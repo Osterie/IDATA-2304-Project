@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b1ef03e0-d355-4c02-958b-c9cdcc971770" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/target/classes/no/ntnu/controlpanel/FakeCommunicationChannel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/no/ntnu/controlpanel/FakeCommunicationChannel$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/no/ntnu/controlpanel/FakeCommunicationChannel$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/no/ntnu/controlpanel/FakeCommunicationChannel$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/no/ntnu/controlpanel/FakeCommunicationChannel$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/no/ntnu/controlpanel/FakeCommunicationChannel$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/no/ntnu/controlpanel/FakeCommunicationChannel$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/no/ntnu/controlpanel/FakeCommunicationChannel$4.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="2mmMuIY5DYkig9l8IrzdNWY3IEG" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.ControlPanelStarter.executor": "Run",
+    "Application.GreenhouseGuiStarter.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/kingt/IT/Nettverk/IDATA-2304-Project"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="ControlPanelStarter" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-22" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="no.ntnu.run.ControlPanelStarter" />
+      <module name="datakomm-project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="no.ntnu.run.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GreenhouseGuiStarter" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-22" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="no.ntnu.run.GreenhouseGuiStarter" />
+      <module name="datakomm-project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="no.ntnu.run.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="project-2024" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="project-2024" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b1ef03e0-d355-4c02-958b-c9cdcc971770" name="Changes" comment="" />
+      <created>1727677518978</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1727677518978</updated>
+    </task>
+    <servers />
+  </component>
+</project>
