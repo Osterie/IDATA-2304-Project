@@ -1,9 +1,11 @@
-package no.ntnu.tools;
+package no.ntnu.tools.Encryption;
 
 /**
  * This class is used to encrypt and decrypt string messages
  */
-public class Encryptor {
+public class HashEncryptor {
+
+    // TODO: Fill methods with hashing method
 
     /**
      * This method takes in a message as a string
