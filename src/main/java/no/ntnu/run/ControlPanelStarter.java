@@ -6,6 +6,11 @@ import no.ntnu.controlpanel.FakeCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.tools.Logger;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 /**
  * Starter class for the control panel.
  * Note: we could launch the Application class directly, but then we would have issues with the
@@ -56,10 +61,34 @@ public class ControlPanelStarter {
     return channel;
   }
 
+  // private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
+  //   // TODO - here you initiate TCP/UDP socket communication
+  //   // You communication class(es) may want to get reference to the logic and call necessary
+  //   // logic methods when events happen (for example, when sensor data is received)
+  //   return null;
+  // }
+
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-    // TODO - here you initiate TCP/UDP socket communication
-    // You communication class(es) may want to get reference to the logic and call necessary
-    // logic methods when events happen (for example, when sensor data is received)
+    try {
+        // Connect to the server
+        Socket socket = new Socket("localhost", 12345);  // Same port as in GreenhouseSimulator
+
+        // Create input and output streams for communication
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+
+        // Example: read sensor data and send control commands back
+        String sensorData;
+        while ((sensorData = reader.readLine()) != null) {
+            System.out.println("Received sensor data: " + sensorData);
+            // Process the sensor data and decide on actuator actions
+            // Example: send command to turn on a fan
+            writer.println("TURN_ON_FAN");
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
     return null;
   }
 

@@ -7,14 +7,30 @@ import java.util.Map;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.tools.Logger;
 
+import static no.ntnu.intermediaryserver.ProxyServer.PORT_NUMBER;
+
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+
 /**
  * Application entrypoint - a simulator for a greenhouse.
  */
 public class GreenhouseSimulator {
+  // The nodes in the greenhouse, keyed by their unique ID
   private final Map<Integer, SensorActuatorNode> nodes = new HashMap<>();
 
-  private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>();
-  private final boolean fake;
+  private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>(); //TODO remove me. Testing only
+  private final boolean fake; 
+
+  private Socket socket;
+  private PrintWriter socketWriter;
+  private boolean isOn;
+  private BufferedReader socketReader;
 
   /**
    * Create a greenhouse simulator.
@@ -67,6 +83,18 @@ public class GreenhouseSimulator {
 
   private void initiateRealCommunication() {
     // TODO - here you can set up the TCP or UDP communication
+    // TODO connect to the intermediary server
+
+    try{
+      this.socket = new Socket("localhost", PORT_NUMBER);
+      this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+      this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
+      this.isOn = true;
+    }
+    catch (IOException e) {
+      System.err.println("Could not establish connection to the server: " + e.getMessage());
+    }
+
   }
 
   private void initiateFakePeriodicSwitches() {
