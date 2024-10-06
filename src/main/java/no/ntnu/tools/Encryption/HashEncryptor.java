@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * This class is used to encrypt and decrypt string messages
+ * This class is used to hash strings.
  */
 public class HashEncryptor {
 
