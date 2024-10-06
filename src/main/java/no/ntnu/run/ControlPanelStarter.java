@@ -6,21 +6,37 @@ import no.ntnu.controlpanel.FakeCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.tools.Logger;
 
+import static no.ntnu.intermediaryserver.ProxyServer.PORT_NUMBER;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javafx.application.Platform;
 
 /**
  * Starter class for the control panel.
  * Note: we could launch the Application class directly, but then we would have issues with the
  * debugger (JavaFX modules not found)
  */
-public class ControlPanelStarter {
+public class ControlPanelStarter implements Runnable {
   private final boolean fake;
+  private final ExecutorService executorService;
+
 
   public ControlPanelStarter(boolean fake) {
     this.fake = fake;
+
+    // Create a thread pool with a single thread to handle socket communication
+    this.executorService = Executors.newSingleThreadExecutor();
+  }
+
+  @Override
+  public void run() {
+    start();
   }
 
   /**
@@ -38,28 +54,34 @@ public class ControlPanelStarter {
       fake = true;
       Logger.info("Using FAKE events");
     }
+    fake = false;
     ControlPanelStarter starter = new ControlPanelStarter(fake);
     starter.start();
   }
 
-  private void start() {
+  public void start() {
     ControlPanelLogic logic = new ControlPanelLogic();
     CommunicationChannel channel = initiateCommunication(logic, fake);
-    ControlPanelApplication.startApp(logic, channel);
+    System.out.println("Starting control panel application");
+    ControlPanelApplication controlPanelApplication = new ControlPanelApplication();
+    controlPanelApplication.startApp(logic, channel);
     // This code is reached only after the GUI-window is closed
-    Logger.info("Exiting the control panel application");
-    stopCommunication();
+    // Logger.info("Exiting the control panel application");
+    // stopCommunication();
   }
 
   private CommunicationChannel initiateCommunication(ControlPanelLogic logic, boolean fake) {
     CommunicationChannel channel;
     if (fake) {
+      System.out.println("initiating fake spawner");
       channel = initiateFakeSpawner(logic);
     } else {
+      System.out.println("initiating socket communication");
       channel = initiateSocketCommunication(logic);
     }
     return channel;
   }
+
 
   // private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
   //   // TODO - here you initiate TCP/UDP socket communication
@@ -71,20 +93,13 @@ public class ControlPanelStarter {
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
     try {
         // Connect to the server
-        Socket socket = new Socket("localhost", 12345);  // Same port as in GreenhouseSimulator
+        Socket socket = new Socket("localhost", PORT_NUMBER);  // Same port as in GreenhouseSimulator
 
         // Create input and output streams for communication
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
 
         // Example: read sensor data and send control commands back
-        String sensorData;
-        while ((sensorData = reader.readLine()) != null) {
-            System.out.println("Received sensor data: " + sensorData);
-            // Process the sensor data and decide on actuator actions
-            // Example: send command to turn on a fan
-            writer.println("TURN_ON_FAN");
-        }
 
     } catch (Exception e) {
         e.printStackTrace();

@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.tools.Logger;
 
 import static no.ntnu.intermediaryserver.ProxyServer.PORT_NUMBER;
 
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.io.BufferedReader;
@@ -73,6 +73,15 @@ public class GreenhouseSimulator {
     Logger.info("Simulator started");
   }
 
+  // public void start() {
+  //   this.initiateCommunication();  // Set up the socket communication with the intermediary server
+
+  //   for (SensorActuatorNode node : nodes.values()) {
+  //       this.startNodeHandler(node);  // Start each node's handler in a separate thread
+  //   }
+  //   Logger.info("Simulator started");
+  // }
+
   private void initiateCommunication() {
     if (fake) {
       initiateFakePeriodicSwitches();
@@ -81,21 +90,136 @@ public class GreenhouseSimulator {
     }
   }
 
-  private void initiateRealCommunication() {
-    // TODO - here you can set up the TCP or UDP communication
-    // TODO connect to the intermediary server
+  // private void initiateRealCommunication() {
+  //   // TODO - here you can set up the TCP or UDP communication
+  //   // TODO connect to the intermediary server
 
-    try{
+  //   try {
+  //       this.socket = new Socket("localhost", PORT_NUMBER);
+  //       this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+  //       this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
+        
+  //       // Notify the server that this is a greenhouse connection
+  //       socketWriter.println("GREENHOUSE");
+
+  //       // Start sending sensor data to the intermediary server
+  //       for (SensorActuatorNode node : nodes.values()) {
+  //           new Thread(() -> {
+  //               while (true) {
+  //                   String sensorData = node.getSensorData();  // Method to get sensor data
+  //                   socketWriter.println(sensorData);
+  //                   try {
+  //                       Thread.sleep(5000); // Send data every 5 seconds
+  //                   } catch (InterruptedException e) {
+  //                       e.printStackTrace();
+  //                   }
+  //               }
+  //           }).start();
+  //       }
+        
+  //       // Receive control commands from the server
+  //       String controlCommand;
+  //       while ((controlCommand = socketReader.readLine()) != null) {
+  //           System.out.println("Received command: " + controlCommand);
+  //           // Process the control command (e.g., turn on/off fans)
+  //       }
+
+  //   } catch (IOException e) {
+  //       e.printStackTrace();
+  //   }
+  
+
+  // }
+
+  private void initiateRealCommunication() {
+    try {
       this.socket = new Socket("localhost", PORT_NUMBER);
       this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
       this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
-      this.isOn = true;
-    }
-    catch (IOException e) {
-      System.err.println("Could not establish connection to the server: " + e.getMessage());
-    }
 
+      // Notify the server that this is a greenhouse connection
+      this.socketWriter.println("GREENHOUSE");
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
   }
+
+  private void startNodeHandler(SensorActuatorNode node) {
+    NodeHandler nodeHandler = new NodeHandler(node, socketWriter, socketReader);
+    new Thread(nodeHandler).start();  // Each node runs in its own thread
+  }
+
+  public void stop() {
+    stopCommunication();
+    for (SensorActuatorNode node : nodes.values()) {
+        node.stop();
+    }
+}
+
+  private void sendResponse(String response) {
+    // String serializedResponse = this.messageSerializer.toString(response);
+    // System.out.println(serializedResponse);
+    this.socketWriter.println(response);
+  } 
+
+
+  private String handleServerRequest(String request) {
+
+    System.out.println("Hanlding request: " + request);
+    return "OK";
+
+    // Example request: "GET_SENSOR_DATA nodeId=1"
+    // if (request.startsWith("GET_SENSOR_DATA")) {
+    //     int nodeId = extractNodeIdFromRequest(request); // A method to extract the node ID
+    //     SensorActuatorNode node = nodes.get(nodeId);
+    //     if (node != null) {
+    //         String sensorData = node.getReading();
+    //         socketWriter.println(sensorData);  // Send the sensor data back to the server
+    //     } else {
+    //         socketWriter.println("ERROR: Node not found");
+    //     }
+    // } else if (request.startsWith("CONTROL_COMMAND")) {
+    //     // Example: "CONTROL_COMMAND fan=on nodeId=1"
+    //     processControlCommand(request);
+    // }
+    // You can add more command types here, such as turning on/off heaters, fans, etc.
+}
+
+private int extractNodeIdFromRequest(String request) {
+  return -1;
+  // TODO figure out which node the request is for
+    // Logic to parse the node ID from the request string
+    // Example: "GET_SENSOR_DATA nodeId=1"
+    // String[] parts = request.split(" ");
+    // for (String part : parts) {
+    //     if (part.startsWith("nodeId=")) {
+    //         return Integer.parseInt(part.split("=")[1]);
+    //     }
+    // }
+    // return -1;  // Or throw an exception if not found
+}
+
+private void processControlCommand(String command) {
+    // Example: "CONTROL_COMMAND fan=on nodeId=1"
+    int nodeId = extractNodeIdFromRequest(command);
+    SensorActuatorNode node = nodes.get(nodeId);
+    if (node != null) {
+      return;
+      // TODO handle the command!
+    //     // Logic to control actuators like fans or heaters
+    //     if (command.contains("fan=on")) {
+    //         node.turnFanOn();  // Assuming this method exists in SensorActuatorNode
+    //         socketWriter.println("SUCCESS: Fan turned on for node " + nodeId);
+    //     } else if (command.contains("fan=off")) {
+    //         node.turnFanOff();  // Assuming this method exists
+    //         socketWriter.println("SUCCESS: Fan turned off for node " + nodeId);
+    //     }
+    // } else {
+    //     socketWriter.println("ERROR: Node not found");
+    }
+  }
+
+
 
   private void initiateFakePeriodicSwitches() {
     periodicSwitches.add(new PeriodicSwitch("Window DJ", nodes.get(1), 2, 20000));
@@ -105,12 +229,12 @@ public class GreenhouseSimulator {
   /**
    * Stop the simulation of the greenhouse - all the nodes in it.
    */
-  public void stop() {
-    stopCommunication();
-    for (SensorActuatorNode node : nodes.values()) {
-      node.stop();
-    }
-  }
+  // public void stop() {
+  //   stopCommunication();
+  //   for (SensorActuatorNode node : nodes.values()) {
+  //     node.stop();
+  //   }
+  // }
 
   private void stopCommunication() {
     if (fake) {
@@ -118,6 +242,13 @@ public class GreenhouseSimulator {
         periodicSwitch.stop();
       }
     } else {
+      try {
+        if (socket != null) {
+            socket.close();
+        }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
       // TODO - here you stop the TCP/UDP communication
     }
   }

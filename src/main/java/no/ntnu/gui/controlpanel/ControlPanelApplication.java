@@ -48,14 +48,18 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
    * @param logic   The logic of the control panel node
    * @param channel Communication channel for sending control commands and receiving events
    */
-  public static void startApp(ControlPanelLogic logic, CommunicationChannel channel) {
+  public void startApp(ControlPanelLogic logic, CommunicationChannel channel) {
     if (logic == null) {
       throw new IllegalArgumentException("Control panel logic can't be null");
+    }
+    if (channel == null) {
+      throw new IllegalArgumentException("Communication channel can't be null");
     }
     ControlPanelApplication.logic = logic;
     ControlPanelApplication.channel = channel;
     Logger.info("Running control panel GUI...");
     launch();
+    // this.start(new Stage());
   }
 
   @Override
