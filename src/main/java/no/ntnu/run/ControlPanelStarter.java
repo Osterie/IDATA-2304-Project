@@ -1,7 +1,7 @@
 package no.ntnu.run;
 
 import no.ntnu.controlpanel.CommunicationChannel;
-import no.ntnu.controlpanel.ControlPanelLogic;
+import no.ntnu.controlpanel.ControlPanelLogicOld;
 import no.ntnu.controlpanel.FakeCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.tools.Logger;
@@ -60,7 +60,7 @@ public class ControlPanelStarter implements Runnable {
   }
 
   public void start() {
-    ControlPanelLogic logic = new ControlPanelLogic();
+    ControlPanelLogicOld logic = new ControlPanelLogicOld();
     CommunicationChannel channel = initiateCommunication(logic, fake);
     System.out.println("Starting control panel application");
     ControlPanelApplication controlPanelApplication = new ControlPanelApplication();
@@ -70,7 +70,7 @@ public class ControlPanelStarter implements Runnable {
     // stopCommunication();
   }
 
-  private CommunicationChannel initiateCommunication(ControlPanelLogic logic, boolean fake) {
+  private CommunicationChannel initiateCommunication(ControlPanelLogicOld logic, boolean fake) {
     CommunicationChannel channel;
     if (fake) {
       System.out.println("initiating fake spawner");
@@ -90,7 +90,7 @@ public class ControlPanelStarter implements Runnable {
   //   return null;
   // }
 
-  private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
+  private CommunicationChannel initiateSocketCommunication(ControlPanelLogicOld logic) {
     try {
         // Connect to the server
         Socket socket = new Socket("localhost", PORT_NUMBER);  // Same port as in GreenhouseSimulator
@@ -107,7 +107,7 @@ public class ControlPanelStarter implements Runnable {
     return null;
   }
 
-  private CommunicationChannel initiateFakeSpawner(ControlPanelLogic logic) {
+  private CommunicationChannel initiateFakeSpawner(ControlPanelLogicOld logic) {
     // Here we pretend that some events will be received with a given delay
     FakeCommunicationChannel spawner = new FakeCommunicationChannel(logic);
     logic.setCommunicationChannel(spawner);

@@ -13,7 +13,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.controlpanel.CommunicationChannel;
-import no.ntnu.controlpanel.ControlPanelLogic;
+import no.ntnu.controlpanel.ControlPanelLogicOld;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.SensorReading;
@@ -28,7 +28,7 @@ import no.ntnu.tools.Logger;
  */
 public class ControlPanelApplication extends Application implements GreenhouseEventListener,
     CommunicationChannelListener {
-  private static ControlPanelLogic logic;
+  private static ControlPanelLogicOld logic;
   private static final int WIDTH = 500;
   private static final int HEIGHT = 400;
   private static CommunicationChannel channel;
@@ -48,7 +48,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
    * @param logic   The logic of the control panel node
    * @param channel Communication channel for sending control commands and receiving events
    */
-  public void startApp(ControlPanelLogic logic, CommunicationChannel channel) {
+  public void startApp(ControlPanelLogicOld logic, CommunicationChannel channel) {
     if (logic == null) {
       throw new IllegalArgumentException("Control panel logic can't be null");
     }

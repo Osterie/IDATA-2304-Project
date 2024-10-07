@@ -18,14 +18,14 @@ import no.ntnu.tools.Logger;
  */
 public class FakeCommunicationChannel implements CommunicationChannel {
 
-  private final ControlPanelLogic logic;
+  private final ControlPanelLogicOld logic;
 
   /**
    * Create a new fake communication channel.
    *
    * @param logic The application logic of the control panel node.
    */
-  public FakeCommunicationChannel(ControlPanelLogic logic) {
+  public FakeCommunicationChannel(ControlPanelLogicOld logic) {
     this.logic = logic;
   }
 
