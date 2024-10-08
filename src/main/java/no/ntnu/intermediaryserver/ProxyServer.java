@@ -9,7 +9,7 @@ import java.util.Map;
 import no.ntnu.tools.Logger;
 
 public class ProxyServer implements Runnable {
-    public static final int PORT_NUMBER = 30425;
+    public static final int PORT_NUMBER = 50500;
     private boolean isTcpServerRunning;
     
     // Maps to store connected Control Panels and Greenhouse nodes

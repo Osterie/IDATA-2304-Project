@@ -20,7 +20,7 @@ distributed application.
 
 TODO - what transport-layer protocol do you use? TCP? UDP? What port number(s)? Why did you choose this transport layer protocol?
 - TCP 
-- Port number: 30425
+- Port number: 50500
 - We chose TCP because it is a connection-oriented protocol, which means that it guarantees the delivery of packets to the destination node. This is important for our system because we want to make sure that all messages are delivered to the destination node.
 
 
