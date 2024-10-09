@@ -1,5 +1,9 @@
 package no.ntnu.greenhouse;
 
+import no.ntnu.greenhouse.sensorreading.HumiditySensorReading;
+import no.ntnu.greenhouse.sensorreading.SensorReading;
+import no.ntnu.greenhouse.sensorreading.TemperatureSensorReading;
+
 /**
  * A sensor which can sense the environment in a specific way.
  */
@@ -18,7 +22,7 @@ public class Sensor {
    * @param unit    The measurement unit. Examples: "%", "C", "lux"
    */
   public Sensor(String type, double min, double max, double current, String unit) {
-    this.reading = new SensorReading(type, current, unit);
+    this.reading = createSensorReading(type, current, unit);
     this.min = min;
     this.max = max;
     ensureValueBoundsAndPrecision(current);
@@ -89,5 +93,29 @@ public class Sensor {
   @Override
   public String toString() {
     return reading.toString();
+  }
+
+  /**
+   * Create a sensor reading based on the type.
+   * 
+   * @param type the type of the sensor
+   * @param value the value of the sensor
+   * @param unit the unit of the sensor
+   * @return the sensor reading
+   */
+  private SensorReading createSensorReading(String type, double value, String unit) {
+    SensorReading reading = null;
+
+    switch (type) {
+      case "temperature":
+        reading = new TemperatureSensorReading(type, value, unit);
+        break;
+      case "humidity":
+        reading = new HumiditySensorReading(type, value, unit);
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown sensor type: " + type);
+    }
+    return reading;
   }
 }

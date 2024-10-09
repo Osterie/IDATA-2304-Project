@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.SensorReading;
+import no.ntnu.greenhouse.sensorreading.SensorReading;
 import no.ntnu.tools.Logger;
 
 /**
