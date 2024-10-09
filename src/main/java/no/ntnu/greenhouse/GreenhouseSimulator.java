@@ -30,7 +30,6 @@ public class GreenhouseSimulator {
 
   private Socket socket;
   private PrintWriter socketWriter;
-  private boolean isOn;
   private BufferedReader socketReader;
 
   /**
@@ -124,40 +123,11 @@ public class GreenhouseSimulator {
       this.socket = new Socket("localhost", PORT_NUMBER);
       this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
       this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
-      this.isOn = true;
     }
     catch (IOException e) {
       System.err.println("Could not establish connection to the server: " + e.getMessage());
     }
   }
-
-  // private void run() {
-  // while (this.isOn) {
-
-  // }
-  // }
-
-  // private void testRun() {
-  //     sendCommandToServer("c");
-  //     sendCommandToServer("g");
-  //     sendCommandToServer("1");
-  //     sendCommandToServer("c");
-  //     sendCommandToServer("g");
-  //     sendCommandToServer("s13");
-  //     sendCommandToServer("sDdd");
-  //     sendCommandToServer("s15");
-  //     sendCommandToServer("s0");
-  //     sendCommandToServer("s-2");
-  //     sendCommandToServer("g");
-  //     sendCommandToServer("s4");
-  //     sendCommandToServer("g");
-  //     sendCommandToServer("0");
-  //     sendCommandToServer("g");
-  //     sendCommandToServer("s12");
-  //     sendCommandToServer("1");
-  //     sendCommandToServer("g");
-  //     sendCommandToServer("0");
-  // }
 
   /**
    * Send a command to the server.
@@ -167,15 +137,10 @@ public class GreenhouseSimulator {
    */
   private void sendCommandToServer(String command) throws IOException {
 
-    if (this.isOn){
       System.out.println("Sending command: " + command.toString());
       socketWriter.println(command);
       String serverResponse = socketReader.readLine();
       System.out.println("  >>> Response: " + serverResponse);
-    }
-    else {
-      System.out.println("The remote control is off, cannot send command.");
-    }
   }
 
 

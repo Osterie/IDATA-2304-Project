@@ -1,7 +1,8 @@
 package no.ntnu.run;
 
+import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.controlpanel.CommunicationChannel;
-import no.ntnu.controlpanel.ControlPanelLogicOld;
+import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.FakeCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.tools.Logger;
@@ -9,11 +10,10 @@ import no.ntnu.tools.Logger;
 import static no.ntnu.intermediaryserver.ProxyServer.PORT_NUMBER;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javafx.application.Platform;
 
@@ -24,14 +24,11 @@ import javafx.application.Platform;
  */
 public class ControlPanelStarter implements Runnable {
   private final boolean fake;
-  private final ExecutorService executorService;
 
+  private CommunicationChannel channel;
 
   public ControlPanelStarter(boolean fake) {
     this.fake = fake;
-
-    // Create a thread pool with a single thread to handle socket communication
-    this.executorService = Executors.newSingleThreadExecutor();
   }
 
   @Override
@@ -60,17 +57,23 @@ public class ControlPanelStarter implements Runnable {
   }
 
   public void start() {
-    ControlPanelLogicOld logic = new ControlPanelLogicOld();
-    CommunicationChannel channel = initiateCommunication(logic, fake);
+    ControlPanelLogic logic = new ControlPanelLogic();
+    this.channel = initiateCommunication(logic, fake);
+    try{
+      this.sendCommandToServer("Control panel started!");
+    }
+    catch (IOException e) {
+      System.err.println("Could not send command to the server: " + e.getMessage());
+    }
     System.out.println("Starting control panel application");
     ControlPanelApplication controlPanelApplication = new ControlPanelApplication();
-    controlPanelApplication.startApp(logic, channel);
+    controlPanelApplication.startApp(logic, this.channel);
     // This code is reached only after the GUI-window is closed
     // Logger.info("Exiting the control panel application");
     // stopCommunication();
   }
 
-  private CommunicationChannel initiateCommunication(ControlPanelLogicOld logic, boolean fake) {
+  private CommunicationChannel initiateCommunication(ControlPanelLogic logic, boolean fake) {
     CommunicationChannel channel;
     if (fake) {
       System.out.println("initiating fake spawner");
@@ -83,31 +86,17 @@ public class ControlPanelStarter implements Runnable {
   }
 
 
-  // private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-  //   // TODO - here you initiate TCP/UDP socket communication
-  //   // You communication class(es) may want to get reference to the logic and call necessary
-  //   // logic methods when events happen (for example, when sensor data is received)
-  //   return null;
-  // }
-
-  private CommunicationChannel initiateSocketCommunication(ControlPanelLogicOld logic) {
+  private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
     try {
-        // Connect to the server
-        Socket socket = new Socket("localhost", PORT_NUMBER);  // Same port as in GreenhouseSimulator
-
-        // Create input and output streams for communication
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-
-        // Example: read sensor data and send control commands back
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        SocketCommunicationChannel channel = new SocketCommunicationChannel(logic, "localhost", PORT_NUMBER);
+        return channel;
+    } catch (IOException e) {
+        System.err.println("Could not establish connection to the server: " + e.getMessage());
+        return null;
     }
-    return null;
   }
 
-  private CommunicationChannel initiateFakeSpawner(ControlPanelLogicOld logic) {
+  private CommunicationChannel initiateFakeSpawner(ControlPanelLogic logic) {
     // Here we pretend that some events will be received with a given delay
     FakeCommunicationChannel spawner = new FakeCommunicationChannel(logic);
     logic.setCommunicationChannel(spawner);
@@ -137,5 +126,16 @@ public class ControlPanelStarter implements Runnable {
 
   private void stopCommunication() {
     // TODO - here you stop the TCP/UDP socket communication
+    this.channel.close();
+  }
+
+  /**
+   * Send a command to the server.
+   * 
+   * @param command the command to send.
+   * @throws IOException if an I/O error occurs when sending the command.
+   */
+  private void sendCommandToServer(String command) throws IOException {
+    this.channel.sendCommandToServer(command);
   }
 }

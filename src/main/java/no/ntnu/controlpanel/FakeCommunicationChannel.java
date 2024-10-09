@@ -18,14 +18,14 @@ import no.ntnu.tools.Logger;
  */
 public class FakeCommunicationChannel implements CommunicationChannel {
 
-  private final ControlPanelLogicOld logic;
+  private final ControlPanelLogic logic;
 
   /**
    * Create a new fake communication channel.
    *
    * @param logic The application logic of the control panel node.
    */
-  public FakeCommunicationChannel(ControlPanelLogicOld logic) {
+  public FakeCommunicationChannel(ControlPanelLogic logic) {
     this.logic = logic;
   }
 
@@ -190,5 +190,16 @@ public class FakeCommunicationChannel implements CommunicationChannel {
   public boolean open() {
     Logger.info("open() does nothing for the fake spawner, all the timers are running already...");
     return true;
+  }
+
+  @Override
+  public boolean close(){
+    Logger.info("close() does nothing for the fake spawner, all the timers are running already...");
+    return true;
+  }
+
+  @Override
+  public void sendCommandToServer(String command) {
+    Logger.info("Sending command to server: " + command);
   }
 }
