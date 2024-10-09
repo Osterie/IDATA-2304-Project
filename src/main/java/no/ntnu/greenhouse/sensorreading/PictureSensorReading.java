@@ -1,5 +1,11 @@
 package no.ntnu.greenhouse.sensorreading;
 
-public class PictureSensorReading {
-    
+/**
+ * Represents one picture sensor reading.
+ */
+public class PictureSensorReading extends SensorReading {
+
+    public PictureSensorReading(String type, double value, String unit) {
+        super(type, value, unit);
+    }
 }
