@@ -5,9 +5,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static no.ntnu.tools.Parser.parseDoubleOrError;
+import static no.ntnu.tools.Parser.parseIntegerOrError;
 
 import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
+import no.ntnu.controlpanel.SensorActuatorNodeInfo;
+import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
 
 public class SocketCommunicationChannel implements CommunicationChannel {
@@ -27,6 +37,7 @@ public class SocketCommunicationChannel implements CommunicationChannel {
             this.socket = new Socket(host, port);
             this.socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.socketWriter = new PrintWriter(socket.getOutputStream(), true);
+            this.socketWriter.println("CONTROL_PANEL");
             this.isConnected = true;
             Logger.info("Socket connection established with " + host + ":" + port);
         } catch (IOException e) {
@@ -35,12 +46,13 @@ public class SocketCommunicationChannel implements CommunicationChannel {
         }
     }
 
-    public void sendCommandToServer(String command) {
+    public String sendCommandToServer(String command) {
+        String serverResponse = "No response";
         if (isConnected && socketWriter != null) {
             socketWriter.println(command);
             Logger.info("Sent command to server: " + command);
             try {
-                String serverResponse = socketReader.readLine();
+                serverResponse = socketReader.readLine();
                 Logger.info("Received response from server: " + serverResponse);
             } catch (IOException e) {
                 Logger.error("Error reading server response: " + e.getMessage());
@@ -48,12 +60,13 @@ public class SocketCommunicationChannel implements CommunicationChannel {
         } else {
             Logger.error("Unable to send command, socket is not connected.");
         }
+        return serverResponse;
     }
 
     @Override
     public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
         String command = "ACTUATOR_CHANGE:" + nodeId + "," + actuatorId + "," + (isOn ? "ON" : "OFF");
-        sendCommandToServer(command);
+        String respone = sendCommandToServer(command);
     }
 
     @Override
@@ -78,4 +91,165 @@ public class SocketCommunicationChannel implements CommunicationChannel {
         }
         return closed;
     }
+
+
+
+
+
+  /**
+   * Spawn a new sensor/actuator node information after a given delay.
+   *
+   * @param specification A (temporary) manual configuration of the node in the following format
+   *                      [nodeId] semicolon
+   *                      [actuator_count_1] underscore [actuator_type_1] space ... space
+   *                      [actuator_count_M] underscore [actuator_type_M]
+   */
+    public void askForNodes() {
+        String nodes = sendCommandToServer("GREENHOUSE;ALL;GET_NODES");
+        for (String node : nodes.split(";")) {
+            this.spawnNode(node);
+        }
+        // SensorActuatorNodeInfo nodeInfo = createSensorNodeInfoFrom(specification);
+        // System.out.println("Spawning node " + specification);
+        // logic.onNodeAdded(nodeInfo);
+    }
+
+    private void spawnNode(String nodeId) {
+        String specification = sendCommandToServer("GET_NODE:" + nodeId);
+        SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(specification);
+        logic.onNodeAdded(nodeInfo);
+        System.out.println("Spawning node " + specification);
+    }
+
+    private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
+        System.out.println("specific:");
+        System.out.println(specification);
+        if (specification == null || specification.isEmpty()) {
+          throw new IllegalArgumentException("Node specification can't be empty");
+        }
+        String[] parts = specification.split(";");
+        if (parts.length > 3) {
+          throw new IllegalArgumentException("Incorrect specification format");
+        }
+        int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
+        SensorActuatorNodeInfo info = new SensorActuatorNodeInfo(nodeId);
+        if (parts.length == 2) {
+          parseActuators(parts[1], info);
+        }
+        return info;
+      }
+
+  private void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info) {
+    String[] parts = actuatorSpecification.split(" ");
+    for (String part : parts) {
+      parseActuatorInfo(part, info);
+    }
+  }
+
+  private void parseActuatorInfo(String s, SensorActuatorNodeInfo info) {
+    String[] actuatorInfo = s.split("_");
+    if (actuatorInfo.length != 2) {
+      throw new IllegalArgumentException("Invalid actuator info format: " + s);
+    }
+    int actuatorCount = parseIntegerOrError(actuatorInfo[0],
+        "Invalid actuator count: " + actuatorInfo[0]);
+    String actuatorType = actuatorInfo[1];
+    for (int i = 0; i < actuatorCount; ++i) {
+      Actuator actuator = new Actuator(actuatorType, info.getId());
+      actuator.setListener(logic);
+      info.addActuator(actuator);
+    }
+  }
+
+
+
+  /**
+   * Advertise new sensor readings.
+   *
+   * @param specification Specification of the readings in the following format:
+   *                      [nodeID]
+   *                      semicolon
+   *                      [sensor_type_1] equals [sensor_value_1] space [unit_1]
+   *                      comma
+   *                      ...
+   *                      comma
+   *                      [sensor_type_N] equals [sensor_value_N] space [unit_N]
+   * @param delay         Delay in seconds
+   */
+  public void advertiseSensorData(String specification, int delay) {
+    if (specification == null || specification.isEmpty()) {
+      throw new IllegalArgumentException("Sensor specification can't be empty");
+    }
+    String[] parts = specification.split(";");
+    if (parts.length != 2) {
+      throw new IllegalArgumentException("Incorrect specification format: " + specification);
+    }
+    int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
+    List<SensorReading> sensors = parseSensors(parts[1]);
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        logic.onSensorData(nodeId, sensors);
+      }
+    }, delay * 1000L);
+  }
+
+  /**
+   * Advertise that a node is removed.
+   *
+   * @param nodeId ID of the removed node
+   * @param delay  Delay in seconds
+   */
+  public void advertiseRemovedNode(int nodeId, int delay) {
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        logic.onNodeRemoved(nodeId);
+      }
+    }, delay * 1000L);
+  }
+
+  private List<SensorReading> parseSensors(String sensorInfo) {
+    List<SensorReading> readings = new LinkedList<>();
+    String[] readingInfo = sensorInfo.split(",");
+    for (String reading : readingInfo) {
+      readings.add(parseReading(reading));
+    }
+    return readings;
+  }
+
+  private SensorReading parseReading(String reading) {
+    String[] assignmentParts = reading.split("=");
+    if (assignmentParts.length != 2) {
+      throw new IllegalArgumentException("Invalid sensor reading specified: " + reading);
+    }
+    String[] valueParts = assignmentParts[1].split(" ");
+    if (valueParts.length != 2) {
+      throw new IllegalArgumentException("Invalid sensor value/unit: " + reading);
+    }
+    String sensorType = assignmentParts[0];
+    double value = parseDoubleOrError(valueParts[0], "Invalid sensor value: " + valueParts[0]);
+    String unit = valueParts[1];
+    return new SensorReading(sensorType, value, unit);
+  }
+
+  /**
+   * Advertise that an actuator has changed it's state.
+   *
+   * @param nodeId     ID of the node to which the actuator is attached
+   * @param actuatorId ID of the actuator.
+   * @param on         When true, actuator is on; off when false.
+   * @param delay      The delay in seconds after which the advertisement will be generated
+   */
+  public void advertiseActuatorState(int nodeId, int actuatorId, boolean on, int delay) {
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        logic.onActuatorStateChanged(nodeId, actuatorId, on);
+      }
+    }, delay * 1000L);
+  }
 }

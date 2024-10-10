@@ -25,7 +25,9 @@ public class GreenhouseSimulator {
   // The nodes in the greenhouse, keyed by their unique ID
   private final Map<Integer, SensorActuatorNode> nodes = new HashMap<>();
 
-  private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>(); //TODO remove me. Testing only
+  private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>(); //TODO remove me. Testing only?
+  private final Map<Integer, NodeConnectionHandler> nodeConnections = new HashMap<>();  // Store connections for each node
+
   private final boolean fake; 
 
   private Socket socket;
@@ -42,24 +44,25 @@ public class GreenhouseSimulator {
     this.fake = fake;
   }
 
-    public static void main(String[] args) {
+
+  public static void main(String[] args) {
 
     GreenhouseSimulator greenhouse1 = new GreenhouseSimulator(false);
     greenhouse1.start();
 
-    GreenhouseSimulator greenhouse2 = new GreenhouseSimulator(false);
-    greenhouse2.start();
+    // GreenhouseSimulator greenhouse2 = new GreenhouseSimulator(false);
+    // greenhouse2.start();
 
     try{
       greenhouse1.sendCommandToServer("Test");
       greenhouse1.sendCommandToServer("Test");
       greenhouse1.sendCommandToServer("Test");
       // greenhouse2.sendCommandToServer("1");
-      greenhouse2.sendCommandToServer("Test2");
+      // greenhouse2.sendCommandToServer("Test2");
       greenhouse1.sendCommandToServer("Test");
 
       greenhouse1.stop();
-      greenhouse2.stop();
+      // greenhouse2.stop();
     }
     catch (IOException e) {
       System.err.println("Could not send command to server: " + e.getMessage());
@@ -114,19 +117,29 @@ public class GreenhouseSimulator {
     }
   }
 
-    /**
+  /**
    * Start the remote control.
    * Able to send commands if started
    */
   public void initiateRealCommunication(){
-    try{
-      this.socket = new Socket("localhost", PORT_NUMBER);
-      this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-      this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
-    }
-    catch (IOException e) {
-      System.err.println("Could not establish connection to the server: " + e.getMessage());
-    }
+    for (SensorActuatorNode node : nodes.values()) {
+      try {
+          NodeConnectionHandler handler = new NodeConnectionHandler(node, "localhost", PORT_NUMBER);
+          nodeConnections.put(node.getId(), handler);
+          new Thread(handler).start();
+      } catch (IOException e) {
+          System.err.println("Failed to connect node " + node.getId() + " to the server: " + e.getMessage());
+      }
+  }
+    // try{
+    //   this.socket = new Socket("localhost", PORT_NUMBER);
+    //   this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+    //   this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
+    //   this.socketWriter.println("GREENHOUSE");
+    // }
+    // catch (IOException e) {
+    //   System.err.println("Could not establish connection to the server: " + e.getMessage());
+    // }
   }
 
   /**
@@ -296,14 +309,14 @@ private void processControlCommand(String command) {
         periodicSwitch.stop();
       }
     } else {
-      try {
-        if (socket != null) {
-            socket.close();
+        for (NodeConnectionHandler handler : nodeConnections.values()) {
+            handler.closeConnection();
         }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (SensorActuatorNode node : nodes.values()) {
+            node.stop();
         }
-      // TODO - here you stop the TCP/UDP communication
+        System.out.println("Greenhouse simulator stopped.");
+        // TODO - here you stop the TCP/UDP communication
     }
   }
 

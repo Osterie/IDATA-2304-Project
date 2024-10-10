@@ -3,84 +3,81 @@ package no.ntnu.intermediaryserver;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.concurrent.ConcurrentHashMap;
 import no.ntnu.tools.Logger;
 
 public class ProxyServer implements Runnable {
     public static final int PORT_NUMBER = 50500;
     private boolean isTcpServerRunning;
-    
-    // Maps to store connected Control Panels and Greenhouse nodes
-    private Map<String, Socket> controlPanels = new HashMap<>();
-    private Map<String, Socket> greenhouseNodes = new HashMap<>();
+
+    // Using ConcurrentHashMap for thread-safe access
+    private final ConcurrentHashMap<String, Socket> controlPanels = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Socket> greenhouseNodes = new ConcurrentHashMap<>();
 
     public static void main(String[] args) throws IOException {
         new ProxyServer().startServer();
     }
 
-    // Method to start the server and accept client connections
+    // Start the server to listen for client connections
     public void startServer() throws IOException {
-
-
         ServerSocket listeningSocket = openListeningSocket(PORT_NUMBER);
         if (listeningSocket != null) {
             this.isTcpServerRunning = true;
             while (this.isTcpServerRunning) {
                 Socket clientSocket = acceptNextClientConnection(listeningSocket);
                 if (clientSocket != null) {
-                  new Thread (new ClientHandler(clientSocket)).start();
-      
+                    new Thread(new ClientHandler(clientSocket, this)).start();
                 }
             }
         }
-
-
-
-        // try (ServerSocket serverSocket = new ServerSocket(PORT_NUMBER)) {
-        //     System.out.println("Proxy Server is running on port " + PORT_NUMBER);
-        //     while (true) {
-        //         Socket clientSocket = serverSocket.accept();
-        //         Logger.info("Client connected: " + clientSocket.getInetAddress().getHostAddress());
-        //         // Start a new ClientHandler for every connected client
-        //         new ClientHandler(clientSocket, controlPanels, greenhouseNodes).start();
-        //     }
-        // }
     }
 
-    public void stopServer(){
+    public void stopServer() {
         this.isTcpServerRunning = false;
     }
 
-    /**
-     * Accept the next client connection on the given server socket.
-     *
-     * @param listeningSocket The server socket to accept client connections on
-     * @return The new client socket, or null on error
-     */
-    private Socket acceptNextClientConnection(ServerSocket listeningSocket) {
-        Socket clientSocket = null;
-        try {
-        clientSocket = listeningSocket.accept();
-        } catch (IOException e) {
-        System.err.println("Could not accept client connection: " + e.getMessage());
-        }
-        return clientSocket;
+    public synchronized void addGreenhouseNode(String nodeId, Socket socket) {
+        greenhouseNodes.put(nodeId, socket);
+        Logger.info("Greenhouse node added: " + nodeId);
     }
 
-    /**
-   * Open a server socket that listens for incoming client connections.
-   */
-    private ServerSocket openListeningSocket(int port) {
-        ServerSocket listeningSocket = null;
-        try {
-        listeningSocket = new ServerSocket(port);
-        System.out.println("Server listening on port " + port);
-        } catch (IOException e) {
-        System.err.println("Could not open server socket for port " + port + ": " + e.getMessage());
+    public synchronized void addControlPanel(String panelId, Socket socket) {
+        controlPanels.put(panelId, socket);
+        Logger.info("Control panel added: " + panelId);
+    }
+
+    public synchronized void removeClient(String clientId, boolean isGreenhouse) {
+        if (isGreenhouse) {
+            greenhouseNodes.remove(clientId);
+            Logger.info("Greenhouse node removed: " + clientId);
+        } else {
+            controlPanels.remove(clientId);
+            Logger.info("Control panel removed: " + clientId);
         }
-        return listeningSocket;
+    }
+
+    public Socket getGreenhouseNode(String nodeId) {
+        return greenhouseNodes.get(nodeId);
+    }
+
+    private Socket acceptNextClientConnection(ServerSocket listeningSocket) {
+        try {
+            return listeningSocket.accept();
+        } catch (IOException e) {
+            System.err.println("Could not accept client connection: " + e.getMessage());
+        }
+        return null;
+    }
+
+    private ServerSocket openListeningSocket(int port) {
+        try {
+            ServerSocket listeningSocket = new ServerSocket(port);
+            System.out.println("Server listening on port " + port);
+            return listeningSocket;
+        } catch (IOException e) {
+            System.err.println("Could not open server socket for port " + port + ": " + e.getMessage());
+        }
+        return null;
     }
 
     @Override

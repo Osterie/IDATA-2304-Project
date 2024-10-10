@@ -30,6 +30,8 @@ public class FakeCommunicationChannel implements CommunicationChannel {
   }
 
   private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
+    System.out.println("specific:");
+    System.out.println(specification);
     if (specification == null || specification.isEmpty()) {
       throw new IllegalArgumentException("Node specification can't be empty");
     }
@@ -199,7 +201,8 @@ public class FakeCommunicationChannel implements CommunicationChannel {
   }
 
   @Override
-  public void sendCommandToServer(String command) {
+  public String sendCommandToServer(String command) {
     Logger.info("Sending command to server: " + command);
+    return command;
   }
 }
