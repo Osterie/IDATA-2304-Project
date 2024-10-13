@@ -3,6 +3,7 @@ package no.ntnu.intermediaryserver;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import no.ntnu.tools.Logger;
 
@@ -58,6 +59,14 @@ public class ProxyServer implements Runnable {
 
     public Socket getGreenhouseNode(String nodeId) {
         return greenhouseNodes.get(nodeId);
+    }
+
+    public ArrayList<Socket> getGreenhouseNodes() {
+        return greenhouseNodes.values().stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+    }
+
+    public Socket getControlPanel(String panelId) {
+        return controlPanels.get(panelId);
     }
 
     private Socket acceptNextClientConnection(ServerSocket listeningSocket) {

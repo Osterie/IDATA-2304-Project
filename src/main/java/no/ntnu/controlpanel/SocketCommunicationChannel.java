@@ -1,4 +1,4 @@
-package no.ntnu;
+package no.ntnu.controlpanel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,9 +13,6 @@ import java.util.TimerTask;
 import static no.ntnu.tools.Parser.parseDoubleOrError;
 import static no.ntnu.tools.Parser.parseIntegerOrError;
 
-import no.ntnu.controlpanel.CommunicationChannel;
-import no.ntnu.controlpanel.ControlPanelLogic;
-import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
@@ -35,9 +32,10 @@ public class SocketCommunicationChannel implements CommunicationChannel {
     private void connect(String host, int port) throws IOException {
         try {
             this.socket = new Socket(host, port);
+            this.socket.setKeepAlive(true);
             this.socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.socketWriter = new PrintWriter(socket.getOutputStream(), true);
-            this.socketWriter.println("CONTROL_PANEL");
+            this.socketWriter.println("CONTROL_PANEL;0"); //TODO Use a unique identifier
             this.isConnected = true;
             Logger.info("Socket connection established with " + host + ":" + port);
         } catch (IOException e) {
@@ -55,7 +53,7 @@ public class SocketCommunicationChannel implements CommunicationChannel {
                 serverResponse = socketReader.readLine();
                 Logger.info("Received response from server: " + serverResponse);
             } catch (IOException e) {
-                Logger.error("Error reading server response: " + e.getMessage());
+                Logger.error("Error reading server response: " + e.getMessage() + " error type" + e.getClass());
             }
         } else {
             Logger.error("Unable to send command, socket is not connected.");
@@ -105,25 +103,42 @@ public class SocketCommunicationChannel implements CommunicationChannel {
    *                      [actuator_count_M] underscore [actuator_type_M]
    */
     public void askForNodes() {
-        String nodes = sendCommandToServer("GREENHOUSE;ALL;GET_NODES");
+        // String nodes = sendCommandToServer("GREENHOUSE;ALL;GET_NODE_ID");
+        String nodes = "1";
         for (String node : nodes.split(";")) {
-            this.spawnNode(node);
+          int nodeId;
+            try{
+              nodeId = parseIntegerOrError(node, "Invalid node ID: " + node);
+            }
+            catch (NumberFormatException e) {
+              System.err.println("Could not parse node ID: " + e.getMessage());
+              continue;
+            }
+            this.spawnNode(node, 5);
         }
         // SensorActuatorNodeInfo nodeInfo = createSensorNodeInfoFrom(specification);
         // System.out.println("Spawning node " + specification);
         // logic.onNodeAdded(nodeInfo);
     }
 
-    private void spawnNode(String nodeId) {
-        String specification = sendCommandToServer("GET_NODE:" + nodeId);
+    public void spawnNode(String nodeId, int START_DELAY) {
+        String specification = sendCommandToServer("GREENHOUSE;" + nodeId + ";GET_NODE");
+        Logger.info("Received node specification: " + specification);
         SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(specification);
-        logic.onNodeAdded(nodeInfo);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+          @Override
+          public void run() {
+            System.out.println("Spawning node " + specification);
+            logic.onNodeAdded(nodeInfo);
+          }
+        }, START_DELAY * 1000L);
+        // logic.onNodeAdded(nodeInfo);
         System.out.println("Spawning node " + specification);
     }
 
     private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
-        System.out.println("specific:");
-        System.out.println(specification);
+        System.out.println("specification: " + specification);
         if (specification == null || specification.isEmpty()) {
           throw new IllegalArgumentException("Node specification can't be empty");
         }

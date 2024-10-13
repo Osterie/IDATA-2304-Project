@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import no.ntnu.tools.Logger;
+
 public class NodeConnectionHandler implements Runnable {
     private final SensorActuatorNode node;
     private final Socket socket;
@@ -15,6 +17,7 @@ public class NodeConnectionHandler implements Runnable {
     public NodeConnectionHandler(SensorActuatorNode node, String host, int port) throws IOException {
         this.node = node;
         this.socket = new Socket(host, port);
+        this.socket.setKeepAlive(true);
         this.socketWriter = new PrintWriter(socket.getOutputStream(), true);
         this.socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -46,6 +49,24 @@ public class NodeConnectionHandler implements Runnable {
     }
 
     private void handleServerCommand(String command) {
+        System.out.println("Received command for node! " + node.getId() + ": " + command);
+        String[] commandParts = command.split(";");
+        String sender = commandParts[0];
+        String senderID = commandParts[1];
+        String commandType = commandParts[2];
+
+        if (commandType.equalsIgnoreCase("GET_NODE_ID")) {
+            Logger.info("Received request for node ID from server, sending response " + node.getId());
+            socketWriter.println(sender + ";" + senderID + ";" + node.getId());
+        }
+        else if (commandType.equalsIgnoreCase("GET_NODE")){
+            Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + node.getId());
+            // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
+            socketWriter.println("CONTROL_PANEL;0;" + node.getId());
+        }
+        else{
+            Logger.info("Received unknown command from server: " + command);
+        }
         // Parse and execute commands received from the server for this node
         // Example: Control actuators based on command type
     }

@@ -30,8 +30,7 @@ public class FakeCommunicationChannel implements CommunicationChannel {
   }
 
   private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
-    System.out.println("specific:");
-    System.out.println(specification);
+    System.out.println("specification: " + specification);
     if (specification == null || specification.isEmpty()) {
       throw new IllegalArgumentException("Node specification can't be empty");
     }

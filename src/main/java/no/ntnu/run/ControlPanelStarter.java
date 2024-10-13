@@ -1,9 +1,9 @@
 package no.ntnu.run;
 
-import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.FakeCommunicationChannel;
+import no.ntnu.controlpanel.SocketCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.tools.Logger;
 
@@ -53,12 +53,12 @@ public class ControlPanelStarter implements Runnable {
   public void start() {
     ControlPanelLogic logic = new ControlPanelLogic();
     this.channel = initiateCommunication(logic, fake);
-    try{
-      this.sendCommandToServer("Control panel started!");
-    }
-    catch (IOException e) {
-      System.err.println("Could not send command to the server: " + e.getMessage());
-    }
+    // try{
+    //   this.sendCommandToServer("Control panel started!");
+    // }
+    // catch (IOException e) {
+    //   System.err.println("Could not send command to the server: " + e.getMessage());
+    // }
     System.out.println("Starting control panel application");
     ControlPanelApplication controlPanelApplication = new ControlPanelApplication();
     controlPanelApplication.startApp(logic, this.channel);
@@ -86,11 +86,17 @@ public class ControlPanelStarter implements Runnable {
         logic.setCommunicationChannel(channel);
         // ((SocketCommunicationChannel) channel).askForNodes();
         channel.askForNodes();
+        // channel.spawnNode("4;3_window");
+        // channel.spawnNode("1");
+        // channel.spawnNode("1");
+        // channel.spawnNode("8;2_heater");
         return channel;
     } catch (IOException e) {
-        System.err.println("Could not establish connection to the server: " + e.getMessage());
+        System.err.println("CouldaskForNodes not establish connection to the server: " + e.getMessage());
         return null;
     }
+
+    
 
   }
 
