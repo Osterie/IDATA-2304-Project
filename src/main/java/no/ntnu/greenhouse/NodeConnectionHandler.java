@@ -57,12 +57,13 @@ public class NodeConnectionHandler implements Runnable {
 
         if (commandType.equalsIgnoreCase("GET_NODE_ID")) {
             Logger.info("Received request for node ID from server, sending response " + node.getId());
-            socketWriter.println(sender + ";" + senderID + ";" + node.getId());
+            // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
+            socketWriter.println("CONTROL_PANEL;0;" + node.getId());
         }
         else if (commandType.equalsIgnoreCase("GET_NODE")){
             Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + node.getId());
             // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
-            socketWriter.println("CONTROL_PANEL;0;" + node.getId());
+            socketWriter.println("CONTROL_PANEL;0;" + node.getId()); // TODO add sensor data and actuator data.
         }
         else{
             Logger.info("Received unknown command from server: " + command);

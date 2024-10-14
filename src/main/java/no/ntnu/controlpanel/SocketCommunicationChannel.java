@@ -44,16 +44,60 @@ public class SocketCommunicationChannel implements CommunicationChannel {
         }
     }
 
+  //   public String sendCommandToServer(String command) {
+  //     String serverResponse = "No response";
+  //     if (isConnected && socketWriter != null) {
+  //         try {
+  //             socketWriter.println(command);
+  //             Logger.info("Sent command to server: " + command);
+              
+  //             // Ensure there's no premature closing before response
+  //             if ((serverResponse = socketReader.readLine()) == null) {
+  //                 throw new IOException("Server closed connection or returned null response");
+  //             }
+  //             Logger.info("Received response from server: " + serverResponse);
+  //         } catch (IOException e) {
+  //             Logger.error("Error reading server response: " + e.getMessage());
+  //             if (e.getMessage().contains("Connection reset")) {
+  //                 Logger.error("Connection reset - retrying connection");
+  //                 reconnectAndRetry(command);
+  //             }
+  //             else if (e.getMessage().contains("connection was aborted by the software")) {
+  //                 Logger.error("Connection aborted - retrying connection");
+  //                 reconnectAndRetry(command);
+  //             }
+  //         }
+  //     } else {
+  //         Logger.error("Unable to send command, socket is not connected.");
+  //     }
+  //     return serverResponse;
+  // }
+  
+  // private void reconnectAndRetry(String command) {
+  //     try {
+  //         close();  // Ensure the old connection is properly closed
+  //         connect(socket.getInetAddress().getHostName(), socket.getPort());
+  //         Logger.info("Reconnected to server, retrying command: " + command);
+  //         sendCommandToServer(command);  // Re-attempt command after reconnect
+  //     } catch (IOException ex) {
+  //         Logger.error("Reconnection failed: " + ex.getMessage());
+  //     }
+  // }
+  
+
     public String sendCommandToServer(String command) {
+      System.out.println("Trying to send command...");
         String serverResponse = "No response";
         if (isConnected && socketWriter != null) {
             socketWriter.println(command);
             Logger.info("Sent command to server: " + command);
             try {
+                System.out.println("Trying to read response...");
                 serverResponse = socketReader.readLine();
                 Logger.info("Received response from server: " + serverResponse);
             } catch (IOException e) {
-                Logger.error("Error reading server response: " + e.getMessage() + " error type" + e.getClass());
+                Logger.error("Error reading server response: " + e.getMessage() + " error type" + e.getClass() + " error cause" + e.getCause() + " error stack trace" + e.getStackTrace() + e);
+                e.printStackTrace();
             }
         } else {
             Logger.error("Unable to send command, socket is not connected.");
@@ -104,7 +148,7 @@ public class SocketCommunicationChannel implements CommunicationChannel {
    */
     public void askForNodes() {
         // String nodes = sendCommandToServer("GREENHOUSE;ALL;GET_NODE_ID");
-        String nodes = "1";
+        String nodes = "1;2;3";
         for (String node : nodes.split(";")) {
           int nodeId;
             try{
