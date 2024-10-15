@@ -26,10 +26,12 @@ public class WholeApplicationRunner {
         Thread serverThread = new Thread(proxyServer);
         serverThread.start();
 
-        Thread greenhouseThread = new Thread(new GreenhouseApplication());
-        greenhouseThread.start();
-        // GreenhouseApplication greenhouseApplication = new GreenhouseApplication();
-        // greenhouseApplication.run();
+
+        // Thread greenhouseThread = new Thread(new GreenhouseApplication());
+        // greenhouseThread.start();
+        
+        GreenhouseApplication greenhouseApplication = new GreenhouseApplication();
+        greenhouseApplication.run();
         
         // Thread controlPanelThread = new Thread(new ControlPanelStarter(false));
         // controlPanelThread.start();

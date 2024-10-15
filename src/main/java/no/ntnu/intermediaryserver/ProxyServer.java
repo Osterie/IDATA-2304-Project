@@ -24,23 +24,16 @@ public class ProxyServer implements Runnable {
 
     // Start the server to listen for client connections
     public void startServer() {
-        listeningSocket = openListeningSocket(PORT_NUMBER);
+        listeningSocket = this.openListeningSocket(PORT_NUMBER);
         if (listeningSocket != null) {
             this.isTcpServerRunning = true;
             Logger.info("Server started on port " + PORT_NUMBER);
-            try {
-                while (isTcpServerRunning) {
-                    Socket clientSocket = acceptNextClientConnection();
-                    if (clientSocket != null) {
-                        try {
-                            new Thread(new ClientHandler(clientSocket, this)).start();
-                        } catch (Exception e) {
-                            Logger.error("Error starting ClientHandler thread: " + e.getMessage());
-                        }
-                    }
+            
+            while (isTcpServerRunning) {
+                Socket clientSocket = acceptNextClientConnection();
+                if (clientSocket != null) {
+                    new Thread(new ClientHandler(clientSocket, this)).start();
                 }
-            } finally {
-                stopServer(); // Ensure resources are closed if the loop exits
             }
         }
     }
@@ -92,14 +85,13 @@ public class ProxyServer implements Runnable {
     }
 
     private Socket acceptNextClientConnection() {
+        Socket clientSocket = null;
         try {
-            if (isTcpServerRunning) {
-                return listeningSocket.accept();
-            }
+          clientSocket = listeningSocket.accept();
         } catch (IOException e) {
-            Logger.error("Could not accept client connection: " + e.getMessage());
+          System.err.println("Could not accept client connection: " + e.getMessage());
         }
-        return null;
+        return clientSocket;
     }
 
     private ServerSocket openListeningSocket(int port) {
