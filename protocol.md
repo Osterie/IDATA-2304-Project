@@ -52,6 +52,13 @@ them here.
 TODO - describe the general format of all messages. Then describe specific format for each 
 message type in your protocol.
 
+TODO
+What we need
+- Who is the receiver (GREENHOUSE or CONTROL_PANEL)
+
+SRC;SRC_ID;DST;DST_ID;COMMAND
+GREENHOUSE;ALL;GET_NODE_ID
+
 ### Error messages
 
 TODO - describe the possible error messages that nodes can send in your system.
