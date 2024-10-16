@@ -3,11 +3,11 @@ package no.ntnu.run;
 import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.FakeCommunicationChannel;
-import no.ntnu.controlpanel.SocketCommunicationChannel;
+import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.tools.Logger;
 
-import static no.ntnu.intermediaryserver.ProxyServer.PORT_NUMBER;
+import static no.ntnu.intermediaryserver.IntermediaryServer.PORT_NUMBER;
 
 import java.io.IOException;
 
@@ -40,7 +40,7 @@ public class ControlPanelStarter implements Runnable {
    *             Apply the changes.
    */
   public static void main(String[] args) {
-    boolean fake = true;// make it true to test in fake mode
+    boolean fake = true; // make it true to test in fake mode
     if (args.length == 1 && "fake".equals(args[0])) {
       fake = true;
       Logger.info("Using FAKE events");
@@ -52,52 +52,39 @@ public class ControlPanelStarter implements Runnable {
 
   public void start() {
     ControlPanelLogic logic = new ControlPanelLogic();
-    this.channel = initiateCommunication(logic, fake);
-    // try{
-    //   this.sendCommandToServer("Control panel started!");
-    // }
-    // catch (IOException e) {
-    //   System.err.println("Could not send command to the server: " + e.getMessage());
-    // }
-    System.out.println("Starting control panel application");
+    this.initiateCommunication(logic, fake);
+
+    Logger.info("Starting control panel application");
     ControlPanelApplication controlPanelApplication = new ControlPanelApplication();
     controlPanelApplication.startApp(logic, this.channel);
+
     // This code is reached only after the GUI-window is closed
     Logger.info("Exiting the control panel application");
     stopCommunication();
   }
 
-  private CommunicationChannel initiateCommunication(ControlPanelLogic logic, boolean fake) {
-    CommunicationChannel channel;
+  private void initiateCommunication(ControlPanelLogic logic, boolean fake) {
     if (fake) {
-      System.out.println("initiating fake spawner");
-      channel = initiateFakeSpawner(logic);
-    } else {
-      System.out.println("initiating socket communication");
-      channel = initiateSocketCommunication(logic);
+      Logger.info("initiating fake spawner");
+      this.channel = initiateFakeSpawner(logic);
+    } 
+    else {
+      Logger.info("initiating socket communication");
+      this.channel = initiateSocketCommunication(logic);
     }
-    return channel;
   }
 
 
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
     try {
-        SocketCommunicationChannel channel = new SocketCommunicationChannel(logic, "localhost", PORT_NUMBER);
+        ControlPanelCommunicationChannel channel = new ControlPanelCommunicationChannel(logic, "localhost", PORT_NUMBER);
         logic.setCommunicationChannel(channel);
-        // ((SocketCommunicationChannel) channel).askForNodes();
         channel.askForNodes();
-        // channel.spawnNode("4;3_window");
-        // channel.spawnNode("1");
-        // channel.spawnNode("1");
-        // channel.spawnNode("8;2_heater");
         return channel;
     } catch (IOException e) {
         System.err.println("CouldaskForNodes not establish connection to the server: " + e.getMessage());
         return null;
     }
-
-    
-
   }
 
   private CommunicationChannel initiateFakeSpawner(ControlPanelLogic logic) {

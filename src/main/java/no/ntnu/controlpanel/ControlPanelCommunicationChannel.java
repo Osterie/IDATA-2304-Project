@@ -17,14 +17,14 @@ import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
 
-public class SocketCommunicationChannel implements CommunicationChannel {
+public class ControlPanelCommunicationChannel implements CommunicationChannel {
     private final ControlPanelLogic logic;
     private Socket socket;
     private BufferedReader socketReader;
     private PrintWriter socketWriter;
     private boolean isOn;
 
-    public SocketCommunicationChannel(ControlPanelLogic logic, String host, int port) throws IOException {
+    public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) throws IOException {
         this.logic = logic;
         start(host, port);
     }
@@ -39,21 +39,21 @@ public class SocketCommunicationChannel implements CommunicationChannel {
             // Send initial identifier to server
             String identifierMessage = "CONTROL_PANEL;0";
             socketWriter.println(identifierMessage);
-            System.out.println("connecting control panel 0 with identifier: " + identifierMessage);
+            Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
             Logger.info("Socket connection established with " + host + ":" + port);
         } catch (IOException e) {
-          System.err.println("Could not establish connection to the server: " + e.getMessage());
+          Logger.error("Could not establish connection to the server: " + e.getMessage());
         }
     }
 
     public String sendCommandToServer(String command) {
       String serverResponse = "No response";
       if (isOn && socketWriter != null) {
-          System.out.println("Trying to send command...");
+          Logger.info("Trying to send command...");
           socketWriter.println(command);
           Logger.info("Sent command to server: " + command);
           try {
-              System.out.println("Trying to read response...");
+              Logger.info("Trying to read response...");
               serverResponse = socketReader.readLine();
               Logger.info("Received response from server: " + serverResponse);
           } catch (IOException e) {
@@ -108,22 +108,19 @@ public class SocketCommunicationChannel implements CommunicationChannel {
    *                      [actuator_count_M] underscore [actuator_type_M]
    */
     public void askForNodes() {
-        // String nodes = sendCommandToServer("GREENHOUSE;ALL;GET_NODE_ID");
-        String nodes = "1;2;3";
+        String nodes = sendCommandToServer("GREENHOUSE;ALL;GET_NODE_ID");
+        Logger.info("Received nodes: " + nodes);
         for (String node : nodes.split(";")) {
           int nodeId;
             try{
               nodeId = parseIntegerOrError(node, "Invalid node ID: " + node);
             }
             catch (NumberFormatException e) {
-              System.err.println("Could not parse node ID: " + e.getMessage());
+              Logger.error("Could not parse node ID: " + e.getMessage());
               continue;
             }
             this.spawnNode(node, 5);
         }
-        // SensorActuatorNodeInfo nodeInfo = createSensorNodeInfoFrom(specification);
-        // System.out.println("Spawning node " + specification);
-        // logic.onNodeAdded(nodeInfo);
     }
 
     public void spawnNode(String nodeId, int START_DELAY) {
@@ -135,16 +132,14 @@ public class SocketCommunicationChannel implements CommunicationChannel {
         timer.schedule(new TimerTask() {
           @Override
           public void run() {
-            System.out.println("Spawning node " + specification);
+            Logger.info("Spawning node " + specification);
             logic.onNodeAdded(nodeInfo);
           }
         }, START_DELAY * 1000L);
-        // logic.onNodeAdded(nodeInfo);
-        System.out.println("Spawning node " + specification);
     }
 
     private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
-        System.out.println("specification: " + specification);
+        Logger.info("specification: " + specification);
         if (specification == null || specification.isEmpty()) {
           throw new IllegalArgumentException("Node specification can't be empty");
         }

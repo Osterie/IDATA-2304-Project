@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import no.ntnu.tools.Logger;
+
 
 public class NodeHandler implements Runnable {
     private final SensorActuatorNode node;
@@ -24,13 +26,13 @@ public class NodeHandler implements Runnable {
                 // TODO get data.
                 // String sensorData = "Data";  // Get sensor data from the node
                 // socketWriter.println(sensorData);          // Send the sensor data to the intermediary server
-                // System.out.println("Sensor data sent: " + sensorData);
+                // Logger.info("Sensor data sent: " + sensorData);
 
                 // Check if there are control commands to execute
                 if (socketReader.ready()) {
                     String controlCommand = socketReader.readLine();  // Read command from the server
                     if (controlCommand != null) {
-                        System.out.println("Received command for node: " + controlCommand);
+                        Logger.info("Received command for node: " + controlCommand);
                         handleControlCommand(controlCommand);  // Handle the control command (fan, heater, etc.)
                     }
                 }
@@ -48,10 +50,10 @@ public class NodeHandler implements Runnable {
         // Process the control command, e.g., turn on/off fans, heaters, etc.
         if (command.contains("TURN_ON_FAN")) {
             // node.turnOnFan();
-            System.out.println("Fan turned on for node " + node.getId());
+            Logger.info("Fan turned on for node " + node.getId());
         } else if (command.contains("TURN_OFF_FAN")) {
             // node.turnOffFan();
-            System.out.println("Fan turned off for node " + node.getId());
+            Logger.info("Fan turned off for node " + node.getId());
         }
         // Add more logic for other commands (heaters, windows, etc.)
     }

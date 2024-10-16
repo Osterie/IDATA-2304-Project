@@ -24,7 +24,7 @@ public class NodeConnectionHandler implements Runnable {
         // Send initial identifier to server
         String identifierMessage = "GREENHOUSE;" + node.getId();
         socketWriter.println(identifierMessage);
-        System.out.println("connecting node " + node.getId() + " with identifier: " + identifierMessage);
+        Logger.info("connecting node " + node.getId() + " with identifier: " + identifierMessage);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class NodeConnectionHandler implements Runnable {
             while (!socket.isClosed()) {
                 String serverMessage = socketReader.readLine();
                 if (serverMessage != null) {
-                    System.out.println("Received for node " + node.getId() + ": " + serverMessage);
+                    Logger.info("Received for node " + node.getId() + ": " + serverMessage);
                     handleServerCommand(serverMessage);
                 }
             }
@@ -49,7 +49,7 @@ public class NodeConnectionHandler implements Runnable {
     }
 
     private void handleServerCommand(String command) {
-        System.out.println("Received command for node! " + node.getId() + ": " + command);
+        Logger.info("Received command for node! " + node.getId() + ": " + command);
         String[] commandParts = command.split(";");
         String sender = commandParts[0];
         String senderID = commandParts[1];

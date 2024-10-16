@@ -5,17 +5,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.tools.Logger;
 
-import static no.ntnu.intermediaryserver.ProxyServer.PORT_NUMBER;
+import static no.ntnu.intermediaryserver.IntermediaryServer.PORT_NUMBER;
 
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 
 /**
@@ -150,10 +148,10 @@ public class GreenhouseSimulator {
    */
   private void sendCommandToServer(String command) throws IOException {
 
-      System.out.println("Sending command: " + command.toString());
+      Logger.info("Sending command: " + command.toString());
       socketWriter.println(command);
       String serverResponse = socketReader.readLine();
-      System.out.println("  >>> Response: " + serverResponse);
+      Logger.info("  >>> Response: " + serverResponse);
   }
 
 
@@ -187,7 +185,7 @@ public class GreenhouseSimulator {
   //       // Receive control commands from the server
   //       String controlCommand;
   //       while ((controlCommand = socketReader.readLine()) != null) {
-  //           System.out.println("Received command: " + controlCommand);
+  //           Logger.info("Received command: " + controlCommand);
   //           // Process the control command (e.g., turn on/off fans)
   //       }
 
@@ -225,14 +223,14 @@ public class GreenhouseSimulator {
 
   private void sendResponse(String response) {
     // String serializedResponse = this.messageSerializer.toString(response);
-    // System.out.println(serializedResponse);
+    // Logger.info(serializedResponse);
     this.socketWriter.println(response);
   } 
 
 
   private String handleServerRequest(String request) {
 
-    System.out.println("Hanlding request: " + request);
+    Logger.info("Hanlding request: " + request);
     return "OK";
 
     // Example request: "GET_SENSOR_DATA nodeId=1"
@@ -315,7 +313,7 @@ private void processControlCommand(String command) {
         for (SensorActuatorNode node : nodes.values()) {
             node.stop();
         }
-        System.out.println("Greenhouse simulator stopped.");
+        Logger.info("Greenhouse simulator stopped.");
         // TODO - here you stop the TCP/UDP communication
     }
   }

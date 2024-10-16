@@ -1,12 +1,5 @@
 package no.ntnu.controlpanel;
 
-import static no.ntnu.intermediaryserver.ProxyServer.PORT_NUMBER;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,16 +27,6 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
 
   private CommunicationChannel communicationChannel;
   private CommunicationChannelListener communicationChannelListener;
-
-  private static final int DEFAULT_PORT_NUMBER = PORT_NUMBER;
-  private int currentPortNumber = DEFAULT_PORT_NUMBER;
-
-  private final String DEFAULT_HOST = "localhost";
-  private String currentHost = DEFAULT_HOST;
-
-  public String getRemoteControlString() {
-    return this.currentHost + ":" + this.currentPortNumber;
-  }
 
   /**
    * Set the channel over which control commands will be sent to sensor/actuator nodes.

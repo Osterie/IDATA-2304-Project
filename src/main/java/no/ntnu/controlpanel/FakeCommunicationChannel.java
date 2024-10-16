@@ -30,7 +30,7 @@ public class FakeCommunicationChannel implements CommunicationChannel {
   }
 
   private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
-    System.out.println("specification: " + specification);
+    Logger.info("specification: " + specification);
     if (specification == null || specification.isEmpty()) {
       throw new IllegalArgumentException("Node specification can't be empty");
     }
@@ -84,7 +84,7 @@ public class FakeCommunicationChannel implements CommunicationChannel {
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
-        System.out.println("Spawning node " + specification);
+        Logger.info("Spawning node " + specification);
         logic.onNodeAdded(nodeInfo);
       }
     }, delay * 1000L);
