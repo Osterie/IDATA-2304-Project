@@ -8,7 +8,7 @@ import no.ntnu.tools.Logger;
  */
 public class GreenhouseGuiStarter {
   /**
-   * Entrypoint gor the Greenhouse GUI application.
+   * Entrypoint for the Greenhouse GUI application.
    *
    * @param args Command line arguments, only the first one of them used: when it is "fake",
    *             emulate fake events, when it is either something else or not present,
@@ -20,6 +20,7 @@ public class GreenhouseGuiStarter {
       fake = true;
       Logger.info("Using FAKE events");
     }
+    fake = false;
     GreenhouseApplication.startApp(fake);
   }
 }

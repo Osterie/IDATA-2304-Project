@@ -18,7 +18,7 @@ public class Logger {
    * @param message The message to log. A newline is appended automatically.
    */
   public static void info(String message) {
-    System.out.println(message);
+    System.err.println(message);
   }
 
   /**

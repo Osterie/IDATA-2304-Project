@@ -2,6 +2,7 @@ package no.ntnu.controlpanel;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.listeners.common.ActuatorListener;
@@ -20,7 +21,8 @@ import no.ntnu.tools.Logger;
  * though you may have no real control-panel logic in your projects.
  */
 public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListener,
-    CommunicationChannelListener {
+    CommunicationChannelListener  {
+
   private final List<GreenhouseEventListener> listeners = new LinkedList<>();
 
   private CommunicationChannel communicationChannel;
@@ -35,6 +37,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     this.communicationChannel = communicationChannel;
   }
 
+  
   /**
    * Set listener which will get notified when communication channel is closed.
    *

@@ -30,6 +30,7 @@ public class FakeCommunicationChannel implements CommunicationChannel {
   }
 
   private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
+    Logger.info("specification: " + specification);
     if (specification == null || specification.isEmpty()) {
       throw new IllegalArgumentException("Node specification can't be empty");
     }
@@ -83,7 +84,7 @@ public class FakeCommunicationChannel implements CommunicationChannel {
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
-        System.out.println("Spawning node " + specification);
+        Logger.info("Spawning node " + specification);
         logic.onNodeAdded(nodeInfo);
       }
     }, delay * 1000L);
@@ -190,5 +191,17 @@ public class FakeCommunicationChannel implements CommunicationChannel {
   public boolean open() {
     Logger.info("open() does nothing for the fake spawner, all the timers are running already...");
     return true;
+  }
+
+  @Override
+  public boolean close(){
+    Logger.info("close() does nothing for the fake spawner, all the timers are running already...");
+    return true;
+  }
+
+  @Override
+  public String sendCommandToServer(String command) {
+    Logger.info("Sending command to server: " + command);
+    return command;
   }
 }

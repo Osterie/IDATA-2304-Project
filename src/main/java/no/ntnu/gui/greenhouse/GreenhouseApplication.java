@@ -13,7 +13,7 @@ import no.ntnu.tools.Logger;
 /**
  * Run a greenhouse simulation with a graphical user interface (GUI), with JavaFX.
  */
-public class GreenhouseApplication extends Application implements NodeStateListener {
+public class GreenhouseApplication extends Application implements NodeStateListener, Runnable {
   private static GreenhouseSimulator simulator;
   private final Map<SensorActuatorNode, NodeGuiWindow> nodeWindows = new HashMap<>();
   private Stage mainStage;
@@ -31,6 +31,11 @@ public class GreenhouseApplication extends Application implements NodeStateListe
     simulator.subscribeToLifecycleUpdates(this);
     mainStage.setOnCloseRequest(event -> closeApplication());
     simulator.start();
+  }
+
+  @Override
+  public void run() {
+    startApp(false);
   }
 
   private void closeApplication() {
