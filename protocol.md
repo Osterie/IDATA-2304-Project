@@ -55,9 +55,12 @@ message type in your protocol.
 TODO
 What we need
 - Who is the receiver (GREENHOUSE or CONTROL_PANEL)
+- ID of the receiver
+- Command
 
-SRC;SRC_ID;DST;DST_ID;COMMAND
-GREENHOUSE;ALL;GET_NODE_ID
+Result:
+- DST;DST_ID;COMMAND
+- GREENHOUSE;ALL;GET_NODE_ID
 
 ### Error messages
 
