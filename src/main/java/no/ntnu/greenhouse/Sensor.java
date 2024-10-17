@@ -30,6 +30,22 @@ public class Sensor {
     ensureValueBoundsAndPrecision(current);
   }
 
+  /**
+   * Create a sensor.
+   *
+   * @param type    The type of the sensor. Examples: "temperature", "humidity"
+   * @param min     Minimum allowed value
+   * @param max     Maximum allowed value
+   * @param current The current (starting) value of the sensor
+   * @param unit    The measurement unit. Examples: "%", "C", "lux"
+   */
+  public Sensor(String type, double min, double max, double current, String unit, BufferedImage image) {
+    this.reading = createSensorReading(type, current, unit, image);
+    this.min = min;
+    this.max = max;
+    ensureValueBoundsAndPrecision(current);
+  }
+
   public String getType() {
     return reading.getType();
   }
