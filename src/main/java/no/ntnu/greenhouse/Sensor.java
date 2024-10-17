@@ -38,6 +38,7 @@ public class Sensor {
    * @param max     Maximum allowed value
    * @param current The current (starting) value of the sensor
    * @param unit    The measurement unit. Examples: "%", "C", "lux"
+   * @param image   The image data for the sensor
    */
   public Sensor(String type, double min, double max, double current, String unit, BufferedImage image) {
     this.reading = createSensorReading(type, current, unit, image);
