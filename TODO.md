@@ -33,12 +33,15 @@ would be sent over the network?
 
 # General TODO
 
+- [ ] Adrian? Handling connection errors and messaging errors properly.
 - [x] ADRIAN. gitignore fil.
 - [ ] Implementere Message og Command interfacer/klasser
 - [ ] Lage ulike Message/Command underklasser
 - [ ] Different sensor types must be supported. The different types are not fixed. I.e., your protocol should allow adding new sensor types when needed. 
-- [ ] Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
+- [ ] PROTOKOLL (IKKE GUI) Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
 Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
+- [ ] Commands to turn on/off all actuators for a node. 
+
 
 - [x] ADRIAN. Lage klasse som applikasjonen kan kjøres fra.
 
@@ -90,6 +93,14 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 
 ## COMMUNICATION
 
+- [ ] what to do when creating a new control panel?
+    - [ ] ADRIAN Connect to server
+    - [ ] ADRIAN send unique identifier to server so server knows id of control panel (and that it is a control panel)
+    - [ ] ADRIAN Ask server for nodes
+    - [ ] ADRIAN Control panel then asks for all their information so that it can show it, does this periodically.
+    - [ ] ADRIAN How does control panel know what info to ask for?
+    - [ ] ADRIAN How does control panel know what to do with the info it receives?
+
 - [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. koble til multiple control panels til intermediary server.
 - [x] ADRIAN. lage kommunikasjons klasse for control panel
@@ -102,6 +113,8 @@ For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuat
 
 - [ ] Visualize charts.
 - [ ] Visualize actuator status for each sensor node. Simple, textual visualization is enough.
+- [ ] GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
+Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
 
 # EXTRA WORK
 

@@ -37,7 +37,7 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
             this.socketWriter = new PrintWriter(socket.getOutputStream(), true);
             this.isOn = true;
             // Send initial identifier to server
-            String identifierMessage = "CONTROL_PANEL;0";
+            String identifierMessage = "CONTROL_PANEL;0"; // TODO generate unique identifier, or let server do it?
             socketWriter.println(identifierMessage);
             Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
             Logger.info("Socket connection established with " + host + ":" + port);
