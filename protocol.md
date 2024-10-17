@@ -54,9 +54,14 @@ message type in your protocol.
 
 TODO
 What we need
+Header.
 - Who is the receiver (GREENHOUSE or CONTROL_PANEL)
 - ID of the receiver
+- Data type
+
+BODY
 - Command
+
 
 Result:
 - DST;DST_ID;COMMAND
