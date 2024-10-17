@@ -8,8 +8,8 @@ For each of the design choices provide a short justification: why did you choose
 
 - [ ] 1. A short introduction: "This document describes _ _"
 - [ ] 2. Terminology: a list of special terms you use
-- [ ] 3. The underlying transport you use (TCP or UDP).
-- [ ] 4. The used port number.
+- [x] 3. The underlying transport you use (TCP or UDP).
+- [x] 4. The used port number.
 - [ ] 5. The overall architecture:
 - [ ] • Who are the actors (nodes) in your solution?
 - [ ] • Who are the clients, who is/are the server(s)?
@@ -40,7 +40,7 @@ would be sent over the network?
 - [ ] Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
 Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
 
-- [ ] ADRIAN. Lage klasse som applikasjonen kan kjøres fra.
+- [x] ADRIAN. Lage klasse som applikasjonen kan kjøres fra.
 
 # Test classes
 
@@ -54,8 +54,8 @@ Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av
 # GREENHOUSE
 
 - [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
-- [ ] ADRIAN lage kommunikasjons klasse for greenhouse nodes.
-- [ ] ADRIAN. Koble til multiple greenhouse nodes til intermediary server.
+- [x] ADRIAN lage kommunikasjons klasse for greenhouse nodes.
+- [x] ADRIAN. Koble til multiple greenhouse nodes til intermediary server.
 
 Each sensor-node can do the following:
 - [ ] Support different sensors. For example, one node may report humidity and light, while the other node reports only temperature
@@ -73,13 +73,13 @@ to introduce the addressing of the sensors (and actuators). For example, tempera
 # INTERMEDIARY SERVER
 
 - [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
-- [ ] ADRIAN. Lage en intermediary server som kan brukes for å tilrettelegge kommunikasjon mellom greenhouse nodes og control panel.
-- [ ] ADRIAN. Ta i mot klienter som vil koble seg til.
-- [ ] ADRIAN. Motta meldinger fra klienter.
-- [ ] ADRIAN. Identifisere klienter.
+- [x] ADRIAN. Lage en intermediary server som kan brukes for å tilrettelegge kommunikasjon mellom greenhouse nodes og control panel.
+- [x] ADRIAN. Ta i mot klienter som vil koble seg til.
+- [x] ADRIAN. Motta meldinger fra klienter.
+- [x] ADRIAN. Identifisere klienter.
 - [ ] ADRIAN. Videre sende melding fra en klient til en/flere andre klienter.
-- [ ] ADRIAN. Huske hvilke klienter som er koblet til.
-- [ ] ADRIAN. Etablere kommunikasjon mellom intermediary server og control panel og greenhouse nodes.
+- [x] ADRIAN. Huske hvilke klienter som er koblet til.
+- [x] ADRIAN. Etablere kommunikasjon mellom intermediary server og control panel og greenhouse nodes.
 
 # CONTROL PANEL
 
@@ -91,8 +91,8 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 ## COMMUNICATION
 
 - [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
-- [ ] ADRIAN. koble til multiple control panels til intermediary server.
-- [ ] ADRIAN. lage kommunikasjons klasse for control panel
+- [x] ADRIAN. koble til multiple control panels til intermediary server.
+- [x] ADRIAN. lage kommunikasjons klasse for control panel
 - [ ] ADRIAN. Spør hele tiden om informasjon for noden som vises i control panel GUI.
 - [ ] ADRIAN. Send kommandoer til sensor nodes. For eksempel, spør om hvilke noder som finnes, spør om data, skru på en vifte, skru av en vifte, skru på en varmeovn, skru av en varmeovn, åpne et vindu, lukke et vindu, osv.
 - [ ] ADRIAN. Receive actuator status data from any sensor node. For example, is a window open or closed, is the fan on or off? 
@@ -105,8 +105,13 @@ For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuat
 
 # EXTRA WORK
 
-- [ ] 1. Resilience in case of network outages. The solution functions when the network connection is
+- [ ] ADRIAN. 1. Resilience in case of network outages. The solution functions when the network connection is
 temporarily lost. This means buffering data, retransmissions, reconnecting, etc
+    - [ ] When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
+    - [ ] If the connection is lost, try to reconnect. If it fails, show an error message to the user.
+    - [ ] If a message is not received, try to receive it again. If it fails, show an error message to the user.
+    - [ ] Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
+
 
 - [ ] 2. Data encryption. You can think of different methods of integrating security into your solution,
 either using public-key cryptography or other methods.
