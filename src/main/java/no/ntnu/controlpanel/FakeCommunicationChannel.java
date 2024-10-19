@@ -199,9 +199,9 @@ public class FakeCommunicationChannel implements CommunicationChannel {
     return true;
   }
 
-  @Override
-  public String sendCommandToServer(String command) {
-    Logger.info("Sending command to server: " + command);
-    return command;
-  }
+  // @Override
+  // public String sendCommandToServer(String command) {
+  //   Logger.info("Sending command to server: " + command);
+  //   return command;
+  // }
 }

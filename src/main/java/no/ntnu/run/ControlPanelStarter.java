@@ -120,13 +120,13 @@ public class ControlPanelStarter implements Runnable {
     this.channel.close();
   }
 
-  /**
-   * Send a command to the server.
-   * 
-   * @param command the command to send.
-   * @throws IOException if an I/O error occurs when sending the command.
-   */
-  private void sendCommandToServer(String command) throws IOException {
-    this.channel.sendCommandToServer(command);
-  }
+  // /**
+  //  * Send a command to the server.
+  //  * 
+  //  * @param command the command to send.
+  //  * @throws IOException if an I/O error occurs when sending the command.
+  //  */
+  // private void sendCommandToServer(String command) throws IOException {
+  //   this.channel.sendCommandToServerSin(command);
+  // }
 }

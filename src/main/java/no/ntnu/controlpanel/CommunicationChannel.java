@@ -23,6 +23,4 @@ public interface CommunicationChannel {
   boolean open();
 
   boolean close();
-
-  String sendCommandToServer(String command);
 }

@@ -3,28 +3,27 @@
 ADRIAN
 
 ## **Sprint Overview**
-- **Sprint Number:** [e.g., Sprint 5]
-- **Duration:** [14.10.2024 - 28.10.2024]
-- **Sprint Goal:** [Briefly summarize the main goal of the sprint]
-- **Team Members:** [List the team members participating in the sprint]
-
-
-
-
-14.10.2024 - 28.10.2024
-
-
+- **Sprint Number:** Sprint 2
+- **Duration:** 14.10.2024 - 28.10.2024
+- **Sprint Goal:** Create a comprehensive TODO list and distribute tasks among team members, complete some TODOs
+- **Team Members:**:
+    - Tobias Olsen Reiakvam - TobyJavascript
+    - Adrian Gjøsund Bjørge - Osterie
+    - Daniel Selbervik - PizzaMachine
+    - Sebastian Olsen - Sebastian Olsen
+    - Knut Olav Leknes - Knut Olav
 
 ---
 
 ## **Sprint Summary**
 - **Total Planned Work:** 
-  - Planned Story Points: [Total]
-  - Planned Stories/Tasks: [Number of planned stories/tasks]
+  - Create a comprehensive TODO list and distribute tasks among team members.
+  - Implement Message and Command interfaces/classes.
+  - Create different Message/Command subclasses.
+  - Send messages between intermediary server and clients.
 
 - **Completed Work:**
-  - Completed Story Points: [Total]
-  - Completed Stories/Tasks: [Number of completed stories/tasks]
+  - Create a comprehensive TODO list and distribute tasks among team members.
 
 - **Carried Over Work:**
   - Unfinished Story Points: [Total]
@@ -33,11 +32,11 @@ ADRIAN
 ---
 
 ## **Sprint Progress**
-| Story/Task | Assignee | Status (Completed, In Progress, Blocked) | Story Points | Comments |
-|------------|----------|------------------------------------------|--------------|----------|
-| Story 1    | [Name]   | [Status]                                 | [Points]     | [Notes]  |
-| Story 2    | [Name]   | [Status]                                 | [Points]     | [Notes]  |
-| Story 3    | [Name]   | [Status]                                 | [Points]     | [Notes]  |
+| Task   | Assignee | Status (Completed, In Progress, Blocked) |
+|--------------|----------|------------------------------------------|
+| Create TODOs | [Adrian] | [Completed]                              |
+| Story 2      | [Name]   | [Status]                                 |
+| Story 3      | [Name]   | [Status]                                 |
 
 ---
 

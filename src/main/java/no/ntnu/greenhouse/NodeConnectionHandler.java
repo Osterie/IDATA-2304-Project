@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import no.ntnu.Clients;
 import no.ntnu.tools.Logger;
 
 public class NodeConnectionHandler implements Runnable {
@@ -58,12 +59,12 @@ public class NodeConnectionHandler implements Runnable {
         if (commandType.equalsIgnoreCase("GET_NODE_ID")) {
             Logger.info("Received request for node ID from server, sending response " + node.getId());
             // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
-            socketWriter.println("CONTROL_PANEL;0;" + node.getId());
+            socketWriter.println(Clients.CONTROL_PANEL + ";0;" + node.getId()); // TODO change the id. (from 0)
         }
         else if (commandType.equalsIgnoreCase("GET_NODE")){
             Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + node.getId());
             // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
-            socketWriter.println("CONTROL_PANEL;0;" + node.getId()); // TODO add sensor data and actuator data.
+            socketWriter.println(Clients.CONTROL_PANEL + ";0;" + node.getId()); // TODO add sensor data and actuator data.
         }
         else{
             Logger.info("Received unknown command from server: " + command);
