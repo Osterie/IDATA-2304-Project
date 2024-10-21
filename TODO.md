@@ -37,8 +37,8 @@ the control-panel node?
 what if a message in an unexpected format is received? Is it ignored, or does the recipient send
 a reply with an error code?
 - [ ] 11. DANIEL Describe a realistic scenario: what would happen from user perspective and what messages would be sent over the network?
-- [ ] 12. TOBIAS. The reliability mechanisms in your protocol (handling of network errors), if you have any
-- [ ] 13. DANIEL. The security mechanisms in your protocol, if you have any
+- [x] 12. TOBIAS. The reliability mechanisms in your protocol (handling of network errors), if you have any
+- [x] 13. TOBIAS (Tidligere daniel, men var lett å sprive om begge). The security mechanisms in your protocol, if you have any
 
 # General TODO
 
@@ -141,7 +141,7 @@ temporarily lost. This means buffering data, retransmissions, reconnecting, etc
     - [ ] Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
 
 
-- [ ] TOBIAS. 2. Data encryption. You can think of different methods of integrating security into your solution,
+- [x] TOBIAS. 2. Data encryption. You can think of different methods of integrating security into your solution,
 either using public-key cryptography or other methods.
 
 - [ ] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line
