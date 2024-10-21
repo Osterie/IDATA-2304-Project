@@ -109,9 +109,9 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 ## COMMUNICATION
 
 - [ ] what to do when creating a new control panel?
-    - [ ] ADRIAN Connect to server
-    - [ ] ADRIAN send unique identifier to server so server knows id of control panel (and that it is a control panel)
-    - [ ] ADRIAN Ask server for nodes
+    - [X] ADRIAN Connect to server
+    - [X] ADRIAN send unique identifier to server so server knows id of control panel (and that it is a control panel)
+    - [X] ADRIAN Ask server for nodes
     - [ ] ADRIAN Control panel then asks for all their information so that it can show it, does this periodically.
     - [ ] ADRIAN How does control panel know what info to ask for?
     - [ ] ADRIAN How does control panel know what to do with the info it receives?

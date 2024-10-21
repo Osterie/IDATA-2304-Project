@@ -19,203 +19,196 @@ import no.ntnu.greenhouse.SensorReading;
 import no.ntnu.tools.Logger;
 
 public class ControlPanelCommunicationChannel implements CommunicationChannel {
-    private final ControlPanelLogic logic;
-    private Socket socket;
-    private BufferedReader socketReader;
-    private PrintWriter socketWriter;
-    private boolean isOn;
+  private final ControlPanelLogic logic;
+  private Socket socket;
+  private BufferedReader socketReader;
+  private PrintWriter socketWriter;
+  private boolean isOn;
 
-    public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) throws IOException {
-        this.logic = logic;
-        start(host, port);
+  public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) throws IOException {
+    this.logic = logic;
+    this.start(host, port);
+    this.establishConnectionWithServer();
+  }
+
+  private void start(String host, int port) throws IOException {
+    try {
+      this.socket = new Socket(host, port);
+      this.socket.setKeepAlive(true);
+      this.socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      this.socketWriter = new PrintWriter(socket.getOutputStream(), true);
+      this.isOn = true;
+      Logger.info("Socket connection established with " + host + ":" + port);
+
+    } catch (IOException e) {
+      Logger.error("Could not establish connection to the server: " + e.getMessage());
     }
+  }
 
-    private void start(String host, int port) throws IOException {
-        try {
-            this.socket = new Socket(host, port);
-            this.socket.setKeepAlive(true);
-            this.socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.socketWriter = new PrintWriter(socket.getOutputStream(), true);
-            this.isOn = true;
-            // Send initial identifier to server
-            String identifierMessage = Clients.CONTROL_PANEL.getValue() + ";0"; // TODO generate unique identifier, or let server do it?
-            socketWriter.println(identifierMessage);
-            Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
-            Logger.info("Socket connection established with " + host + ":" + port);
-        } catch (IOException e) {
-          Logger.error("Could not establish connection to the server: " + e.getMessage());
-        }
-    }
-
+  private void establishConnectionWithServer() {
+    // Send initial identifier to server
+    String identifierMessage = Clients.CONTROL_PANEL.getValue() + ";0"; // TODO generate unique identifier, or let
+                                                                        // server do it?
+    socketWriter.println(identifierMessage);
+    Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
+  }
 
   public String sendCommandToServerSingleResponse(String command) {
     String serverResponse = "No response";
     if (isOn && socketWriter != null) {
-        Logger.info("Trying to send command...");
-        socketWriter.println(command);
-        Logger.info("Sent command to server: " + command);
-        try {
-            Logger.info("Trying to read response...");
-            serverResponse = socketReader.readLine();
-            Logger.info("Received response from server: " + serverResponse);
-        } catch (IOException e) {
-            Logger.error("Error reading server response: " + e.getMessage() + " error type" + e.getClass() + " error cause" + e.getCause() + " error stack trace" + e.getStackTrace());
-            e.printStackTrace();
-        }
-      } else {
-          Logger.error("Unable to send command, socket is not connected.");
+      Logger.info("Trying to send command...");
+      socketWriter.println(command);
+      Logger.info("Sent command to server: " + command);
+      try {
+        Logger.info("Trying to read response...");
+        serverResponse = socketReader.readLine();
+        Logger.info("Received response from server: " + serverResponse);
+      } catch (IOException e) {
+        Logger.error("Error reading server response: " + e.getMessage() + " error type" + e.getClass() + " error cause"
+            + e.getCause() + " error stack trace" + e.getStackTrace());
+        e.printStackTrace();
       }
-      return serverResponse;
+    } else {
+      Logger.error("Unable to send command, socket is not connected.");
+    }
+    return serverResponse;
   }
 
   public List<String> sendCommandToServerMultipleResponses(String command) {
-      List<String> serverResponses = new LinkedList<>();
-      if (isOn && socketWriter != null) {
-          Logger.info("Trying to send command...");
-          socketWriter.println(command);
-          Logger.info("Sent command to server: " + command);
-  
-          // Start a background thread to listen for multiple responses
-          Thread responseReaderThread = new Thread(() -> {
-              try {
-                  String response;
-                  long startTime = System.currentTimeMillis();
-                  long timeout = 2000; // Timeout after 2 seconds if no response
-  
-                  while ((System.currentTimeMillis() - startTime) < timeout) {
-                      if (socketReader.ready()) {
-                          response = socketReader.readLine();
-                          if (response != null && !response.isEmpty()) {
-                              Logger.info("Received response from server: " + response);
-                              serverResponses.add(response);
-                              startTime = System.currentTimeMillis(); // Reset the timeout on each response
-                          }
-                      }
-                  }
-              } catch (IOException e) {
-                  Logger.error("Error reading server response: " + e.getMessage());
-                  e.printStackTrace();
-              }
-          });
-  
-          responseReaderThread.start();
-          try {
-              responseReaderThread.join(); // Wait for the thread to finish
-          } catch (InterruptedException e) {
-              Logger.error("Response reading interrupted: " + e.getMessage());
-          }
-  
-      } else {
-          Logger.error("Unable to send command, socket is not connected.");
-      }
-      return serverResponses;
-    }
+    List<String> serverResponses = new LinkedList<>();
+    if (isOn && socketWriter != null) {
+      Logger.info("Trying to send command...");
+      socketWriter.println(command);
+      Logger.info("Sent command to server: " + command);
 
-  
-    @Override
-    public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-        String command = "ACTUATOR_CHANGE:" + nodeId + "," + actuatorId + "," + (isOn ? "ON" : "OFF");
-        String respone = sendCommandToServerSingleResponse(command);
-    }
-
-    @Override
-    public boolean open() {
-        return isOn;
-    }
-
-    @Override
-    public boolean close() {
-
-        boolean closed = false;
-        
+      // Start a background thread to listen for multiple responses
+      Thread responseReaderThread = new Thread(() -> {
         try {
-            if (socket != null) socket.close();
-            if (socketReader != null) socketReader.close();
-            if (socketWriter != null) socketWriter.close();
-            isOn = false;
-            Logger.info("Socket connection closed.");
-            closed = true;
+          String response;
+          long startTime = System.currentTimeMillis();
+          long timeout = 2000; // Timeout after 2 seconds if no response
+
+          while ((System.currentTimeMillis() - startTime) < timeout) {
+            if (socketReader.ready()) {
+              response = socketReader.readLine();
+              if (response != null && !response.isEmpty()) {
+                Logger.info("Received response from server: " + response);
+                serverResponses.add(response);
+                startTime = System.currentTimeMillis(); // Reset the timeout on each response
+              }
+            }
+          }
         } catch (IOException e) {
-            Logger.error("Failed to close socket connection: " + e.getMessage());
+          Logger.error("Error reading server response: " + e.getMessage());
+          e.printStackTrace();
         }
-        return closed;
+      });
+
+      responseReaderThread.start();
+      try {
+        responseReaderThread.join(); // Wait for the thread to finish
+      } catch (InterruptedException e) {
+        Logger.error("Response reading interrupted: " + e.getMessage());
+      }
+
+    } else {
+      Logger.error("Unable to send command, socket is not connected.");
     }
+    return serverResponses;
+  }
 
+  @Override
+  public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
+    String command = "ACTUATOR_CHANGE:" + nodeId + "," + actuatorId + "," + (isOn ? "ON" : "OFF");
+    String respone = sendCommandToServerSingleResponse(command);
+  }
 
+  @Override
+  public boolean open() {
+    return isOn;
+  }
 
+  @Override
+  public boolean close() {
 
+    boolean closed = false;
+
+    try {
+      if (socket != null)
+        socket.close();
+      if (socketReader != null)
+        socketReader.close();
+      if (socketWriter != null)
+        socketWriter.close();
+      isOn = false;
+      Logger.info("Socket connection closed.");
+      closed = true;
+    } catch (IOException e) {
+      Logger.error("Failed to close socket connection: " + e.getMessage());
+    }
+    return closed;
+  }
 
   /**
    * Spawn a new sensor/actuator node information after a given delay.
    *
-   * @param specification A (temporary) manual configuration of the node in the following format
+   * @param specification A (temporary) manual configuration of the node in the
+   *                      following format
    *                      [nodeId] semicolon
-   *                      [actuator_count_1] underscore [actuator_type_1] space ... space
+   *                      [actuator_count_1] underscore [actuator_type_1] space
+   *                      ... space
    *                      [actuator_count_M] underscore [actuator_type_M]
    */
-    public void askForNodes() {
-        // String nodes = sendCommandToServer("GREENHOUSE;ALL;GET_NODE_ID");
-        List<String> responses = sendCommandToServerMultipleResponses("GREENHOUSE;ALL;GET_NODE_ID");
+  public void askForNodes() {
 
-        for (String response : responses) {
-            String[] parts = response.split(";");
-            String node = parts[2];
+    List<String> responses = sendCommandToServerMultipleResponses("GREENHOUSE;ALL;GET_NODE_ID");
 
-            int nodeId;
-            try {
-                nodeId = parseIntegerOrError(node, "Invalid node ID: " + node);
-            } catch (NumberFormatException e) {
-                Logger.error("Could not parse node ID: " + e.getMessage());
-                continue;
-            }
-            this.spawnNode(node, 5);
-        }
+    for (String response : responses) {
+      String[] parts = response.split(";");
+      String node = parts[2];
 
-        // Logger.info("Received nodes: " + nodes);
-        // for (String node : nodes.split(";")) {
-        //   int nodeId;
-        //     try{
-        //       nodeId = parseIntegerOrError(node, "Invalid node ID: " + node);
-        //     }
-        //     catch (NumberFormatException e) {
-        //       Logger.error("Could not parse node ID: " + e.getMessage());
-        //       continue;
-        //     }
-        //     this.spawnNode(node, 5);
-        // }
-    }
-
-    public void spawnNode(String nodeId, int START_DELAY) {
-        String specification = sendCommandToServerSingleResponse("GREENHOUSE;" + nodeId + ";GET_NODE");
-        Logger.info("Received node specification: " + specification);
-        String info = specification.split(";")[2];
-        SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(info);
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-          @Override
-          public void run() {
-            Logger.info("Spawning node " + specification);
-            logic.onNodeAdded(nodeInfo);
-          }
-        }, START_DELAY * 1000L);
-    }
-
-    private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
-        Logger.info("specification: " + specification);
-        if (specification == null || specification.isEmpty()) {
-          throw new IllegalArgumentException("Node specification can't be empty");
-        }
-        String[] parts = specification.split(";");
-        if (parts.length > 3) {
-          throw new IllegalArgumentException("Incorrect specification format");
-        }
-        int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
-        SensorActuatorNodeInfo info = new SensorActuatorNodeInfo(nodeId);
-        if (parts.length == 2) {
-          parseActuators(parts[1], info);
-        }
-        return info;
+      int nodeId;
+      try {
+        nodeId = parseIntegerOrError(node, "Invalid node ID: " + node);
+      } catch (NumberFormatException e) {
+        Logger.error("Could not parse node ID: " + e.getMessage());
+        continue;
       }
+      this.spawnNode(node, 5);
+    }
+  }
+
+  public void spawnNode(String nodeId, int START_DELAY) {
+    String specification = sendCommandToServerSingleResponse("GREENHOUSE;" + nodeId + ";GET_NODE");
+    Logger.info("Received node specification: " + specification);
+    String info = specification.split(";")[2];
+    SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(info);
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        Logger.info("Spawning node " + specification);
+        logic.onNodeAdded(nodeInfo);
+      }
+    }, START_DELAY * 1000L);
+  }
+
+  private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
+    Logger.info("specification: " + specification);
+    if (specification == null || specification.isEmpty()) {
+      throw new IllegalArgumentException("Node specification can't be empty");
+    }
+    String[] parts = specification.split(";");
+    if (parts.length > 3) {
+      throw new IllegalArgumentException("Incorrect specification format");
+    }
+    int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
+    SensorActuatorNodeInfo info = new SensorActuatorNodeInfo(nodeId);
+    if (parts.length == 2) {
+      parseActuators(parts[1], info);
+    }
+    return info;
+  }
 
   private void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info) {
     String[] parts = actuatorSpecification.split(" ");
@@ -238,8 +231,6 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
       info.addActuator(actuator);
     }
   }
-
-
 
   /**
    * Advertise new sensor readings.
@@ -319,7 +310,8 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
    * @param nodeId     ID of the node to which the actuator is attached
    * @param actuatorId ID of the actuator.
    * @param on         When true, actuator is on; off when false.
-   * @param delay      The delay in seconds after which the advertisement will be generated
+   * @param delay      The delay in seconds after which the advertisement will be
+   *                   generated
    */
   public void advertiseActuatorState(int nodeId, int actuatorId, boolean on, int delay) {
     Timer timer = new Timer();
