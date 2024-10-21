@@ -38,13 +38,13 @@ what if a message in an unexpected format is received? Is it ignored, or does th
 a reply with an error code?
 - [ ] 11. DANIEL Describe a realistic scenario: what would happen from user perspective and what messages would be sent over the network?
 - [x] 12. TOBIAS. The reliability mechanisms in your protocol (handling of network errors), if you have any
-- [x] 13. TOBIAS (Tidligere daniel, men var lett å sprive om begge). The security mechanisms in your protocol, if you have any
+- [x] 13. TOBIAS (Tidligere daniel, men var lett å skrive om begge). The security mechanisms in your protocol, if you have any
 
 # General TODO
 
 - [ ] Adrian? Handling connection errors and messaging errors properly.
 - [x] ADRIAN. gitignore fil.
-- [ ] TOBIAS. Implementere Message og Command interfacer/klasser
+- [x] TOBIAS. Implementere Message og Command interfacer/klasser
 - [ ] TOBIAS. Lage ulike Message/Command underklasser
 - [ ] Different sensor types must be supported. The different types are not fixed. I.e., your protocol should allow adding new sensor types when needed. 
 - [ ] PROTOKOLL (IKKE GUI) Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
