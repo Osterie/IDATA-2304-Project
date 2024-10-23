@@ -3,6 +3,7 @@
     -fx-padding: 10;
     -fx-spacing: 10;
     -fx-alignment: center;
+    -fx-background-color: #90EE90;
 }
 
 .sensor-pane, .actuator-pane {
