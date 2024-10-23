@@ -90,7 +90,7 @@ example scenario could be as follows:
 
 ## Reliability and security
 
-Security:
+### Security:
   - For security of the data the AES encryption method is used.
 
   - Justification for AES: AES (Advanced Encryption Standard) is a widely used, efficient, and secure
@@ -104,7 +104,7 @@ Security:
   management (as seen in asymmetric encryption like RSA), which makes it suitable for
   applications where the sender and receiver can securely share a common secret key.
 
-Reliability:
+### Reliability:
   - For reliability a hashing algorithm is being used.
 
   - Justification for hashing algorithm: Hashing algorithms like SHA-256 are used to ensure data integrity. The hash
