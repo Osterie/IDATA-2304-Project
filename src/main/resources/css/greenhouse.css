@@ -1,0 +1,21 @@
+/* greenhouse.css */
+.root {
+    -fx-padding: 20;
+    -fx-spacing: 5;
+    -fx-alignment: center;
+    -fx-background-color: #90EE90;
+}
+
+.info-label {
+    -fx-wrap-text: true;
+    -fx-padding: 0 0 10 0;
+}
+
+.copyright-label {
+    -fx-font-size: 10px;
+}
+
+.image-view {
+    -fx-fit-width: 100px;
+    -fx-preserve-ratio: true;
+}

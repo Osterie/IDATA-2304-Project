@@ -1,0 +1,31 @@
+/* sensorNode.css */
+.root {
+    -fx-padding: 10;
+    -fx-spacing: 10;
+    -fx-alignment: center;
+    -fx-background-color: #90EE90;
+}
+
+.sensor-pane, .actuator-pane {
+    -fx-background-color: #f4f4f4;
+    -fx-border-color: #d3d3d3;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+
+.sensor-pane {
+    -fx-background-color: #e0f7fa;
+}
+
+.actuator-pane {
+    -fx-background-color: #ffe0b2;
+}
+
+.button {
+    -fx-background-color: #81c784;
+    -fx-text-fill: white;
+    -fx-padding: 8 16;
+    -fx-border-radius: 3;
+}
