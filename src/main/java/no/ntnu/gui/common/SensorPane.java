@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
 import no.ntnu.greenhouse.Sensor;
-import no.ntnu.greenhouse.SensorReading;
+import no.ntnu.greenhouse.sensorreading.SensorReading;
 import no.ntnu.tools.Logger;
 
 /**

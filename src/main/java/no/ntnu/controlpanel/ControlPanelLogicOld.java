@@ -2,13 +2,19 @@ package no.ntnu.controlpanel;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.sensorreading.SensorReading;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.controlpanel.GreenhouseEventListener;
 import no.ntnu.tools.Logger;
+
+import static no.ntnu.intermediaryserver.ProxyServer.PORT_NUMBER;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 /**
  * The central logic of a control panel node. It uses a communication channel to send commands
@@ -20,9 +26,8 @@ import no.ntnu.tools.Logger;
  * be placed inside a GUI class (JavaFX classes). Therefore, we use proper structure here, even
  * though you may have no real control-panel logic in your projects.
  */
-public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListener,
-    CommunicationChannelListener  {
-
+public class ControlPanelLogicOld implements GreenhouseEventListener, ActuatorListener,
+    CommunicationChannelListener {
   private final List<GreenhouseEventListener> listeners = new LinkedList<>();
 
   private CommunicationChannel communicationChannel;
@@ -37,7 +42,32 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     this.communicationChannel = communicationChannel;
   }
 
-  
+  private CommunicationChannel initiateSocketCommunication(ControlPanelLogicOld logic) {
+    try {
+        // Connect to the intermediary server
+        Socket socket = new Socket("localhost", PORT_NUMBER);
+
+        // Create input and output streams for communication
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+
+        // Notify the server that this is a control panel connection
+        writer.println("CONTROL_PANEL");
+
+        // Receive sensor data from the intermediary server
+        String sensorData;
+        while ((sensorData = reader.readLine()) != null) {
+            System.out.println("Received sensor data: " + sensorData);
+            // Update the GUI or process the data
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return null;
+  }
+
+
   /**
    * Set listener which will get notified when communication channel is closed.
    *

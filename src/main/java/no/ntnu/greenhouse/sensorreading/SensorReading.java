@@ -1,11 +1,14 @@
-package no.ntnu.greenhouse;
+package no.ntnu.greenhouse.sensorreading;
 
 import java.util.Objects;
+
+
+//TODO: Refactor the methods to fit an abstract class
 
 /**
  * Represents one sensor reading (value).
  */
-public class SensorReading {
+public abstract class SensorReading {
   private final String type;
   private double value;
   private final String unit;
@@ -71,4 +74,5 @@ public class SensorReading {
   public int hashCode() {
     return Objects.hash(type, value, unit);
   }
+
 }

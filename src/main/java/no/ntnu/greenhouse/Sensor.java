@@ -1,5 +1,11 @@
 package no.ntnu.greenhouse;
 
+import no.ntnu.greenhouse.sensorreading.HumiditySensorReading;
+import no.ntnu.greenhouse.sensorreading.PictureSensorReading;
+import no.ntnu.greenhouse.sensorreading.SensorReading;
+import no.ntnu.greenhouse.sensorreading.TemperatureSensorReading;
+import java.awt.image.BufferedImage;
+
 /**
  * A sensor which can sense the environment in a specific way.
  */
@@ -18,7 +24,24 @@ public class Sensor {
    * @param unit    The measurement unit. Examples: "%", "C", "lux"
    */
   public Sensor(String type, double min, double max, double current, String unit) {
-    this.reading = new SensorReading(type, current, unit);
+    this.reading = createSensorReading(type, current, unit);
+    this.min = min;
+    this.max = max;
+    ensureValueBoundsAndPrecision(current);
+  }
+
+  /**
+   * Create a sensor.
+   *
+   * @param type    The type of the sensor. Examples: "temperature", "humidity"
+   * @param min     Minimum allowed value
+   * @param max     Maximum allowed value
+   * @param current The current (starting) value of the sensor
+   * @param unit    The measurement unit. Examples: "%", "C", "lux"
+   * @param image   The image data for the sensor
+   */
+  public Sensor(String type, double min, double max, double current, String unit, BufferedImage image) {
+    this.reading = createSensorReading(type, current, unit, image);
     this.min = min;
     this.max = max;
     ensureValueBoundsAndPrecision(current);
@@ -89,5 +112,51 @@ public class Sensor {
   @Override
   public String toString() {
     return reading.toString();
+  }
+
+  /**
+   * Create a sensor reading based on the type.
+   * 
+   * @param type the type of the sensor
+   * @param value the value of the sensor
+   * @param unit the unit of the sensor
+   * @return the sensor reading
+   */
+  private SensorReading createSensorReading(String type, double value, String unit) {
+    SensorReading reading = null;
+
+    switch (type) {
+      case "temperature":
+        reading = new TemperatureSensorReading(type, value, unit);
+        break;
+      case "humidity":
+        reading = new HumiditySensorReading(type, value, unit);
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown sensor type: " + type);
+    }
+    return reading;
+  }
+
+  /**
+   * Create a sensor reading based on the type, with an image.
+   * 
+   * @param type the type of the sensor
+   * @param value the value of the sensor
+   * @param unit the unit of the sensor
+   * @param image the image data for the sensor
+   * @return the sensor reading
+   */
+  private SensorReading createSensorReading(String type, double value, String unit, BufferedImage image) {
+    SensorReading reading = null;
+
+    switch (type) {
+      case "picture":
+        reading = new PictureSensorReading(type, value, unit, image);
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown sensor type: " + type);
+    }
+    return reading;
   }
 }
