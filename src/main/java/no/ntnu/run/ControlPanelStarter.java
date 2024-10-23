@@ -95,7 +95,7 @@ public class ControlPanelStarter implements Runnable {
     spawner.spawnNode("4;3_window", START_DELAY);
     spawner.spawnNode("1", START_DELAY + 1);
     spawner.spawnNode("1", START_DELAY + 2);
-    // spawner.advertiseSensorData("4;temperature=27.4 °C,temperature=26.8 °C,humidity=80 %", START_DELAY + 2);
+    spawner.advertiseSensorData("4;temperature=27.4 °C,temperature=26.8 °C,humidity=80 %", START_DELAY + 2);
     spawner.spawnNode("8;2_heater", START_DELAY + 3);
     // spawner.advertiseActuatorState(4, 1, true, START_DELAY + 3);
     // spawner.advertiseActuatorState(4, 1, false, START_DELAY + 4);

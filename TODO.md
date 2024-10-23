@@ -52,6 +52,20 @@ Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av
 - [ ] Commands to turn on/off all actuators for a node. 
 - [x] ADRIAN. Lage klasse som applikasjonen kan kjøres fra.
 
+
+- [ ] ADRIAN
+How to notify all clients about state update?
+• Keep a reference list of connected clients in the server, update when
+	• new client connects
+	• a client disconnects
+	• Client threads will "block" on read - wait for next command from client
+• When a set-command is received:
+	• Update the state
+	• Call server.notifyClients() on the same thread
+	• This method iterates over connected clients, sends a message to each client
+
+Need to introduse a new thread on client side, on thread for reading, on thread for sending a command.
+
 # Test classes
 
 ## COMMUNICATION

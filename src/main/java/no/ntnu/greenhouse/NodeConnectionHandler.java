@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import no.ntnu.Clients;
 import no.ntnu.tools.Logger;
@@ -62,13 +65,41 @@ public class NodeConnectionHandler implements Runnable {
             socketWriter.println(Clients.CONTROL_PANEL + ";0;" + node.getId()); // TODO change the id. (from 0)
         }
         else if (commandType.equalsIgnoreCase("GET_NODE")){
+            // spawner.spawnNode("4;2_heater;3_window", START_DELAY + 3);
+
+            // List<Sensor> sensors = node.getSensors();
+            ActuatorCollection actuators = node.getActuators();
+
+            StringBuilder actuatorString = new StringBuilder();
+            HashMap<String, Integer> actuatorCount = new HashMap<String, Integer>();
+            for (Actuator actuator : actuators) {
+                if (actuatorCount.containsKey(actuator.getType())) {
+                    actuatorCount.put(actuator.getType(), actuatorCount.get(actuator.getType()) + 1);
+                } else {
+                    actuatorCount.put(actuator.getType(), 1);
+                }
+                // actuatorString.append(actuator "_" + actuator.getType());
+            }
+
+            for (String key : actuatorCount.keySet()) {
+                actuatorString.append(";" + actuatorCount.get(key) + "_" + key);
+            }
+
+            String resultString = actuatorString.toString();
+
+
             Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + node.getId());
             // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
-            socketWriter.println(Clients.CONTROL_PANEL + ";0;" + node.getId()); // TODO add sensor data and actuator data.
+            Logger.info(resultString);
+            socketWriter.println(Clients.CONTROL_PANEL + ";0;" + node.getId() + resultString); // TODO add sensor data and actuator data.
         }
         else{
             Logger.info("Received unknown command from server: " + command);
         }
+
+        // spawner.advertiseSensorData("4;temperature=27.4 °C,temperature=26.8 °C,humidity=80 %", START_DELAY + 2);
+
+
         // Parse and execute commands received from the server for this node
         // Example: Control actuators based on command type
     }

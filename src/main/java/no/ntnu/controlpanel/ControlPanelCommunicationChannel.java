@@ -181,7 +181,16 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
   public void spawnNode(String nodeId, int START_DELAY) {
     String specification = sendCommandToServerSingleResponse("GREENHOUSE;" + nodeId + ";GET_NODE");
     Logger.info("Received node specification: " + specification);
-    String info = specification.split(";")[2];
+
+    // String info = specification.split(";")[2];
+    String[] test = specification.split(";", 3);
+    for (String s : test) {
+      Logger.info(s);
+    }
+    
+    String info = specification.split(";", 3)[2];
+    Logger.info(info);
+    
     SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(info);
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
@@ -198,22 +207,25 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     if (specification == null || specification.isEmpty()) {
       throw new IllegalArgumentException("Node specification can't be empty");
     }
-    String[] parts = specification.split(";");
-    if (parts.length > 3) {
-      throw new IllegalArgumentException("Incorrect specification format");
-    }
+    String[] parts = specification.split(";", 2);
+    // if (parts.length > 3) {
+    //   throw new IllegalArgumentException("Incorrect specification format");
+    // }
     int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
     SensorActuatorNodeInfo info = new SensorActuatorNodeInfo(nodeId);
+
+
+
     if (parts.length == 2) {
-      parseActuators(parts[1], info);
+      this.parseActuators(parts[1], info);
     }
     return info;
   }
 
   private void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info) {
-    String[] parts = actuatorSpecification.split(" ");
+    String[] parts = actuatorSpecification.split(";");
     for (String part : parts) {
-      parseActuatorInfo(part, info);
+      this.parseActuatorInfo(part, info);
     }
   }
 

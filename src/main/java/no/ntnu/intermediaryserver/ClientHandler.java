@@ -107,7 +107,7 @@ public class ClientHandler extends Thread {
    * @param response The response to send to the client, NOT including the newline
    */
     private void sendToClient(String response) {
-        String[] responseParts = response.split(";");
+        String[] responseParts = response.split(";", 3);
         String target = responseParts[0];
         String targetId = responseParts[1];
         String command = responseParts[2];
