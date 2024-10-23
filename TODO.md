@@ -82,7 +82,6 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 - [ ] Lag tester for alle klasser som kan testes.
 - [ ] Test protokoll
 - [ ] Test Message og Command klasser
-- [ ] SEBASTIAN Test sensor klasser
 
 # GREENHOUSE
 
@@ -91,9 +90,9 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 - [x] ADRIAN. Koble til multiple greenhouse nodes til intermediary server.
 
 Each sensor-node can do the following:
-- [ ] SEBASTIAN. Support different sensors. For example, one node may report humidity and light, while the other node reports only temperature
-- [ ] SEBASTIAN. Act as an actuator node as well. That is, each sensor node is a "sensor and actuator node", which can have several actuators attached
-- [ ] SEBASTIAN. Support different actuators. For example, fan, heater, window opener, door lock, shower opener.
+- [x] SEBASTIAN. Support different sensors. For example, one node may report humidity and light, while the other node reports only temperature
+- [x] SEBASTIAN. Act as an actuator node as well. That is, each sensor node is a "sensor and actuator node", which can have several actuators attached
+- [x] SEBASTIAN. Support different actuators. For example, fan, heater, window opener, door lock, shower opener.
 
 - [ ] KNUT. Hint: if your protocol will support only one instance of each sensor type on a node (only one
 temperature sensor per node, one humidity sensor, etc.), it is probably enough to address the sensors

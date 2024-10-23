@@ -11,6 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import no.ntnu.Clients;
 import no.ntnu.tools.Logger;
 
+/**
+ * The IntermediaryServer class is responsible for managing the connections between the greenhouse nodes and control panels.
+ * It listens for incoming connections from clients and creates a new thread to handle each client connection.
+ * 
+ */
 public class IntermediaryServer implements Runnable {
     public static final int PORT_NUMBER = 50500;
     private boolean isTcpServerRunning;

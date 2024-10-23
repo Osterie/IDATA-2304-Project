@@ -19,6 +19,11 @@ import no.ntnu.greenhouse.Sensor;
 import no.ntnu.greenhouse.sensorreading.SensorReading;
 import no.ntnu.tools.Logger;
 
+/**
+ * A communication channel for the control panel. This class is responsible for
+ * sending commands to the server and receiving responses. It also listens for
+ * incoming events from the server.
+ */
 public class ControlPanelCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
   private Socket socket;
