@@ -144,6 +144,7 @@ For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuat
 - [ ] KNUT. Visualize actuator status for each sensor node. Simple, textual visualization is enough.
 - [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
 Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
+- [ ] ADRIAN. Make actuator buttons send data. 
 
 # EXTRA WORK
 

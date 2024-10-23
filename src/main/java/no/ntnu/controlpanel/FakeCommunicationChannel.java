@@ -140,7 +140,7 @@ public class FakeCommunicationChannel implements CommunicationChannel {
 
   private List<SensorReading> parseSensors(String sensorInfo) {
     List<SensorReading> readings = new LinkedList<>();
-    String[] readingInfo = sensorInfo.split(",");
+    String[] readingInfo = sensorInfo.split(";");
     for (String reading : readingInfo) {
       readings.add(parseReading(reading));
     }

@@ -53,6 +53,16 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
   }
 
+  public void sendCommandToServerNoResponse(String command) {
+    if (isOn && socketWriter != null) {
+      Logger.info("Trying to send command...");
+      socketWriter.println(command);
+      Logger.info("Sent command to server: " + command);
+    } else {
+      Logger.error("Unable to send command, socket is not connected.");
+    }
+  }
+
   public String sendCommandToServerSingleResponse(String command) {
     String serverResponse = "No response";
     if (isOn && socketWriter != null) {
@@ -119,8 +129,8 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
 
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-    String command = "ACTUATOR_CHANGE:" + nodeId + "," + actuatorId + "," + (isOn ? "ON" : "OFF");
-    String respone = sendCommandToServerSingleResponse(command);
+    String command = Clients.GREENHOUSE + ";" + nodeId + ";ACTUATOR_CHANGE;" + actuatorId + ";" + (isOn ? "ON" : "OFF");
+    sendCommandToServerNoResponse(command);
   }
 
   @Override
@@ -234,14 +244,23 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     if (actuatorInfo.length != 2) {
       throw new IllegalArgumentException("Invalid actuator info format: " + s);
     }
-    int actuatorCount = parseIntegerOrError(actuatorInfo[0],
+
+    String actuatorType = actuatorInfo[0];
+    int  actuatorId = parseIntegerOrError(actuatorInfo[1],
         "Invalid actuator count: " + actuatorInfo[0]);
-    String actuatorType = actuatorInfo[1];
-    for (int i = 0; i < actuatorCount; ++i) {
-      Actuator actuator = new Actuator(actuatorType, info.getId());
+
+      Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
       actuator.setListener(logic);
       info.addActuator(actuator);
-    }
+
+    // int actuatorCount = parseIntegerOrError(actuatorInfo[0],
+    //     "Invalid actuator count: " + actuatorInfo[0]);
+    // String actuatorType = actuatorInfo[1];
+    // for (int i = 0; i < actuatorCount; ++i) {
+    //   Actuator actuator = new Actuator(actuatorType, info.getId());
+    //   actuator.setListener(logic);
+    //   info.addActuator(actuator);
+    // }
   }
 
   /**
@@ -294,7 +313,7 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
 
   private List<SensorReading> parseSensors(String sensorInfo) {
     List<SensorReading> readings = new LinkedList<>();
-    String[] readingInfo = sensorInfo.split(",");
+    String[] readingInfo = sensorInfo.split(";");
     for (String reading : readingInfo) {
       readings.add(parseReading(reading));
     }

@@ -297,9 +297,14 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param on         Whether it should be on (true) or off (false)
    */
   public void setActuator(int actuatorId, boolean on) {
-    Actuator actuator = getActuator(actuatorId);
+    Logger.info("Setting actuator " + actuatorId + " to " + (on ? "ON" : "off"));
+    Actuator actuator = this.getActuator(actuatorId);
+    this.actuators.debugPrint();
     if (actuator != null) {
       actuator.set(on);
+    }
+    else{
+      Logger.error("Actuator " + actuatorId + " not found on node " + id);
     }
   }
 

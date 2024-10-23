@@ -18,6 +18,7 @@ public class GreenhouseApplication extends Application implements NodeStateListe
   private final Map<SensorActuatorNode, NodeGuiWindow> nodeWindows = new HashMap<>();
   private Stage mainStage;
 
+
   @Override
   public void start(Stage mainStage) {
     this.mainStage = mainStage;
