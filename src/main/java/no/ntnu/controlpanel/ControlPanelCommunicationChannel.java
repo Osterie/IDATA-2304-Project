@@ -15,7 +15,8 @@ import static no.ntnu.tools.Parser.parseIntegerOrError;
 
 import no.ntnu.Clients;
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.SensorReading;
+import no.ntnu.greenhouse.Sensor;
+import no.ntnu.greenhouse.sensorreading.SensorReading;
 import no.ntnu.tools.Logger;
 
 public class ControlPanelCommunicationChannel implements CommunicationChannel {
@@ -332,7 +333,8 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     String sensorType = assignmentParts[0];
     double value = parseDoubleOrError(valueParts[0], "Invalid sensor value: " + valueParts[0]);
     String unit = valueParts[1];
-    return new SensorReading(sensorType, value, unit);
+    Sensor sensor = new Sensor(sensorType, value, value, value, unit);
+    return sensor.getReading();
   }
 
   /**
