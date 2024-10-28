@@ -26,6 +26,7 @@ public class IntermediaryServer implements Runnable {
     private ServerSocket listeningSocket;
 
     public static void main(String[] args) throws IOException {
+        Logger.info("Starting Intermediary Server...");
         new IntermediaryServer().startServer();
     }
 

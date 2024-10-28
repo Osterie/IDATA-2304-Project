@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import no.ntnu.Clients;
 import no.ntnu.tools.Logger;
@@ -57,17 +55,25 @@ public class NodeConnectionHandler implements Runnable {
 
     private void handleServerCommand(String command) {
         Logger.info("Received command for node! " + node.getId() + ": " + command);
-        String[] commandParts = command.split(";");
-        String sender = commandParts[0];
-        String senderID = commandParts[1];
-        String commandType = commandParts[2];
+        String[] commandParts = command.split("-");
+
+        String header = commandParts[0];
+        String body = commandParts[1];
+
+        String[] headerParts = header.split(";");
+        String[] bodyParts = body.split(";");
+
+        String sender = headerParts[0];
+        String senderID = headerParts[1];
+        String commandType = bodyParts[0];
 
         if (commandType.equalsIgnoreCase("GET_NODE_ID")) {
             Logger.info("Received request for node ID from server, sending response " + node.getId());
             // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
-            socketWriter.println(Clients.CONTROL_PANEL + ";0;" + node.getId()); // TODO change the id. (from 0)
+            socketWriter.println(Clients.CONTROL_PANEL + ";0-GET_NODE_ID;" + node.getId()); // TODO change the id. (from 0)
         }
         else if (commandType.equalsIgnoreCase("GET_NODE")){
+            Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + node.getId());
             // spawner.spawnNode("4;2_heater;3_window", START_DELAY + 3);
 
             // List<Sensor> sensors = node.getSensors();
@@ -95,7 +101,7 @@ public class NodeConnectionHandler implements Runnable {
             Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + node.getId());
             // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
             Logger.info(resultString);
-            socketWriter.println(Clients.CONTROL_PANEL + ";0;" + node.getId() + resultString); // TODO add sensor data and actuator data.
+            socketWriter.println(Clients.CONTROL_PANEL + ";0-GET_NODE;" + node.getId() + resultString); // TODO add sensor data and actuator data.
         }
         else if (commandType.equalsIgnoreCase("ACTUATOR_CHANGE")){
             int actuatorId = Integer.parseInt(commandParts[3]);

@@ -102,22 +102,34 @@ public class ClientHandler extends Thread {
 //   }
 
    /**
-   * Send a response from the server to the client, over the TCP socket.
+   * Send a message from the server to the client, over the TCP socket.
    *
-   * @param response The response to send to the client, NOT including the newline
+   * @param message The message to send to the client, NOT including the newline
    */
-    private void sendToClient(String response) {
-        String[] responseParts = response.split(";", 3);
-        String target = responseParts[0];
-        String targetId = responseParts[1];
-        String command = responseParts[2];
+    private void sendToClient(String message) {
+        String[] responseParts = message.split("-");
+
+        String header = responseParts[0];
+        String body = responseParts[1];
+
+        String[] headerParts = header.split(";");
+        String target = headerParts[0];
+        String targetId = headerParts[1];
+        
+        // String[] bodyParts = body.split(";");
+        // String command = bodyParts[0];
+        // String response = null;
+        // if (bodyParts.length > 1) {
+        //     response = bodyParts[1];
+        // }
+
 
         if (targetId.equalsIgnoreCase("ALL")){
-            this.sendToAll(target, command);
+            this.sendToAll(target, body);
             return;
         }
 
-        this.sendCommandToClient(target, targetId, command);
+        this.sendCommandToClient(target, targetId, body);
     }
 
     private void sendCommandToClient(String targetClientType, String targetClientId, String command) {
@@ -127,10 +139,17 @@ public class ClientHandler extends Thread {
             return;
         }
 
+        String header = this.clientType + ";" + this.clientId;
+
+        String body = command;
+
+        String message = header + "-" + body;
+
+
         try {
             PrintWriter receiverWriter = new PrintWriter(receiver.getOutputStream(), true);
             Logger.info("Sending response to " + targetClientType + " " + receiver.getRemoteSocketAddress() + ": " + command);
-            receiverWriter.println(this.clientType + ";" + this.clientId + ";" + command);
+            receiverWriter.println(message);
         } catch (IOException e) {
             Logger.error("Failed to send response to " + targetClientType + ": " + e.getMessage());
         }
@@ -144,7 +163,7 @@ public class ClientHandler extends Thread {
             try {
                 receiverWriter = new PrintWriter(client.getOutputStream(), true);
                 Logger.info("Sending response to " + targetClientType + " " + client.getRemoteSocketAddress() + ": " + command);
-                receiverWriter.println(this.clientType + ";" + this.clientId + ";" + command);
+                receiverWriter.println(this.clientType + ";" + this.clientId + "-" + command);
             } catch (IOException e) {
                 Logger.error("Failed to send response to " + targetClientType + ": " + e.getMessage());
             }

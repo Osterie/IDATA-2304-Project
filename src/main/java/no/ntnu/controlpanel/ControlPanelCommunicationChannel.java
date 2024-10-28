@@ -35,6 +35,98 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     this.logic = logic;
     this.start(host, port);
     this.establishConnectionWithServer();
+    this.listenForServerMessages();
+  }
+
+  private void listenForServerMessages(){
+    Thread messageListener = new Thread(() -> {
+      try {
+        while (isOn) {
+          if (socketReader.ready()) {
+            String serverMessage = socketReader.readLine();
+            if (serverMessage != null) {
+              Logger.info("Received from server: " + serverMessage);
+              this.handleServerCommand(serverMessage);
+            }
+          }
+        }
+        Logger.info("Server message listener stopped.");
+      } catch (IOException e) {
+        Logger.error("Connection lost: " + e.getMessage());
+      } 
+      Logger.info("Closing socket connection...");
+      // finally {
+      //   close();
+      // }
+    });
+    messageListener.start();
+  }
+
+  private void handleServerCommand(String serverMessage) {
+
+    String[] headerAndBodyParts = serverMessage.split("-");
+    if (headerAndBodyParts.length != 2) {
+      Logger.error("Invalid server message: " + serverMessage);
+      return;
+    }
+
+    String header = headerAndBodyParts[0];
+    String body = headerAndBodyParts[1];
+
+    String[] headerParts = header.split(";");
+
+    String client = headerParts[0];
+    String nodeIdRaw = headerParts[1];
+    
+    
+    String[] bodyParts = body.split(";", 2);
+    
+    String command = bodyParts[0];
+    String response = bodyParts[1];
+
+    Integer nodeId = parseIntegerOrError(nodeIdRaw, "Invalid node ID: " + nodeIdRaw);
+
+    
+    switch (client) {
+      case ("GREENHOUSE"):
+        Logger.info("Handling greenhouse command: " + command);
+        this.handleGreenhouseCommand(nodeId, command, response); 
+        break;
+      default:
+        Logger.error("Unknown client: " + client);
+    }
+  }
+
+  private void handleGreenhouseCommand(int nodeId, String command, String response) {
+    switch (command.trim()) {
+      case "GET_NODE_ID":
+        this.spawnNode(response, 5);
+        break;
+      case "GET_NODE":
+        
+      
+        // Logger.info(response);
+        // String info = response.split(";", 2)[1];
+        // Logger.info(info);
+
+        // info = response
+
+        String info = response;
+        
+        SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(info);
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+          @Override
+          public void run() {
+            Logger.info("Spawning node " + response);
+            logic.onNodeAdded(nodeInfo);
+          }
+        }, 5 * 1000L);
+        
+        break;
+      default:
+        Logger.error("Unknown command: " + command);
+    }
   }
 
   private void start(String host, int port) throws IOException {
@@ -75,15 +167,15 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
       Logger.info("Trying to send command...");
       socketWriter.println(command);
       Logger.info("Sent command to server: " + command);
-      try {
-        Logger.info("Trying to read response...");
-        serverResponse = socketReader.readLine();
-        Logger.info("Received response from server: " + serverResponse);
-      } catch (IOException e) {
-        Logger.error("Error reading server response: " + e.getMessage() + " error type" + e.getClass() + " error cause"
-            + e.getCause() + " error stack trace" + e.getStackTrace());
-        e.printStackTrace();
-      }
+      // try {
+      //   Logger.info("Trying to read response...");
+      //   serverResponse = socketReader.readLine();
+      //   Logger.info("Received response from server: " + serverResponse);
+      // } catch (IOException e) {
+      //   Logger.error("Error reading server response: " + e.getMessage() + " error type" + e.getClass() + " error cause"
+      //       + e.getCause() + " error stack trace" + e.getStackTrace());
+      //   e.printStackTrace();
+      // }
     } else {
       Logger.error("Unable to send command, socket is not connected.");
     }
@@ -98,34 +190,34 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
       Logger.info("Sent command to server: " + command);
 
       // Start a background thread to listen for multiple responses
-      Thread responseReaderThread = new Thread(() -> {
-        try {
-          String response;
-          long startTime = System.currentTimeMillis();
-          long timeout = 2000; // Timeout after 2 seconds if no response
+      // Thread responseReaderThread = new Thread(() -> {
+      //   try {
+      //     String response;
+      //     long startTime = System.currentTimeMillis();
+      //     long timeout = 2000; // Timeout after 2 seconds if no response
 
-          while ((System.currentTimeMillis() - startTime) < timeout) {
-            if (socketReader.ready()) {
-              response = socketReader.readLine();
-              if (response != null && !response.isEmpty()) {
-                Logger.info("Received response from server: " + response);
-                serverResponses.add(response);
-                startTime = System.currentTimeMillis(); // Reset the timeout on each response
-              }
-            }
-          }
-        } catch (IOException e) {
-          Logger.error("Error reading server response: " + e.getMessage());
-          e.printStackTrace();
-        }
-      });
+      //     while ((System.currentTimeMillis() - startTime) < timeout) {
+      //       if (socketReader.ready()) {
+      //         response = socketReader.readLine();
+      //         if (response != null && !response.isEmpty()) {
+      //           Logger.info("Received response from server: " + response);
+      //           serverResponses.add(response);
+      //           startTime = System.currentTimeMillis(); // Reset the timeout on each response
+      //         }
+      //       }
+      //     }
+      //   } catch (IOException e) {
+      //     Logger.error("Error reading server response: " + e.getMessage());
+      //     e.printStackTrace();
+      //   }
+      // });
 
-      responseReaderThread.start();
-      try {
-        responseReaderThread.join(); // Wait for the thread to finish
-      } catch (InterruptedException e) {
-        Logger.error("Response reading interrupted: " + e.getMessage());
-      }
+      // responseReaderThread.start();
+      // try {
+      //   responseReaderThread.join(); // Wait for the thread to finish
+      // } catch (InterruptedException e) {
+      //   Logger.error("Response reading interrupted: " + e.getMessage());
+      // }
 
     } else {
       Logger.error("Unable to send command, socket is not connected.");
@@ -177,7 +269,7 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
    */
   public void askForNodes() {
 
-    List<String> responses = sendCommandToServerMultipleResponses("GREENHOUSE;ALL;GET_NODE_ID");
+    List<String> responses = sendCommandToServerMultipleResponses("GREENHOUSE;ALL-GET_NODE_ID");
 
     for (String response : responses) {
       String[] parts = response.split(";");
@@ -195,27 +287,27 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
   }
 
   public void spawnNode(String nodeId, int START_DELAY) {
-    String specification = sendCommandToServerSingleResponse("GREENHOUSE;" + nodeId + ";GET_NODE");
-    Logger.info("Received node specification: " + specification);
+    String specification = sendCommandToServerSingleResponse("GREENHOUSE;" + nodeId + "-GET_NODE");
+    // Logger.info("Received node specification: " + specification);
 
     // String info = specification.split(";")[2];
-    String[] test = specification.split(";", 3);
-    for (String s : test) {
-      Logger.info(s);
-    }
+    // String[] test = specification.split(";", 3);
+    // for (String s : test) {
+    //   Logger.info(s);
+    // }
     
-    String info = specification.split(";", 3)[2];
-    Logger.info(info);
+    // String info = specification.split(";", 3)[2];
+    // Logger.info(info);
     
-    SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(info);
-    Timer timer = new Timer();
-    timer.schedule(new TimerTask() {
-      @Override
-      public void run() {
-        Logger.info("Spawning node " + specification);
-        logic.onNodeAdded(nodeInfo);
-      }
-    }, START_DELAY * 1000L);
+    // SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(info);
+    // Timer timer = new Timer();
+    // timer.schedule(new TimerTask() {
+    //   @Override
+    //   public void run() {
+    //     Logger.info("Spawning node " + specification);
+    //     logic.onNodeAdded(nodeInfo);
+    //   }
+    // }, START_DELAY * 1000L);
   }
 
   private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
