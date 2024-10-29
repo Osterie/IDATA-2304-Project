@@ -104,8 +104,8 @@ public class NodeConnectionHandler implements Runnable {
             socketWriter.println(Clients.CONTROL_PANEL + ";0-GET_NODE;" + node.getId() + resultString); // TODO add sensor data and actuator data.
         }
         else if (commandType.equalsIgnoreCase("ACTUATOR_CHANGE")){
-            int actuatorId = Integer.parseInt(commandParts[3]);
-            boolean isOn = commandParts[4].equalsIgnoreCase("ON");
+            int actuatorId = Integer.parseInt(bodyParts[1]);
+            boolean isOn = bodyParts[2].equalsIgnoreCase("ON");
             node.setActuator(actuatorId, isOn);
         }
         else{
