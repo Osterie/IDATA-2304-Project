@@ -7,6 +7,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import no.ntnu.Clients;
+import no.ntnu.messages.Message;
+import no.ntnu.messages.MessageBody;
+import no.ntnu.messages.MessageHeader;
+import no.ntnu.messages.MessageTest;
 import no.ntnu.tools.Logger;
 
 public class ClientHandler extends Thread {
@@ -17,7 +22,7 @@ public class ClientHandler extends Thread {
 
     private ClientIdentifier clientIdentifier;
     
-    private String clientType;  // "CONTROL_PANEL" or "GREENHOUSE"
+    private Clients clientType;  // Clients.CONTROL_PANEL or Clients.GREENHOUSE
     private String clientId;    // Unique ID for the greenhouse node or control panel
 
     public ClientHandler(Socket socket, IntermediaryServer server) {
@@ -106,33 +111,27 @@ public class ClientHandler extends Thread {
    *
    * @param message The message to send to the client, NOT including the newline
    */
-    private void sendToClient(String message) {
-        String[] responseParts = message.split("-");
+    private void sendToClient(String request) {
 
-        String header = responseParts[0];
-        String body = responseParts[1];
+        MessageTest message = MessageTest.fromProtocolString(request);
 
-        String[] headerParts = header.split(";");
-        String target = headerParts[0];
-        String targetId = headerParts[1];
-        
-        // String[] bodyParts = body.split(";");
-        // String command = bodyParts[0];
-        // String response = null;
-        // if (bodyParts.length > 1) {
-        //     response = bodyParts[1];
-        // }
+        MessageHeader header = message.getHeader();
+        MessageBody body = message.getBody();
+
+        Clients target = header.getReceiver();
+        String targetId = header.getId();
+        String bodyString = body.toProtocolString();
 
 
         if (targetId.equalsIgnoreCase("ALL")){
-            this.sendToAll(target, body);
+            this.sendToAll(target, bodyString);
             return;
         }
 
-        this.sendCommandToClient(target, targetId, body);
+        this.sendCommandToClient(target, targetId, bodyString);
     }
 
-    private void sendCommandToClient(String targetClientType, String targetClientId, String command) {
+    private void sendCommandToClient(Clients targetClientType, String targetClientId, String body) {
         Socket receiver = server.getClient(targetClientType, targetClientId);
         if (receiver == null) {
             Logger.error(targetClientType + " not found: " + targetClientId);
@@ -140,30 +139,32 @@ public class ClientHandler extends Thread {
         }
 
         String header = this.clientType + ";" + this.clientId;
-
-        String body = command;
-
         String message = header + "-" + body;
 
 
         try {
             PrintWriter receiverWriter = new PrintWriter(receiver.getOutputStream(), true);
-            Logger.info("Sending response to " + targetClientType + " " + receiver.getRemoteSocketAddress() + ": " + command);
+            Logger.info("Sending response to " + targetClientType + " " + receiver.getRemoteSocketAddress() + ": " + body);
             receiverWriter.println(message);
         } catch (IOException e) {
             Logger.error("Failed to send response to " + targetClientType + ": " + e.getMessage());
         }
     }
 
-    private void sendToAll(String targetClientType, String command) {
+    private void sendToAll(Clients targetClientType, String body) {
         ArrayList<Socket> clients = server.getAllClients(targetClientType);
         PrintWriter receiverWriter;
 
+        MessageHeader header = new MessageHeader(this.clientType, this.clientId);
+        MessageBody messageBody = new MessageBody(body);
+        MessageTest message = new MessageTest(header, messageBody);
+        
         for (Socket client : clients) {
             try {
                 receiverWriter = new PrintWriter(client.getOutputStream(), true);
-                Logger.info("Sending response to " + targetClientType + " " + client.getRemoteSocketAddress() + ": " + command);
-                receiverWriter.println(this.clientType + ";" + this.clientId + "-" + command);
+                Logger.info("Sending response to " + targetClientType + " " + client.getRemoteSocketAddress() + ": " + body);
+
+                receiverWriter.println(message.toProtocolString());
             } catch (IOException e) {
                 Logger.error("Failed to send response to " + targetClientType + ": " + e.getMessage());
             }

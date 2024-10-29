@@ -42,6 +42,14 @@ a reply with an error code?
 
 # General TODO
 
+- [ ] Adrian use Clients enum constants instead of strings.
+    - [ ] Intermediary server
+    - [ ] Control panel
+    - [ ] Greenhouse
+
+- [x] Adrian Implement Header/Body messages for control panel 
+- [x] Adrian Implement Header/Body messages for intermediary server
+- [] Adrian Implement Header/Body messages for greenhouse
 - [ ] Adrian? Handling connection errors and messaging errors properly.
 - [x] ADRIAN. gitignore fil.
 - [x] TOBIAS. Implementere Message og Command interfacer/klasser

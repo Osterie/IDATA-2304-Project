@@ -60,10 +60,10 @@ public class IntermediaryServer implements Runnable {
         }
     }
 
-    public synchronized void addClient(String clientType, String clientId, Socket socket) {
-        if (clientType.equals(Clients.GREENHOUSE.getValue())) {
+    public synchronized void addClient(Clients clientType, String clientId, Socket socket) {
+        if (clientType == Clients.GREENHOUSE) {
             addGreenhouseNode(clientId, socket);
-        } else if (clientType.equals(Clients.CONTROL_PANEL.getValue())) {
+        } else if (clientType == Clients.CONTROL_PANEL) {
             addControlPanel(clientId, socket);
         }
         else {
@@ -113,21 +113,24 @@ public class IntermediaryServer implements Runnable {
         return new ArrayList<>(controlPanels.values());
     }
 
-    public Socket getClient(String clientType, String clientId) {
+    public Socket getClient(Clients clientType, String clientId) {
         Socket clientSocket = null;
-        if (clientType.equals(Clients.GREENHOUSE.getValue())) {
-            clientSocket = this.getGreenhouseNode(clientId);
-        } else if (clientType.equals(Clients.CONTROL_PANEL.getValue())) {
-            clientSocket = this.getControlPanel(clientId);
+        
+        if (clientType == Clients.GREENHOUSE) {
+            clientSocket = getGreenhouseNode(clientId);
+        } else if (clientType == Clients.CONTROL_PANEL) {
+            clientSocket = getControlPanel(clientId);
         }
+
         return clientSocket;
     }
 
-    public ArrayList<Socket> getAllClients(String clientType) {
+    public ArrayList<Socket> getAllClients(Clients clientType) {
         ArrayList<Socket> clients = new ArrayList<>();
-        if (clientType.equalsIgnoreCase(Clients.GREENHOUSE.getValue())) {
+
+        if (clientType == Clients.GREENHOUSE) {
             clients = this.getGreenhouseNodes();
-        } else if (clientType.equalsIgnoreCase(Clients.CONTROL_PANEL.getValue())) {
+        } else if (clientType == Clients.CONTROL_PANEL) {
             clients = this.getControlPanels();
         }
         return clients;
