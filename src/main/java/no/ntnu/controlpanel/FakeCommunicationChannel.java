@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.SensorReading;
+import no.ntnu.greenhouse.sensorreading.HumiditySensorReading;
+import no.ntnu.greenhouse.sensorreading.SensorReading;
+import no.ntnu.greenhouse.sensorreading.TemperatureSensorReading;
 import no.ntnu.tools.Logger;
 
 /**
@@ -140,7 +142,7 @@ public class FakeCommunicationChannel implements CommunicationChannel {
 
   private List<SensorReading> parseSensors(String sensorInfo) {
     List<SensorReading> readings = new LinkedList<>();
-    String[] readingInfo = sensorInfo.split(",");
+    String[] readingInfo = sensorInfo.split(";");
     for (String reading : readingInfo) {
       readings.add(parseReading(reading));
     }
@@ -159,7 +161,32 @@ public class FakeCommunicationChannel implements CommunicationChannel {
     String sensorType = assignmentParts[0];
     double value = parseDoubleOrError(valueParts[0], "Invalid sensor value: " + valueParts[0]);
     String unit = valueParts[1];
-    return new SensorReading(sensorType, value, unit);
+    return this.createSensorReading(sensorType, value, unit);
+  }
+
+  /**
+   * ADDED THIS METHOD TO MAKE THE CODE COMPILABLE
+   * Create a sensor reading based on the type.
+   * 
+   * @param type the type of the sensor
+   * @param value the value of the sensor
+   * @param unit the unit of the sensor
+   * @return the sensor reading
+   */
+  private SensorReading createSensorReading(String type, double value, String unit) {
+    SensorReading reading = null;
+
+    switch (type) {
+      case "temperature":
+        reading = new TemperatureSensorReading(type, value, unit);
+        break;
+      case "humidity":
+        reading = new HumiditySensorReading(type, value, unit);
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown sensor type: " + type);
+    }
+    return reading;
   }
 
   /**
@@ -199,9 +226,9 @@ public class FakeCommunicationChannel implements CommunicationChannel {
     return true;
   }
 
-  @Override
-  public String sendCommandToServer(String command) {
-    Logger.info("Sending command to server: " + command);
-    return command;
-  }
+  // @Override
+  // public String sendCommandToServer(String command) {
+  //   Logger.info("Sending command to server: " + command);
+  //   return command;
+  // }
 }

@@ -13,152 +13,221 @@ import java.util.TimerTask;
 import static no.ntnu.tools.Parser.parseDoubleOrError;
 import static no.ntnu.tools.Parser.parseIntegerOrError;
 
+import no.ntnu.Clients;
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.SensorReading;
+import no.ntnu.greenhouse.Sensor;
+import no.ntnu.greenhouse.sensorreading.SensorReading;
 import no.ntnu.tools.Logger;
 
+/**
+ * A communication channel for the control panel. This class is responsible for
+ * sending commands to the server and receiving responses. It also listens for
+ * incoming events from the server.
+ */
 public class ControlPanelCommunicationChannel implements CommunicationChannel {
-    private final ControlPanelLogic logic;
-    private Socket socket;
-    private BufferedReader socketReader;
-    private PrintWriter socketWriter;
-    private boolean isOn;
+  private final ControlPanelLogic logic;
+  private Socket socket;
+  private BufferedReader socketReader;
+  private PrintWriter socketWriter;
+  private boolean isOn;
 
-    public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) throws IOException {
-        this.logic = logic;
-        start(host, port);
-    }
+  public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) throws IOException {
+    this.logic = logic;
+    this.start(host, port);
+    this.establishConnectionWithServer();
+    this.listenForServerMessages();
+  }
 
-    private void start(String host, int port) throws IOException {
-        try {
-            this.socket = new Socket(host, port);
-            this.socket.setKeepAlive(true);
-            this.socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.socketWriter = new PrintWriter(socket.getOutputStream(), true);
-            this.isOn = true;
-            // Send initial identifier to server
-            String identifierMessage = "CONTROL_PANEL;0";
-            socketWriter.println(identifierMessage);
-            Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
-            Logger.info("Socket connection established with " + host + ":" + port);
-        } catch (IOException e) {
-          Logger.error("Could not establish connection to the server: " + e.getMessage());
-        }
-    }
-
-    public String sendCommandToServer(String command) {
-      String serverResponse = "No response";
-      if (isOn && socketWriter != null) {
-          Logger.info("Trying to send command...");
-          socketWriter.println(command);
-          Logger.info("Sent command to server: " + command);
-          try {
-              Logger.info("Trying to read response...");
-              serverResponse = socketReader.readLine();
-              Logger.info("Received response from server: " + serverResponse);
-          } catch (IOException e) {
-              Logger.error("Error reading server response: " + e.getMessage() + " error type" + e.getClass() + " error cause" + e.getCause() + " error stack trace" + e.getStackTrace());
-              e.printStackTrace();
+  private void listenForServerMessages(){
+    Thread messageListener = new Thread(() -> {
+      try {
+        while (isOn) {
+          if (socketReader.ready()) {
+            String serverMessage = socketReader.readLine();
+            if (serverMessage != null) {
+              Logger.info("Received from server: " + serverMessage);
+              this.handleServerCommand(serverMessage);
+            }
           }
-        } else {
-            Logger.error("Unable to send command, socket is not connected.");
         }
-        return serverResponse;
+        Logger.info("Server message listener stopped.");
+      } catch (IOException e) {
+        Logger.error("Connection lost: " + e.getMessage());
+      } 
+      finally {
+        close();
+      }
+    });
+    messageListener.start();
+  }
+
+  private void handleServerCommand(String serverMessage) {
+
+    String[] headerAndBodyParts = serverMessage.split("-");
+    if (headerAndBodyParts.length != 2) {
+      Logger.error("Invalid server message: " + serverMessage);
+      return;
     }
 
-    @Override
-    public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-        String command = "ACTUATOR_CHANGE:" + nodeId + "," + actuatorId + "," + (isOn ? "ON" : "OFF");
-        String respone = sendCommandToServer(command);
+    String header = headerAndBodyParts[0];
+    String body = headerAndBodyParts[1];
+
+    String[] headerParts = header.split(";");
+
+    String client = headerParts[0];
+    String nodeIdRaw = headerParts[1];
+    
+    
+    String[] bodyParts = body.split(";", 2);
+    
+    String command = bodyParts[0];
+    String response = bodyParts[1];
+
+    Integer nodeId = parseIntegerOrError(nodeIdRaw, "Invalid node ID: " + nodeIdRaw);
+
+    
+    switch (client) {
+      case ("GREENHOUSE"):
+        Logger.info("Handling greenhouse command: " + command);
+        this.handleGreenhouseCommand(nodeId, command, response); 
+        break;
+      default:
+        Logger.error("Unknown client: " + client);
     }
+  }
 
-    @Override
-    public boolean open() {
-        return isOn;
+  private void handleGreenhouseCommand(int nodeId, String command, String response) {
+    switch (command.trim()) {
+      case "GET_NODE_ID":
+        this.spawnNode(response, 5);
+        break;
+      case "GET_NODE":
+        this.addNode(response);
+        break;
+      default:
+        Logger.error("Unknown command: " + command);
     }
+  }
 
-    @Override
-    public boolean close() {
+  private void addNode(String response) {
+    SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(response);
 
-        boolean closed = false;
-        
-        try {
-            if (socket != null) socket.close();
-            if (socketReader != null) socketReader.close();
-            if (socketWriter != null) socketWriter.close();
-            isOn = false;
-            Logger.info("Socket connection closed.");
-            closed = true;
-        } catch (IOException e) {
-            Logger.error("Failed to close socket connection: " + e.getMessage());
-        }
-        return closed;
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        Logger.info("Spawning node " + response);
+        logic.onNodeAdded(nodeInfo);
+      }
+    }, 5 * 1000L);
+  }
+
+  private void start(String host, int port) throws IOException {
+    try {
+      this.socket = new Socket(host, port);
+      this.socket.setKeepAlive(true);
+      this.socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      this.socketWriter = new PrintWriter(socket.getOutputStream(), true);
+      this.isOn = true;
+      Logger.info("Socket connection established with " + host + ":" + port);
+
+    } catch (IOException e) {
+      Logger.error("Could not establish connection to the server: " + e.getMessage());
     }
+  }
 
+  private void establishConnectionWithServer() {
+    // Send initial identifier to server
+    String identifierMessage = Clients.CONTROL_PANEL.getValue() + ";0"; // TODO generate unique identifier, or let
+                                                                        // server do it?
+    socketWriter.println(identifierMessage);
+    Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
+  }
 
+  public void sendCommandToServerNoResponse(String command) {
+    if (isOn && socketWriter != null) {
+      Logger.info("Trying to send command...");
+      socketWriter.println(command);
+      Logger.info("Sent command to server: " + command);
+    } else {
+      Logger.error("Unable to send command, socket is not connected.");
+    }
+  }
 
+  @Override
+  public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
+    String command = Clients.GREENHOUSE + ";" + nodeId + "-ACTUATOR_CHANGE;" + actuatorId + ";" + (isOn ? "ON" : "OFF");
+    sendCommandToServerNoResponse(command);
+  }
 
+  @Override
+  public boolean open() {
+    return isOn;
+  }
+
+  @Override
+  public boolean close() {
+
+    boolean closed = false;
+
+    try {
+      if (socket != null)
+        socket.close();
+      if (socketReader != null)
+        socketReader.close();
+      if (socketWriter != null)
+        socketWriter.close();
+      isOn = false;
+      Logger.info("Socket connection closed.");
+      closed = true;
+    } catch (IOException e) {
+      Logger.error("Failed to close socket connection: " + e.getMessage());
+    }
+    return closed;
+  }
 
   /**
    * Spawn a new sensor/actuator node information after a given delay.
    *
-   * @param specification A (temporary) manual configuration of the node in the following format
+   * @param specification A (temporary) manual configuration of the node in the
+   *                      following format
    *                      [nodeId] semicolon
-   *                      [actuator_count_1] underscore [actuator_type_1] space ... space
+   *                      [actuator_count_1] underscore [actuator_type_1] space
+   *                      ... space
    *                      [actuator_count_M] underscore [actuator_type_M]
    */
-    public void askForNodes() {
-        String nodes = sendCommandToServer("GREENHOUSE;ALL;GET_NODE_ID");
-        Logger.info("Received nodes: " + nodes);
-        for (String node : nodes.split(";")) {
-          int nodeId;
-            try{
-              nodeId = parseIntegerOrError(node, "Invalid node ID: " + node);
-            }
-            catch (NumberFormatException e) {
-              Logger.error("Could not parse node ID: " + e.getMessage());
-              continue;
-            }
-            this.spawnNode(node, 5);
-        }
-    }
+  public void askForNodes() {
+    this.sendCommandToServerNoResponse("GREENHOUSE;ALL-GET_NODE_ID");
+  }
 
-    public void spawnNode(String nodeId, int START_DELAY) {
-        String specification = sendCommandToServer("GREENHOUSE;" + nodeId + ";GET_NODE");
-        Logger.info("Received node specification: " + specification);
-        String info = specification.split(";")[2];
-        SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(info);
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-          @Override
-          public void run() {
-            Logger.info("Spawning node " + specification);
-            logic.onNodeAdded(nodeInfo);
-          }
-        }, START_DELAY * 1000L);
-    }
+  public void spawnNode(String nodeId, int START_DELAY) {
+    sendCommandToServerNoResponse("GREENHOUSE;" + nodeId + "-GET_NODE");
+  }
 
-    private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
-        Logger.info("specification: " + specification);
-        if (specification == null || specification.isEmpty()) {
-          throw new IllegalArgumentException("Node specification can't be empty");
-        }
-        String[] parts = specification.split(";");
-        if (parts.length > 3) {
-          throw new IllegalArgumentException("Incorrect specification format");
-        }
-        int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
-        SensorActuatorNodeInfo info = new SensorActuatorNodeInfo(nodeId);
-        if (parts.length == 2) {
-          parseActuators(parts[1], info);
-        }
-        return info;
-      }
+  private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
+    Logger.info("specification: " + specification);
+    if (specification == null || specification.isEmpty()) {
+      throw new IllegalArgumentException("Node specification can't be empty");
+    }
+    String[] parts = specification.split(";", 2);
+    // if (parts.length > 3) {
+    //   throw new IllegalArgumentException("Incorrect specification format");
+    // }
+    int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
+    SensorActuatorNodeInfo info = new SensorActuatorNodeInfo(nodeId);
+
+
+
+    if (parts.length == 2) {
+      this.parseActuators(parts[1], info);
+    }
+    return info;
+  }
 
   private void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info) {
-    String[] parts = actuatorSpecification.split(" ");
+    String[] parts = actuatorSpecification.split(";");
     for (String part : parts) {
-      parseActuatorInfo(part, info);
+      this.parseActuatorInfo(part, info);
     }
   }
 
@@ -167,17 +236,24 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     if (actuatorInfo.length != 2) {
       throw new IllegalArgumentException("Invalid actuator info format: " + s);
     }
-    int actuatorCount = parseIntegerOrError(actuatorInfo[0],
+
+    String actuatorType = actuatorInfo[0];
+    int  actuatorId = parseIntegerOrError(actuatorInfo[1],
         "Invalid actuator count: " + actuatorInfo[0]);
-    String actuatorType = actuatorInfo[1];
-    for (int i = 0; i < actuatorCount; ++i) {
-      Actuator actuator = new Actuator(actuatorType, info.getId());
+
+      Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
       actuator.setListener(logic);
       info.addActuator(actuator);
-    }
+
+    // int actuatorCount = parseIntegerOrError(actuatorInfo[0],
+    //     "Invalid actuator count: " + actuatorInfo[0]);
+    // String actuatorType = actuatorInfo[1];
+    // for (int i = 0; i < actuatorCount; ++i) {
+    //   Actuator actuator = new Actuator(actuatorType, info.getId());
+    //   actuator.setListener(logic);
+    //   info.addActuator(actuator);
+    // }
   }
-
-
 
   /**
    * Advertise new sensor readings.
@@ -229,7 +305,7 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
 
   private List<SensorReading> parseSensors(String sensorInfo) {
     List<SensorReading> readings = new LinkedList<>();
-    String[] readingInfo = sensorInfo.split(",");
+    String[] readingInfo = sensorInfo.split(";");
     for (String reading : readingInfo) {
       readings.add(parseReading(reading));
     }
@@ -248,7 +324,8 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     String sensorType = assignmentParts[0];
     double value = parseDoubleOrError(valueParts[0], "Invalid sensor value: " + valueParts[0]);
     String unit = valueParts[1];
-    return new SensorReading(sensorType, value, unit);
+    Sensor sensor = new Sensor(sensorType, value, value, value, unit);
+    return sensor.getReading();
   }
 
   /**
@@ -257,7 +334,8 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
    * @param nodeId     ID of the node to which the actuator is attached
    * @param actuatorId ID of the actuator.
    * @param on         When true, actuator is on; off when false.
-   * @param delay      The delay in seconds after which the advertisement will be generated
+   * @param delay      The delay in seconds after which the advertisement will be
+   *                   generated
    */
   public void advertiseActuatorState(int nodeId, int actuatorId, boolean on, int delay) {
     Timer timer = new Timer();

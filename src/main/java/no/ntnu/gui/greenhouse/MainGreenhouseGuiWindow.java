@@ -23,27 +23,26 @@ public class MainGreenhouseGuiWindow extends Scene {
 
   public MainGreenhouseGuiWindow() {
     super(createMainContent(), WIDTH, HEIGHT);
+    // Load the CSS file and apply it to the scene
+    getStylesheets().add(getClass().getResource("/css/greenhouse.css").toExternalForm());
   }
 
   private static Parent createMainContent() {
     VBox container = new VBox(createInfoLabel(), createMasterImage(), createCopyrightNotice());
-    container.setPadding(new Insets(20));
-    container.setAlignment(Pos.CENTER);
-    container.setSpacing(5);
+    container.getStyleClass().add("root"); // Adding a root style class
     return container;
   }
 
   private static Label createInfoLabel() {
-    Label l = new Label("Close this window to stop the whole simulation");
-    l.setWrapText(true);
-    l.setPadding(new Insets(0, 0, 10, 0));
-    return l;
+    Label label = new Label("Close this window to stop the whole simulation");
+    label.getStyleClass().add("info-label"); // Apply CSS class
+    return label;
   }
 
   private static Node createCopyrightNotice() {
-    Label l = new Label("Image generated with Picsart");
-    l.setFont(Font.font(10));
-    return l;
+    Label label = new Label("Image generated with Picsart");
+    label.getStyleClass().add("copyright-label"); // Apply CSS class
+    return label;
   }
 
   private static Node createMasterImage() {
@@ -52,8 +51,10 @@ public class MainGreenhouseGuiWindow extends Scene {
       InputStream fileContent = new FileInputStream("images/picsart_chuck.jpeg");
       ImageView imageView = new ImageView();
       imageView.setImage(new Image(fileContent));
-      imageView.setFitWidth(100);
+      imageView.getStyleClass().add("image-view");
+      imageView.setFitWidth(300);
       imageView.setPreserveRatio(true);
+
       node = imageView;
     } catch (FileNotFoundException e) {
       node = new Label("Could not find image file: " + e.getMessage());

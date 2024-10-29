@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashMap;
 
+import no.ntnu.Clients;
 import no.ntnu.tools.Logger;
 
 public class NodeConnectionHandler implements Runnable {
@@ -36,9 +38,12 @@ public class NodeConnectionHandler implements Runnable {
                     Logger.info("Received for node " + node.getId() + ": " + serverMessage);
                     handleServerCommand(serverMessage);
                 }
+                else{
+                    Logger.info("Invalid request from server: " + serverMessage);
+                }
             }
         } catch (IOException e) {
-            System.err.println("Connection lost for node " + node.getId() + ": " + e.getMessage());
+            Logger.error("Connection lost for node " + node.getId() + ": " + e.getMessage());
         } finally {
             closeConnection();
         }
@@ -50,24 +55,66 @@ public class NodeConnectionHandler implements Runnable {
 
     private void handleServerCommand(String command) {
         Logger.info("Received command for node! " + node.getId() + ": " + command);
-        String[] commandParts = command.split(";");
-        String sender = commandParts[0];
-        String senderID = commandParts[1];
-        String commandType = commandParts[2];
+        String[] commandParts = command.split("-");
+
+        String header = commandParts[0];
+        String body = commandParts[1];
+
+        String[] headerParts = header.split(";");
+        String[] bodyParts = body.split(";");
+
+        String sender = headerParts[0];
+        String senderID = headerParts[1];
+        String commandType = bodyParts[0];
 
         if (commandType.equalsIgnoreCase("GET_NODE_ID")) {
             Logger.info("Received request for node ID from server, sending response " + node.getId());
             // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
-            socketWriter.println("CONTROL_PANEL;0;" + node.getId());
+            socketWriter.println(Clients.CONTROL_PANEL + ";0-GET_NODE_ID;" + node.getId()); // TODO change the id. (from 0)
         }
         else if (commandType.equalsIgnoreCase("GET_NODE")){
             Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + node.getId());
+            // spawner.spawnNode("4;2_heater;3_window", START_DELAY + 3);
+
+            // List<Sensor> sensors = node.getSensors();
+            ActuatorCollection actuators = node.getActuators();
+
+            StringBuilder actuatorString = new StringBuilder();
+            HashMap<String, Integer> actuatorCount = new HashMap<String, Integer>();
+            for (Actuator actuator : actuators) {
+                actuatorString.append(";" + actuator.getType() + "_" + actuator.getId());
+                // if (actuatorCount.containsKey(actuator.getType())) {
+                //     actuatorCount.put(actuator.getType(), actuatorCount.get(actuator.getType()) + 1);
+                // } else {
+                //     actuatorCount.put(actuator.getType(), 1);
+                // }
+                // actuatorString.append(actuator "_" + actuator.getType());
+            }
+
+            // for (String key : actuatorCount.keySet()) {
+            //     actuatorString.append(";" + actuatorCount.get(key) + "_" + key);
+            // }
+
+            String resultString = actuatorString.toString();
+
+
+            Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + node.getId());
             // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
-            socketWriter.println("CONTROL_PANEL;0;" + node.getId()); // TODO add sensor data and actuator data.
+            Logger.info(resultString);
+            socketWriter.println(Clients.CONTROL_PANEL + ";0-GET_NODE;" + node.getId() + resultString); // TODO add sensor data and actuator data.
+        }
+        else if (commandType.equalsIgnoreCase("ACTUATOR_CHANGE")){
+            int actuatorId = Integer.parseInt(bodyParts[1]);
+            boolean isOn = bodyParts[2].equalsIgnoreCase("ON");
+            node.setActuator(actuatorId, isOn);
         }
         else{
             Logger.info("Received unknown command from server: " + command);
         }
+
+        // spawner.advertiseSensorData("4;temperature=27.4 °C,temperature=26.8 °C,humidity=80 %", START_DELAY + 2);
+
+
         // Parse and execute commands received from the server for this node
         // Example: Control actuators based on command type
     }
@@ -77,8 +124,9 @@ public class NodeConnectionHandler implements Runnable {
             socket.close();
             socketWriter.close();
             socketReader.close();
+            Logger.info("Connection closed for node " + node.getId());
         } catch (IOException e) {
-            System.err.println("Error closing connection for node " + node.getId() + ": " + e.getMessage());
+            Logger.error("Error closing connection for node " + node.getId() + ": " + e.getMessage());
         }
     }
 }

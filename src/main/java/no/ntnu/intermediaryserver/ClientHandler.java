@@ -14,6 +14,8 @@ public class ClientHandler extends Thread {
     private final IntermediaryServer server;
     private BufferedReader socketReader;
     private PrintWriter socketWriter;
+
+    private ClientIdentifier clientIdentifier;
     
     private String clientType;  // "CONTROL_PANEL" or "GREENHOUSE"
     private String clientId;    // Unique ID for the greenhouse node or control panel
@@ -21,6 +23,7 @@ public class ClientHandler extends Thread {
     public ClientHandler(Socket socket, IntermediaryServer server) {
         this.clientSocket = socket;
         this.server = server;
+        this.clientIdentifier = new ClientIdentifier();
         initializeStreams();
     }
 
@@ -37,133 +40,23 @@ public class ClientHandler extends Thread {
     
     @Override
     public void run() {
-        identifyClientType();
-        handleClient();
-    }
-
-    private void identifyClientType() {
-        try {
-            String identification = this.socketReader.readLine();
-            String[] parts = identification.split(";");
-            this.clientType = parts[0];
-            clientId = parts.length > 1 ? parts[1] : null;
-
-            if ("CONTROL_PANEL".equalsIgnoreCase(this.clientType) && clientId != null) {
-                server.addControlPanel(clientId, clientSocket);
-                Logger.info("Connected Control Panel with ID: " + clientId);
-            } else if ("GREENHOUSE".equalsIgnoreCase(this.clientType) && clientId != null) {
-                server.addGreenhouseNode(clientId, clientSocket);
-                Logger.info("Connected Greenhouse Node with ID: " + clientId);
-            } else {
-                Logger.info("Unknown client type. Closing connection. Received: " + identification + " Client type: " + this.clientType + " Client ID: " + clientId);
-                clientSocket.close();
-            }
-        } catch (IOException e) {
-            Logger.error("Error identifying client type: " + e.getMessage());
-        }
-    }
-
-   /**
-   * Handle a request from the client.
-   *
-   * @param clientRequest The request from the client
-   * @return The response to send back to the client
-   */
-  private String handleClientRequest(String clientRequest) {
-    if (clientRequest == null) {
-      return null;
-    }
-
-    String[] parts = clientRequest.split(";");
-    String sender = parts[0];
-    String senderID = parts[1];
-    String command;
-    if (parts.length == 3) {
-      command = parts[2];
-      return sender + ";" + senderID + ";" + command;
-    }
-
-    return "Handled request: " + clientRequest;
-  }
-
-    /**
-   * Send a response from the server to the client, over the TCP socket.
-   *
-   * @param response The response to send to the client, NOT including the newline
-   */
-    private void sendResponseToClient(String response) {
-        Logger.info(">>> " + response);
-        String[] responseParts = response.split(";");
-        if (responseParts.length == 2){
-            Logger.info("Received identifier message...");
-            return;
-        } 
-
-        String target = responseParts[0];
-        String targetId = responseParts[1];
-        String command = responseParts[2];
-        PrintWriter receiverWriter;
-
-
-        if (targetId.equalsIgnoreCase("ALL")){
-            ArrayList<String> nodeIds = server.getGreenhouseNodeIds();
-            String nodeIdsString = String.join(";", nodeIds);
-            this.socketWriter.println(nodeIdsString);
-            // for (Socket nodeSocket : server.getGreenhouseNodes()) {
-            //     try {
-            //         receiverWriter = new PrintWriter(nodeSocket.getOutputStream(), true);
-            //         Logger.info("Sending response to greenhouse node " + nodeSocket.getRemoteSocketAddress() + ": " + command);
-            //         receiverWriter.println(this.clientType + ";" + this.clientId + ";" + command);
-            //     } catch (IOException e) {
-            //         Logger.error("Failed to send response to greenhouse node: " + e.getMessage());
-            //     }
-            // }
-            return;
-        }
-        
-        if ("CONTROL_PANEL".equalsIgnoreCase(target)) {
-            Socket controlPanelSocket = server.getControlPanel(targetId);
-            if (controlPanelSocket != null) {
-                try {
-                    receiverWriter = new PrintWriter(controlPanelSocket.getOutputStream(), true);
-                    Logger.info("Sending response to control panel " + targetId + ": " + command);
-                    receiverWriter.println(this.clientType + ";" + this.clientId + ";" + command);
-                } catch (IOException e) {
-                    Logger.error("Failed to send response to control panel: " + e.getMessage());
-                }
-            } else {
-                Logger.error("Control panel not found: " + targetId);
-            }
-        } else if ("GREENHOUSE".equalsIgnoreCase(target)) {
-            Socket greenhouseNodeSocket = server.getGreenhouseNode(targetId);
-            if (greenhouseNodeSocket != null) {
-                try {
-                    receiverWriter = new PrintWriter(greenhouseNodeSocket.getOutputStream(), true);
-                    Logger.info("Sending response to greenhouse node " + targetId + ": " + command);
-                    receiverWriter.println(this.clientType + ";" + this.clientId + ";" + command);
-                } catch (IOException e) {
-                    Logger.error("Failed to send response to greenhouse node: " + e.getMessage());
-                }
-            } else {
-                Logger.error("Greenhouse node not found: " + targetId);
-            }
-        }
-        // this.socketWriter.println(response);
+        this.identifyClientType();
+        this.handleClient();
     }
 
     private void handleClient() {
-        String response; 
+        String clientRequest = null; 
         do {
-        String clientRequest = readClientRequest();
-        Logger.info("Received from client: " + clientRequest);
-        response = this.handleClientRequest(clientRequest);
-        if (response != null) {
-            this.sendResponseToClient(response);
-        }
-        else{
-            Logger.info("Invalid request from client: " + clientRequest);
-        }
-        } while (response != null);
+            clientRequest = this.readClientRequest();
+            if (clientRequest != null) {
+                Logger.info("Received from client: " + clientRequest);
+                this.sendToClient(clientRequest);
+            }
+            else{
+                Logger.info("Invalid request from client: " + clientRequest);
+            }
+        } while (clientRequest != null);
+        this.closeStreams();
         Logger.info("Client disconnected");
     }
 
@@ -175,10 +68,155 @@ public class ClientHandler extends Thread {
     private String readClientRequest() {
         String clientRequest = null;
         try {
-        clientRequest = this.socketReader.readLine();
+            clientRequest = this.socketReader.readLine();
         } catch (IOException e) {
-        Logger.error("Could not receive client request: " + e.getMessage());
+            Logger.error("Could not receive client request: " + e.getMessage());
         }
         return clientRequest;
+    }
+
+//    /**
+//    * Handle a request from the client.
+//    *
+//    * @param clientRequest The request from the client
+//    * @return The response to send back to the client
+//    */
+//   private String handleClientRequest(String clientRequest) {
+//     if (clientRequest == null) {
+//       return null;
+//     }
+
+//     // TODO use a class to parse the client request
+//     // TODO Seperate between header and body
+
+//     String[] parts = clientRequest.split(";");
+//     String sender = parts[0];
+//     String senderID = parts[1];
+//     String command;
+//     if (parts.length == 3) {
+//       command = parts[2];
+//       return sender + ";" + senderID + ";" + command;
+//     }
+
+//     return "Handled request: " + clientRequest;
+//   }
+
+   /**
+   * Send a message from the server to the client, over the TCP socket.
+   *
+   * @param message The message to send to the client, NOT including the newline
+   */
+    private void sendToClient(String message) {
+        String[] responseParts = message.split("-");
+
+        String header = responseParts[0];
+        String body = responseParts[1];
+
+        String[] headerParts = header.split(";");
+        String target = headerParts[0];
+        String targetId = headerParts[1];
+        
+        // String[] bodyParts = body.split(";");
+        // String command = bodyParts[0];
+        // String response = null;
+        // if (bodyParts.length > 1) {
+        //     response = bodyParts[1];
+        // }
+
+
+        if (targetId.equalsIgnoreCase("ALL")){
+            this.sendToAll(target, body);
+            return;
+        }
+
+        this.sendCommandToClient(target, targetId, body);
+    }
+
+    private void sendCommandToClient(String targetClientType, String targetClientId, String command) {
+        Socket receiver = server.getClient(targetClientType, targetClientId);
+        if (receiver == null) {
+            Logger.error(targetClientType + " not found: " + targetClientId);
+            return;
+        }
+
+        String header = this.clientType + ";" + this.clientId;
+
+        String body = command;
+
+        String message = header + "-" + body;
+
+
+        try {
+            PrintWriter receiverWriter = new PrintWriter(receiver.getOutputStream(), true);
+            Logger.info("Sending response to " + targetClientType + " " + receiver.getRemoteSocketAddress() + ": " + command);
+            receiverWriter.println(message);
+        } catch (IOException e) {
+            Logger.error("Failed to send response to " + targetClientType + ": " + e.getMessage());
+        }
+    }
+
+    private void sendToAll(String targetClientType, String command) {
+        ArrayList<Socket> clients = server.getAllClients(targetClientType);
+        PrintWriter receiverWriter;
+
+        for (Socket client : clients) {
+            try {
+                receiverWriter = new PrintWriter(client.getOutputStream(), true);
+                Logger.info("Sending response to " + targetClientType + " " + client.getRemoteSocketAddress() + ": " + command);
+                receiverWriter.println(this.clientType + ";" + this.clientId + "-" + command);
+            } catch (IOException e) {
+                Logger.error("Failed to send response to " + targetClientType + ": " + e.getMessage());
+            }
+        }
+    }
+
+    private void identifyClientType() {
+        String identification = this.readClientRequest();
+        if (identification == null) {
+            Logger.error("Error identifying client type");
+            return;
+        }
+
+        if (!this.processIdentification(identification)) {
+            return;
+        }
+    
+        this.addClient();
+    }
+
+    private boolean processIdentification(String identification) {
+        boolean identificationSuccess = false;
+        try{
+            this.clientIdentifier.identifyClientType(identification);
+            identificationSuccess = true;    
+        }
+        catch (IllegalArgumentException e){
+            Logger.error("Invalid identification message: " + identification);
+            this.closeStreams();
+        }
+        
+        this.clientType = this.clientIdentifier.getClientType();
+        this.clientId = this.clientIdentifier.getClientId();
+
+        return identificationSuccess;
+    }
+
+    private void addClient() {
+        try {
+            server.addClient(this.clientType, this.clientId, this.clientSocket);
+        } catch (UnknownClientException e) {
+            Logger.error("Unknown client type: " + this.clientType);
+            this.closeStreams();
+        }
+    }
+
+    private void closeStreams() {
+        try {
+            this.socketReader.close();
+            this.socketWriter.close();
+            this.clientSocket.close();
+        } catch (IOException e) {
+            Logger.error("Could not close reader, writer or socket: " + e.getMessage());
+        }
     }
 }

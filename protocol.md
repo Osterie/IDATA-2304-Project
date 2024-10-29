@@ -54,10 +54,18 @@ message type in your protocol.
 
 TODO
 What we need
+Header.
 - Who is the receiver (GREENHOUSE or CONTROL_PANEL)
+- ID of the receiver
+- Data type
 
-SRC;SRC_ID;DST;DST_ID;COMMAND
-GREENHOUSE;ALL;GET_NODE_ID
+BODY
+- Command
+
+
+Result:
+- DST;DST_ID;DATA_TYPE COMMAND
+- GREENHOUSE;ALL;STRING GET_NODE_ID
 
 ### Error messages
 
@@ -82,4 +90,30 @@ example scenario could be as follows:
 
 ## Reliability and security
 
-TODO - describe the reliability and security mechanisms your solution supports.
+### Security:
+  - For security of the data the AES encryption method is used.
+
+  - Justification for AES: AES (Advanced Encryption Standard) is a widely used, efficient, and secure
+  symmetric encryption algorithm. It provides confidentiality by ensuring that the data sent
+  over the network cannot be read by anyone who doesn’t have the encryption key. AES is
+  chosen because it balances performance and security, making it suitable for both small and
+  large-scale applications. It is considered highly secure when using proper key management.
+
+  - Justification for symmetric encryption: Using symmetric encryption simplifies the process because the same key is
+  used for both encryption and decryption. This avoids the complexity of key pair
+  management (as seen in asymmetric encryption like RSA), which makes it suitable for
+  applications where the sender and receiver can securely share a common secret key.
+
+### Reliability:
+  - For reliability a hashing algorithm is being used.
+
+  - Justification for hashing algorithm: Hashing algorithms like SHA-256 are used to ensure data integrity. The hash
+  function generates a fixed-size output (hash) that uniquely represents the message. When
+  transmitting messages over unreliable networks, hashes can verify the integrity of the
+  message and ensure it has not been tampered with or altered. This also provides
+  lightweight verification without adding computational overhead.
+
+    - Message Integrity Check: By hashing the message on both the sender and receiver
+  sides, we ensure that any corruption during transmission can be detected. If the
+  received hash doesn't match the hash computed on the receiver's side, the message is
+  considered tampered or corrupted, and the sender is notified to resend.

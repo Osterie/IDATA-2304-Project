@@ -95,7 +95,7 @@ public class ControlPanelStarter implements Runnable {
     spawner.spawnNode("4;3_window", START_DELAY);
     spawner.spawnNode("1", START_DELAY + 1);
     spawner.spawnNode("1", START_DELAY + 2);
-    // spawner.advertiseSensorData("4;temperature=27.4 °C,temperature=26.8 °C,humidity=80 %", START_DELAY + 2);
+    spawner.advertiseSensorData("4;temperature=27.4 °C,temperature=26.8 °C,humidity=80 %", START_DELAY + 2);
     spawner.spawnNode("8;2_heater", START_DELAY + 3);
     // spawner.advertiseActuatorState(4, 1, true, START_DELAY + 3);
     // spawner.advertiseActuatorState(4, 1, false, START_DELAY + 4);
@@ -120,13 +120,13 @@ public class ControlPanelStarter implements Runnable {
     this.channel.close();
   }
 
-  /**
-   * Send a command to the server.
-   * 
-   * @param command the command to send.
-   * @throws IOException if an I/O error occurs when sending the command.
-   */
-  private void sendCommandToServer(String command) throws IOException {
-    this.channel.sendCommandToServer(command);
-  }
+  // /**
+  //  * Send a command to the server.
+  //  * 
+  //  * @param command the command to send.
+  //  * @throws IOException if an I/O error occurs when sending the command.
+  //  */
+  // private void sendCommandToServer(String command) throws IOException {
+  //   this.channel.sendCommandToServerSin(command);
+  // }
 }

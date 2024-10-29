@@ -7,8 +7,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+
+import no.ntnu.Clients;
 import no.ntnu.tools.Logger;
 
+/**
+ * The IntermediaryServer class is responsible for managing the connections between the greenhouse nodes and control panels.
+ * It listens for incoming connections from clients and creates a new thread to handle each client connection.
+ * 
+ */
 public class IntermediaryServer implements Runnable {
     public static final int PORT_NUMBER = 50500;
     private boolean isTcpServerRunning;
@@ -19,6 +26,7 @@ public class IntermediaryServer implements Runnable {
     private ServerSocket listeningSocket;
 
     public static void main(String[] args) throws IOException {
+        Logger.info("Starting Intermediary Server...");
         new IntermediaryServer().startServer();
     }
 
@@ -50,6 +58,19 @@ public class IntermediaryServer implements Runnable {
                 Logger.error("Error closing server socket: " + e.getMessage());
             }
         }
+    }
+
+    public synchronized void addClient(String clientType, String clientId, Socket socket) {
+        if (clientType.equals(Clients.GREENHOUSE.getValue())) {
+            addGreenhouseNode(clientId, socket);
+        } else if (clientType.equals(Clients.CONTROL_PANEL.getValue())) {
+            addControlPanel(clientId, socket);
+        }
+        else {
+            Logger.error("Unknown client type: " + clientType);
+            throw new UnknownClientException("Unknown client type: " + clientType);
+        }
+        Logger.info("Connected " + clientType + " with ID: " + clientId);
     }
 
     public synchronized void addGreenhouseNode(String nodeId, Socket socket) {
@@ -86,6 +107,30 @@ public class IntermediaryServer implements Runnable {
 
     public Socket getControlPanel(String panelId) {
         return controlPanels.get(panelId);
+    }
+
+    public ArrayList<Socket> getControlPanels() {
+        return new ArrayList<>(controlPanels.values());
+    }
+
+    public Socket getClient(String clientType, String clientId) {
+        Socket clientSocket = null;
+        if (clientType.equals(Clients.GREENHOUSE.getValue())) {
+            clientSocket = this.getGreenhouseNode(clientId);
+        } else if (clientType.equals(Clients.CONTROL_PANEL.getValue())) {
+            clientSocket = this.getControlPanel(clientId);
+        }
+        return clientSocket;
+    }
+
+    public ArrayList<Socket> getAllClients(String clientType) {
+        ArrayList<Socket> clients = new ArrayList<>();
+        if (clientType.equalsIgnoreCase(Clients.GREENHOUSE.getValue())) {
+            clients = this.getGreenhouseNodes();
+        } else if (clientType.equalsIgnoreCase(Clients.CONTROL_PANEL.getValue())) {
+            clients = this.getControlPanels();
+        }
+        return clients;
     }
 
     private Socket acceptNextClientConnection() {

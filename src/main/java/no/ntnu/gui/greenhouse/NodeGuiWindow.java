@@ -1,6 +1,5 @@
 package no.ntnu.gui.greenhouse;
 
-import java.util.List;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -12,6 +11,8 @@ import no.ntnu.gui.common.ActuatorPane;
 import no.ntnu.gui.common.SensorPane;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
+
+import java.util.List;
 
 /**
  * Window with GUI for overview and control of one specific sensor/actuator node.
@@ -34,6 +35,9 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
   public NodeGuiWindow(SensorActuatorNode node) {
     this.node = node;
     Scene scene = new Scene(createContent(), WINDOW_WIDTH, WINDOW_HEIGHT);
+    // Load the CSS file and apply it to the scene
+    scene.getStylesheets().add(getClass().getResource("/css/sensorNode.css").toExternalForm());
+
     setScene(scene);
     setTitle("Node " + node.getId());
     initializeListeners(node);
@@ -46,7 +50,6 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
     setMinWidth(WINDOW_HEIGHT);
     setMinHeight(WINDOW_WIDTH);
   }
-
 
   private void initializeListeners(SensorActuatorNode node) {
     setOnCloseRequest(windowEvent -> shutDownNode());
@@ -61,9 +64,10 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
   private Parent createContent() {
     actuatorPane = new ActuatorPane(node.getActuators());
     sensorPane = new SensorPane(node.getSensors());
-    return new VBox(sensorPane, actuatorPane);
+    VBox root = new VBox(sensorPane, actuatorPane);
+    root.getStyleClass().add("root");
+    return root;
   }
-
 
   @Override
   public void sensorsUpdated(List<Sensor> sensors) {
