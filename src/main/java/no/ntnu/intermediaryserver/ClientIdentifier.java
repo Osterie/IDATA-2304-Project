@@ -1,19 +1,14 @@
 package no.ntnu.intermediaryserver;
 
-import java.util.ArrayList;
-
 import no.ntnu.Clients;
+import no.ntnu.tools.Logger;
 
 public class ClientIdentifier {
-    private String clientType;  // "CONTROL_PANEL" or "GREENHOUSE" (currently)
+    private Clients clientType;  // Clients.CONTROL_PANEL or Clients.GREENHOUSE
     private String clientId;    // Unique ID for the greenhouse node or control panel
 
-    private ArrayList<String> possibleClients;
-
     public ClientIdentifier() {
-        this.possibleClients = new ArrayList<>();
-        this.possibleClients.add(Clients.CONTROL_PANEL.getValue());
-        this.possibleClients.add(Clients.GREENHOUSE.getValue());
+        // Empty
     }
 
     public void identifyClientType(String identification) {
@@ -22,19 +17,20 @@ public class ClientIdentifier {
         this.setClientId(parts[1]);        
     }
 
-    public String getClientType() {
-        return clientType;
+    public Clients getClientType() {
+        return this.clientType;
     }
 
     public String getClientId() {
-        return clientId;
+        return this.clientId;
     }
 
     private void setClientType(String identifiedClientType) {
         if (!this.isValidClientType(identifiedClientType)) {
+            Logger.error("Invalid client type: " + identifiedClientType);
             throw new IllegalArgumentException("Invalid client type: " + identifiedClientType);
         }
-        this.clientType = identifiedClientType;
+        this.clientType = Clients.fromString(identifiedClientType);
     }
 
     private void setClientId(String clientId) {
@@ -44,12 +40,18 @@ public class ClientIdentifier {
     private String[] identifyParts(String identification) {
         String[] parts = identification.split(";");
         if (parts.length != 2) {
+            Logger.error("Invalid identification message: " + identification);
             throw new IllegalArgumentException("Invalid identification message: " + identification);
         }
         return parts;
     }
 
-    private boolean isValidClientType(String clientType) {
-        return this.possibleClients.contains(clientType);
+    private boolean isValidClientType(String identifiedClientType) {
+        boolean isValid = false;
+        if (Clients.fromString(identifiedClientType) != null) {
+            Logger.info("yaaaz");
+            isValid = true;
+        }
+        return isValid;
     }
 }

@@ -42,6 +42,14 @@ a reply with an error code?
 
 # General TODO
 
+- [ ] Adrian use Clients enum constants instead of strings.
+    - [ ] Intermediary server
+    - [ ] Control panel
+    - [ ] Greenhouse
+
+- [x] Adrian Implement Header/Body messages for control panel 
+- [x] Adrian Implement Header/Body messages for intermediary server
+- [] Adrian Implement Header/Body messages for greenhouse
 - [ ] Adrian? Handling connection errors and messaging errors properly.
 - [x] ADRIAN. gitignore fil.
 - [x] TOBIAS. Implementere Message og Command interfacer/klasser
@@ -141,7 +149,7 @@ For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuat
 ## GUI
 
 - [ ] KNUT. Visualize charts.
-- [ ] KNUT. Visualize actuator status for each sensor node. Simple, textual visualization is enough.
+- [ ] KNUT. Visualize actuator status for each sensor node. Simple, textual visualization is enough (images and such).
 - [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
 Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
 - [ ] ADRIAN. Make actuator buttons send data. 

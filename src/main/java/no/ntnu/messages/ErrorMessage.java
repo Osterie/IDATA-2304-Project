@@ -1,4 +1,4 @@
-package no.ntnu.commands;
+package no.ntnu.messages;
 
 /**
  * Message class used to display an error to the user

@@ -1,4 +1,4 @@
-package no.ntnu.commands;
+package no.ntnu.messages;
 
 /**
  * If the client or the server needs to send a response
