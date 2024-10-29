@@ -1,4 +1,4 @@
-package no.ntnu.commands;
+package no.ntnu.messages;
 
 /**
  * Represents a general command
