@@ -1,9 +1,11 @@
 package no.ntnu.greenhouse;
 
 import no.ntnu.greenhouse.sensorreading.HumiditySensorReading;
-import no.ntnu.greenhouse.sensorreading.PictureSensorReading;
+import no.ntnu.greenhouse.sensorreading.CameraSensorReading;
 import no.ntnu.greenhouse.sensorreading.SensorReading;
 import no.ntnu.greenhouse.sensorreading.TemperatureSensorReading;
+
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 /**
@@ -66,8 +68,29 @@ public class Sensor {
    * @return A clone of this sensor, where all the fields are the same
    */
   public Sensor createClone() {
+    if (reading instanceof CameraSensorReading) {
+      CameraSensorReading pictureReading = (CameraSensorReading) reading;
+      BufferedImage imageClone = deepCopy(pictureReading.getImage());
+      return new Sensor(this.reading.getType(), this.min, this.max,
+          this.reading.getValue(), this.reading.getUnit(), imageClone);
+    }
     return new Sensor(this.reading.getType(), this.min, this.max,
         this.reading.getValue(), this.reading.getUnit());
+  }
+
+
+/**
+     * Create a deep copy of a BufferedImage.
+     *
+     * @param image The BufferedImage to copy.
+     * @return A deep copy of the BufferedImage.
+     */
+    private BufferedImage deepCopy(BufferedImage image) {
+      BufferedImage copy = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+      Graphics2D g = copy.createGraphics();
+      g.drawRenderedImage(image, null);
+      g.dispose();
+      return copy;
   }
 
   /**
@@ -151,8 +174,8 @@ public class Sensor {
     SensorReading reading = null;
 
     switch (type) {
-      case "picture":
-        reading = new PictureSensorReading(type, value, unit, image);
+      case "camera":
+        reading = new CameraSensorReading(type, value, unit, image);
         break;
       default:
         throw new IllegalArgumentException("Unknown sensor type: " + type);

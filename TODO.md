@@ -82,7 +82,7 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 - [ ] Lag tester for alle klasser som kan testes.
 - [ ] Test protokoll
 - [ ] Test Message og Command klasser
-
+_
 # GREENHOUSE
 
 - [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.

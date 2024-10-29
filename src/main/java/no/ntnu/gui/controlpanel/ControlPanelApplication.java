@@ -120,7 +120,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     Logger.info("Sensor data from node " + nodeId);
     SensorPane sensorPane = sensorPanes.get(nodeId);
     if (sensorPane != null) {
-      sensorPane.update(sensors);
+      sensorPane.update(sensors, null);
     } else {
       Logger.error("No sensor section for node " + nodeId);
     }

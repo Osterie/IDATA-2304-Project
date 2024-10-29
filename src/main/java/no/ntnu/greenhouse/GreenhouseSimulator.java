@@ -71,15 +71,16 @@ public class GreenhouseSimulator {
    * Initialise the greenhouse but don't start the simulation just yet.
    */
   public void initialize() {
-    createNode(1, 2, 1, 0, 0);
-    createNode(1, 0, 0, 2, 1);
-    createNode(2, 0, 0, 0, 0);
+    createNode(1, 2, 1, 0, 0,0);
+    createNode(1, 0, 0, 2, 1,0);
+    createNode(2, 0, 0, 0, 0,0);
+    createNode(0, 0, 0, 0, 0, 1);
     Logger.info("Greenhouse initialized");
   }
 
-  private void createNode(int temperature, int humidity, int windows, int fans, int heaters) {
+  private void createNode(int temperature, int humidity, int windows, int fans, int heaters, int cameras) {
     SensorActuatorNode node = DeviceFactory.createNode(
-        temperature, humidity, windows, fans, heaters);
+        temperature, humidity, windows, fans, heaters, cameras);
     nodes.put(node.getId(), node);
   }
 

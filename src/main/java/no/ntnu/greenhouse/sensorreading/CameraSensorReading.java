@@ -3,12 +3,12 @@ package no.ntnu.greenhouse.sensorreading;
 import java.awt.image.BufferedImage;
 
 /**
- * Represents one picture sensor reading.
+ * Represents one camera sensor reading.
  */
-public class PictureSensorReading extends SensorReading {
+public class CameraSensorReading extends SensorReading {
     private final BufferedImage image;
 
-    public PictureSensorReading(String type, double value, String unit, BufferedImage image) {
+    public CameraSensorReading(String type, double value, String unit, BufferedImage image) {
         super(type, value, unit);
         this.image = image;
     }
