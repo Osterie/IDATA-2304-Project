@@ -17,7 +17,12 @@ import no.ntnu.Clients;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.Sensor;
 import no.ntnu.greenhouse.sensorreading.SensorReading;
+import no.ntnu.messages.Message;
 import no.ntnu.tools.Logger;
+
+import no.ntnu.messages.MessageBody;
+import no.ntnu.messages.MessageHeader;
+import no.ntnu.messages.MessageTest;
 
 /**
  * A communication channel for the control panel. This class is responsible for
@@ -136,6 +141,7 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     }
   }
 
+  // TODO this should be done in another way, use a protocol with header and body instead and such?
   private void establishConnectionWithServer() {
     // Send initial identifier to server
     String identifierMessage = Clients.CONTROL_PANEL.getValue() + ";0"; // TODO generate unique identifier, or let
@@ -144,20 +150,25 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
   }
 
-  public void sendCommandToServerNoResponse(String command) {
+  public void sendCommandToServerNoResponse(MessageTest message) {
     if (isOn && socketWriter != null) {
-      Logger.info("Trying to send command...");
-      socketWriter.println(command);
-      Logger.info("Sent command to server: " + command);
+      Logger.info("Trying to send message...");
+      socketWriter.println(message.toProtocolString());
+      Logger.info("Sent message to server: " + message);
     } else {
-      Logger.error("Unable to send command, socket is not connected.");
+      Logger.error("Unable to send message, socket is not connected.");
     }
   }
 
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-    String command = Clients.GREENHOUSE + ";" + nodeId + "-ACTUATOR_CHANGE;" + actuatorId + ";" + (isOn ? "ON" : "OFF");
-    sendCommandToServerNoResponse(command);
+    String nodeIdStr = Integer.toString(nodeId);
+    MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeIdStr);
+    MessageBody body = new MessageBody("ACTUATOR_CHANGE;" + actuatorId + ";" + (isOn ? "ON" : "OFF"));
+    MessageTest message = new MessageTest(header, body);
+    this.sendCommandToServerNoResponse(message);
+    // String command = Clients.GREENHOUSE + ";" + nodeId + "-ACTUATOR_CHANGE;" + actuatorId + ";" + (isOn ? "ON" : "OFF");
+    // sendCommandToServerNoResponse(command);
   }
 
   @Override
@@ -197,11 +208,17 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
    *                      [actuator_count_M] underscore [actuator_type_M]
    */
   public void askForNodes() {
-    this.sendCommandToServerNoResponse("GREENHOUSE;ALL-GET_NODE_ID");
+    MessageHeader header = new MessageHeader(Clients.GREENHOUSE, "ALL");
+    MessageBody body = new MessageBody("GET_NODE_ID");
+    MessageTest message = new MessageTest(header, body);
+    this.sendCommandToServerNoResponse(message);
   }
 
   public void spawnNode(String nodeId, int START_DELAY) {
-    sendCommandToServerNoResponse("GREENHOUSE;" + nodeId + "-GET_NODE");
+    MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeId);
+    MessageBody body = new MessageBody("GET_NODE");
+    MessageTest message = new MessageTest(header, body);
+    this.sendCommandToServerNoResponse(message);
   }
 
   private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {

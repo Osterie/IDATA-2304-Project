@@ -1,6 +1,6 @@
 package no.ntnu.messages;
 
-class MessageBody {
+public class MessageBody {
     private static final String FIELD_DELIMITER = Delimiters.BODY_DELIMITER.getValue();
     private String command;
     private String data;

@@ -1,30 +1,32 @@
 package no.ntnu.messages;
 
-class MessageHeader {
+import no.ntnu.Clients;
+
+public class MessageHeader {
     private static final String FIELD_DELIMITER = Delimiters.HEADER_DELIMITER.getValue();
-    private String receiver;
+    private Clients receiver;
     private String id;
     private String dataType;
 
     // Constructor
-    public MessageHeader(String receiver, String id, String dataType) {
-        this.receiver = receiver;
-        this.id = id;
-        this.dataType = dataType;
+    public MessageHeader(Clients receiver, String id, String dataType) {
+        this.setReceiver(receiver);
+        this.setId(id);
+        this.setDataType(dataType);
     }
 
-    public MessageHeader(String receiver, String id) {
-        this.receiver = receiver;
-        this.id = id;
+    public MessageHeader(Clients receiver, String id) {
+        this.setReceiver(receiver);
+        this.setId(id);
         this.dataType = "";
     }
 
     // Setters and Getters
-    public String getReceiver() {
+    public Clients getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(String receiver) {
+    public void setReceiver(Clients receiver) {
         this.receiver = receiver;
     }
 
@@ -32,8 +34,23 @@ class MessageHeader {
         return id;
     }
 
+    // TODO refactor me.
     public void setId(String id) {
-        this.id = id;
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("ID cannot be null or empty");
+        }
+        if (id.equalsIgnoreCase("ALL")){
+            this.id = id;
+        }
+        else{
+            try{
+                Integer idInt = Integer.parseInt(id);
+                this.id = id;
+            }
+            catch (NumberFormatException e){
+                throw new IllegalArgumentException("ID must be an integer");
+            }
+        }
     }
 
     public String getDataType() {
@@ -49,20 +66,24 @@ class MessageHeader {
         
         String result = "";
         if (dataType.isEmpty()) {
-            result = String.join(FIELD_DELIMITER, receiver, id);
+            result = String.join(FIELD_DELIMITER, receiver.getValue(), id);
         }
         else {
-            result = String.join(FIELD_DELIMITER, receiver, id, dataType);
+            result = String.join(FIELD_DELIMITER, receiver.getValue(), id, dataType);
         }
         return result;
     }
 
+    // TODO make better. CHeck if Clients.fromString is possible and such.
     // Parse from protocol string
     public static MessageHeader fromProtocolString(String protocolString) {
         String[] parts = protocolString.split(FIELD_DELIMITER);
         if (parts.length < 2) {
             throw new IllegalArgumentException("Invalid header format");
         }
-        return new MessageHeader(parts[0], parts[1], parts[2]);
+        if (parts.length == 2) {
+            return new MessageHeader(Clients.fromString(parts[0]), parts[1]);
+        }
+        return new MessageHeader(Clients.fromString(parts[0]), parts[1], parts[2]);
     }
 }
