@@ -154,6 +154,7 @@ For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuat
 - [ ] KNUT. Visualize actuator status for each sensor node. Simple, textual visualization is enough (images and such).
 - [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
 Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
+- [ ] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
 - [ ] ADRIAN. Make actuator buttons send data. 
 
 # EXTRA WORK
