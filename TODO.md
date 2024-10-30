@@ -5,12 +5,10 @@
 # GENERAL
 
 - [x] TOBIAS. Gjør om bilde til string, også den stringen til bilde. (for å sende over socket)
-- [ ]TOBIAS. Klasse for control panel som kan gjøre om den mottatte informasjonen til riktig format.
+- [ ] TOBIAS. Klasse for control panel som kan gjøre om den mottatte informasjonen til riktig format.
 
 
-- [ ] Følge protokoll, en header og en body.
-Header inneholer mottaker, mottakerID, datatype
-Body inneholder dataen.
+- [ ] ADRIAN. Følge protokoll, en header og en body. Header inneholer mottaker, mottakerID, datatype Body inneholder dataen.
 
 # PROTOCOL DESCRIPTION REQUIREMENTS
 
@@ -21,18 +19,17 @@ For each of the design choices provide a short justification: why did you choose
 - [x] 3. The underlying transport you use (TCP or UDP).
 - [x] 4. The used port number.
 - [ ] 5. SEBASTIAN. The overall architecture:
-- [ ] SEBASTIAN. • Who are the actors (nodes) in your solution?
-- [ ] SEBASTIAN. • Who are the clients, who is/are the server(s)?
-- [ ] ADRIAN 6. The flow of information: when and how the messages are sent?
+- [ ]   SEBASTIAN. • Who are the actors (nodes) in your solution?
+- [ ]   SEBASTIAN. • Who are the clients, who is/are the server(s)?
+- [ ] 6. ADRIAN The flow of information: when and how the messages are sent?
 - [ ] 7. KNUT. The type of your protocol:
-- [ ] KNUT. • Is your protocol connection-oriented or connection-less?
-- [ ] KNUT. • Is the protocol state-full or state-less?
+- [ ]   KNUT. • Is your protocol connection-oriented or connection-less?
+- [ ]   KNUT. • Is the protocol state-full or state-less?
 - [ ] 8. DANIEL The different types and special values (constants) used
-- [ ] TOBIAS 9. The message format:
-- [ ] TOBIAS • The allowed message types (sensor messages, command messages)
-- [ ] TOBIAS • The type of marshalling used (fixed size, separators, TLV?)
-- [ ] TOBIAS • Which messages are sent by which node? For example, are some messages only sent by
-the control-panel node?
+- [ ] 9. TOBIAS The message format:
+- [ ]   TOBIAS • The allowed message types (sensor messages, command messages)
+- [ ]   TOBIAS • The type of marshalling used (fixed size, separators, TLV?)
+- [ ]   TOBIAS • Which messages are sent by which node? For example, are some messages only sent by the control-panel node?
 - [ ] 10. DANIEL The different errors that can occur and how each node should react on the errors. For example,
 what if a message in an unexpected format is received? Is it ignored, or does the recipient send
 a reply with an error code?
@@ -42,10 +39,10 @@ a reply with an error code?
 
 # General TODO
 
-- [ ] Adrian use Clients enum constants instead of strings.
-    - [ ] Intermediary server
-    - [ ] Control panel
-    - [ ] Greenhouse
+- [x] Adrian use Clients enum constants instead of strings.
+    - [x] Intermediary server
+    - [x] Control panel
+    - [x] Greenhouse
 
 - [x] Adrian Implement Header/Body messages for control panel 
 - [x] Adrian Implement Header/Body messages for intermediary server
@@ -55,15 +52,15 @@ a reply with an error code?
 - [x] TOBIAS. Implementere Message og Command interfacer/klasser
 - [ ] ADRIAN. Lage ulike Message/Command underklasser
 - [ ] Different sensor types must be supported. The different types are not fixed. I.e., your protocol should allow adding new sensor types when needed. 
-- [ ] PROTOKOLL (IKKE GUI) Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
+- [ ] ADRIAN PROTOKOLL (IKKE GUI) Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
 Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
-- [ ] Commands to turn on/off all actuators for a node. 
+- [ ] ADRIAN Commands to turn on/off all actuators for a node. 
 - [x] ADRIAN. Lage klasse som applikasjonen kan kjøres fra.
-- [ ] Refaktorer client handler felt, kanskje bruke egen klasse for å lagre klient type og klient id.
-- [ ] Instead of storing sockets in server, stor clienthandler?
+- [ ] ADRIAN Refaktorer client handler felt, kanskje bruke egen klasse for å lagre klient type og klient id.
+- [ ] ADRIAN Instead of storing sockets in server, store clienthandler?
 
 
-- [ ] ADRIAN
+- [ ] ADRIAN:
 How to notify all clients about state update?
 • Keep a reference list of connected clients in the server, update when
 	• new client connects
@@ -73,7 +70,6 @@ How to notify all clients about state update?
 	• Update the state
 	• Call server.notifyClients() on the same thread
 	• This method iterates over connected clients, sends a message to each client
-
 Need to introduse a new thread on client side, on thread for reading, on thread for sending a command.
 
 # Test classes
@@ -95,6 +91,8 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 _
 # GREENHOUSE
 
+- [ ] ADRIAN One Thread for writing and one for reading.
+
 - [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN lage kommunikasjons klasse for greenhouse nodes.
 - [x] ADRIAN. Koble til multiple greenhouse nodes til intermediary server.
@@ -104,11 +102,7 @@ Each sensor-node can do the following:
 - [x] SEBASTIAN. Act as an actuator node as well. That is, each sensor node is a "sensor and actuator node", which can have several actuators attached
 - [x] SEBASTIAN. Support different actuators. For example, fan, heater, window opener, door lock, shower opener.
 
-- [ ] KNUT. Hint: if your protocol will support only one instance of each sensor type on a node (only one
-temperature sensor per node, one humidity sensor, etc.), it is probably enough to address the sensors
-by their type. If you want to support multiple instances of the same sensor type per node, you need
-to introduce the addressing of the sensors (and actuators). For example, temperature sensors 1 and
-2 on the sensor node 7, humidity sensors 1, 2 and 3 on sensor node 12, etc.
+- [ ] ADRIAN. Hint: if your protocol will support only one instance of each sensor type on a node (only one temperature sensor per node, one humidity sensor, etc.), it is probably enough to address the sensors by their type. If you want to support multiple instances of the same sensor type per node, you need to introduce the addressing of the sensors (and actuators). For example, temperature sensors 1 and 2 on the sensor node 7, humidity sensors 1, 2 and 3 on sensor node 12, etc.
 
 
 # INTERMEDIARY SERVER
@@ -118,7 +112,7 @@ to introduce the addressing of the sensors (and actuators). For example, tempera
 - [x] ADRIAN. Ta i mot klienter som vil koble seg til.
 - [x] ADRIAN. Motta meldinger fra klienter.
 - [x] ADRIAN. Identifisere klienter.
-- [ ] ADRIAN. Videre sende melding fra en klient til en/flere andre klienter.
+- [x] ADRIAN. Videre sende melding fra en klient til en/flere andre klienter.
 - [x] ADRIAN. Huske hvilke klienter som er koblet til.
 - [x] ADRIAN. Etablere kommunikasjon mellom intermediary server og control panel og greenhouse nodes.
 
@@ -132,6 +126,8 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 
 ## COMMUNICATION
 
+- [x] ADRIAN One Thread for writing and one for reading.
+
 - [ ] what to do when creating a new control panel?
     - [X] ADRIAN Connect to server
     - [X] ADRIAN send unique identifier to server so server knows id of control panel (and that it is a control panel)
@@ -144,7 +140,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [x] ADRIAN. koble til multiple control panels til intermediary server.
 - [x] ADRIAN. lage kommunikasjons klasse for control panel
 - [ ] ADRIAN. Spør hele tiden om informasjon for noden som vises i control panel GUI.
-- [ ] ADRIAN. Send kommandoer til sensor nodes. For eksempel, spør om hvilke noder som finnes, spør om data, skru på en vifte, skru av en vifte, skru på en varmeovn, skru av en varmeovn, åpne et vindu, lukke et vindu, osv.
+- [x] ADRIAN. Send kommandoer til sensor nodes. For eksempel, spør om hvilke noder som finnes, spør om data, skru på en vifte, skru av en vifte, skru på en varmeovn, skru av en varmeovn, åpne et vindu, lukke et vindu, osv.
 - [ ] ADRIAN. Receive actuator status data from any sensor node. For example, is a window open or closed, is the fan on or off? 
 For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)
 
@@ -155,7 +151,7 @@ For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuat
 - [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
 Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
 - [ ] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
-- [ ] ADRIAN. Make actuator buttons send data. 
+- [x] ADRIAN. Make actuator buttons send data. 
 
 # EXTRA WORK
 
@@ -165,11 +161,11 @@ temporarily lost. This means buffering data, retransmissions, reconnecting, etc
     - [ ] If the connection is lost, try to reconnect. If it fails, show an error message to the user.
     - [ ] If a message is not received, try to receive it again. If it fails, show an error message to the user.
     - [ ] Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
-    - [ ] TOBIAS Convert symmetric encryption to RSA.
 
 
 - [x] TOBIAS. 2. Data encryption. You can think of different methods of integrating security into your solution,
 either using public-key cryptography or other methods.
+    - [ ] TOBIAS Convert symmetric encryption to RSA.
 
 - [ ] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line
 argument). But you can design automated-address assignments as part of your protocol. For
