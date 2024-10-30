@@ -138,9 +138,10 @@ public class ClientHandler extends Thread {
             return;
         }
 
+        // TODO sue new message class 
+
         String header = this.clientType + ";" + this.clientId;
         String message = header + "-" + body;
-
 
         try {
             PrintWriter receiverWriter = new PrintWriter(receiver.getOutputStream(), true);

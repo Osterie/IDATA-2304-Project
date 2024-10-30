@@ -79,6 +79,8 @@ public class NodeConnectionHandler implements Runnable {
             // List<Sensor> sensors = node.getSensors();
             ActuatorCollection actuators = node.getActuators();
 
+            // TODO send state of actuator, on/off?
+
             StringBuilder actuatorString = new StringBuilder();
             HashMap<String, Integer> actuatorCount = new HashMap<String, Integer>();
             for (Actuator actuator : actuators) {

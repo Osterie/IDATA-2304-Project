@@ -68,31 +68,23 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
 
   private void handleServerCommand(String serverMessage) {
 
-    String[] headerAndBodyParts = serverMessage.split("-");
-    if (headerAndBodyParts.length != 2) {
-      Logger.error("Invalid server message: " + serverMessage);
-      return;
-    }
+    // TODO what if invalid serverMessage?
+    MessageTest message = MessageTest.fromProtocolString(serverMessage);
 
-    String header = headerAndBodyParts[0];
-    String body = headerAndBodyParts[1];
+    MessageHeader header = message.getHeader();
+    MessageBody body = message.getBody();
 
-    String[] headerParts = header.split(";");
-
-    String client = headerParts[0];
-    String nodeIdRaw = headerParts[1];
+    Clients client = header.getClient();
+    String nodeIdRaw = header.getNodeId();
     
-    
-    String[] bodyParts = body.split(";", 2);
-    
-    String command = bodyParts[0];
-    String response = bodyParts[1];
+    String command = body.getCommand();
+    String response = body.getData();
 
     Integer nodeId = parseIntegerOrError(nodeIdRaw, "Invalid node ID: " + nodeIdRaw);
 
     
     switch (client) {
-      case ("GREENHOUSE"):
+      case Clients.GREENHOUSE:
         Logger.info("Handling greenhouse command: " + command);
         this.handleGreenhouseCommand(nodeId, command, response); 
         break;
