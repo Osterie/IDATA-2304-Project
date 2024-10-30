@@ -14,6 +14,10 @@ import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.MessageTest;
 import no.ntnu.tools.Logger;
 
+/**
+ * Handles communication with a client connected to the IntermediaryServer.
+ * This class runs in its own thread to manage the client's requests and responses.
+ */
 public class ClientHandler extends Thread {
     private final Socket clientSocket;
     private final IntermediaryServer server;
@@ -25,6 +29,12 @@ public class ClientHandler extends Thread {
     private Clients clientType;  // Clients.CONTROL_PANEL or Clients.GREENHOUSE
     private String clientId;    // Unique ID for the greenhouse node or control panel
 
+    /**
+     * Constructs a ClientHandler for a given client socket and server.
+     *
+     * @param socket The client socket
+     * @param server The server managing the connections
+     */
     public ClientHandler(Socket socket, IntermediaryServer server) {
         this.clientSocket = socket;
         this.server = server;
@@ -32,6 +42,9 @@ public class ClientHandler extends Thread {
         initializeStreams();
     }
 
+    /**
+     * Initializes the input and output streams for the client socket.
+     */
     private void initializeStreams() {
         try {
             clientSocket.setKeepAlive(true); // Enable keep-alive on the socket
@@ -42,13 +55,19 @@ public class ClientHandler extends Thread {
             Logger.error("Could not open reader or writer: " + e.getMessage());
         }
     }
-    
+
+    /**
+     * Runs the client handler thread, identifying the client type and handling client requests.
+     */
     @Override
     public void run() {
         this.identifyClientType();
         this.handleClient();
     }
 
+    /**
+     * Handles client requests in a loop until the client disconnects.
+     */
     private void handleClient() {
         String clientRequest = null; 
         do {
@@ -56,8 +75,7 @@ public class ClientHandler extends Thread {
             if (clientRequest != null) {
                 Logger.info("Received from client: " + clientRequest);
                 this.sendToClient(clientRequest);
-            }
-            else{
+            } else {
                 Logger.info("Invalid request from client: " + clientRequest);
             }
         } while (clientRequest != null);
@@ -66,7 +84,7 @@ public class ClientHandler extends Thread {
     }
 
     /**
-     * Read one message from the TCP socket - from the client.
+     * Reads one message from the TCP socket - from the client.
      *
      * @return The received client message, or null on error
      */
@@ -80,39 +98,12 @@ public class ClientHandler extends Thread {
         return clientRequest;
     }
 
-//    /**
-//    * Handle a request from the client.
-//    *
-//    * @param clientRequest The request from the client
-//    * @return The response to send back to the client
-//    */
-//   private String handleClientRequest(String clientRequest) {
-//     if (clientRequest == null) {
-//       return null;
-//     }
-
-//     // TODO use a class to parse the client request
-//     // TODO Seperate between header and body
-
-//     String[] parts = clientRequest.split(";");
-//     String sender = parts[0];
-//     String senderID = parts[1];
-//     String command;
-//     if (parts.length == 3) {
-//       command = parts[2];
-//       return sender + ";" + senderID + ";" + command;
-//     }
-
-//     return "Handled request: " + clientRequest;
-//   }
-
-   /**
-   * Send a message from the server to the client, over the TCP socket.
-   *
-   * @param message The message to send to the client, NOT including the newline
-   */
+    /**
+     * Sends a message from the server to the client, over the TCP socket.
+     *
+     * @param request The request from the client
+     */
     private void sendToClient(String request) {
-
         MessageTest message = MessageTest.fromProtocolString(request);
 
         MessageHeader header = message.getHeader();
@@ -122,8 +113,7 @@ public class ClientHandler extends Thread {
         String targetId = header.getId();
         String bodyString = body.toProtocolString();
 
-
-        if (targetId.equalsIgnoreCase("ALL")){
+        if (targetId.equalsIgnoreCase("ALL")) {
             this.sendToAll(target, bodyString);
             return;
         }
@@ -131,6 +121,13 @@ public class ClientHandler extends Thread {
         this.sendCommandToClient(target, targetId, bodyString);
     }
 
+    /**
+     * Sends a command to a specific client.
+     *
+     * @param targetClientType The type of the target client
+     * @param targetClientId The ID of the target client
+     * @param body The body of the message to send
+     */
     private void sendCommandToClient(Clients targetClientType, String targetClientId, String body) {
         Socket receiver = server.getClient(targetClientType, targetClientId);
         if (receiver == null) {
@@ -141,7 +138,6 @@ public class ClientHandler extends Thread {
         String header = this.clientType + ";" + this.clientId;
         String message = header + "-" + body;
 
-
         try {
             PrintWriter receiverWriter = new PrintWriter(receiver.getOutputStream(), true);
             Logger.info("Sending response to " + targetClientType + " " + receiver.getRemoteSocketAddress() + ": " + body);
@@ -151,6 +147,12 @@ public class ClientHandler extends Thread {
         }
     }
 
+    /**
+     * Sends a message to all clients of a specific type.
+     *
+     * @param targetClientType The type of the target clients
+     * @param body The body of the message to send
+     */
     private void sendToAll(Clients targetClientType, String body) {
         ArrayList<Socket> clients = server.getAllClients(targetClientType);
         PrintWriter receiverWriter;
@@ -163,7 +165,6 @@ public class ClientHandler extends Thread {
             try {
                 receiverWriter = new PrintWriter(client.getOutputStream(), true);
                 Logger.info("Sending response to " + targetClientType + " " + client.getRemoteSocketAddress() + ": " + body);
-
                 receiverWriter.println(message.toProtocolString());
             } catch (IOException e) {
                 Logger.error("Failed to send response to " + targetClientType + ": " + e.getMessage());
@@ -171,6 +172,9 @@ public class ClientHandler extends Thread {
         }
     }
 
+    /**
+     * Identifies the type of the client (control panel or greenhouse).
+     */
     private void identifyClientType() {
         String identification = this.readClientRequest();
         if (identification == null) {
@@ -185,13 +189,18 @@ public class ClientHandler extends Thread {
         this.addClient();
     }
 
+    /**
+     * Processes the identification message from the client.
+     *
+     * @param identification The identification message
+     * @return true if identification was successful, false otherwise
+     */
     private boolean processIdentification(String identification) {
         boolean identificationSuccess = false;
-        try{
+        try {
             this.clientIdentifier.identifyClientType(identification);
             identificationSuccess = true;    
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             Logger.error("Invalid identification message: " + identification);
             this.closeStreams();
         }
@@ -202,6 +211,9 @@ public class ClientHandler extends Thread {
         return identificationSuccess;
     }
 
+    /**
+     * Adds the client to the server's list of clients.
+     */
     private void addClient() {
         try {
             server.addClient(this.clientType, this.clientId, this.clientSocket);
@@ -211,6 +223,9 @@ public class ClientHandler extends Thread {
         }
     }
 
+    /**
+     * Closes the input and output streams and the client socket.
+     */
     private void closeStreams() {
         try {
             this.socketReader.close();

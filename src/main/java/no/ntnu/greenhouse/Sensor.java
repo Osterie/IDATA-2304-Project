@@ -8,6 +8,9 @@ import no.ntnu.greenhouse.sensorreading.TemperatureSensorReading;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+
+//TODO: make abstract class?
+
 /**
  * A sensor which can sense the environment in a specific way.
  */
