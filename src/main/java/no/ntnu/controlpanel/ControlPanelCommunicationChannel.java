@@ -74,23 +74,31 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     MessageHeader header = message.getHeader();
     MessageBody body = message.getBody();
 
-    Clients client = header.getClient();
-    String nodeIdRaw = header.getNodeId();
+    Clients client = header.getReceiver();
+    String nodeIdRaw = header.getId();
     
     String command = body.getCommand();
     String response = body.getData();
 
     Integer nodeId = parseIntegerOrError(nodeIdRaw, "Invalid node ID: " + nodeIdRaw);
 
-    
-    switch (client) {
-      case Clients.GREENHOUSE:
-        Logger.info("Handling greenhouse command: " + command);
-        this.handleGreenhouseCommand(nodeId, command, response); 
-        break;
-      default:
-        Logger.error("Unknown client: " + client);
+    if (client == Clients.GREENHOUSE) {
+      Logger.info("Handling greenhouse command: " + command);
+      this.handleGreenhouseCommand(nodeId, command, response);
     }
+    else {
+      Logger.error("Unknown client: " + client);
+    }
+
+
+    // switch (client) {
+    //   case GREENHOUSE:
+    //     Logger.info("Handling greenhouse command: " + command);
+    //     this.handleGreenhouseCommand(nodeId, command, response); 
+    //     break;
+    //   default:
+    //     Logger.error("Unknown client: " + client);
+    // }
   }
 
   private void handleGreenhouseCommand(int nodeId, String command, String response) {
