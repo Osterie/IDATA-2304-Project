@@ -35,35 +35,11 @@ public class SensorPane extends TitledPane {
     initialize(sensors);
   }
 
-  /**
-   * Create a sensor pane with images.
-   *
-   * @param sensors The sensor data to be displayed on the pane.
-   * @param imageBuffer The images associated with the sensors.
-   */
-  public SensorPane(Iterable<SensorReading> sensors, Iterable<BufferedImage> imageBuffer) {
-    super();
-    initializeWithImages(sensors, imageBuffer);
-  }
-
   private void initialize(Iterable<SensorReading> sensors) {
     setText("Sensors");
     sensors.forEach(sensor ->
-        contentBox.getChildren().add(createAndRememberSensorNode(sensor, null))
+        contentBox.getChildren().add(createAndRememberSensorLabel(sensor))
     );
-    setContent(contentBox);
-  }
-
-  private void initializeWithImages(Iterable<SensorReading> sensors, Iterable<BufferedImage> imageBuffer) {
-    setText("Sensors with Images");
-    List<BufferedImage> images = new ArrayList<>();
-    imageBuffer.forEach(images::add); // Collecting images in a list to match sensor indices
-    int index = 0;
-    for (SensorReading sensor : sensors) {
-      BufferedImage img = index < images.size() ? images.get(index) : null;
-      contentBox.getChildren().add(createAndRememberSensorNode(sensor, img));
-      index++;
-    }
     setContent(contentBox);
   }
 
@@ -85,18 +61,14 @@ public class SensorPane extends TitledPane {
   }
 
   /**
-   * Update the GUI according to the changes in sensor data and images.
+   * Update the GUI according to the changes in sensor data.
    *
    * @param sensors The sensor data that has been updated
-   * @param images The updated sensor images
    */
-  public void update(Iterable<SensorReading> sensors, Iterable<BufferedImage> images) {
+  public void update(Iterable<SensorReading> sensors) {
     int index = 0;
-    List<BufferedImage> imageList = new ArrayList<>();
-    images.forEach(imageList::add);
     for (SensorReading sensor : sensors) {
-      BufferedImage img = index < imageList.size() ? imageList.get(index) : null;
-      updateSensorLabel(sensor, index++, img);
+      updateSensorLabel(sensor, index++);
     }
   }
 
@@ -107,21 +79,14 @@ public class SensorPane extends TitledPane {
    * @param sensors The sensor data that has been updated
    */
   public void update(List<NumericSensor> sensors) {
-    update(sensors.stream().map(NumericSensor::getReading).toList(), null);
+    update(sensors.stream().map(NumericSensor::getReading).toList());
   }
 
-  private Node createAndRememberSensorNode(SensorReading sensor, BufferedImage image) {
+  private Label createAndRememberSensorLabel(SensorReading sensor) {
     SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
     sensorProps.add(props);
     Label label = new Label();
     label.textProperty().bind(props);
-
-    if (image != null) {
-      ImageView imageView = new ImageView(convertToFxImage(image));
-      VBox container = new VBox(label, imageView);
-      return container;
-    }
-    
     return label;
   }
 
@@ -129,29 +94,13 @@ public class SensorPane extends TitledPane {
     return sensor.getType() + ": " + sensor.getFormatted();
   }
 
-  private void updateSensorLabel(SensorReading sensor, int index, BufferedImage image) {
+  private void updateSensorLabel(SensorReading sensor, int index) {
     if (sensorProps.size() > index) {
       SimpleStringProperty props = sensorProps.get(index);
-      Platform.runLater(() -> {
-        props.set(generateSensorText(sensor));
-        if (image != null) {
-          ImageView imageView = new ImageView(convertToFxImage(image));
-          contentBox.getChildren().set(index, new VBox(new Label(props.get()), imageView));
-        }
-      });
+      Platform.runLater(() -> props.set(generateSensorText(sensor)));
     } else {
       Logger.info("Adding sensor[" + index + "]");
-      Platform.runLater(() -> contentBox.getChildren().add(createAndRememberSensorNode(sensor, image)));
+      Platform.runLater(() -> contentBox.getChildren().add(createAndRememberSensorLabel(sensor)));
     }
-  }
-
-  /**
-   * Convert a BufferedImage to a JavaFX Image.
-   * 
-   * @param bufferedImage The BufferedImage to convert.
-   * @return The converted Image.
-   */
-  private Image convertToFxImage(BufferedImage bufferedImage) {
-    return SwingFXUtils.toFXImage(bufferedImage, null);
   }
 }
