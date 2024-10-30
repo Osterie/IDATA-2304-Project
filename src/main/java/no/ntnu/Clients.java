@@ -4,6 +4,8 @@ public enum Clients {
     CONTROL_PANEL("CONTROL_PANEL"),
     GREENHOUSE("GREENHOUSE");
 
+
+
     private final String value;
 
     Clients(String value) {

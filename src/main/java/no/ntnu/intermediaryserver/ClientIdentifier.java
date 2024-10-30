@@ -13,6 +13,8 @@ public class ClientIdentifier {
 
     public void identifyClientType(String identification) {
         String[] parts = this.identifyParts(identification);
+        System.out.println("Part 0 = " + parts[0]);
+        System.out.println("Part 1 = " + parts[1]);
         this.setClientType(parts[0]);
         this.setClientId(parts[1]);        
     }

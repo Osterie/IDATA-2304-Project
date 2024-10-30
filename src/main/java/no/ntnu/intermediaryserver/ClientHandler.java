@@ -187,6 +187,7 @@ public class ClientHandler extends Thread {
 
     private boolean processIdentification(String identification) {
         boolean identificationSuccess = false;
+        System.out.println(identification);
         try{
             this.clientIdentifier.identifyClientType(identification);
             identificationSuccess = true;    
