@@ -89,9 +89,9 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 
 ## OTHER
 
-- [ ] Lag tester for alle klasser som kan testes.
+- [ ] TOBIAS - Lag tester for alle klasser som kan testes.
 - [ ] Test protokoll
-- [ ] Test Message og Command klasser
+- [ ] TOBIAS - Test Message og Command klasser
 _
 # GREENHOUSE
 
@@ -165,6 +165,7 @@ temporarily lost. This means buffering data, retransmissions, reconnecting, etc
     - [ ] If the connection is lost, try to reconnect. If it fails, show an error message to the user.
     - [ ] If a message is not received, try to receive it again. If it fails, show an error message to the user.
     - [ ] Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
+    - [ ] TOBIAS Convert symmetric encryption to RSA.
 
 
 - [x] TOBIAS. 2. Data encryption. You can think of different methods of integrating security into your solution,
