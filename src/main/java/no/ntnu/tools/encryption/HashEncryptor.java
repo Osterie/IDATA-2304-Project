@@ -1,4 +1,4 @@
-package no.ntnu.tools.Encryption;
+package no.ntnu.tools.encryption;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

@@ -1,4 +1,4 @@
-package no.ntnu.tools.Stringification;
+package no.ntnu.tools.stringification;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

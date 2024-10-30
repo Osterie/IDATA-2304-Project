@@ -1,4 +1,4 @@
-package no.ntnu.tools.Encryption;
+package no.ntnu.tools.encryption;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 public class HashEncryptorTest {

@@ -1,4 +1,4 @@
-package no.ntnu.tools.Encryption;
+package no.ntnu.tools.encryption.symmetric;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import javax.crypto.SecretKey;

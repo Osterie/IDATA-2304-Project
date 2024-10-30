@@ -4,7 +4,7 @@
 
 # GENERAL
 
-- [ ] TOBIAS. Gjør om bilde til string, også den stringen til bilde. (for å sende over socket)
+- [x] TOBIAS. Gjør om bilde til string, også den stringen til bilde. (for å sende over socket)
 - [ ]TOBIAS. Klasse for control panel som kan gjøre om den mottatte informasjonen til riktig format.
 
 
@@ -126,7 +126,7 @@ to introduce the addressing of the sensors (and actuators). For example, tempera
 
 ## GENERAL
 
-- [ ] TOBIAS: Add css.
+- [x] TOBIAS: Add css.
 - [ ] TOBIAS: Håndtere å motta ulike datatyper hoss control panel. Foreløbig mottas kun desimal tall, og vi displayer det som tekst. Men hva om det er et bilde som mottas? En video? Lydopptak? Video med lyd? En kommentar? (for eksempel en advarsel om lavt batteri på noe, ada varsel om farlig temperatur, brann, natta melding, whatever.)
 Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å utvide løsningen.
 

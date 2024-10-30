@@ -1,4 +1,4 @@
-package no.ntnu.tools.Encryption;
+package no.ntnu.tools.encryption.symmetric;
 
 /**
  * This class is used to encrypt and decrypt string messages

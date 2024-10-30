@@ -1,4 +1,4 @@
-package no.ntnu.tools.Encryption;
+package no.ntnu.tools.encryption.symmetric;
 
 import static org.junit.Assert.assertEquals;
 

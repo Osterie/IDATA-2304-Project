@@ -48,6 +48,13 @@
             <artifactId>javafx-swing</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <!-- Mockito dependency -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.5.0</version> <!-- Or latest stable version -->
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
