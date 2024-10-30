@@ -87,8 +87,8 @@ public class DeviceFactory {
    *
    * @return A typical temperature sensor, which can be used as a template
    */
-  public static Sensor createTemperatureSensor() {
-    return new Sensor(SENSOR_TYPE_TEMPERATURE, MIN_TEMPERATURE, MAX_TEMPERATURE,
+  public static NumericSensor createTemperatureSensor() {
+    return new NumericSensor(SENSOR_TYPE_TEMPERATURE, MIN_TEMPERATURE, MAX_TEMPERATURE,
         randomize(NORMAL_GREENHOUSE_TEMPERATURE, 1.0), TEMPERATURE_UNIT);
   }
 
@@ -97,8 +97,8 @@ public class DeviceFactory {
    *
    * @return A typical humidity sensor which can be used as a template
    */
-  public static Sensor createHumiditySensor() {
-    return new Sensor(SENSOR_TYPE_HUMIDITY, MIN_HUMIDITY, MAX_HUMIDITY,
+  public static NumericSensor createHumiditySensor() {
+    return new NumericSensor(SENSOR_TYPE_HUMIDITY, MIN_HUMIDITY, MAX_HUMIDITY,
         randomize(NORMAL_GREENHOUSE_HUMIDITY, 5.0), HUMIDITY_UNIT);
   }
 
@@ -144,7 +144,7 @@ public class DeviceFactory {
    * 
    * @return The camera sensor
    */
-  public static Sensor createCamera(){
+  public static NumericSensor createCamera(){
     BufferedImage image = null;
     try {
       //Load an image from a file
@@ -152,7 +152,7 @@ public class DeviceFactory {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return new Sensor(SENSOR_TYPE_CAMERA, 0, 0, 0, "", image);
+    return new NumericSensor(SENSOR_TYPE_CAMERA, 0, 0, 0, "", image);
   }
 
   /**

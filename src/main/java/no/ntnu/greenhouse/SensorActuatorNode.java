@@ -19,7 +19,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   private static final long SENSING_DELAY = 5000;
   private final int id;
 
-  private final List<Sensor> sensors = new LinkedList<>();
+  private final List<NumericSensor> sensors = new LinkedList<>();
   private final ActuatorCollection actuators = new ActuatorCollection();
 
   private final List<SensorListener> sensorListeners = new LinkedList<>();
@@ -59,7 +59,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    *                 generation algorithms, etc.
    * @param n        The number of sensors to add to the node.
    */
-  public void addSensors(Sensor template, int n) {
+  public void addSensors(NumericSensor template, int n) {
     if (template == null) {
       throw new IllegalArgumentException("Sensor template is missing");
     }
@@ -182,13 +182,13 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   private void addRandomNoiseToSensors() {
-    for (Sensor sensor : sensors) {
+    for (NumericSensor sensor : sensors) {
       sensor.addRandomNoise();
     }
   }
 
   private void debugPrint() {
-    for (Sensor sensor : sensors) {
+    for (NumericSensor sensor : sensors) {
       Logger.infoNoNewline(" " + sensor.getReading().getFormatted());
     }
     Logger.infoNoNewline(" :");
@@ -259,7 +259,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param impact     The impact to apply
    */
   public void applyActuatorImpact(String sensorType, double impact) {
-    for (Sensor sensor : sensors) {
+    for (NumericSensor sensor : sensors) {
       if (sensor.getType().equals(sensorType)) {
         sensor.applyImpact(impact);
       }
@@ -271,7 +271,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    *
    * @return List of all the sensors
    */
-  public List<Sensor> getSensors() {
+  public List<NumericSensor> getSensors() {
     return sensors;
   }
 
