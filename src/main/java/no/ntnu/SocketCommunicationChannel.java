@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import no.ntnu.messages.MessageTest;
 import no.ntnu.tools.Logger;
 
 
@@ -39,7 +40,6 @@ public abstract class SocketCommunicationChannel {
         }
     }
 
-
     private void listenForMessages(){
         Thread messageListener = new Thread(() -> {
             try {
@@ -64,8 +64,17 @@ public abstract class SocketCommunicationChannel {
         messageListener.start();
     }
 
-
     protected abstract void handleMessage(String message);
+
+    protected void sendCommandToServer(MessageTest message) {
+      if (isOn && socketWriter != null) {
+        Logger.info("Trying to send message...");
+        socketWriter.println(message.toProtocolString());
+        Logger.info("Sent message to server: " + message.toProtocolString());
+      } else {
+        Logger.error("Unable to send message, socket is not connected.");
+      }
+    }
     
     // @Override
     public boolean open() {

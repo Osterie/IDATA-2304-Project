@@ -1,10 +1,6 @@
 package no.ntnu.controlpanel;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -18,7 +14,6 @@ import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.NumericSensor;
 import no.ntnu.greenhouse.sensorreading.SensorReading;
-import no.ntnu.messages.Message;
 import no.ntnu.tools.Logger;
 
 import no.ntnu.messages.MessageBody;
@@ -32,35 +27,13 @@ import no.ntnu.messages.MessageTest;
  */
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
-  // private Socket socket;
-  // private BufferedReader socketReader;
-  // private PrintWriter socketWriter;
-  // private boolean isOn;
 
   public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) throws IOException {
     super(host, port);
     this.logic = logic;
-    // this.listenForServerMessages();
-    // this.logic = logic;
-    // this.initializeStreams(host, port);
-    // // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
+    // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
     this.establishConnectionWithServer();
-    // this.listenForServerMessages();
   }
-
-  // private void initializeStreams(String host, int port) throws IOException {
-  //   try {
-  //     this.socket = new Socket(host, port);
-  //     this.socket.setKeepAlive(true);
-  //     this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-  //     this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
-  //     this.isOn = true;
-  //     Logger.info("Socket connection established with " + host + ":" + port);
-
-  //   } catch (IOException e) {
-  //     Logger.error("Could not establish connection to the server: " + e.getMessage());
-  //   }
-  // }
 
   // TODO this should be done in another way, use a protocol with header and body instead and such?
   private void establishConnectionWithServer() {
@@ -71,29 +44,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
   }
 
-  // private void listenForServerMessages(){
-  //   Thread messageListener = new Thread(() -> {
-  //     try {
-  //       while (isOn) {
-  //         if (socketReader.ready()) {
-  //           String serverMessage = socketReader.readLine();
-  //           if (serverMessage != null) {
-  //             Logger.info("Received from server: " + serverMessage);
-  //             // this.handleServerCommand(serverMessage);
-  //           }
-  //         }
-  //       }
-  //       Logger.info("Server message listener stopped.");
-  //     } catch (IOException e) {
-  //       Logger.error("Connection lost: " + e.getMessage());
-  //     } 
-  //     finally {
-  //       this.close();
-  //     }
-  //   });
-  //   messageListener.start();
-  // }
-
+  @Override
   protected void handleMessage(String serverMessage) {
 
     // TODO handle invalid serverMessage.
@@ -144,16 +95,6 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }, 5 * 1000L);
   }
 
-  public void sendCommandToServer(MessageTest message) {
-    if (isOn && socketWriter != null) {
-      Logger.info("Trying to send message...");
-      socketWriter.println(message.toProtocolString());
-      Logger.info("Sent message to server: " + message.toProtocolString());
-    } else {
-      Logger.error("Unable to send message, socket is not connected.");
-    }
-  }
-
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
     String nodeIdStr = Integer.toString(nodeId);
@@ -161,32 +102,6 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     MessageBody body = new MessageBody("ACTUATOR_CHANGE;" + actuatorId + ";" + (isOn ? "ON" : "OFF"));
     MessageTest message = new MessageTest(header, body);
     this.sendCommandToServer(message);
-  }
-
-  @Override
-  public boolean open() {
-    return isOn;
-  }
-
-  @Override
-  public boolean close() {
-
-    boolean closed = false;
-
-    try {
-      if (socket != null)
-        socket.close();
-      if (socketReader != null)
-        socketReader.close();
-      if (socketWriter != null)
-        socketWriter.close();
-      isOn = false;
-      Logger.info("Socket connection closed.");
-      closed = true;
-    } catch (IOException e) {
-      Logger.error("Failed to close socket connection: " + e.getMessage());
-    }
-    return closed;
   }
 
   /**
