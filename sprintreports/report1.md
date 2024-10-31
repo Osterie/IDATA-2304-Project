@@ -1,10 +1,15 @@
 # **Sprint Report**
 
 ## **Sprint Overview**
-- **Sprint Number:** [e.g., Sprint 5]
+  - **Sprint Number:** 1
 - **Duration:** [30.09.2024 - 14.10.2024]
-- **Sprint Goal:** [Briefly summarize the main goal of the sprint]
-- **Team Members:** [List the team members participating in the sprint]
+- **Sprint Goal:** Get to know the project and finish assigned tasks.
+- **Team Members:**
+- Tobias Olsen Reiakvam - TobyJavascript 
+- Adrian Gjøsund Bjørge - Osterie
+- Daniel Selbervik - PizzaMachine
+- Sebastian Olsen - Sebastian Olsen
+- Knut Olav Leknes - Knut Olav
 
 ---
 
@@ -24,11 +29,13 @@
 ---
 
 ## **Sprint Progress**
-| Story/Task | Assignee | Status (Completed, In Progress, Blocked) | Story Points | Comments |
-|------------|----------|------------------------------------------|--------------|----------|
-| Story 1    | [Name]   | [Status]                                 | [Points]     | [Notes]  |
-| Story 2    | [Name]   | [Status]                                 | [Points]     | [Notes]  |
-| Story 3    | [Name]   | [Status]                                 | [Points]     | [Notes]  |
+| Story/Task | Assignee              | Status (Completed, In Progress, Blocked) | Story Points | Comments |
+|------------|-----------------------|-----------------------------------------|--------------|----------|
+| Story 1    | Tobias Olsen Reiakvam | In Progress                             | [Points]     | [Notes]  |
+| Story 2    | Adrian Gjøsund Bjørge | In Progress                             | [Points]     | [Notes]  |
+| Story 3    | Daniel Selbervik      | In Progress                             | [Points]     | [Notes]  |
+| Story 4    | Sebasitan Olsen       | In Progress                             | [Points]     | [Notes]  |
+| Story 5    | Knut Olav Leknes      | In Progress                             | [Points]     | [Notes]  |
 
 ---
 
@@ -50,13 +57,6 @@
 ## **Risks & Dependencies**
 - **Risk 1:** [Description and impact on project]
 - **Dependency 1:** [External dependency affecting sprint completion]
-
----
-
-## **Retrospective Summary**
-- **What Went Well:** [List successful practices, teamwork highlights]
-- **What Could Be Improved:** [Areas needing improvement, e.g., planning, communication]
-- **Actions for Next Sprint:** [Action items or changes planned for the next sprint]
 
 ---
 
