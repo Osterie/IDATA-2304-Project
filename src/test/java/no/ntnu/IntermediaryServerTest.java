@@ -29,9 +29,11 @@ public class IntermediaryServerTest {
 
     // Start the mock greenhouse node
     mockGreenhouseNode = new MockGreenhouseNode("localhost", PORT);
+    mockGreenhouseNode.sendCommand("GREENHOUSE;1");
 
     // Start the mock control panel
     mockControlPanel = new MockControlPanel("localhost", PORT);
+    mockControlPanel.sendCommand("CONTROL_PANEL;2");
   }
 
   @AfterAll
@@ -43,26 +45,32 @@ public class IntermediaryServerTest {
 
   @Test
   public void testControlPanelToGreenhouseNodeCommunication() throws IOException {
-    String command = "ACTUATOR_CHANGE:1,1,ON";
+
+    MessageBody messageBody = new MessageBody("TURN_ON_FAN", "1");
+    MessageHeader messageHeader = new MessageHeader(Clients.GREENHOUSE, "1");
+    MessageTest message = new MessageTest(messageHeader, messageBody);
+
+    String command = message.toProtocolString();
+
     mockControlPanel.sendCommand(command);
 
     String response = mockGreenhouseNode.receiveResponse();
-    assertEquals(command, response);
+    assertEquals("CONTROL_PANEL;2-TURN_ON_FAN;1", response);
   }
 
   @Test
   public void testGreenhouseNodeToControlPanelCommunication() throws IOException {
-      MessageBody messageBody = new MessageBody("SENSOR_DATA", "1");
+      MessageBody messageBody = new MessageBody("SENSOR_NODE", "1");
       MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
       MessageTest message = new MessageTest(messageHeader, messageBody);
 
     String command = message.toProtocolString();
 
-    System.out.println(command);
 
     mockGreenhouseNode.sendCommand(command);
 
+
     String response = mockControlPanel.receiveResponse();
-    assertEquals(command, response);
+    assertEquals("GREENHOUSE;1-SENSOR_NODE;1", response);
   }
 }
