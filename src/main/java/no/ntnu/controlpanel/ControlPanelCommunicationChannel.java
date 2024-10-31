@@ -84,7 +84,7 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
 
     if (client == Clients.GREENHOUSE) {
       Logger.info("Handling greenhouse command: " + command);
-      this.handleGreenhouseCommand(nodeId, command, response);
+      this.handleGreenhouseCommandResponse(nodeId, command, response);
     }
     else {
       Logger.error("Unknown client: " + client);
@@ -94,14 +94,15 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     // switch (client) {
     //   case GREENHOUSE:
     //     Logger.info("Handling greenhouse command: " + command);
-    //     this.handleGreenhouseCommand(nodeId, command, response); 
+    //     this.handleGreenhouseCommandResponse(nodeId, command, response); 
     //     break;
     //   default:
     //     Logger.error("Unknown client: " + client);
     // }
   }
 
-  private void handleGreenhouseCommand(int nodeId, String command, String response) {
+  private void handleGreenhouseCommandResponse(int nodeId, String command, String response) {
+    
     switch (command.trim()) {
       case "GET_NODE_ID":
         this.spawnNode(response, 5);
