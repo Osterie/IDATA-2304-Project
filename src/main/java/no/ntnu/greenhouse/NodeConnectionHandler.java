@@ -1,27 +1,18 @@
 package no.ntnu.greenhouse;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.HashMap;
 
 import no.ntnu.Clients;
+import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.tools.Logger;
 
-public class NodeConnectionHandler implements Runnable {
+public class NodeConnectionHandler extends SocketCommunicationChannel implements Runnable {
     private final SensorActuatorNode node;
-    private final Socket socket;
-    private final PrintWriter socketWriter;
-    private final BufferedReader socketReader;
 
     public NodeConnectionHandler(SensorActuatorNode node, String host, int port) throws IOException {
+        super(host, port);
         this.node = node;
-        this.socket = new Socket(host, port);
-        this.socket.setKeepAlive(true);
-        this.socketWriter = new PrintWriter(socket.getOutputStream(), true);
-        this.socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
         // Send initial identifier to server
         String identifierMessage = "GREENHOUSE;" + node.getId();
@@ -31,29 +22,15 @@ public class NodeConnectionHandler implements Runnable {
 
     @Override
     public void run() {
-        try {
-            while (!socket.isClosed()) {
-                String serverMessage = socketReader.readLine();
-                if (serverMessage != null) {
-                    Logger.info("Received for node " + node.getId() + ": " + serverMessage);
-                    handleServerCommand(serverMessage);
-                }
-                else{
-                    Logger.info("Invalid request from server: " + serverMessage);
-                }
-            }
-        } catch (IOException e) {
-            Logger.error("Connection lost for node " + node.getId() + ": " + e.getMessage());
-        } finally {
-            closeConnection();
-        }
+        // Empty
     }
 
     public void sendSensorData(String data) {
         socketWriter.println(data);
     }
 
-    private void handleServerCommand(String command) {
+    @Override
+    protected void handleMessage(String command) {
         Logger.info("Received command for node! " + node.getId() + ": " + command);
         String[] commandParts = command.split("-");
 
@@ -119,16 +96,5 @@ public class NodeConnectionHandler implements Runnable {
 
         // Parse and execute commands received from the server for this node
         // Example: Control actuators based on command type
-    }
-
-    public void closeConnection() {
-        try {
-            socket.close();
-            socketWriter.close();
-            socketReader.close();
-            Logger.info("Connection closed for node " + node.getId());
-        } catch (IOException e) {
-            Logger.error("Error closing connection for node " + node.getId() + ": " + e.getMessage());
-        }
     }
 }
