@@ -38,9 +38,33 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
 
   public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) throws IOException {
     this.logic = logic;
-    this.start(host, port);
+    this.initializeStreams(host, port);
+    // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
     this.establishConnectionWithServer();
     this.listenForServerMessages();
+  }
+
+  private void initializeStreams(String host, int port) throws IOException {
+    try {
+      this.socket = new Socket(host, port);
+      this.socket.setKeepAlive(true);
+      this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+      this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
+      this.isOn = true;
+      Logger.info("Socket connection established with " + host + ":" + port);
+
+    } catch (IOException e) {
+      Logger.error("Could not establish connection to the server: " + e.getMessage());
+    }
+  }
+
+  // TODO this should be done in another way, use a protocol with header and body instead and such?
+  private void establishConnectionWithServer() {
+    // Send initial identifier to server
+    String identifierMessage = Clients.CONTROL_PANEL.getValue() + ";0"; // TODO generate unique identifier, or let
+                                                                        // server do it?
+    this.socketWriter.println(identifierMessage);
+    Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
   }
 
   private void listenForServerMessages(){
@@ -60,7 +84,7 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
         Logger.error("Connection lost: " + e.getMessage());
       } 
       finally {
-        close();
+        this.close();
       }
     });
     messageListener.start();
@@ -68,42 +92,30 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
 
   private void handleServerCommand(String serverMessage) {
 
-    // TODO what if invalid serverMessage?
+    // TODO handle invalid serverMessage.
     MessageTest message = MessageTest.fromProtocolString(serverMessage);
 
     MessageHeader header = message.getHeader();
     MessageBody body = message.getBody();
 
     Clients client = header.getReceiver();
-    String nodeIdRaw = header.getId();
-    
-    String command = body.getCommand();
-    String response = body.getData();
-
-    Integer nodeId = parseIntegerOrError(nodeIdRaw, "Invalid node ID: " + nodeIdRaw);
 
     if (client == Clients.GREENHOUSE) {
-      Logger.info("Handling greenhouse command: " + command);
-      this.handleGreenhouseCommandResponse(nodeId, command, response);
+      this.handleGreenhouseCommandResponse(body);
     }
     else {
       Logger.error("Unknown client: " + client);
     }
-
-
-    // switch (client) {
-    //   case GREENHOUSE:
-    //     Logger.info("Handling greenhouse command: " + command);
-    //     this.handleGreenhouseCommandResponse(nodeId, command, response); 
-    //     break;
-    //   default:
-    //     Logger.error("Unknown client: " + client);
-    // }
   }
 
-  private void handleGreenhouseCommandResponse(int nodeId, String command, String response) {
+  private void handleGreenhouseCommandResponse(MessageBody body) {
+    String respondedToCommand = body.getCommand();
+    String response = body.getData();
+
+    Logger.info("Handling greenhouse command response: " + respondedToCommand);
     
-    switch (command.trim()) {
+    // TODO should someone else do this? @SebasoOlsen
+    switch (respondedToCommand.trim()) {
       case "GET_NODE_ID":
         this.spawnNode(response, 5);
         break;
@@ -111,7 +123,7 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
         this.addNode(response);
         break;
       default:
-        Logger.error("Unknown command: " + command);
+        Logger.error("Unknown command: " + respondedToCommand);
     }
   }
 
@@ -128,30 +140,7 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     }, 5 * 1000L);
   }
 
-  private void start(String host, int port) throws IOException {
-    try {
-      this.socket = new Socket(host, port);
-      this.socket.setKeepAlive(true);
-      this.socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      this.socketWriter = new PrintWriter(socket.getOutputStream(), true);
-      this.isOn = true;
-      Logger.info("Socket connection established with " + host + ":" + port);
-
-    } catch (IOException e) {
-      Logger.error("Could not establish connection to the server: " + e.getMessage());
-    }
-  }
-
-  // TODO this should be done in another way, use a protocol with header and body instead and such?
-  private void establishConnectionWithServer() {
-    // Send initial identifier to server
-    String identifierMessage = Clients.CONTROL_PANEL.getValue() + ";0"; // TODO generate unique identifier, or let
-                                                                        // server do it?
-    socketWriter.println(identifierMessage);
-    Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
-  }
-
-  public void sendCommandToServerNoResponse(MessageTest message) {
+  public void sendCommandToServer(MessageTest message) {
     if (isOn && socketWriter != null) {
       Logger.info("Trying to send message...");
       socketWriter.println(message.toProtocolString());
@@ -167,9 +156,7 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeIdStr);
     MessageBody body = new MessageBody("ACTUATOR_CHANGE;" + actuatorId + ";" + (isOn ? "ON" : "OFF"));
     MessageTest message = new MessageTest(header, body);
-    this.sendCommandToServerNoResponse(message);
-    // String command = Clients.GREENHOUSE + ";" + nodeId + "-ACTUATOR_CHANGE;" + actuatorId + ";" + (isOn ? "ON" : "OFF");
-    // sendCommandToServerNoResponse(command);
+    this.sendCommandToServer(message);
   }
 
   @Override
@@ -212,29 +199,25 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, "ALL");
     MessageBody body = new MessageBody("GET_NODE_ID");
     MessageTest message = new MessageTest(header, body);
-    this.sendCommandToServerNoResponse(message);
+    this.sendCommandToServer(message);
   }
 
   public void spawnNode(String nodeId, int START_DELAY) {
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeId);
     MessageBody body = new MessageBody("GET_NODE");
     MessageTest message = new MessageTest(header, body);
-    this.sendCommandToServerNoResponse(message);
+    this.sendCommandToServer(message);
   }
 
+  // TODO someone else should do this.
   private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
     Logger.info("specification: " + specification);
     if (specification == null || specification.isEmpty()) {
       throw new IllegalArgumentException("Node specification can't be empty");
     }
     String[] parts = specification.split(";", 2);
-    // if (parts.length > 3) {
-    //   throw new IllegalArgumentException("Incorrect specification format");
-    // }
     int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
     SensorActuatorNodeInfo info = new SensorActuatorNodeInfo(nodeId);
-
-
 
     if (parts.length == 2) {
       this.parseActuators(parts[1], info);
@@ -262,15 +245,6 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
       Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
       actuator.setListener(logic);
       info.addActuator(actuator);
-
-    // int actuatorCount = parseIntegerOrError(actuatorInfo[0],
-    //     "Invalid actuator count: " + actuatorInfo[0]);
-    // String actuatorType = actuatorInfo[1];
-    // for (int i = 0; i < actuatorCount; ++i) {
-    //   Actuator actuator = new Actuator(actuatorType, info.getId());
-    //   actuator.setListener(logic);
-    //   info.addActuator(actuator);
-    // }
   }
 
   /**

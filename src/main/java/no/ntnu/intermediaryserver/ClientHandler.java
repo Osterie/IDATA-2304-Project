@@ -39,7 +39,7 @@ public class ClientHandler extends Thread {
         this.clientSocket = socket;
         this.server = server;
         this.clientIdentifier = new ClientIdentifier();
-        initializeStreams();
+        this.initializeStreams();
     }
 
     /**
@@ -47,10 +47,10 @@ public class ClientHandler extends Thread {
      */
     private void initializeStreams() {
         try {
-            clientSocket.setKeepAlive(true); // Enable keep-alive on the socket
-            this.socketReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            this.socketWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-            Logger.info("New client connected from " + clientSocket.getRemoteSocketAddress());
+            this.clientSocket.setKeepAlive(true); // Enable keep-alive on the socket
+            this.socketReader = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+            this.socketWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
+            Logger.info("New client connected from " + this.clientSocket.getRemoteSocketAddress());
         } catch (IOException e) {
             Logger.error("Could not open reader or writer: " + e.getMessage());
         }
