@@ -43,6 +43,10 @@ public class IntermediaryServerTest {
     server.stopServer();
   }
 
+  /**
+   * Test the communication between the control panel and the greenhouse node.
+   * The control panel sends a command to the greenhouse node, and the greenhouse node responds.
+   */
   @Test
   public void testControlPanelToGreenhouseNodeCommunication() throws IOException {
 
@@ -58,6 +62,10 @@ public class IntermediaryServerTest {
     assertEquals("CONTROL_PANEL;2-TURN_ON_FAN;1", response);
   }
 
+  /**
+   * Test the communication between the greenhouse node and the control panel.
+   * The greenhouse node sends a command to the control panel, and the control panel responds.
+   */
   @Test
   public void testGreenhouseNodeToControlPanelCommunication() throws IOException {
       MessageBody messageBody = new MessageBody("SENSOR_NODE", "1");
