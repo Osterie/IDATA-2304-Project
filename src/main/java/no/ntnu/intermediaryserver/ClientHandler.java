@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import no.ntnu.Clients;
-import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.MessageTest;

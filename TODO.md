@@ -6,7 +6,8 @@
 
 - [x] TOBIAS. Gjør om bilde til string, også den stringen til bilde. (for å sende over socket)
 - [ ] TOBIAS. Klasse for control panel som kan gjøre om den mottatte informasjonen til riktig format.
-
+- [ ] ADRIAN/DANIEL/KNUT/SEBASTIAN/TOBIAS. JAVADOC FOLKENS, JAVADOC.
+ 
 
 - [ ] ADRIAN. Følge protokoll, en header og en body. Header inneholer mottaker, mottakerID, datatype Body inneholder dataen.
 
