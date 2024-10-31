@@ -15,6 +15,7 @@ public class ActuatorCollection implements Iterable<Actuator> {
    * Print a short info about all the actuators. Usable for debugging. Does NOT print a newline!
    */
   public void debugPrint() {
+
     for (Actuator actuator : actuators.values()) {
       Logger.infoNoNewline(" " + actuator.getType() + "[" + actuator.getId() + "]"
           + (actuator.isOn() ? " ON" : " off"));

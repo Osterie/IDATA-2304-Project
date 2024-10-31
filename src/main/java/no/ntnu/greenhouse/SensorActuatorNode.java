@@ -227,8 +227,13 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   private void notifyActuatorChange(Actuator actuator) {
+
+    // ANSI escape codes for colors
+    final String YELLOW = "\u001B[33m";
+    final String RESET = "\u001B[0m";
+
     String onOff = actuator.isOn() ? "ON" : "off";
-    Logger.info(" => " + actuator.getType() + " on node " + id + " " + onOff);
+    Logger.info(YELLOW + " => " + actuator.getType() + " on node " + id + " " + onOff + RESET);
     for (ActuatorListener listener : actuatorListeners) {
       listener.actuatorUpdated(id, actuator);
     }
