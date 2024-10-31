@@ -23,7 +23,6 @@ public abstract class SocketCommunicationChannel {
         catch (IOException e) {
             Logger.error("Could not establish connection to the server: " + e.getMessage());
         }
-        this.listenForMessages();
     }
 
     private void initializeStreams(String host, int port) throws IOException {
@@ -40,7 +39,7 @@ public abstract class SocketCommunicationChannel {
         }
     }
 
-    private void listenForMessages(){
+    protected void listenForMessages(){
         Thread messageListener = new Thread(() -> {
             try {
             while (isOn) {

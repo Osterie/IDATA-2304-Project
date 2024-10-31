@@ -32,6 +32,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     super(host, port);
     this.logic = logic;
     // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
+    this.listenForMessages();
     this.establishConnectionWithServer();
   }
 
