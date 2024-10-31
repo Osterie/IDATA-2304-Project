@@ -14,6 +14,7 @@ import static no.ntnu.tools.Parser.parseDoubleOrError;
 import static no.ntnu.tools.Parser.parseIntegerOrError;
 
 import no.ntnu.Clients;
+import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.NumericSensor;
 import no.ntnu.greenhouse.sensorreading.SensorReading;
@@ -29,34 +30,37 @@ import no.ntnu.messages.MessageTest;
  * sending commands to the server and receiving responses. It also listens for
  * incoming events from the server.
  */
-public class ControlPanelCommunicationChannel implements CommunicationChannel {
+public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
-  private Socket socket;
-  private BufferedReader socketReader;
-  private PrintWriter socketWriter;
-  private boolean isOn;
+  // private Socket socket;
+  // private BufferedReader socketReader;
+  // private PrintWriter socketWriter;
+  // private boolean isOn;
 
   public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) throws IOException {
+    super(host, port);
     this.logic = logic;
-    this.initializeStreams(host, port);
-    // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
+    // this.listenForServerMessages();
+    // this.logic = logic;
+    // this.initializeStreams(host, port);
+    // // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
     this.establishConnectionWithServer();
-    this.listenForServerMessages();
+    // this.listenForServerMessages();
   }
 
-  private void initializeStreams(String host, int port) throws IOException {
-    try {
-      this.socket = new Socket(host, port);
-      this.socket.setKeepAlive(true);
-      this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-      this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
-      this.isOn = true;
-      Logger.info("Socket connection established with " + host + ":" + port);
+  // private void initializeStreams(String host, int port) throws IOException {
+  //   try {
+  //     this.socket = new Socket(host, port);
+  //     this.socket.setKeepAlive(true);
+  //     this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+  //     this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
+  //     this.isOn = true;
+  //     Logger.info("Socket connection established with " + host + ":" + port);
 
-    } catch (IOException e) {
-      Logger.error("Could not establish connection to the server: " + e.getMessage());
-    }
-  }
+  //   } catch (IOException e) {
+  //     Logger.error("Could not establish connection to the server: " + e.getMessage());
+  //   }
+  // }
 
   // TODO this should be done in another way, use a protocol with header and body instead and such?
   private void establishConnectionWithServer() {
@@ -67,30 +71,30 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
   }
 
-  private void listenForServerMessages(){
-    Thread messageListener = new Thread(() -> {
-      try {
-        while (isOn) {
-          if (socketReader.ready()) {
-            String serverMessage = socketReader.readLine();
-            if (serverMessage != null) {
-              Logger.info("Received from server: " + serverMessage);
-              this.handleServerCommand(serverMessage);
-            }
-          }
-        }
-        Logger.info("Server message listener stopped.");
-      } catch (IOException e) {
-        Logger.error("Connection lost: " + e.getMessage());
-      } 
-      finally {
-        this.close();
-      }
-    });
-    messageListener.start();
-  }
+  // private void listenForServerMessages(){
+  //   Thread messageListener = new Thread(() -> {
+  //     try {
+  //       while (isOn) {
+  //         if (socketReader.ready()) {
+  //           String serverMessage = socketReader.readLine();
+  //           if (serverMessage != null) {
+  //             Logger.info("Received from server: " + serverMessage);
+  //             // this.handleServerCommand(serverMessage);
+  //           }
+  //         }
+  //       }
+  //       Logger.info("Server message listener stopped.");
+  //     } catch (IOException e) {
+  //       Logger.error("Connection lost: " + e.getMessage());
+  //     } 
+  //     finally {
+  //       this.close();
+  //     }
+  //   });
+  //   messageListener.start();
+  // }
 
-  private void handleServerCommand(String serverMessage) {
+  protected void handleMessage(String serverMessage) {
 
     // TODO handle invalid serverMessage.
     MessageTest message = MessageTest.fromProtocolString(serverMessage);
@@ -144,7 +148,7 @@ public class ControlPanelCommunicationChannel implements CommunicationChannel {
     if (isOn && socketWriter != null) {
       Logger.info("Trying to send message...");
       socketWriter.println(message.toProtocolString());
-      Logger.info("Sent message to server: " + message);
+      Logger.info("Sent message to server: " + message.toProtocolString());
     } else {
       Logger.error("Unable to send message, socket is not connected.");
     }
