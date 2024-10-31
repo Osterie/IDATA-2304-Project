@@ -309,7 +309,7 @@ private void processControlCommand(String command) {
       }
     } else {
         for (NodeConnectionHandler handler : nodeConnections.values()) {
-            handler.closeConnection();
+            handler.close();
         }
         for (SensorActuatorNode node : nodes.values()) {
             node.stop();
