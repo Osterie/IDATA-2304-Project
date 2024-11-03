@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import no.ntnu.greenhouse.sensors.ImageSensorReading;
+import no.ntnu.greenhouse.sensors.NumericSensorReading;
+import no.ntnu.greenhouse.sensors.Sensor;
+import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
@@ -19,7 +24,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   private static final long SENSING_DELAY = 5000;
   private final int id;
 
-  private final List<NumericSensor> sensors = new LinkedList<>();
+  private final List<Sensor> sensors = new LinkedList<>();
   private final ActuatorCollection actuators = new ActuatorCollection();
 
   private final List<SensorListener> sensorListeners = new LinkedList<>();
@@ -59,7 +64,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    *                 generation algorithms, etc.
    * @param n        The number of sensors to add to the node.
    */
-  public void addSensors(NumericSensor template, int n) {
+  public void addSensors(Sensor template, int n) {
     if (template == null) {
       throw new IllegalArgumentException("Sensor template is missing");
     }
@@ -182,14 +187,24 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   private void addRandomNoiseToSensors() {
-    for (NumericSensor sensor : sensors) {
+    for (Sensor sensor : sensors) {
       sensor.addRandomNoise();
     }
   }
 
   private void debugPrint() {
-    for (NumericSensor sensor : sensors) {
-      Logger.infoNoNewline(" " + sensor.getReading().getFormatted());
+    for (Sensor sensor : sensors) {
+
+      // TODO refactor. Can make a debug class for the sensor nodes which handles this.
+      // Type cast
+      SensorReading reading = sensor.getReading();
+      if (reading instanceof NumericSensorReading) {
+        NumericSensorReading numericSensorReading = (NumericSensorReading) reading;
+        Logger.infoNoNewline(" " + numericSensorReading.getFormatted());
+      } else if (reading instanceof ImageSensorReading) {
+        ImageSensorReading imageSensorReading = (ImageSensorReading) reading;
+        Logger.infoNoNewline(" " + imageSensorReading.getType());
+      } 
     }
     Logger.infoNoNewline(" :");
     actuators.debugPrint();
@@ -227,13 +242,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   private void notifyActuatorChange(Actuator actuator) {
-
-    // ANSI escape codes for colors
-    final String YELLOW = "\u001B[33m";
-    final String RESET = "\u001B[0m";
-
     String onOff = actuator.isOn() ? "ON" : "off";
-    Logger.info(YELLOW + " => " + actuator.getType() + " on node " + id + " " + onOff + RESET);
+    Logger.info(" => " + actuator.getType() + " on node " + id + " " + onOff);
     for (ActuatorListener listener : actuatorListeners) {
       listener.actuatorUpdated(id, actuator);
     }
@@ -264,7 +274,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param impact     The impact to apply
    */
   public void applyActuatorImpact(String sensorType, double impact) {
-    for (NumericSensor sensor : sensors) {
+    for (Sensor sensor : sensors) {
       if (sensor.getType().equals(sensorType)) {
         sensor.applyImpact(impact);
       }
@@ -276,7 +286,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    *
    * @return List of all the sensors
    */
-  public List<NumericSensor> getSensors() {
+  public List<Sensor> getSensors() {
     return sensors;
   }
 
@@ -302,14 +312,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param on         Whether it should be on (true) or off (false)
    */
   public void setActuator(int actuatorId, boolean on) {
-    Logger.info("Setting actuator " + actuatorId + " to " + (on ? "ON" : "off"));
-    Actuator actuator = this.getActuator(actuatorId);
-    this.actuators.debugPrint();
+    Actuator actuator = getActuator(actuatorId);
     if (actuator != null) {
       actuator.set(on);
-    }
-    else{
-      Logger.error("Actuator " + actuatorId + " not found on node " + id);
     }
   }
 

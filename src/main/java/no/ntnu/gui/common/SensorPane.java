@@ -14,8 +14,8 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import no.ntnu.greenhouse.NumericSensor;
-import no.ntnu.greenhouse.sensorreading.SensorReading;
+import no.ntnu.greenhouse.sensors.Sensor;
+import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.tools.Logger;
 
 /**
@@ -56,8 +56,8 @@ public class SensorPane extends TitledPane {
    *
    * @param sensors The sensor data to be displayed on the pane.
    */
-  public SensorPane(List<NumericSensor> sensors) {
-    initialize(sensors.stream().map(NumericSensor::getReading).toList());
+  public SensorPane(List<Sensor> sensors) {
+    initialize(sensors.stream().map(Sensor::getReading).toList());
   }
 
   /**
@@ -78,8 +78,8 @@ public class SensorPane extends TitledPane {
    *
    * @param sensors The sensor data that has been updated
    */
-  public void update(List<NumericSensor> sensors) {
-    update(sensors.stream().map(NumericSensor::getReading).toList());
+  public void update(List<Sensor> sensors) {
+    update(sensors.stream().map(Sensor::getReading).toList());
   }
 
   private Label createAndRememberSensorLabel(SensorReading sensor) {

@@ -1,7 +1,8 @@
 package no.ntnu.listeners.greenhouse;
 
 import java.util.List;
-import no.ntnu.greenhouse.NumericSensor;
+
+import no.ntnu.greenhouse.sensors.Sensor;
 
 /**
  * Listener for sensor update events.
@@ -15,5 +16,5 @@ public interface SensorListener {
    *
    * @param sensors A list of sensors having new values (readings)
    */
-  void sensorsUpdated(List<NumericSensor> sensors);
+  void sensorsUpdated(List<Sensor> sensors);
 }

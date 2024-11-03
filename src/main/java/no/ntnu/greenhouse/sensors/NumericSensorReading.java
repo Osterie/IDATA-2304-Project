@@ -1,15 +1,12 @@
-package no.ntnu.greenhouse.sensorreading;
+package no.ntnu.greenhouse.sensors;
 
 import java.util.Objects;
-
-
-//TODO: Refactor the methods to fit an abstract class
 
 /**
  * Represents one sensor reading (value).
  */
-public abstract class SensorReading {
-  private final String type;
+public class NumericSensorReading extends SensorReading {
+  // private final String type;
   private double value;
   private final String unit;
 
@@ -20,15 +17,16 @@ public abstract class SensorReading {
    * @param value The current value of the sensor
    * @param unit  The unit, for example: %, lux
    */
-  public SensorReading(String type, double value, String unit) {
-    this.type = type;
+  public NumericSensorReading(String type, double value, String unit) {
+    super(type);
+    // this.type = type;
     this.value = value;
     this.unit = unit;
   }
 
-  public String getType() {
-    return type;
-  }
+  // public String getType() {
+  //   return type;
+  // }
 
   public double getValue() {
     return value;
@@ -44,7 +42,7 @@ public abstract class SensorReading {
 
   @Override
   public String toString() {
-    return "{ type=" + type + ", value=" + value + ", unit=" + unit + " }";
+    return "{ type=" + this.type + ", value=" + value + ", unit=" + unit + " }";
   }
 
   /**
@@ -64,7 +62,7 @@ public abstract class SensorReading {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    SensorReading that = (SensorReading) o;
+    NumericSensorReading that = (NumericSensorReading) o;
     return Double.compare(value, that.value) == 0
         && Objects.equals(type, that.type)
         && Objects.equals(unit, that.unit);
@@ -74,5 +72,4 @@ public abstract class SensorReading {
   public int hashCode() {
     return Objects.hash(type, value, unit);
   }
-
 }

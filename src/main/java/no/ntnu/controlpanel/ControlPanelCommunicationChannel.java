@@ -12,8 +12,8 @@ import static no.ntnu.tools.Parser.parseIntegerOrError;
 import no.ntnu.Clients;
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.NumericSensor;
-import no.ntnu.greenhouse.sensorreading.SensorReading;
+import no.ntnu.greenhouse.sensors.NumericSensor;
+import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.tools.Logger;
 
 import no.ntnu.messages.MessageBody;

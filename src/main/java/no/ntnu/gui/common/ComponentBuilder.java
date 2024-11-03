@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import no.ntnu.greenhouse.sensorreading.SensorReading;
+import no.ntnu.greenhouse.sensors.SensorReading;
 
 import java.io.InputStream;
 

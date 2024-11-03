@@ -5,7 +5,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import java.awt.image.BufferedImage;
+import no.ntnu.greenhouse.sensors.ImageSensor;
+import no.ntnu.greenhouse.sensors.NumericSensor;
+import no.ntnu.greenhouse.sensors.Sensor;
 
 /**
  * A factory for producing sensors and actuators of specific types.
@@ -20,11 +22,6 @@ public class DeviceFactory {
   private static final double NORMAL_GREENHOUSE_HUMIDITY = 80;
   private static final String HUMIDITY_UNIT = "%";
   private static final String SENSOR_TYPE_TEMPERATURE = "temperature";
-  private static final String SENSOR_TYPE_HUMIDITY = "humidity";
-  private static final String SENSOR_TYPE_FAN = "fan";
-  private static final String SENSOR_TYPE_WINDOW = "window";
-  private static final String SENSOR_TYPE_HEATER = "heater";
-  private static final String SENSOR_TYPE_CAMERA = "camera";
 
   private static int nextNodeId = 1;
 
@@ -64,6 +61,8 @@ public class DeviceFactory {
     }
     if (cameraCount > 0) {
       node.addSensors(DeviceFactory.createCamera(), cameraCount);
+
+      // addActuators(node, DeviceFactory.createCamera(node.getId()), cameraCount);
     }
     return node;
   }
@@ -87,7 +86,7 @@ public class DeviceFactory {
    *
    * @return A typical temperature sensor, which can be used as a template
    */
-  public static NumericSensor createTemperatureSensor() {
+  public static Sensor createTemperatureSensor() {
     return new NumericSensor(SENSOR_TYPE_TEMPERATURE, MIN_TEMPERATURE, MAX_TEMPERATURE,
         randomize(NORMAL_GREENHOUSE_TEMPERATURE, 1.0), TEMPERATURE_UNIT);
   }
@@ -97,8 +96,8 @@ public class DeviceFactory {
    *
    * @return A typical humidity sensor which can be used as a template
    */
-  public static NumericSensor createHumiditySensor() {
-    return new NumericSensor(SENSOR_TYPE_HUMIDITY, MIN_HUMIDITY, MAX_HUMIDITY,
+  public static Sensor createHumiditySensor() {
+    return new NumericSensor("humidity", MIN_HUMIDITY, MAX_HUMIDITY,
         randomize(NORMAL_GREENHOUSE_HUMIDITY, 5.0), HUMIDITY_UNIT);
   }
 
@@ -109,7 +108,7 @@ public class DeviceFactory {
    * @return The window actuator
    */
   public static Actuator createWindow(int nodeId) {
-    Actuator actuator = new Actuator(SENSOR_TYPE_WINDOW, nodeId);
+    Actuator actuator = new Actuator("window", nodeId);
     actuator.setImpact(SENSOR_TYPE_TEMPERATURE, -5.0);
     actuator.setImpact("humidity", -10.0);
     return actuator;
@@ -122,7 +121,7 @@ public class DeviceFactory {
    * @return The fan actuator
    */
   public static Actuator createFan(int nodeId) {
-    Actuator actuator = new Actuator(SENSOR_TYPE_FAN, nodeId);
+    Actuator actuator = new Actuator("fan", nodeId);
     actuator.setImpact(SENSOR_TYPE_TEMPERATURE, -1.0);
     return actuator;
   }
@@ -134,25 +133,19 @@ public class DeviceFactory {
    * @return The heater actuator
    */
   public static Actuator createHeater(int nodeId) {
-    Actuator actuator = new Actuator(SENSOR_TYPE_HEATER, nodeId);
+    Actuator actuator = new Actuator("heater", nodeId);
     actuator.setImpact(SENSOR_TYPE_TEMPERATURE, 4.0);
     return actuator;
   }
 
+  
   /**
    * Create a typical camera-sensor.
    * 
    * @return The camera sensor
    */
-  public static NumericSensor createCamera(){
-    BufferedImage image = null;
-    try {
-      //Load an image from a file
-      image = ImageIO.read(new File("images\\picsart_chuck.jpeg"));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return new NumericSensor(SENSOR_TYPE_CAMERA, 0, 0, 0, "", image);
+  public static ImageSensor createCamera(){
+    return new ImageSensor("Image", ".images/");
   }
 
   /**
