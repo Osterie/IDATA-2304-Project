@@ -99,7 +99,7 @@ _
 - [x] ADRIAN. Koble til multiple greenhouse nodes til intermediary server.
 
 Each sensor-node can do the following:
-- [x] SEBASTIAN. Support different sensors. For example, one node may report humidity and light, while the other node reports only temperature
+- [x] SEBASTIAN/ADRIAN. Support different sensors. For example, one node may report humidity and light, while the other node reports only temperature
 - [x] SEBASTIAN. Act as an actuator node as well. That is, each sensor node is a "sensor and actuator node", which can have several actuators attached
 - [x] SEBASTIAN. Support different actuators. For example, fan, heater, window opener, door lock, shower opener.
 
@@ -172,14 +172,10 @@ either using public-key cryptography or other methods.
 argument). But you can design automated-address assignments as part of your protocol. For
 example, look at DHCP as an inspiration.
 
-- [ ] 4. SEBASTIAN Images/files as sensor data. Imagine a scenario when a web camera is attached to a sensor
-node and the image frames it captures could be transmitted to the control panel. Image
-transfer poses some extra challenges. It is therefore considered an extra feature if you manage
-to integrate it in your protocol and implement it in your source code.
-- [ ] 5. KANSKJE Support of more flexible actuator commands. By default, it is expected that a command is
-sent to a specific sensor node, specific actuator. If you manage to support also either broadcast
-commands (to all sensor nodes at a time), or multicast (to specific groups of sensor nodes),
-this is considered an extra.
+- [ ] 4. SEBASTIAN/ADRIAN Images/files as sensor data. 
+
+    - [ ] ADRIAN Imagine a scenario when a web camera is attached to a sensor node and the image frames it captures could be transmitted to the control panel. Image transfer poses some extra challenges. It is therefore considered an extra feature if you manage to integrate it in your protocol and implement it in your source code.
+- [ ] 5. KANSKJE Support of more flexible actuator commands. By default, it is expected that a command is sent to a specific sensor node, specific actuator. If you manage to support also either broadcast commands (to all sensor nodes at a time), or multicast (to specific groups of sensor nodes), this is considered an extra.
 
 
 # WORK PROCESS DOCUMENTATION REQUIREMENTS
