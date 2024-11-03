@@ -1,6 +1,9 @@
 package no.ntnu.tools.stringification;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import no.ntnu.tools.Logger;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.image.BufferedImage;
@@ -23,7 +26,7 @@ public class Base64ImageEncoderTest {
         String base64String = Base64ImageEncoder.imageToString(inputImageFile);
         assertNotNull(base64String, "Base64 string should not be null.");
         assertFalse(base64String.isEmpty(), "Base64 string should not be empty.");
-        System.out.println("Image successfully converted to Base64 string.");
+        Logger.info("Image successfully converted to Base64 string.");
     }
 
     @Test
@@ -36,6 +39,6 @@ public class Base64ImageEncoderTest {
         assertNotNull(image, "BufferedImage should not be null.");
         assertEquals(image.getWidth(), 1024);
         assertEquals(image.getHeight(), 1024);
-        System.out.println("Base64 string successfully converted back to image.");
+        Logger.info("Base64 string successfully converted back to image.");
     }
 }

@@ -145,7 +145,9 @@ public class DeviceFactory {
    * @return The camera sensor
    */
   public static ImageSensor createCamera(){
-    return new ImageSensor("Image", ".images/");
+    // TODO images path should be a constant stored somewhere.
+    // TODO add a field for "Image", like is done for the other stuff.
+    return new ImageSensor("Image", "images/");
   }
 
   /**
