@@ -18,7 +18,7 @@ public class MessageBody {
 
     // Setters and Getters
     public String getCommand() {
-        return command;
+        return this.command;
     }
 
     public void setCommand(String command) {
