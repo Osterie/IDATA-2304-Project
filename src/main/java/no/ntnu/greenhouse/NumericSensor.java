@@ -14,7 +14,8 @@ import java.awt.image.BufferedImage;
 /**
  * A sensor which can sense the environment in a specific way.
  */
-public class NumericSensor extends Sensor {
+public class NumericSensor {
+  private final SensorReading reading;
   private final double min;
   private final double max;
 
@@ -35,6 +36,36 @@ public class NumericSensor extends Sensor {
   }
 
   /**
+   * Create a sensor.
+   *
+   * @param type    The type of the sensor. Examples: "temperature", "humidity"
+   * @param min     Minimum allowed value
+   * @param max     Maximum allowed value
+   * @param current The current (starting) value of the sensor
+   * @param unit    The measurement unit. Examples: "%", "C", "lux"
+   * @param image   The image data for the sensor
+   */
+  public NumericSensor(String type, double min, double max, double current, String unit, BufferedImage image) {
+    this.reading = createSensorReading(type, current, unit, image);
+    this.min = min;
+    this.max = max;
+    ensureValueBoundsAndPrecision(current);
+  }
+
+  public String getType() {
+    return reading.getType();
+  }
+
+  /**
+   * Get the current sensor reading.
+   *
+   * @return The current sensor reading (value)
+   */
+  public SensorReading getReading() {
+    return reading;
+  }
+
+  /**
    * Create a clone of this sensor.
    *
    * @return A clone of this sensor, where all the fields are the same
@@ -48,6 +79,21 @@ public class NumericSensor extends Sensor {
     }
     return new NumericSensor(this.reading.getType(), this.min, this.max,
         this.reading.getValue(), this.reading.getUnit());
+  }
+
+
+/**
+     * Create a deep copy of a BufferedImage.
+     *
+     * @param image The BufferedImage to copy.
+     * @return A deep copy of the BufferedImage.
+     */
+    private BufferedImage deepCopy(BufferedImage image) {
+      BufferedImage copy = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+      Graphics2D g = copy.createGraphics();
+      g.drawRenderedImage(image, null);
+      g.dispose();
+      return copy;
   }
 
   /**
@@ -89,6 +135,11 @@ public class NumericSensor extends Sensor {
     ensureValueBoundsAndPrecision(newValue);
   }
 
+  @Override
+  public String toString() {
+    return reading.toString();
+  }
+
   /**
    * Create a sensor reading based on the type.
    * 
@@ -97,15 +148,37 @@ public class NumericSensor extends Sensor {
    * @param unit the unit of the sensor
    * @return the sensor reading
    */
-  private SensorReading createSensorReading(String type, double value) {
+  private SensorReading createSensorReading(String type, double value, String unit) {
     SensorReading reading = null;
 
     switch (type) {
       case "temperature":
-        reading = new TemperatureSensorReading(type, value);
+        reading = new TemperatureSensorReading(type, value, unit);
         break;
       case "humidity":
-        reading = new HumiditySensorReading(type, value);
+        reading = new HumiditySensorReading(type, value, unit);
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown sensor type: " + type);
+    }
+    return reading;
+  }
+
+  /**
+   * Create a sensor reading based on the type, with an image.
+   * 
+   * @param type the type of the sensor
+   * @param value the value of the sensor
+   * @param unit the unit of the sensor
+   * @param image the image data for the sensor
+   * @return the sensor reading
+   */
+  private SensorReading createSensorReading(String type, double value, String unit, BufferedImage image) {
+    SensorReading reading = null;
+
+    switch (type) {
+      case "camera":
+        reading = new CameraSensorReading(type, value, unit, image);
         break;
       default:
         throw new IllegalArgumentException("Unknown sensor type: " + type);
