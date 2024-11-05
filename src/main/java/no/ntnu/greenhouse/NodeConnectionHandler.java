@@ -53,6 +53,7 @@ public class NodeConnectionHandler implements Runnable {
         socketWriter.println(data);
     }
 
+    // TODO fix, improve, refactor. Use command classes and message classes
     private void handleServerCommand(String command) {
         Logger.info("Received command for node! " + node.getId() + ": " + command);
         String[] commandParts = command.split("-");

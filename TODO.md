@@ -181,13 +181,7 @@ example, look at DHCP as an inspiration.
 # WORK PROCESS DOCUMENTATION REQUIREMENTS
 provide some form of documentation of the following:
 - [ ] ADRIAN 1. How the work was planned in terms of iterations (sprints)
-- [ ] ADRIAN 2. How the tasks were distributed - who was responsible for what. Note - it is NOT OK to
-have someone in the group responsible only for creating videos. This course is primarily about
-network protocols and network programming. Every group member must demonstrate expertise
-within these fields. Perhaps one student works more on the protocol, another on the server
-programming, and the third on client programming, that is fine. But it is not fine if one student
-does all the programming, one just writes documentation (sprint reports) and the third creates
-a video. How are the second and third students showing their computer network expertise?
+- [ ] ADRIAN 2. How the tasks were distributed - who was responsible for what. Note - it is NOT OK to have someone in the group responsible only for creating videos. This course is primarily about network protocols and network programming. Every group member must demonstrate expertise within these fields. Perhaps one student works more on the protocol, another on the server programming, and the third on client programming, that is fine. But it is not fine if one student does all the programming, one just writes documentation (sprint reports) and the third creates a video. How are the second and third students showing their computer network expertise?
 - [ ] ADRIAN 3. How was the work broken down into issues? Remember the principles you learned about issue
 definition in the System development course. Issues should be small, have descriptive names,
 clear "definition of done", etc. For example, an issue like "improve GUI" is a bad issue. What
@@ -203,7 +197,7 @@ Wiki pages, Jira or other tools if you want.
 
 # VIDEO
 
-- [ ] ADRIAN 1. Introduction of the application: what problem does your solution solve? (1min)
+- [ ] KNUT 1. Introduction of the application: what problem does your solution solve? (1min)
 - [ ] SEBASTIAN 2. The information, materials, approach you used, and the research you did. (1min)
 - [ ] KNUT 3. The work process: how did you organize work throughout the semester? Role of each team
 member? How did you work with the sprints? Were there any general themes for the sprints, phases of the project? (1min)
