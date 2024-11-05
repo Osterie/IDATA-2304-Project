@@ -48,7 +48,8 @@ public class MainGreenhouseGuiWindow extends Scene {
   private static Node createMasterImage() {
     Node node;
     try {
-      InputStream fileContent = new FileInputStream("images/picsart_chuck.jpeg");
+      // TODO change stuff. What if the image is not found?
+      InputStream fileContent = new FileInputStream("images/picsart_chuck.jpg");
       ImageView imageView = new ImageView();
       imageView.setImage(new Image(fileContent));
       imageView.getStyleClass().add("image-view");

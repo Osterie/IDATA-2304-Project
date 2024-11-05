@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.sensorreading.HumiditySensorReading;
-import no.ntnu.greenhouse.sensorreading.SensorReading;
-import no.ntnu.greenhouse.sensorreading.TemperatureSensorReading;
+import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.tools.Logger;
 
 /**
@@ -175,18 +173,19 @@ public class FakeCommunicationChannel implements CommunicationChannel {
    */
   private SensorReading createSensorReading(String type, double value, String unit) {
     SensorReading reading = null;
-
-    switch (type) {
-      case "temperature":
-        reading = new TemperatureSensorReading(type, value, unit);
-        break;
-      case "humidity":
-        reading = new HumiditySensorReading(type, value, unit);
-        break;
-      default:
-        throw new IllegalArgumentException("Unknown sensor type: " + type);
-    }
     return reading;
+
+    // switch (type) {
+    //   case "temperature":
+    //     reading = new TemperatureSensorReading(type, value, unit);
+    //     break;
+    //   case "humidity":
+    //     reading = new HumiditySensorReading(type, value, unit);
+    //     break;
+    //   default:
+    //     throw new IllegalArgumentException("Unknown sensor type: " + type);
+    // }
+    // return reading;
   }
 
   /**

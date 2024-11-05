@@ -45,7 +45,7 @@ public class NodeConnectionHandler implements Runnable {
         } catch (IOException e) {
             Logger.error("Connection lost for node " + node.getId() + ": " + e.getMessage());
         } finally {
-            closeConnection();
+            this.close();
         }
     }
 
@@ -78,6 +78,8 @@ public class NodeConnectionHandler implements Runnable {
 
             // List<Sensor> sensors = node.getSensors();
             ActuatorCollection actuators = node.getActuators();
+
+            // TODO send state of actuator, on/off?
 
             StringBuilder actuatorString = new StringBuilder();
             HashMap<String, Integer> actuatorCount = new HashMap<String, Integer>();
@@ -119,7 +121,7 @@ public class NodeConnectionHandler implements Runnable {
         // Example: Control actuators based on command type
     }
 
-    public void closeConnection() {
+    public void close() {
         try {
             socket.close();
             socketWriter.close();

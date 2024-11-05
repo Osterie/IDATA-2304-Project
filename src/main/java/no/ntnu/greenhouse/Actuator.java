@@ -100,9 +100,13 @@ public class Actuator {
   }
 
   private void notifyChanges() {
-    Logger.info("Actuator " + id + " on node " + nodeId + " is now " + (on ? "ON" : "off"));
+    // ANSI escape codes for colors
+    final String GREEN = "\u001B[32m";
+    final String RESET = "\u001B[0m";
+
+    Logger.info(GREEN + "Actuator " + id + " on node " + nodeId + " is now " + (on ? "ON" : "off") + RESET);
     if (this.listener != null) {
-      Logger.info("Notifying listener about actuator change");
+      Logger.info(GREEN + "Notifying listener about actuator change" + RESET);
       this.listener.actuatorUpdated(this.nodeId, this);
     }
   }

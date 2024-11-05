@@ -1,5 +1,14 @@
 package no.ntnu.greenhouse;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import no.ntnu.greenhouse.sensors.ImageSensor;
+import no.ntnu.greenhouse.sensors.NumericSensor;
+import no.ntnu.greenhouse.sensors.Sensor;
+
 /**
  * A factory for producing sensors and actuators of specific types.
  */
@@ -33,7 +42,7 @@ public class DeviceFactory {
    * @return The created sensor/actuator device, with a unique ID
    */
   public static SensorActuatorNode createNode(int temperatureSensorCount, int humiditySensorCount,
-                                              int windowCount, int fanCount, int heaterCount) {
+                                              int windowCount, int fanCount, int heaterCount, int cameraCount) {
     SensorActuatorNode node = new SensorActuatorNode(generateUniqueNodeId());
     if (temperatureSensorCount > 0) {
       node.addSensors(DeviceFactory.createTemperatureSensor(), temperatureSensorCount);
@@ -49,6 +58,11 @@ public class DeviceFactory {
     }
     if (heaterCount > 0) {
       addActuators(node, DeviceFactory.createHeater(node.getId()), heaterCount);
+    }
+    if (cameraCount > 0) {
+      node.addSensors(DeviceFactory.createCamera(), cameraCount);
+
+      // addActuators(node, DeviceFactory.createCamera(node.getId()), cameraCount);
     }
     return node;
   }
@@ -73,7 +87,7 @@ public class DeviceFactory {
    * @return A typical temperature sensor, which can be used as a template
    */
   public static Sensor createTemperatureSensor() {
-    return new Sensor(SENSOR_TYPE_TEMPERATURE, MIN_TEMPERATURE, MAX_TEMPERATURE,
+    return new NumericSensor(SENSOR_TYPE_TEMPERATURE, MIN_TEMPERATURE, MAX_TEMPERATURE,
         randomize(NORMAL_GREENHOUSE_TEMPERATURE, 1.0), TEMPERATURE_UNIT);
   }
 
@@ -83,7 +97,7 @@ public class DeviceFactory {
    * @return A typical humidity sensor which can be used as a template
    */
   public static Sensor createHumiditySensor() {
-    return new Sensor("humidity", MIN_HUMIDITY, MAX_HUMIDITY,
+    return new NumericSensor("humidity", MIN_HUMIDITY, MAX_HUMIDITY,
         randomize(NORMAL_GREENHOUSE_HUMIDITY, 5.0), HUMIDITY_UNIT);
   }
 
@@ -122,6 +136,18 @@ public class DeviceFactory {
     Actuator actuator = new Actuator("heater", nodeId);
     actuator.setImpact(SENSOR_TYPE_TEMPERATURE, 4.0);
     return actuator;
+  }
+
+  
+  /**
+   * Create a typical camera-sensor.
+   * 
+   * @return The camera sensor
+   */
+  public static ImageSensor createCamera(){
+    // TODO images path should be a constant stored somewhere.
+    // TODO add a field for "Image", like is done for the other stuff.
+    return new ImageSensor("Image", "images/");
   }
 
   /**
