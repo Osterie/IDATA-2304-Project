@@ -44,6 +44,9 @@ public class NumericSensor extends Sensor {
    * @return A clone of this sensor, where all the fields are the same
    */
   public NumericSensor createClone() {
+    if (this.reading == null) {
+      throw new IllegalStateException("The sensor reading is null");
+    }
     return new NumericSensor(this.reading.getType(), this.min, this.max,
         this.reading.getValue(), this.reading.getUnit());
   }
