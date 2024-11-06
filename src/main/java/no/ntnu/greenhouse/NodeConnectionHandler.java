@@ -35,7 +35,7 @@ public class NodeConnectionHandler implements Runnable {
             while (!socket.isClosed()) {
                 String serverMessage = socketReader.readLine();
                 if (serverMessage != null) {
-                    Logger.info("Received for node " + node.getId() + ": " + serverMessage);
+                    Logger.info("Received for node " + this.node.getId() + ": " + serverMessage);
                     handleServerCommand(serverMessage);
                 }
                 else{
@@ -43,7 +43,7 @@ public class NodeConnectionHandler implements Runnable {
                 }
             }
         } catch (IOException e) {
-            Logger.error("Connection lost for node " + node.getId() + ": " + e.getMessage());
+            Logger.error("Connection lost for node " + this.node.getId() + ": " + e.getMessage());
         } finally {
             this.close();
         }
@@ -55,7 +55,7 @@ public class NodeConnectionHandler implements Runnable {
 
     // TODO fix, improve, refactor. Use command classes and message classes
     private void handleServerCommand(String command) {
-        Logger.info("Received command for node! " + node.getId() + ": " + command);
+        Logger.info("Received command for node! " + this.node.getId() + ": " + command);
         String[] commandParts = command.split("-");
 
         String header = commandParts[0];
@@ -69,16 +69,16 @@ public class NodeConnectionHandler implements Runnable {
         String commandType = bodyParts[0];
 
         if (commandType.equalsIgnoreCase("GET_NODE_ID")) {
-            Logger.info("Received request for node ID from server, sending response " + node.getId());
+            Logger.info("Received request for node ID from server, sending response " + this.node.getId());
             // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
-            socketWriter.println(Clients.CONTROL_PANEL + ";0-GET_NODE_ID;" + node.getId()); // TODO change the id. (from 0)
+            socketWriter.println(Clients.CONTROL_PANEL + ";0-GET_NODE_ID;" + this.node.getId()); // TODO change the id. (from 0)
         }
         else if (commandType.equalsIgnoreCase("GET_NODE")){
-            Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + node.getId());
+            Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + this.node.getId());
             // spawner.spawnNode("4;2_heater;3_window", START_DELAY + 3);
 
             // List<Sensor> sensors = node.getSensors();
-            ActuatorCollection actuators = node.getActuators();
+            ActuatorCollection actuators = this.node.getActuators();
 
             // TODO send state of actuator, on/off?
 
@@ -104,7 +104,7 @@ public class NodeConnectionHandler implements Runnable {
             Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + node.getId());
             // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
             Logger.info(resultString);
-            socketWriter.println(Clients.CONTROL_PANEL + ";0-GET_NODE;" + node.getId() + resultString); // TODO add sensor data and actuator data.
+            socketWriter.println(Clients.CONTROL_PANEL + ";0-GET_NODE;" + this.node.getId() + resultString); // TODO add sensor data and actuator data.
         }
         else if (commandType.equalsIgnoreCase("ACTUATOR_CHANGE")){
             int actuatorId = Integer.parseInt(bodyParts[1]);

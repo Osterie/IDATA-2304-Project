@@ -44,20 +44,20 @@ public abstract class SocketCommunicationChannel {
             try {
             while (isOn) {
                 if (socketReader.ready()) {
-                String serverMessage = socketReader.readLine();
-                if (serverMessage != null) {
-                    Logger.info("Received from server: " + serverMessage);
-                    this.handleMessage(serverMessage);
-                    // this.handleServerCommand(serverMessage);
-                }
+                  String serverMessage = socketReader.readLine();
+                  if (serverMessage != null) {
+                      Logger.info("Received from server: " + serverMessage);
+                      this.handleMessage(serverMessage);
+                      // this.handleServerCommand(serverMessage);
+                  }
                 }
             }
             Logger.info("Server message listener stopped.");
             } catch (IOException e) {
-            Logger.error("Connection lost: " + e.getMessage());
+              Logger.error("Connection lost: " + e.getMessage());
             } 
             finally {
-            this.close();
+              this.close();
             }
         });
         messageListener.start();

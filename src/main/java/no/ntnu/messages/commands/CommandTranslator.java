@@ -1,6 +1,8 @@
-package no.ntnu.messages;
+package no.ntnu.messages.commands;
 
 import java.util.HashMap;
+
+import no.ntnu.messages.Message;
 
 public class CommandTranslator {
 

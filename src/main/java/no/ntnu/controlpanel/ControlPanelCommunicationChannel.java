@@ -28,7 +28,7 @@ import no.ntnu.messages.MessageTest;
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
 
-  public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) throws IOException {
+  public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) {
     super(host, port);
     this.logic = logic;
     // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
@@ -39,6 +39,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   // TODO this should be done in another way, use a protocol with header and body instead and such?
   private void establishConnectionWithServer() {
     // Send initial identifier to server
+    // TODO server should send a response back with something to indicate the connection was successful.
     String identifierMessage = Clients.CONTROL_PANEL.getValue() + ";0"; // TODO generate unique identifier, or let
                                                                         // server do it?
     this.socketWriter.println(identifierMessage);
@@ -224,6 +225,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     return readings;
   }
 
+  // TODO improve...
   private SensorReading parseReading(String reading) {
     String[] assignmentParts = reading.split("=");
     if (assignmentParts.length != 2) {

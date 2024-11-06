@@ -50,8 +50,8 @@ a reply with an error code?
 - [ ] Adrian Implement Header/Body messages for greenhouse
 - [ ] Adrian? Handling connection errors and messaging errors properly.
 - [x] ADRIAN. gitignore fil.
-- [x] TOBIAS. Implementere Message og Command interfacer/klasser
-- [ ] DANIEL. Lage ulike Message/Command underklasser
+- [x] ADRIAN. Implementere Message og Command interfacer/klasser
+- [ ] ADRIAN. Lage ulike Message/Command underklasser
 - [ ] Different sensor types must be supported. The different types are not fixed. I.e., your protocol should allow adding new sensor types when needed. 
 - [ ] ADRIAN PROTOKOLL (IKKE GUI) Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
 Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
