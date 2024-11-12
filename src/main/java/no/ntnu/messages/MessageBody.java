@@ -37,8 +37,10 @@ public class MessageBody {
     public String toProtocolString() {
 
         String result = "";
-
-        if (data.isEmpty()) {
+        if (data == null) {
+            result = command;
+        }
+        else if (data.isEmpty()) {
             result = command;
         } else {
             result = String.join(FIELD_DELIMITER, command, data);
