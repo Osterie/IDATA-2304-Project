@@ -37,6 +37,7 @@ a reply with an error code?
 - [ ] 11. DANIEL Describe a realistic scenario: what would happen from user perspective and what messages would be sent over the network?
 - [x] 12. TOBIAS. The reliability mechanisms in your protocol (handling of network errors), if you have any
 - [x] 13. TOBIAS (Tidligere daniel, men var lett å skrive om begge). The security mechanisms in your protocol, if you have any
+- [x] 14. TOBIAS Må skrive meir om security fordi eg he endra på klassene.
 
 # General TODO
 
@@ -166,7 +167,7 @@ temporarily lost. This means buffering data, retransmissions, reconnecting, etc
 
 - [x] TOBIAS. 2. Data encryption. You can think of different methods of integrating security into your solution,
 either using public-key cryptography or other methods.
-    - [ ] TOBIAS Convert symmetric encryption to RSA.
+- [x] TOBIAS Convert symmetric encryption to RSA.
 
 - [ ] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line
 argument). But you can design automated-address assignments as part of your protocol. For
@@ -174,7 +175,7 @@ example, look at DHCP as an inspiration.
 
 - [ ] 4. SEBASTIAN/ADRIAN Images/files as sensor data. 
 
-    - [ ] ADRIAN Imagine a scenario when a web camera is attached to a sensor node and the image frames it captures could be transmitted to the control panel. Image transfer poses some extra challenges. It is therefore considered an extra feature if you manage to integrate it in your protocol and implement it in your source code.
+- [ ] ADRIAN Imagine a scenario when a web camera is attached to a sensor node and the image frames it captures could be transmitted to the control panel. Image transfer poses some extra challenges. It is therefore considered an extra feature if you manage to integrate it in your protocol and implement it in your source code.
 - [ ] 5. KANSKJE Support of more flexible actuator commands. By default, it is expected that a command is sent to a specific sensor node, specific actuator. If you manage to support also either broadcast commands (to all sensor nodes at a time), or multicast (to specific groups of sensor nodes), this is considered an extra.
 
 
