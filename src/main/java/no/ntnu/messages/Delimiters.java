@@ -4,7 +4,9 @@ public enum Delimiters {
     
     HEADER_BODY_DELIMITER("-"),
     HEADER_DELIMITER(";"),
-    BODY_DELIMITER(HEADER_DELIMITER.getValue()),;
+    BODY_DELIMITER(HEADER_DELIMITER.getValue()),
+    BODY_PARAMETERS_DELIMITER(",");
+
 
     private final String value;
 

@@ -14,8 +14,8 @@ import no.ntnu.tools.Logger;
 public class GetNodeCommand extends Command {
     
 
-    public GetNodeCommand(MessageBody body) {
-        super(body);
+    public GetNodeCommand() {
+        super("GET_NODE");
     }
 
     public Message execute(NodeLogic nodeLogic) {
@@ -41,22 +41,28 @@ public class GetNodeCommand extends Command {
         //     actuatorString.append(";" + actuatorCount.get(key) + "_" + key);
         // }
 
+
         String resultString = actuatorString.toString();
+        // Remove first semicolon
+        // if (resultString.length() > 0) {
+        //     resultString = resultString.substring(1);
+        // }
 
 
         
         // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
         Logger.info(resultString);
 
-        MessageHeader header = new MessageHeader(Clients.CONTROL_PANEL, "0", this.toProtocolString());
+        MessageHeader header = new MessageHeader(Clients.CONTROL_PANEL, "0");
         // MessageBody body = new MessageBody(this, resultString);
-        MessageBody body = new MessageBody(this.toProtocolString(), resultString);
+        MessageBody body = new MessageBody(this, nodeLogic.getId() + resultString);
         return new Message(header, body);
         
         // socketWriter.println(Clients.CONTROL_PANEL + ";0-GET_NODE;" + this.nodeLogic.getId() + resultString); // TODO add sensor data and actuator data.
     }
 
+    @Override
     public String toProtocolString() {
-        return "GET_NODE";
+        return this.getCommandString();
     }
 }

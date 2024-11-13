@@ -9,8 +9,8 @@ import no.ntnu.tools.Logger;
 
 public class GetNodeIdCommand extends Command {
 
-    public GetNodeIdCommand(MessageBody body) {
-        super(body);
+    public GetNodeIdCommand() {
+        super("GET_NODE_ID");
     }
 
     @Override
@@ -18,14 +18,14 @@ public class GetNodeIdCommand extends Command {
         Logger.info("Received request for node ID from server, sending response " + logic.getId());
 
         // TODO should not be 0, how to know what though?
-        MessageHeader header = new MessageHeader(Clients.CONTROL_PANEL, "0", this.toProtocolString());
+        MessageHeader header = new MessageHeader(Clients.CONTROL_PANEL, "0");
         // MessageBody body = new MessageBody(this, String.valueOf(logic.getId()));
-        MessageBody body = new MessageBody(this.toProtocolString(), String.valueOf(logic.getId()));
+        MessageBody body = new MessageBody(this, String.valueOf(logic.getId()));
         return new Message(header, body);
     }
 
     @Override
     public String toProtocolString() {
-        return "GET_NODE_ID";
+        return this.getCommandString();
     }
 }

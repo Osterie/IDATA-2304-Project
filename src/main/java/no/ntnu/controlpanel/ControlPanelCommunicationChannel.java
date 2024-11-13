@@ -70,7 +70,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   }
 
   private void handleGreenhouseCommandResponse(MessageBody body) {
-    String respondedToCommand = body.getCommand();
+    // TODO CHANGE!
+    String respondedToCommand = body.getCommand().toProtocolString();
     String response = body.getData();
 
     Logger.info("Handling greenhouse command response: " + respondedToCommand);
@@ -105,9 +106,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
     String nodeIdStr = Integer.toString(nodeId);
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeIdStr);
+    MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
     // MessageBody body = new MessageBody(new ActuatorChangeCommand(null, String.valueOf(actuatorId), isOn));
-    // MessageBody body = new MessageBody(new ActuatorChangeCommand(null, String.valueOf(actuatorId), isOn));
-    MessageBody body = new MessageBody("ACTUATOR_CHANGE" + Delimiters.BODY_DELIMITER + actuatorId + Delimiters.BODY_DELIMITER + (isOn ? "ON" : "OFF"));
+    // MessageBody body = new MessageBody("ACTUATOR_CHANGE" + Delimiters.BODY_DELIMITER + actuatorId + Delimiters.BODY_DELIMITER + (isOn ? "ON" : "OFF"));
     Message message = new Message(header, body);
     this.sendCommandToServer(message);
   }
@@ -124,14 +125,15 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    */
   public void askForNodes() {
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, "ALL");
-    MessageBody body = new MessageBody("GET_NODE_ID");
+    MessageBody body = new MessageBody(new GetNodeCommand());
+    System.out.println("body: " + body.toProtocolString());
     Message message = new Message(header, body);
     this.sendCommandToServer(message);
   }
 
   public void spawnNode(String nodeId, int START_DELAY) {
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeId);
-    MessageBody body = new MessageBody("GET_NODE");
+    MessageBody body = new MessageBody(new GetNodeCommand());
     Message message = new Message(header, body);
     this.sendCommandToServer(message);
   }
