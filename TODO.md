@@ -169,7 +169,7 @@ temporarily lost. This means buffering data, retransmissions, reconnecting, etc
 either using public-key cryptography or other methods.
 - [x] TOBIAS Convert symmetric encryption to RSA.
 
-- [ ] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line
+- [x] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line
 argument). But you can design automated-address assignments as part of your protocol. For
 example, look at DHCP as an inspiration.
 
