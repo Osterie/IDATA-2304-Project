@@ -31,6 +31,9 @@ public class MessageTest {
 
     // Convert to protocol string
     public String toProtocolString() {
+        if (header == null || body == null) {
+            throw new IllegalArgumentException("Header and body cannot be null");
+        }
         return header.toProtocolString() + HEADER_BODY_DELIMITER + body.toProtocolString();
     }
 

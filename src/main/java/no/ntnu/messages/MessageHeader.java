@@ -65,7 +65,10 @@ public class MessageHeader {
     public String toProtocolString() {
         
         String result = "";
-        if (dataType.isEmpty()) {
+        if (dataType == null) {
+            throw new IllegalArgumentException("Data type cannot be null");
+        }
+        else if (dataType.isEmpty()) {
             result = String.join(FIELD_DELIMITER, receiver.getValue(), id);
         }
         else {
