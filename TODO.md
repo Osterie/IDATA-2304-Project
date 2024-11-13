@@ -48,7 +48,7 @@ a reply with an error code?
 - [x] Adrian Implement Header/Body messages for control panel 
 - [x] Adrian Implement Header/Body messages for intermediary server
 - [ ] Adrian Implement Header/Body messages for greenhouse
-- [ ] Adrian? Handling connection errors and messaging errors properly.
+- [ ] DANIEL Handling connection errors and messaging errors properly.
 - [x] ADRIAN. gitignore fil.
 - [x] ADRIAN. Implementere Message og Command interfacer/klasser
 - [ ] ADRIAN. Lage ulike Message/Command underklasser
@@ -94,7 +94,7 @@ _
 
 - [ ] ADRIAN One Thread for writing and one for reading.
 
-- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
+- [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN lage kommunikasjons klasse for greenhouse nodes.
 - [x] ADRIAN. Koble til multiple greenhouse nodes til intermediary server.
 
@@ -108,7 +108,7 @@ Each sensor-node can do the following:
 
 # INTERMEDIARY SERVER
 
-- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
+- [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. Lage en intermediary server som kan brukes for å tilrettelegge kommunikasjon mellom greenhouse nodes og control panel.
 - [x] ADRIAN. Ta i mot klienter som vil koble seg til.
 - [x] ADRIAN. Motta meldinger fra klienter.
@@ -137,7 +137,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
     - [ ] ADRIAN How does control panel know what info to ask for?
     - [ ] ADRIAN How does control panel know what to do with the info it receives?
 
-- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
+- [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. koble til multiple control panels til intermediary server.
 - [x] ADRIAN. lage kommunikasjons klasse for control panel
 - [ ] ADRIAN. Spør hele tiden om informasjon for noden som vises i control panel GUI.
