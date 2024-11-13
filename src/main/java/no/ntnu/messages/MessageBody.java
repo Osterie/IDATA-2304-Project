@@ -1,5 +1,8 @@
 package no.ntnu.messages;
 
+import no.ntnu.messages.commands.Command;
+import no.ntnu.messages.commands.CommandTranslator;
+
 public class MessageBody {
     private static final String FIELD_DELIMITER = Delimiters.BODY_DELIMITER.getValue();
     private String command;
@@ -54,6 +57,8 @@ public class MessageBody {
         if (parts.length < 1) {
             throw new IllegalArgumentException("Invalid message format");
         }
+        // CommandTranslator commandTranslator = new CommandTranslator();
+        // Command command = commandTranslator.toCommand(parts[0]);
         return new MessageBody(parts[0], parts.length > 1 ? parts[1] : "");
     }
 }

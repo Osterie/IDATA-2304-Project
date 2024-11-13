@@ -52,7 +52,7 @@ public class CommandTest {
   @Test
   public void testCreatingCommandWithNullBody() throws IOException {
     MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
-    MessageTest message = new MessageTest(messageHeader, null);
+    Message message = new Message(messageHeader, null);
 
     try {
       String command = message.toProtocolString();
@@ -67,7 +67,7 @@ public class CommandTest {
   @Test
   public void testCreatingCommandWithNullHeader() throws IOException {
     MessageBody messageBody = new MessageBody("TURN_ON_FAN", "1");
-    MessageTest message = new MessageTest(null, messageBody);
+    Message message = new Message(null, messageBody);
 
     try {
       String command = message.toProtocolString();

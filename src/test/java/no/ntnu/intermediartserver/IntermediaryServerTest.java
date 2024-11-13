@@ -6,7 +6,7 @@ import no.ntnu.greenhouse.MockGreenhouseNode;
 import no.ntnu.intermediaryserver.IntermediaryServer;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
-import no.ntnu.messages.MessageTest;
+import no.ntnu.messages.Message;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -58,7 +58,7 @@ public class IntermediaryServerTest {
 
     MessageBody messageBody = new MessageBody("TURN_ON_FAN", "1");
     MessageHeader messageHeader = new MessageHeader(Clients.GREENHOUSE, "1");
-    MessageTest message = new MessageTest(messageHeader, messageBody);
+    Message message = new Message(messageHeader, messageBody);
 
     String command = message.toProtocolString();
 
@@ -76,7 +76,7 @@ public class IntermediaryServerTest {
   public void testGreenhouseNodeToControlPanelCommunication() throws IOException {
     MessageBody messageBody = new MessageBody("SENSOR_NODE", "1");
     MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
-    MessageTest message = new MessageTest(messageHeader, messageBody);
+    Message message = new Message(messageHeader, messageBody);
 
     String command = message.toProtocolString();
 
@@ -97,7 +97,7 @@ public class IntermediaryServerTest {
 
         MessageBody messageBody = new MessageBody("INVALID_COMMAND", "1");
         MessageHeader messageHeader = new MessageHeader(Clients.GREENHOUSE, "1");
-        MessageTest message = new MessageTest(messageHeader, messageBody);
+        Message message = new Message(messageHeader, messageBody);
 
         String command = message.toProtocolString();
 
@@ -116,7 +116,7 @@ public class IntermediaryServerTest {
     public void testGreenhouseNodeToControlPanelCommunicationWithInvalidClient() throws IOException {
         MessageBody messageBody = new MessageBody("INVALID_COMMAND", "1");
         MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
-        MessageTest message = new MessageTest(messageHeader, messageBody);
+        Message message = new Message(messageHeader, messageBody);
 
         String command = message.toProtocolString();
 
@@ -135,7 +135,7 @@ public class IntermediaryServerTest {
   public void testCreateMessageWithNullData() throws IOException {
     MessageBody messageBody = new MessageBody("TURN_ON_FAN", null);
     MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
-    MessageTest message = new MessageTest(messageHeader, messageBody);
+    Message message = new Message(messageHeader, messageBody);
 
     try {
       String command = message.toProtocolString();
@@ -153,7 +153,7 @@ public class IntermediaryServerTest {
   public void testCreateMessageWithNullCommand() throws IOException {
     MessageBody messageBody = new MessageBody(null, "1");
     MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
-    MessageTest message = new MessageTest(messageHeader, messageBody);
+    Message message = new Message(messageHeader, messageBody);
 
     try {
       String command = message.toProtocolString();

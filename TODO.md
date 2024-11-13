@@ -9,7 +9,7 @@
 - [ ] ADRIAN/DANIEL/KNUT/SEBASTIAN/TOBIAS. JAVADOC FOLKENS, JAVADOC.
  
 
-- [ ] ADRIAN. Følge protokoll, en header og en body. Header inneholer mottaker, mottakerID, datatype Body inneholder dataen.
+- [x] ADRIAN. Følge protokoll, en header og en body. Header inneholer mottaker, mottakerID, datatype Body inneholder dataen.
 
 # PROTOCOL DESCRIPTION REQUIREMENTS
 
@@ -46,6 +46,8 @@ a reply with an error code?
     - [x] Control panel
     - [x] Greenhouse
 
+- [ ] ADRIAN. Make identifier message follow our protocol.
+
 - [x] Adrian Implement Header/Body messages for control panel 
 - [x] Adrian Implement Header/Body messages for intermediary server
 - [ ] Adrian Implement Header/Body messages for greenhouse
@@ -53,10 +55,9 @@ a reply with an error code?
 - [x] ADRIAN. gitignore fil.
 - [x] ADRIAN. Implementere Message og Command interfacer/klasser
 - [ ] ADRIAN. Lage ulike Message/Command underklasser
-- [ ] Different sensor types must be supported. The different types are not fixed. I.e., your protocol should allow adding new sensor types when needed. 
-- [ ] ADRIAN PROTOKOLL (IKKE GUI) Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
+- [ ] SEBASTIAN PROTOKOLL (IKKE GUI) Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
 Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
-- [ ] ADRIAN Commands to turn on/off all actuators for a node. 
+- [ ] SEBASTIAN Commands to turn on/off all actuators for a node. 
 - [x] ADRIAN. Lage klasse som applikasjonen kan kjøres fra.
 - [ ] ADRIAN Refaktorer client handler felt, kanskje bruke egen klasse for å lagre klient type og klient id.
 - [ ] ADRIAN Instead of storing sockets in server, store clienthandler?
@@ -104,7 +105,7 @@ Each sensor-node can do the following:
 - [x] SEBASTIAN. Act as an actuator node as well. That is, each sensor node is a "sensor and actuator node", which can have several actuators attached
 - [x] SEBASTIAN. Support different actuators. For example, fan, heater, window opener, door lock, shower opener.
 
-- [ ] ADRIAN. Hint: if your protocol will support only one instance of each sensor type on a node (only one temperature sensor per node, one humidity sensor, etc.), it is probably enough to address the sensors by their type. If you want to support multiple instances of the same sensor type per node, you need to introduce the addressing of the sensors (and actuators). For example, temperature sensors 1 and 2 on the sensor node 7, humidity sensors 1, 2 and 3 on sensor node 12, etc.
+- [ ] SEBASTIAN. Hint: if your protocol will support only one instance of each sensor type on a node (only one temperature sensor per node, one humidity sensor, etc.), it is probably enough to address the sensors by their type. If you want to support multiple instances of the same sensor type per node, you need to introduce the addressing of the sensors (and actuators). For example, temperature sensors 1 and 2 on the sensor node 7, humidity sensors 1, 2 and 3 on sensor node 12, etc.
 
 
 # INTERMEDIARY SERVER
@@ -157,8 +158,7 @@ Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av
 
 # EXTRA WORK
 
-- [ ] ADRIAN. 1. Resilience in case of network outages. The solution functions when the network connection is
-temporarily lost. This means buffering data, retransmissions, reconnecting, etc
+- [ ] ADRIAN. 1. Resilience in case of network outages. The solution functions when the network connection is temporarily lost. This means buffering data, retransmissions, reconnecting, etc
     - [ ] When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
     - [ ] If the connection is lost, try to reconnect. If it fails, show an error message to the user.
     - [ ] If a message is not received, try to receive it again. If it fails, show an error message to the user.
@@ -169,11 +169,9 @@ temporarily lost. This means buffering data, retransmissions, reconnecting, etc
 either using public-key cryptography or other methods.
 - [x] TOBIAS Convert symmetric encryption to RSA.
 
-- [x] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line
-argument). But you can design automated-address assignments as part of your protocol. For
-example, look at DHCP as an inspiration.
+- [x] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line argument). But you can design automated-address assignments as part of your protocol. For example, look at DHCP as an inspiration.
 
-- [ ] 4. SEBASTIAN/ADRIAN Images/files as sensor data. 
+- [x] 4. SEBASTIAN/ADRIAN Images/files as sensor data. 
 
 - [ ] ADRIAN Imagine a scenario when a web camera is attached to a sensor node and the image frames it captures could be transmitted to the control panel. Image transfer poses some extra challenges. It is therefore considered an extra feature if you manage to integrate it in your protocol and implement it in your source code.
 - [ ] 5. KANSKJE Support of more flexible actuator commands. By default, it is expected that a command is sent to a specific sensor node, specific actuator. If you manage to support also either broadcast commands (to all sensor nodes at a time), or multicast (to specific groups of sensor nodes), this is considered an extra.

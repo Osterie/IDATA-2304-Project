@@ -1,6 +1,6 @@
 package no.ntnu.greenhouse;
 
-import no.ntnu.messages.MessageTest;
+import no.ntnu.messages.Message;
 
 public class NodeLogic {
     private final SensorActuatorNode node;
@@ -9,7 +9,11 @@ public class NodeLogic {
         this.node = node;
     }
 
-    public void doCommand(MessageTest message){
-        
+    public SensorActuatorNode getNode(){
+        return this.node;
+    }
+
+    public int getId() {
+        return this.node.getId();
     }
 }

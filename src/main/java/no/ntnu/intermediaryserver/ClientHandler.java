@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import no.ntnu.Clients;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
-import no.ntnu.messages.MessageTest;
+import no.ntnu.messages.Message;
 import no.ntnu.tools.Logger;
 
 /**
@@ -103,7 +103,7 @@ public class ClientHandler extends Thread {
      * @param request The request from the client
      */
     private void sendToClient(String request) {
-        MessageTest message = MessageTest.fromProtocolString(request);
+        Message message = Message.fromProtocolString(request);
 
         MessageHeader header = message.getHeader();
         MessageBody body = message.getBody();
@@ -160,7 +160,7 @@ public class ClientHandler extends Thread {
 
         MessageHeader header = new MessageHeader(this.clientType, this.clientId);
         MessageBody messageBody = new MessageBody(body);
-        MessageTest message = new MessageTest(header, messageBody);
+        Message message = new Message(header, messageBody);
         
         for (Socket client : clients) {
             try {

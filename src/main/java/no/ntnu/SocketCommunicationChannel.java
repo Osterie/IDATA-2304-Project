@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import no.ntnu.messages.MessageTest;
+import no.ntnu.messages.Message;
 import no.ntnu.tools.Logger;
 
 
@@ -65,7 +65,7 @@ public abstract class SocketCommunicationChannel {
 
     protected abstract void handleMessage(String message);
 
-    protected void sendCommandToServer(MessageTest message) {
+    protected void sendCommandToServer(Message message) {
       if (isOn && socketWriter != null) {
         Logger.info("Trying to send message...");
         socketWriter.println(message.toProtocolString());

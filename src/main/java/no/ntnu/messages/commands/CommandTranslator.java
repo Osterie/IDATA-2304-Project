@@ -14,6 +14,10 @@ public class CommandTranslator {
     public CommandTranslator() {
 
         this.commandMap = new HashMap<>();
+        this.commandMap.put(new GetNodeIdCommand(null).toProtocolString(), new GetNodeIdCommand(null));
+        this.commandMap.put(new GetNodeCommand(null).toProtocolString(), new GetNodeCommand(null));
+        this.commandMap.put(new ActuatorChangeCommand(null, "", false).toProtocolString(), new ActuatorChangeCommand(null, "", false));
+
         // TODO: Add commands
     }
 
@@ -23,7 +27,7 @@ public class CommandTranslator {
      * @param string the string to convert
      * @return the message object
      */
-    public Message toMessage(String string) {
+    public Command toCommand(String string) {
         if (this.commandMap.containsKey(string)) {
             return this.commandMap.get(string);
         }
