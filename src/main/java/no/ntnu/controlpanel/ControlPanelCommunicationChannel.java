@@ -52,19 +52,30 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
   @Override
   protected void handleMessage(String serverMessage) {
+    // Attempt to parse the server message
+    Message message;
+    try {
+      message = Message.fromProtocolString(serverMessage);
+    } catch (IllegalArgumentException | NullPointerException e) {
+      Logger.error("Invalid server message format: " + serverMessage + ". Error: " + e.getMessage());
+      return;
+    }
 
-    // TODO handle invalid serverMessage.
-    Message message = Message.fromProtocolString(serverMessage);
+    // Check for null message, header, or body
+    if (message == null || message.getHeader() == null || message.getBody() == null) {
+      Logger.error("Message, header, or body is missing in server message: " + serverMessage);
+      return;
+    }
 
+    // Extract header and body
     MessageHeader header = message.getHeader();
     MessageBody body = message.getBody();
-
     Clients client = header.getReceiver();
 
+    // Handle based on client type
     if (client == Clients.GREENHOUSE) {
       this.handleGreenhouseCommandResponse(body);
-    }
-    else {
+    } else {
       Logger.error("Unknown client: " + client);
     }
   }
