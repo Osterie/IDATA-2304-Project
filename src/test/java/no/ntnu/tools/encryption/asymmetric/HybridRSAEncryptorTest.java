@@ -6,7 +6,10 @@ import javax.crypto.SecretKey;
 import java.security.KeyPair;
 import java.util.Base64;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class HybridRSAEncryptorTest {
 
