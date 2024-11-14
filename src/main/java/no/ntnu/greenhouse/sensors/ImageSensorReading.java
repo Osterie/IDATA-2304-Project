@@ -20,6 +20,12 @@ public class ImageSensorReading extends SensorReading{
         this.fileExtension = null;
     }
 
+    public ImageSensorReading(String type, BufferedImage image) {
+        super(type);
+        this.currentImage = image;
+        this.fileExtension = null;
+    }
+
     public void generateRandomImage(String imagesFilePath) {
         // Gets a random image from the given file path.
 

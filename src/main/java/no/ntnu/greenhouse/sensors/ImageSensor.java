@@ -9,11 +9,12 @@ public class ImageSensor extends Sensor {
   private final ImageSensorReading reading;
   private final String imagesFilePath;
 
+  // TODO do not give image, just have a constant image
+
   /**
    * Create a sensor.
    *
-   * @param type    The type of the sensor. Examples: "temperature", "humidity"
-   * @param fileExtension The file extension of the image
+   * @param type    The type of the sensor.
    * @param currentImage The current (starting) image of the sensor
    */
   public ImageSensor(String type, String imagesFilePath) {

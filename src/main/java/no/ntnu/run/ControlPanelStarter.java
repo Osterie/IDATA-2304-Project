@@ -76,15 +76,10 @@ public class ControlPanelStarter implements Runnable {
 
 
   private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-    try {
-        ControlPanelCommunicationChannel channel = new ControlPanelCommunicationChannel(logic, "localhost", PORT_NUMBER);
-        logic.setCommunicationChannel(channel);
-        channel.askForNodes();
-        return channel;
-    } catch (IOException e) {
-        System.err.println("CouldaskForNodes not establish connection to the server: " + e.getMessage());
-        return null;
-    }
+      ControlPanelCommunicationChannel channel = new ControlPanelCommunicationChannel(logic, "localhost", PORT_NUMBER);
+      logic.setCommunicationChannel(channel);
+      channel.askForNodes();
+      return channel;
   }
 
   private CommunicationChannel initiateFakeSpawner(ControlPanelLogic logic) {

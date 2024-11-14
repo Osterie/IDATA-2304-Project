@@ -18,7 +18,11 @@ import no.ntnu.tools.Logger;
 
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
-import no.ntnu.messages.MessageTest;
+import no.ntnu.messages.commands.ActuatorChangeCommand;
+import no.ntnu.messages.commands.GetNodeCommand;
+import no.ntnu.messages.commands.GetNodeIdCommand;
+import no.ntnu.messages.Delimiters;
+import no.ntnu.messages.Message;
 
 /**
  * A communication channel for the control panel. This class is responsible for
@@ -28,7 +32,7 @@ import no.ntnu.messages.MessageTest;
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
 
-  public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) throws IOException {
+  public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) {
     super(host, port);
     this.logic = logic;
     // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
@@ -39,6 +43,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   // TODO this should be done in another way, use a protocol with header and body instead and such?
   private void establishConnectionWithServer() {
     // Send initial identifier to server
+    // TODO server should send a response back with something to indicate the connection was successful.
     String identifierMessage = Clients.CONTROL_PANEL.getValue() + ";0"; // TODO generate unique identifier, or let
                                                                         // server do it?
     this.socketWriter.println(identifierMessage);
@@ -49,7 +54,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   protected void handleMessage(String serverMessage) {
 
     // TODO handle invalid serverMessage.
-    MessageTest message = MessageTest.fromProtocolString(serverMessage);
+    Message message = Message.fromProtocolString(serverMessage);
 
     MessageHeader header = message.getHeader();
     MessageBody body = message.getBody();
@@ -65,7 +70,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   }
 
   private void handleGreenhouseCommandResponse(MessageBody body) {
-    String respondedToCommand = body.getCommand();
+    // TODO CHANGE!
+    String respondedToCommand = body.getCommand().toProtocolString();
     String response = body.getData();
 
     Logger.info("Handling greenhouse command response: " + respondedToCommand);
@@ -100,8 +106,10 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
     String nodeIdStr = Integer.toString(nodeId);
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeIdStr);
-    MessageBody body = new MessageBody("ACTUATOR_CHANGE;" + actuatorId + ";" + (isOn ? "ON" : "OFF"));
-    MessageTest message = new MessageTest(header, body);
+    MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
+    // MessageBody body = new MessageBody(new ActuatorChangeCommand(null, String.valueOf(actuatorId), isOn));
+    // MessageBody body = new MessageBody("ACTUATOR_CHANGE" + Delimiters.BODY_DELIMITER + actuatorId + Delimiters.BODY_DELIMITER + (isOn ? "ON" : "OFF"));
+    Message message = new Message(header, body);
     this.sendCommandToServer(message);
   }
 
@@ -117,15 +125,16 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    */
   public void askForNodes() {
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, "ALL");
-    MessageBody body = new MessageBody("GET_NODE_ID");
-    MessageTest message = new MessageTest(header, body);
+    MessageBody body = new MessageBody(new GetNodeCommand());
+    System.out.println("body: " + body.toProtocolString());
+    Message message = new Message(header, body);
     this.sendCommandToServer(message);
   }
 
   public void spawnNode(String nodeId, int START_DELAY) {
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeId);
-    MessageBody body = new MessageBody("GET_NODE");
-    MessageTest message = new MessageTest(header, body);
+    MessageBody body = new MessageBody(new GetNodeCommand());
+    Message message = new Message(header, body);
     this.sendCommandToServer(message);
   }
 
@@ -224,6 +233,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     return readings;
   }
 
+  // TODO improve...
   private SensorReading parseReading(String reading) {
     String[] assignmentParts = reading.split("=");
     if (assignmentParts.length != 2) {

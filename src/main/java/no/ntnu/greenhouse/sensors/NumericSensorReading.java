@@ -6,7 +6,7 @@ import java.util.Objects;
  * Represents one sensor reading (value).
  */
 public class NumericSensorReading extends SensorReading {
-  // private final String type;
+
   private double value;
   private final String unit;
 
@@ -19,14 +19,9 @@ public class NumericSensorReading extends SensorReading {
    */
   public NumericSensorReading(String type, double value, String unit) {
     super(type);
-    // this.type = type;
     this.value = value;
     this.unit = unit;
   }
-
-  // public String getType() {
-  //   return type;
-  // }
 
   public double getValue() {
     return value;

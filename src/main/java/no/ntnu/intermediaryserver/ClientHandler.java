@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import no.ntnu.Clients;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
-import no.ntnu.messages.MessageTest;
+import no.ntnu.messages.Message;
 import no.ntnu.tools.Logger;
 
 /**
@@ -103,74 +103,71 @@ public class ClientHandler extends Thread {
      * @param request The request from the client
      */
     private void sendToClient(String request) {
-        MessageTest message = MessageTest.fromProtocolString(request);
-
-        MessageHeader header = message.getHeader();
-        MessageBody body = message.getBody();
-
-        Clients target = header.getReceiver();
-        String targetId = header.getId();
-        String bodyString = body.toProtocolString();
+        Logger.info("request: " + request);
+        Message message = Message.fromProtocolString(request);
+        System.out.println("message " + message.toProtocolString());
+        // System.out.println("command: " + message.getBody().getCommand().toProtocolString() + "message " + message.toProtocolString());
+        String targetId = message.getHeader().getId();
 
         if (targetId.equalsIgnoreCase("ALL")) {
-            this.sendToAll(target, bodyString);
-            return;
+            this.sendMessageToAllClients(message);
         }
-
-        this.sendCommandToClient(target, targetId, bodyString);
+        else{
+            this.sendMessageToClient(message);
+        }
     }
 
-    /**
-     * Sends a command to a specific client.
-     *
-     * @param targetClientType The type of the target client
-     * @param targetClientId The ID of the target client
-     * @param body The body of the message to send
-     */
-    private void sendCommandToClient(Clients targetClientType, String targetClientId, String body) {
-        Socket receiver = server.getClient(targetClientType, targetClientId);
+    private void sendMessageToAllClients(Message message) {
+        ArrayList<Socket> clients = this.getAllClients(message.getHeader());
+        message.setHeader(this.generateNewHeader());
+        
+        
+        // PrintWriter receiverWriter;
+        Logger.info("Sending message to all clients: " + message.toProtocolString());
+        for (Socket client : clients) {
+            this.sendMessage(message, client);
+        }
+    }
+
+    private void sendMessageToClient(Message message) {
+        Socket receiver = this.getClient(message.getHeader());
+        message.setHeader(this.generateNewHeader());
+
+
         if (receiver == null) {
-            Logger.error(targetClientType + " not found: " + targetClientId);
+            Logger.error("Not found: " + message.getHeader().getReceiver() + " " + message.getHeader().getId());
             return;
         }
 
-        // TODO sue new message class 
+        // Logger.info("Sending message to " + message.getHeader().getReceiver() + " " + message.getHeader().getId() + ": " + message.toProtocolString());
+        this.sendMessage(message, receiver);
+    }
 
-        String header = this.clientType + ";" + this.clientId;
-        String message = header + "-" + body;
-
+    private void sendMessage(Message message, Socket receiver) {
+        if (message == null) {
+            Logger.error("Message is null");
+            return;
+        }
         try {
             PrintWriter receiverWriter = new PrintWriter(receiver.getOutputStream(), true);
-            Logger.info("Sending response to " + targetClientType + " " + receiver.getRemoteSocketAddress() + ": " + body);
-            receiverWriter.println(message);
+            // Logger.info("Sending response to " + targetClientType + " " + receiver.getRemoteSocketAddress() + ": " + message.toProtocolString());
+
+            receiverWriter.println(message.toProtocolString());
         } catch (IOException e) {
-            Logger.error("Failed to send response to " + targetClientType + ": " + e.getMessage());
+            // Logger.error("Failed to send response to " + targetClientType + ": " + e.getMessage());
         }
     }
 
-    /**
-     * Sends a message to all clients of a specific type.
-     *
-     * @param targetClientType The type of the target clients
-     * @param body The body of the message to send
-     */
-    private void sendToAll(Clients targetClientType, String body) {
-        ArrayList<Socket> clients = server.getAllClients(targetClientType);
-        PrintWriter receiverWriter;
+    private MessageHeader generateNewHeader(){
+        return new MessageHeader(this.clientType, this.clientId);
+    }
 
-        MessageHeader header = new MessageHeader(this.clientType, this.clientId);
-        MessageBody messageBody = new MessageBody(body);
-        MessageTest message = new MessageTest(header, messageBody);
-        
-        for (Socket client : clients) {
-            try {
-                receiverWriter = new PrintWriter(client.getOutputStream(), true);
-                Logger.info("Sending response to " + targetClientType + " " + client.getRemoteSocketAddress() + ": " + body);
-                receiverWriter.println(message.toProtocolString());
-            } catch (IOException e) {
-                Logger.error("Failed to send response to " + targetClientType + ": " + e.getMessage());
-            }
-        }
+    private Socket getClient(MessageHeader header){
+        return server.getClient(header.getReceiver(), header.getId());
+    }
+
+    private ArrayList<Socket> getAllClients(MessageHeader header){
+        return server.getAllClients(header.getReceiver());
     }
 
     /**
@@ -229,6 +226,7 @@ public class ClientHandler extends Thread {
      */
     private void closeStreams() {
         try {
+            Logger.info("Closing reader, writer and socket");
             this.socketReader.close();
             this.socketWriter.close();
             this.clientSocket.close();
