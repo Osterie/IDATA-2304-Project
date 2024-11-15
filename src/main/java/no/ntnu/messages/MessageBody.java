@@ -40,7 +40,6 @@ public class MessageBody {
     public String toProtocolString() {
 
         String result = "";
-        System.out.println("what " + command.toProtocolString() + " works");
         if (data == null) {
             result = command.toProtocolString();
         }

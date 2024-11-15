@@ -5,57 +5,32 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.HashMap;
 
 import no.ntnu.Clients;
+import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
-import no.ntnu.messages.commands.ActuatorChangeCommand;
 import no.ntnu.messages.commands.Command;
 import no.ntnu.tools.Logger;
 
-public class NodeConnectionHandler implements Runnable {
+public class NodeConnectionHandler extends SocketCommunicationChannel implements Runnable {
     private final NodeLogic nodeLogic;
-    private final Socket socket;
-    private final PrintWriter socketWriter;
-    private final BufferedReader socketReader;
 
-    public NodeConnectionHandler(SensorActuatorNode node, String host, int port) throws IOException {
+    public NodeConnectionHandler(SensorActuatorNode node, String host, int port) {
+        super(host, port);
         this.nodeLogic = new NodeLogic(node);
-        this.socket = new Socket(host, port);
-        this.socket.setKeepAlive(true);
-        this.socketWriter = new PrintWriter(socket.getOutputStream(), true);
-        this.socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-        // Send initial identifier to server
-        String identifierMessage = "GREENHOUSE;" + node.getId();
-        socketWriter.println(identifierMessage);
-        Logger.info("connecting node " + node.getId() + " with identifier: " + identifierMessage);
+        this.establishConnectionWithServer(Clients.GREENHOUSE, String.valueOf(node.getId()));
     }
 
     @Override
     public void run() {
-        try {
-            while (!socket.isClosed()) {
-                String serverMessage = socketReader.readLine();
-                if (serverMessage != null) {
-                    Logger.info("Received for node " + this.nodeLogic.getId() + ": " + serverMessage);
-                    handleServerCommand(serverMessage);
-                }
-                else{
-                    Logger.info("Invalid request from server: " + serverMessage);
-                }
-            }
-        } catch (IOException e) {
-            Logger.error("Connection lost for node " + this.nodeLogic.getId() + ": " + e.getMessage());
-        } finally {
-            this.close();
-        }
+        this.listenForMessages();
     }
 
     // TODO fix, improve, refactor. Use command classes and message classes
-    private void handleServerCommand(String message) {
+    @Override
+    protected void handleMessage(String message) {
 
         Logger.info("Received message for node! " + this.nodeLogic.getId() + ": " + message);
 
@@ -71,16 +46,5 @@ public class NodeConnectionHandler implements Runnable {
 
         Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + nodeLogic.getId());
         socketWriter.println(response.toProtocolString());
-    }
-
-    public void close() {
-        try {
-            socket.close();
-            socketWriter.close();
-            socketReader.close();
-            Logger.info("Connection closed for node " + nodeLogic.getId());
-        } catch (IOException e) {
-            Logger.error("Error closing connection for node " + nodeLogic.getId() + ": " + e.getMessage());
-        }
     }
 }

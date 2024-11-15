@@ -1,6 +1,7 @@
 package no.ntnu.gui.greenhouse;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import javafx.scene.Node;
@@ -74,23 +75,19 @@ public class MainGreenhouseGuiWindow extends Scene {
    * @return An ImageView if the image is successfully loaded; otherwise, a placeholder Label.
    */
   private static Node createMasterImage() {
-    // Path to image file
-    String imagePath = "images/picsart_chuck.jpg";
+    Node node;
+    try {
+      InputStream fileContent = new FileInputStream("images/picsart_chuck.jpg");
+      ImageView imageView = new ImageView();
+      imageView.setImage(new Image(fileContent));
+      imageView.getStyleClass().add("image-view");
+      imageView.setFitWidth(300);
+      imageView.setPreserveRatio(true);
 
-    try (InputStream fileContent = new FileInputStream(imagePath)) {
-      // Create ImageView to display the loaded image
-      ImageView imageView = new ImageView(new Image(fileContent));
-      imageView.getStyleClass().add("image-view"); // Style for the image
-      imageView.setFitWidth(300); // Width constraint
-      imageView.setPreserveRatio(true); // Preserve aspect ratio
-      return imageView;
-    } catch (IOException e) {
-      // Log error if the image file is not found or cannot be opened
-      Logger.error("Image file not found or cannot be opened: " + imagePath);
-      // Placeholder label if image loading fails
-      Label noImageLabel = new Label("No Image Available");
-      noImageLabel.getStyleClass().add("no-image-label"); // Style for fallback label
-      return noImageLabel;
+      node = imageView;
+    } catch (FileNotFoundException e) {
+      node = new Label("Could not find image file: " + e.getMessage());
     }
+    return node;
   }
 }

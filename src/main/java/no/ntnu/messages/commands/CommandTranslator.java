@@ -31,7 +31,6 @@ public class CommandTranslator {
      */
     public Command toCommand(String string) {
 
-        System.out.println("command is here!: " + string);
         String[] parts = string.split(Delimiters.BODY_PARAMETERS_DELIMITER.getValue(), 2);
         String commandString = parts[0];
         

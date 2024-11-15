@@ -77,7 +77,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     stage.show();
     logic.addListener(this);
     logic.setCommunicationChannelListener(this);
-    if (!channel.open()) {
+    if (!channel.isOpen()) {
       logic.onCommunicationChannelClosed();
     }
   }

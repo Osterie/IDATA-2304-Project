@@ -48,8 +48,8 @@ public abstract class SocketCommunicationChannel {
                   if (serverMessage != null) {
                       Logger.info("Received from server: " + serverMessage);
                       this.handleMessage(serverMessage);
-                      // this.handleServerCommand(serverMessage);
                   }
+                  // TODO handle if null and such
                 }
             }
             Logger.info("Server message listener stopped.");
@@ -75,12 +75,10 @@ public abstract class SocketCommunicationChannel {
       }
     }
     
-    // @Override
-    public boolean open() {
+    public boolean isOpen() {
       return isOn;
     }
   
-    // @Override
     public boolean close() {
   
       boolean closed = false;
@@ -100,4 +98,13 @@ public abstract class SocketCommunicationChannel {
       }
       return closed;
     }
+
+  // TODO this should be done in another way, use a protocol with header and body instead and such?
+  protected void establishConnectionWithServer(Clients client, String id) {
+
+    // Send initial identifier to server
+    // TODO server should send a response back with something to indicate the connection was successful.
+    String identifierMessage = client.getValue() + ";" + id; 
+    this.socketWriter.println(identifierMessage);
+  }
 }
