@@ -19,6 +19,7 @@ public class CommandTranslator {
         this.commandMap.put(new GetNodeIdCommand().getCommandString(), new GetNodeIdCommand());
         this.commandMap.put(new GetNodeCommand().getCommandString(), new GetNodeCommand());
         this.commandMap.put(new ActuatorChangeCommand(0, false).getCommandString(), new ActuatorChangeCommand(0, false));
+        this.commandMap.put(new GetSensorDataCommand().getCommandString(), new GetSensorDataCommand());
 
         // TODO: Add commands
     }

@@ -21,6 +21,7 @@ import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.commands.ActuatorChangeCommand;
 import no.ntnu.messages.commands.GetNodeCommand;
 import no.ntnu.messages.commands.GetNodeIdCommand;
+import no.ntnu.messages.commands.GetSensorDataCommand;
 import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Message;
 
@@ -38,6 +39,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
     this.listenForMessages();
     this.establishConnectionWithServer(Clients.CONTROL_PANEL, "0");
+    this.askForSensorDataPeriodically(1, 5);
   }
 
   @Override
@@ -85,6 +87,10 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       case "GET_NODE":
         this.addNode(response);
         break;
+      case "GET_SENSOR_DATA":
+        Logger.info("Received sensor data: " + response);
+        this.advertiseSensorData(response, 1);
+        break;
       default:
         Logger.error("Unknown command: " + respondedToCommand);
     }
@@ -110,6 +116,22 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
     Message message = new Message(header, body);
     this.sendCommandToServer(message);
+  }
+
+  public void askForSensorDataPeriodically(int nodeId, int period) {
+    Thread thread = new Thread(() -> {
+      Timer timer = new Timer();
+      timer.schedule(new TimerTask() {
+        @Override
+        public void run() {
+          MessageHeader header = new MessageHeader(Clients.GREENHOUSE, Integer.toString(nodeId));
+          MessageBody body = new MessageBody(new GetSensorDataCommand());
+          Message message = new Message(header, body);
+          sendCommandToServer(message);
+        }
+      }, 0, period * 1000L);
+    });
+    thread.start();
   }
 
   /**
@@ -224,7 +246,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
   private List<SensorReading> parseSensors(String sensorInfo) {
     List<SensorReading> readings = new LinkedList<>();
-    String[] readingInfo = sensorInfo.split(";");
+    String[] readingInfo = sensorInfo.split(",");
     for (String reading : readingInfo) {
       readings.add(parseReading(reading));
     }
@@ -233,6 +255,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
   // TODO improve...
   private SensorReading parseReading(String reading) {
+    Logger.info("Reading: " + reading);
     String[] assignmentParts = reading.split("=");
     if (assignmentParts.length != 2) {
       throw new IllegalArgumentException("Invalid sensor reading specified: " + reading);
