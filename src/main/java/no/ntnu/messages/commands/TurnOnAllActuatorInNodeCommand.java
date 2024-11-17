@@ -18,8 +18,8 @@ public class TurnOnAllActuatorInNodeCommand extends Command {
     //TODO Change id to what is should be.
     @Override
     public Message execute(NodeLogic nodeLogic) {
-        nodeLogic.getNode().setAllActuators(true);;
-        MessageHeader header = new MessageHeader(Clients.CONTROL_PANEL, "123", this.toProtocolString());
+        nodeLogic.getNode().setAllActuators(true);
+        MessageHeader header = new MessageHeader(Clients.CONTROL_PANEL, "0", this.toProtocolString());
         MessageBody response = new MessageBody(this, "TURN_ON_ALL_ACTUATORS_SUCCESS");
         return new Message(header, response);
     }
