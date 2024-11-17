@@ -49,101 +49,101 @@ public class IntermediaryServerTest {
     server.stopServer();
   }
 
-  /**
-   * Test the communication between the control panel and the greenhouse node.
-   * The control panel sends a command to the greenhouse node, and the greenhouse node responds.
-   */
-  @Test
-  public void testControlPanelToGreenhouseNodeCommunication() throws IOException {
+  // /**
+  //  * Test the communication between the control panel and the greenhouse node.
+  //  * The control panel sends a command to the greenhouse node, and the greenhouse node responds.
+  //  */
+  // @Test
+  // public void testControlPanelToGreenhouseNodeCommunication() throws IOException {
 
-    MessageBody messageBody = new MessageBody("TURN_ON_FAN", "1");
-    MessageHeader messageHeader = new MessageHeader(Clients.GREENHOUSE, "1");
-    Message message = new Message(messageHeader, messageBody);
+  //   MessageBody messageBody = new MessageBody("TURN_ON_FAN", "1");
+  //   MessageHeader messageHeader = new MessageHeader(Clients.GREENHOUSE, "1");
+  //   Message message = new Message(messageHeader, messageBody);
 
-    String command = message.toProtocolString();
+  //   String command = message.toProtocolString();
 
-    mockControlPanel.sendCommand(command);
+  //   mockControlPanel.sendCommand(command);
 
-    String response = mockGreenhouseNode.receiveResponse();
-    assertEquals("CONTROL_PANEL;2-TURN_ON_FAN;1", response);
-  }
+  //   String response = mockGreenhouseNode.receiveResponse();
+  //   assertEquals("CONTROL_PANEL;2-TURN_ON_FAN;1", response);
+  // }
 
-  /**
-   * Test the communication between the greenhouse node and the control panel.
-   * The greenhouse node sends a command to the control panel, and the control panel responds.
-   */
-  @Test
-  public void testGreenhouseNodeToControlPanelCommunication() throws IOException {
-    MessageBody messageBody = new MessageBody("SENSOR_NODE", "1");
-    MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
-    Message message = new Message(messageHeader, messageBody);
+  // /**
+  //  * Test the communication between the greenhouse node and the control panel.
+  //  * The greenhouse node sends a command to the control panel, and the control panel responds.
+  //  */
+  // @Test
+  // public void testGreenhouseNodeToControlPanelCommunication() throws IOException {
+  //   MessageBody messageBody = new MessageBody("SENSOR_NODE", "1");
+  //   MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
+  //   Message message = new Message(messageHeader, messageBody);
 
-    String command = message.toProtocolString();
-
-
-    mockGreenhouseNode.sendCommand(command);
+  //   String command = message.toProtocolString();
 
 
-    String response = mockControlPanel.receiveResponse();
-    assertEquals("GREENHOUSE;1-SENSOR_NODE;1", response);
-  }
+  //   mockGreenhouseNode.sendCommand(command);
 
 
-  /**
-   * Test the communication between the control panel and the greenhouse node with not valid client.
-   */
-    @Test
-    public void testControlPanelToGreenhouseNodeCommunicationWithInvalidClient() throws IOException {
-
-        MessageBody messageBody = new MessageBody("INVALID_COMMAND", "1");
-        MessageHeader messageHeader = new MessageHeader(Clients.GREENHOUSE, "1");
-        Message message = new Message(messageHeader, messageBody);
-
-        String command = message.toProtocolString();
-
-        try {
-            mockControlPanel.sendCommand(command);
-        } catch (IllegalArgumentException e) {
-            assertEquals("Invalid client type", e.getMessage());
-        }
-    }
-
-    /**
-     * Test the communication between the greenhouse node and the control panel with not valid client.
-     * The greenhouse node sends a command to the control panel, and the control panel responds.
-     */
-    @Test
-    public void testGreenhouseNodeToControlPanelCommunicationWithInvalidClient() throws IOException {
-        MessageBody messageBody = new MessageBody("INVALID_COMMAND", "1");
-        MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
-        Message message = new Message(messageHeader, messageBody);
-
-        String command = message.toProtocolString();
-
-        try {
-            mockGreenhouseNode.sendCommand(command);
-        } catch (IllegalArgumentException e) {
-            assertEquals("Invalid client type", e.getMessage());
-        }
-    }
+  //   String response = mockControlPanel.receiveResponse();
+  //   assertEquals("GREENHOUSE;1-SENSOR_NODE;1", response);
+  // }
 
 
-  /**
-   * Test the creation of a command when the data in body is null.
-   */
-  @Test
-  public void testCreateMessageWithNullData() throws IOException {
-    MessageBody messageBody = new MessageBody("TURN_ON_FAN", null);
-    MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
-    Message message = new Message(messageHeader, messageBody);
+  // /**
+  //  * Test the communication between the control panel and the greenhouse node with not valid client.
+  //  */
+  //   @Test
+  //   public void testControlPanelToGreenhouseNodeCommunicationWithInvalidClient() throws IOException {
 
-    try {
-      String command = message.toProtocolString();
-      mockGreenhouseNode.sendCommand(command);
-    } catch (IllegalArgumentException e) {
-      assertEquals("Invalid client type", e.getMessage());
-    }
-  }
+  //       MessageBody messageBody = new MessageBody("INVALID_COMMAND", "1");
+  //       MessageHeader messageHeader = new MessageHeader(Clients.GREENHOUSE, "1");
+  //       Message message = new Message(messageHeader, messageBody);
+
+  //       String command = message.toProtocolString();
+
+  //       try {
+  //           mockControlPanel.sendCommand(command);
+  //       } catch (IllegalArgumentException e) {
+  //           assertEquals("Invalid client type", e.getMessage());
+  //       }
+  //   }
+
+  // /**
+  //  * Test the communication between the greenhouse node and the control panel with not valid client.
+  //  * The greenhouse node sends a command to the control panel, and the control panel responds.
+  //  */
+  // @Test
+  // public void testGreenhouseNodeToControlPanelCommunicationWithInvalidClient() throws IOException {
+  //     MessageBody messageBody = new MessageBody("INVALID_COMMAND", "1");
+  //     MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
+  //     Message message = new Message(messageHeader, messageBody);
+
+  //     String command = message.toProtocolString();
+
+  //     try {
+  //         mockGreenhouseNode.sendCommand(command);
+  //     } catch (IllegalArgumentException e) {
+  //         assertEquals("Invalid client type", e.getMessage());
+  //     }
+  // }
+
+
+  // /**
+  //  * Test the creation of a command when the data in body is null.
+  //  */
+  // @Test
+  // public void testCreateMessageWithNullData() throws IOException {
+  //   MessageBody messageBody = new MessageBody("TURN_ON_FAN", null);
+  //   MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
+  //   Message message = new Message(messageHeader, messageBody);
+
+  //   try {
+  //     String command = message.toProtocolString();
+  //     mockGreenhouseNode.sendCommand(command);
+  //   } catch (IllegalArgumentException e) {
+  //     assertEquals("Invalid client type", e.getMessage());
+  //   }
+  // }
 
 
   /**

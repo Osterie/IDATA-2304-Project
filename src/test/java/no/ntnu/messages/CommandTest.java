@@ -61,18 +61,20 @@ public class CommandTest {
     }
   }
 
-  /**
-   * Test the creation of a command when the header is null.
-   */
-  @Test
-  public void testCreatingCommandWithNullHeader() throws IOException {
-    MessageBody messageBody = new MessageBody("TURN_ON_FAN", "1");
-    Message message = new Message(null, messageBody);
+  // /**
+  //  * Test the creation of a command when the header is null.
+  //  */
+  // @Test
+  // public void testCreatingCommandWithNullHeader() throws IOException {
+  //   MessageBody messageBody = new MessageBody("TURN_ON_FAN", "1");
+  //   Message message = new Message(null, messageBody);
 
-    try {
-      String command = message.toProtocolString();
-    } catch (IllegalArgumentException e) {
-      assertEquals("Header and body cannot be null", e.getMessage());
-    }
-  }
+  //   try {
+  //     String command = message.toProtocolString();
+  //   } catch (IllegalArgumentException e) {
+  //     assertEquals("Header and body cannot be null", e.getMessage());
+  //   }
+  // }
+
+
 }

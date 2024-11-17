@@ -2,6 +2,10 @@ package no.ntnu.messages;
 
 import no.ntnu.Clients;
 
+/**
+ * Represents the header of a message.
+ * The header contains information about the receiver of the message, the ID of the receiver, and the data type of the message.
+ */
 public class MessageHeader {
     private static final String FIELD_DELIMITER = Delimiters.HEADER_DELIMITER.getValue();
     private Clients receiver;
