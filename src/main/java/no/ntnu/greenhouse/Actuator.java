@@ -27,6 +27,9 @@ public class Actuator {
    * @param nodeId ID of the node to which this actuator is connected.
    */
   public Actuator(String type, int nodeId) {
+    if (type == null || type.isEmpty()) {
+      throw new IllegalArgumentException("Type cannot be null or empty");
+    }
     this.type = type;
     this.nodeId = nodeId;
     this.on = false;
@@ -41,6 +44,9 @@ public class Actuator {
    * @param nodeId ID of the node to which this actuator is connected.
    */
   public Actuator(int id, String type, int nodeId) {
+    if (type == null || type.isEmpty()) {
+      throw new IllegalArgumentException("Type cannot be null or empty");
+    }
     this.type = type;
     this.nodeId = nodeId;
     this.on = false;
@@ -130,6 +136,9 @@ public class Actuator {
    * @param node The sensor node to be affected by this actuator.
    */
   public void applyImpact(SensorActuatorNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("Actuator node cannot be null");
+    }
     for (Map.Entry<String, Double> impactEntry : impacts.entrySet()) {
       String sensorType = impactEntry.getKey();
       double impact = impactEntry.getValue();
@@ -138,6 +147,7 @@ public class Actuator {
       }
       node.applyActuatorImpact(sensorType, impact);
     }
+
   }
 
   @Override

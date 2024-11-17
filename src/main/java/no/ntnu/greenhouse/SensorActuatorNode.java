@@ -87,6 +87,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param actuator The actuator to add
    */
   public void addActuator(Actuator actuator) {
+    if (actuator == null) {
+      throw new IllegalArgumentException("Actuator cannot be null");
+    }
     actuator.setListener(this);
     actuators.add(actuator);
     Logger.info("Created " + actuator.getType() + "[" + actuator.getId() + "] on node " + id);
@@ -98,6 +101,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param listener The listener which will get notified every time sensor values change.
    */
   public void addSensorListener(SensorListener listener) {
+    if (listener == null) {
+      throw new IllegalArgumentException("SensorListener cannot be null");
+    }
     if (!sensorListeners.contains(listener)) {
       sensorListeners.add(listener);
     }
@@ -109,6 +115,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param listener The listener which will get notified every time actuator state changes.
    */
   public void addActuatorListener(ActuatorListener listener) {
+    if (listener == null) {
+      throw new IllegalArgumentException("ActuatorListener cannot be null");
+    }
     if (!actuatorListeners.contains(listener)) {
       actuatorListeners.add(listener);
     }
@@ -120,6 +129,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param listener The listener which will get notified when the state of this node changes
    */
   public void addStateListener(NodeStateListener listener) {
+    if (listener == null) {
+      throw new IllegalArgumentException("NodeStateListener cannot be null");
+    }
     if (!stateListeners.contains(listener)) {
       stateListeners.add(listener);
     }
@@ -237,6 +249,10 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
 
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
+    if (actuator == null) {
+      Logger.error("Actuator is null for node " + nodeId);
+      return;
+    }
     actuator.applyImpact(this);
     notifyActuatorChange(actuator);
   }
@@ -274,6 +290,9 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param impact     The impact to apply
    */
   public void applyActuatorImpact(String sensorType, double impact) {
+    if (sensorType == null || sensorType.isEmpty()) {
+      throw new IllegalArgumentException("Sensor type cannot be null or empty");
+    }
     for (Sensor sensor : sensors) {
       if (sensor.getType().equals(sensorType)) {
         sensor.applyImpact(impact);
@@ -313,9 +332,10 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    */
   public void setActuator(int actuatorId, boolean on) {
     Actuator actuator = getActuator(actuatorId);
-    if (actuator != null) {
-      actuator.set(on);
+    if (actuator == null) {
+      throw new IllegalArgumentException("Actuator not found on node " + actuatorId);
     }
+    actuator.set(on);
   }
 
   /**

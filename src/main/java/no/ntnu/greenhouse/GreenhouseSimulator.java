@@ -135,11 +135,15 @@ public class GreenhouseSimulator {
    * @throws IOException if an I/O error occurs when sending the command.
    */
   private void sendCommandToServer(String command) throws IOException {
-
-      Logger.info("Sending command: " + command.toString());
-      socketWriter.println(command);
-      String serverResponse = socketReader.readLine();
-      Logger.info("  >>> Response: " + serverResponse);
+      try {
+        Logger.info("Sending command: " + command.toString());
+        socketWriter.println(command);
+        String serverResponse = socketReader.readLine();
+        Logger.info("  >>> Response: " + serverResponse);
+      } catch (IOException e) {
+        Logger.error("Failed to send command to server: " + e.getMessage());
+        throw e;
+      }
   }
 
 
