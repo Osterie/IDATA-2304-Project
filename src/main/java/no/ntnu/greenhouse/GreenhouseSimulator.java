@@ -122,9 +122,14 @@ public class GreenhouseSimulator {
    */
   public void initiateRealCommunication(){
     for (SensorActuatorNode node : nodes.values()) {
+      try{
         NodeConnectionHandler handler = new NodeConnectionHandler(node, "localhost", PORT_NUMBER);
         nodeConnections.put(node.getId(), handler);
         new Thread(handler).start();
+      }
+      catch (IOException e) {
+        Logger.error("Could not connect to server: " + e.getMessage());
+      }
     }
   }
 
