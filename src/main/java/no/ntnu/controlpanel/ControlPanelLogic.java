@@ -60,39 +60,67 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
 
   @Override
   public void onNodeAdded(SensorActuatorNodeInfo nodeInfo) {
-    listeners.forEach(listener -> listener.onNodeAdded(nodeInfo));
+    try {
+      listeners.forEach(listener -> listener.onNodeAdded(nodeInfo));
+    } catch (Exception e) {
+      Logger.error("Error notifying listener about node addition: " + e.getMessage());
+    }
   }
 
   @Override
   public void onNodeRemoved(int nodeId) {
-    listeners.forEach(listener -> listener.onNodeRemoved(nodeId));
+    try {
+      listeners.forEach(listener -> listener.onNodeRemoved(nodeId));
+    } catch (Exception e) {
+      Logger.error("Error notifying listener about node removal: " + e.getMessage());
+    }
   }
 
   @Override
   public void onSensorData(int nodeId, List<SensorReading> sensors) {
-    listeners.forEach(listener -> listener.onSensorData(nodeId, sensors));
+    try {
+      listeners.forEach(listener -> listener.onSensorData(nodeId, sensors));
+    } catch (Exception e) {
+      Logger.error("Error notifying listener about sensor data: " + e.getMessage());
+    }
   }
 
   @Override
   public void onActuatorStateChanged(int nodeId, int actuatorId, boolean isOn) {
-    listeners.forEach(listener -> listener.onActuatorStateChanged(nodeId, actuatorId, isOn));
+    try {
+      listeners.forEach(listener -> listener.onActuatorStateChanged(nodeId, actuatorId, isOn));
+    } catch (Exception e) {
+      Logger.error("Error notifying listener about actuator state change: " + e.getMessage());
+    }
   }
 
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
     if (communicationChannel != null) {
-      communicationChannel.sendActuatorChange(nodeId, actuator.getId(), actuator.isOn());
+      try {
+        communicationChannel.sendActuatorChange(nodeId, actuator.getId(), actuator.isOn());
+      } catch (Exception e) {
+        Logger.error("Error sending actuator change: " + e.getMessage());
+      }
     }
-    listeners.forEach(listener ->
-        listener.onActuatorStateChanged(nodeId, actuator.getId(), actuator.isOn())
-    );
+    try {
+      listeners.forEach(listener ->
+              listener.onActuatorStateChanged(nodeId, actuator.getId(), actuator.isOn())
+      );
+    } catch (Exception e) {
+      Logger.error("Error notifying listener about actuator state change: " + e.getMessage());
+    }
   }
 
   @Override
   public void onCommunicationChannelClosed() {
     Logger.info("Communication closed, updating logic...");
     if (communicationChannelListener != null) {
-      communicationChannelListener.onCommunicationChannelClosed();
+      try {
+        communicationChannelListener.onCommunicationChannelClosed();
+      } catch (Exception e) {
+        Logger.error("Error notifying listener about communication channel closure: " + e.getMessage());
+      }
     }
   }
 }

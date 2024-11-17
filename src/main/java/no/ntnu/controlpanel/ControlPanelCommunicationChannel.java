@@ -36,9 +36,32 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) {
     super(host, port);
     this.logic = logic;
-    // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
-    this.listenForMessages();
-    this.establishConnectionWithServer(Clients.CONTROL_PANEL, "0");
+
+    int attempt = 0;
+    boolean connected = false;
+
+    while (attempt < 3 && !connected) {
+      try {
+        this.listenForMessages();
+        this.establishConnectionWithServer(Clients.CONTROL_PANEL, "0");
+        connected = true;
+      } catch (IOException e) {
+        attempt++;
+        Logger.error("Failed to establish connection with server (attempt " + attempt + "): " + e.getMessage());
+        if (!connected) {
+          try {
+            Thread.sleep(1000); // Wait for 1 second before retrying
+          } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            Logger.error("Retry interrupted: " + ie.getMessage());
+          }
+        }
+      }
+      if (attempt < 3) {
+        Logger.error("Failed to establish connection with server after 3 attempts.");
+      }
+
+    }
     this.askForSensorDataPeriodically(1, 5);
   }
 
@@ -103,19 +126,27 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
-        Logger.info("Spawning node " + response);
-        logic.onNodeAdded(nodeInfo);
+        try {
+          Logger.info("Spawning node " + response);
+          logic.onNodeAdded(nodeInfo);
+        } catch (Exception e) {
+          Logger.error("Failed to add node: " + e.getMessage());
+        }
       }
     }, 5 * 1000L);
   }
 
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
+    try {
     String nodeIdStr = Integer.toString(nodeId);
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeIdStr);
     MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
     Message message = new Message(header, body);
     this.sendCommandToServer(message);
+    } catch (Exception e) {
+      Logger.error("Failed to send actuator change: " + e.getMessage());
+    }
   }
 
   public void askForSensorDataPeriodically(int nodeId, int period) {
@@ -145,17 +176,25 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    *                      [actuator_count_M] underscore [actuator_type_M]
    */
   public void askForNodes() {
+    try {
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, "ALL");
     MessageBody body = new MessageBody(new GetNodeCommand());
     Message message = new Message(header, body);
     this.sendCommandToServer(message);
+    } catch (Exception e) {
+      Logger.error("Failed to ask for nodes: " + e.getMessage());
+    }
   }
 
   public void spawnNode(String nodeId, int START_DELAY) {
-    MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeId);
-    MessageBody body = new MessageBody(new GetNodeCommand());
-    Message message = new Message(header, body);
-    this.sendCommandToServer(message);
+    try {
+      MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeId);
+      MessageBody body = new MessageBody(new GetNodeCommand());
+      Message message = new Message(header, body);
+      this.sendCommandToServer(message);
+    } catch (Exception e) {
+      Logger.error("Failed to spawn node: " + e.getMessage());
+    }
   }
 
   // TODO someone else should do this.
@@ -175,6 +214,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   }
 
   private void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info) {
+    if (actuatorSpecification == null || actuatorSpecification.isEmpty()) {
+      throw new IllegalArgumentException("Actuator specification can't be empty");
+    }
     String[] parts = actuatorSpecification.split(";");
     for (String part : parts) {
       this.parseActuatorInfo(part, info);
@@ -182,6 +224,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   }
 
   private void parseActuatorInfo(String s, SensorActuatorNodeInfo info) {
+    if (s == null || s.isEmpty()) {
+      throw new IllegalArgumentException("Actuator info can't be empty");
+    }
     String[] actuatorInfo = s.split("_");
     if (actuatorInfo.length != 2) {
       throw new IllegalArgumentException("Invalid actuator info format: " + s);
@@ -191,9 +236,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     int  actuatorId = parseIntegerOrError(actuatorInfo[1],
         "Invalid actuator count: " + actuatorInfo[0]);
 
-      Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
-      actuator.setListener(logic);
-      info.addActuator(actuator);
+    Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
+    actuator.setListener(logic);
+    info.addActuator(actuator);
   }
 
   /**
@@ -245,6 +290,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   }
 
   private List<SensorReading> parseSensors(String sensorInfo) {
+    if (sensorInfo == null || sensorInfo.isEmpty()) {
+      throw new IllegalArgumentException("Sensor info can't be empty");
+    }
     List<SensorReading> readings = new LinkedList<>();
     String[] readingInfo = sensorInfo.split(",");
     for (String reading : readingInfo) {
@@ -256,6 +304,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   // TODO improve...
   private SensorReading parseReading(String reading) {
     Logger.info("Reading: " + reading);
+    if (reading == null || reading.isEmpty()) {
+      throw new IllegalArgumentException("Sensor reading can't be empty");
+    }
     String[] assignmentParts = reading.split("=");
     if (assignmentParts.length != 2) {
       throw new IllegalArgumentException("Invalid sensor reading specified: " + reading);
