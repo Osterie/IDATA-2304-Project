@@ -3,6 +3,10 @@ package no.ntnu.messages;
 import no.ntnu.messages.commands.Command;
 import no.ntnu.messages.commands.CommandTranslator;
 
+/**
+ * Represents the body of a message.
+ * The body contains the command and the data of the message.
+ */
 public class MessageBody {
     private static final String FIELD_DELIMITER = Delimiters.BODY_DELIMITER.getValue();
     private Command command;
@@ -40,7 +44,6 @@ public class MessageBody {
     public String toProtocolString() {
 
         String result = "";
-        System.out.println("what " + command.toProtocolString() + " works");
         if (data == null) {
             result = command.toProtocolString();
         }

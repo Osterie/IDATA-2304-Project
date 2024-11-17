@@ -28,7 +28,7 @@ public abstract class Command {
      * Abstract method for executing command
      */
     public abstract Message execute(NodeLogic logic);
-    // TODO: Fill in with the right logic class
+
     /**
      * Abstract method for converting command to string
      */

@@ -37,34 +37,35 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     this.logic = logic;
     // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
     this.listenForMessages();
-    this.establishConnectionWithServer();
-  }
-
-  // TODO this should be done in another way, use a protocol with header and body instead and such?
-  private void establishConnectionWithServer() {
-    // Send initial identifier to server
-    // TODO server should send a response back with something to indicate the connection was successful.
-    String identifierMessage = Clients.CONTROL_PANEL.getValue() + ";0"; // TODO generate unique identifier, or let
-                                                                        // server do it?
-    this.socketWriter.println(identifierMessage);
-    Logger.info("connecting control panel 0 with identifier: " + identifierMessage);
+    this.establishConnectionWithServer(Clients.CONTROL_PANEL, "0");
   }
 
   @Override
   protected void handleMessage(String serverMessage) {
+    // Attempt to parse the server message
+    Message message;
+    try {
+      message = Message.fromProtocolString(serverMessage);
+    } catch (IllegalArgumentException | NullPointerException e) {
+      Logger.error("Invalid server message format: " + serverMessage + ". Error: " + e.getMessage());
+      return;
+    }
 
-    // TODO handle invalid serverMessage.
-    Message message = Message.fromProtocolString(serverMessage);
+    // Check for null message, header, or body
+    if (message == null || message.getHeader() == null || message.getBody() == null) {
+      Logger.error("Message, header, or body is missing in server message: " + serverMessage);
+      return;
+    }
 
+    // Extract header and body
     MessageHeader header = message.getHeader();
     MessageBody body = message.getBody();
-
     Clients client = header.getReceiver();
 
+    // Handle based on client type
     if (client == Clients.GREENHOUSE) {
       this.handleGreenhouseCommandResponse(body);
-    }
-    else {
+    } else {
       Logger.error("Unknown client: " + client);
     }
   }
@@ -76,7 +77,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
     Logger.info("Handling greenhouse command response: " + respondedToCommand);
     
-    // TODO should someone else do this? @SebasoOlsen
+    // TODO should someone else do this? another class?
     switch (respondedToCommand.trim()) {
       case "GET_NODE_ID":
         this.spawnNode(response, 5);
@@ -107,8 +108,6 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     String nodeIdStr = Integer.toString(nodeId);
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeIdStr);
     MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
-    // MessageBody body = new MessageBody(new ActuatorChangeCommand(null, String.valueOf(actuatorId), isOn));
-    // MessageBody body = new MessageBody("ACTUATOR_CHANGE" + Delimiters.BODY_DELIMITER + actuatorId + Delimiters.BODY_DELIMITER + (isOn ? "ON" : "OFF"));
     Message message = new Message(header, body);
     this.sendCommandToServer(message);
   }
@@ -126,7 +125,6 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   public void askForNodes() {
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, "ALL");
     MessageBody body = new MessageBody(new GetNodeCommand());
-    System.out.println("body: " + body.toProtocolString());
     Message message = new Message(header, body);
     this.sendCommandToServer(message);
   }

@@ -8,9 +8,9 @@ import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 
 public class ActuatorChangeCommand extends ParameterizedCommand {
-    // TODO make private
-    public int actuatorId;
-    public boolean isOn;
+
+    private int actuatorId;
+    private boolean isOn;
 
     public ActuatorChangeCommand(int actuatorId, boolean isOn) {
         super("ACTUATOR_CHANGE");

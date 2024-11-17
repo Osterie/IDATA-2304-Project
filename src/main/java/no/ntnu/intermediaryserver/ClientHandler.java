@@ -105,8 +105,6 @@ public class ClientHandler extends Thread {
     private void sendToClient(String request) {
         Logger.info("request: " + request);
         Message message = Message.fromProtocolString(request);
-        System.out.println("message " + message.toProtocolString());
-        // System.out.println("command: " + message.getBody().getCommand().toProtocolString() + "message " + message.toProtocolString());
         String targetId = message.getHeader().getId();
 
         if (targetId.equalsIgnoreCase("ALL")) {

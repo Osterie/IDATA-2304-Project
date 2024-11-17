@@ -100,11 +100,15 @@ public class Actuator {
   }
 
   private void notifyChanges() {
+    // TODO do not do it like this. Actuator class should not be responsible for setting color of logger printouts.
+    // The actuator class should know nothing about the logger. No classes should act like they are aware of the loggers precence.
+    // Do not fix with copilot/chatgpt, think and do good...
+
     // ANSI escape codes for colors
     final String GREEN = "\u001B[32m";
     final String RESET = "\u001B[0m";
 
-    Logger.info(GREEN + "Actuator " + id + " on node " + nodeId + " is now " + (on ? "ON" : "off") + RESET);
+    Logger.info(GREEN + "Actuator " + id + " on node " + nodeId + " is now " + (this.on ? "ON" : "OFF") + RESET);
     if (this.listener != null) {
       Logger.info(GREEN + "Notifying listener about actuator change" + RESET);
       this.listener.actuatorUpdated(this.nodeId, this);
