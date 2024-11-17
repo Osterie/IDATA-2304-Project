@@ -2,6 +2,10 @@ package no.ntnu.messages;
 
 import no.ntnu.Clients;
 
+/**
+ * Represents the header of a message.
+ * The header contains information about the receiver of the message, the ID of the receiver, and the data type of the message.
+ */
 public class MessageHeader {
     private static final String FIELD_DELIMITER = Delimiters.HEADER_DELIMITER.getValue();
     private Clients receiver;
@@ -34,22 +38,31 @@ public class MessageHeader {
         return id;
     }
 
-    // TODO refactor me.
+    // TODO: Check if new code is good: old TODO: (refactor me.)
     public void setId(String id) {
-        if (id == null || id.isEmpty()) {
+        if (id == null || id.trim().isEmpty()) {
             throw new IllegalArgumentException("ID cannot be null or empty");
         }
-        if (id.equalsIgnoreCase("ALL")){
+
+        if (id.equalsIgnoreCase("ALL")) {
             this.id = id;
+            return;
         }
-        else{
-            try{
-                Integer idInt = Integer.parseInt(id);
-                this.id = id;
-            }
-            catch (NumberFormatException e){
-                throw new IllegalArgumentException("ID must be an integer");
-            }
+
+        // Validate if `id` can be parsed as an integer
+        if (!isInteger(id)) {
+            throw new IllegalArgumentException("ID must be an integer");
+        }
+
+        this.id = id;
+    }
+
+    private boolean isInteger(String id) {
+        try {
+            Integer.parseInt(id);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 
@@ -65,7 +78,10 @@ public class MessageHeader {
     public String toProtocolString() {
         
         String result = "";
-        if (dataType.isEmpty()) {
+        if (dataType == null) {
+            throw new IllegalArgumentException("Data type cannot be null");
+        }
+        else if (dataType.isEmpty()) {
             result = String.join(FIELD_DELIMITER, receiver.getValue(), id);
         }
         else {
@@ -74,16 +90,29 @@ public class MessageHeader {
         return result;
     }
 
-    // TODO make better. CHeck if Clients.fromString is possible and such.
-    // Parse from protocol string
+    // TODO: Check if new code is good: old TODO: (make better. CHeck if Clients.fromString is possible and such.)
     public static MessageHeader fromProtocolString(String protocolString) {
+        if (protocolString == null || protocolString.trim().isEmpty()) {
+            throw new IllegalArgumentException("Protocol string cannot be null or empty");
+        }
+
         String[] parts = protocolString.split(FIELD_DELIMITER);
-        if (parts.length < 2) {
-            throw new IllegalArgumentException("Invalid header format");
+        if (parts.length < 2 || parts.length > 3) {
+            throw new IllegalArgumentException("Invalid header format. Expected 2 or 3 parts separated by '" + FIELD_DELIMITER + "'");
         }
+
+        Clients clientType = Clients.fromString(parts[0]);
+        if (clientType == null) {
+            throw new IllegalArgumentException("Unknown client type: " + parts[0]);
+        }
+
+        String targetId = parts[1];
+
         if (parts.length == 2) {
-            return new MessageHeader(Clients.fromString(parts[0]), parts[1]);
+            return new MessageHeader(clientType, targetId);
+        } else {
+            String optionalField = parts[2];
+            return new MessageHeader(clientType, targetId, optionalField);
         }
-        return new MessageHeader(Clients.fromString(parts[0]), parts[1], parts[2]);
     }
 }

@@ -84,7 +84,7 @@ public class SensorPane extends TitledPane {
     update(sensors.stream().map(Sensor::getReading).toList());
   }
 
-  // TODO refactor this logic. Create a method above this method and such. This method should create a label and then anotehr for images. 
+  // TODO refactor this logic. Create a method above this method and such. This method should create a label and then another for images.
   // Alternatively, would not be necessary when we have implemented the component builder class.
   private Node createAndRememberSensorLabel(SensorReading sensor) {
 

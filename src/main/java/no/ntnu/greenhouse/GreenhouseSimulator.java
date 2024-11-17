@@ -122,23 +122,15 @@ public class GreenhouseSimulator {
    */
   public void initiateRealCommunication(){
     for (SensorActuatorNode node : nodes.values()) {
-      try {
-          NodeConnectionHandler handler = new NodeConnectionHandler(node, "localhost", PORT_NUMBER);
-          nodeConnections.put(node.getId(), handler);
-          new Thread(handler).start();
-      } catch (IOException e) {
-          System.err.println("Failed to connect node " + node.getId() + " to the server: " + e.getMessage());
+      try{
+        NodeConnectionHandler handler = new NodeConnectionHandler(node, "localhost", PORT_NUMBER);
+        nodeConnections.put(node.getId(), handler);
+        new Thread(handler).start();
       }
-  }
-    // try{
-    //   this.socket = new Socket("localhost", PORT_NUMBER);
-    //   this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-    //   this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
-    //   this.socketWriter.println("GREENHOUSE");
-    // }
-    // catch (IOException e) {
-    //   System.err.println("Could not establish connection to the server: " + e.getMessage());
-    // }
+      catch (IOException e) {
+        Logger.error("Could not connect to server: " + e.getMessage());
+      }
+    }
   }
 
   /**
@@ -148,11 +140,15 @@ public class GreenhouseSimulator {
    * @throws IOException if an I/O error occurs when sending the command.
    */
   private void sendCommandToServer(String command) throws IOException {
-
-      Logger.info("Sending command: " + command.toString());
-      socketWriter.println(command);
-      String serverResponse = socketReader.readLine();
-      Logger.info("  >>> Response: " + serverResponse);
+      try {
+        Logger.info("Sending command: " + command.toString());
+        socketWriter.println(command);
+        String serverResponse = socketReader.readLine();
+        Logger.info("  >>> Response: " + serverResponse);
+      } catch (IOException e) {
+        Logger.error("Failed to send command to server: " + e.getMessage());
+        throw e;
+      }
   }
 
 

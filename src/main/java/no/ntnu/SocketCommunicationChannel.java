@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import no.ntnu.messages.MessageTest;
+import no.ntnu.messages.Message;
 import no.ntnu.tools.Logger;
 
 
@@ -44,20 +44,20 @@ public abstract class SocketCommunicationChannel {
             try {
             while (isOn) {
                 if (socketReader.ready()) {
-                String serverMessage = socketReader.readLine();
-                if (serverMessage != null) {
-                    Logger.info("Received from server: " + serverMessage);
-                    this.handleMessage(serverMessage);
-                    // this.handleServerCommand(serverMessage);
-                }
+                  String serverMessage = socketReader.readLine();
+                  if (serverMessage != null) {
+                      Logger.info("Received from server: " + serverMessage);
+                      this.handleMessage(serverMessage);
+                  }
+                  // TODO handle if null and such
                 }
             }
             Logger.info("Server message listener stopped.");
             } catch (IOException e) {
-            Logger.error("Connection lost: " + e.getMessage());
+              Logger.error("Connection lost: " + e.getMessage());
             } 
             finally {
-            this.close();
+              this.close();
             }
         });
         messageListener.start();
@@ -65,7 +65,7 @@ public abstract class SocketCommunicationChannel {
 
     protected abstract void handleMessage(String message);
 
-    protected void sendCommandToServer(MessageTest message) {
+    protected void sendCommandToServer(Message message) {
       if (isOn && socketWriter != null) {
         Logger.info("Trying to send message...");
         socketWriter.println(message.toProtocolString());
@@ -75,12 +75,10 @@ public abstract class SocketCommunicationChannel {
       }
     }
     
-    // @Override
-    public boolean open() {
+    public boolean isOpen() {
       return isOn;
     }
   
-    // @Override
     public boolean close() {
   
       boolean closed = false;
@@ -100,4 +98,13 @@ public abstract class SocketCommunicationChannel {
       }
       return closed;
     }
+
+  // TODO this should be done in another way, use a protocol with header and body instead and such?
+  protected void establishConnectionWithServer(Clients client, String id) {
+
+    // Send initial identifier to server
+    // TODO server should send a response back with something to indicate the connection was successful.
+    String identifierMessage = client.getValue() + ";" + id; 
+    this.socketWriter.println(identifierMessage);
+  }
 }
