@@ -50,11 +50,11 @@ a reply with an error code?
 
 - [x] Adrian Implement Header/Body messages for control panel 
 - [x] Adrian Implement Header/Body messages for intermediary server
-- [ ] Adrian Implement Header/Body messages for greenhouse
+- [x] Adrian Implement Header/Body messages for greenhouse
 - [ ] DANIEL Handling connection errors and messaging errors properly.
 - [x] ADRIAN. gitignore fil.
 - [x] ADRIAN. Implementere Message og Command interfacer/klasser
-- [ ] ADRIAN. Lage ulike Message/Command underklasser
+- [x] ADRIAN. Lage ulike Message/Command underklasser
 - [ ] SEBASTIAN PROTOKOLL (IKKE GUI) Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
 Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
 - [x] SEBASTIAN Commands to turn on/off all actuators for a node. 
@@ -94,7 +94,7 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 _
 # GREENHOUSE
 
-- [ ] ADRIAN One Thread for writing and one for reading.
+- [x] ADRIAN One Thread for writing and one for reading.
 
 - [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN lage kommunikasjons klasse for greenhouse nodes.
@@ -145,7 +145,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [ ] ADRIAN. Spør hele tiden om informasjon for noden som vises i control panel GUI.
 - [x] ADRIAN. Send kommandoer til sensor nodes. For eksempel, spør om hvilke noder som finnes, spør om data, skru på en vifte, skru av en vifte, skru på en varmeovn, skru av en varmeovn, åpne et vindu, lukke et vindu, osv.
 - [ ] ADRIAN. Receive actuator status data from any sensor node. For example, is a window open or closed, is the fan on or off? 
-For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)
+- [ ] For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)
 
 ## GUI
 
