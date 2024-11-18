@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import no.ntnu.Clients;
@@ -20,7 +19,7 @@ public class IntermediaryServer implements Runnable {
     private boolean isTcpServerRunning;
 
     // Thread-safe collections for managing client sockets
-    private final ConcurrentHashMap<String, Socket> clients = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, ClientHandler> clients = new ConcurrentHashMap<>();
     private ServerSocket listeningSocket;
 
     /**
@@ -65,12 +64,11 @@ public class IntermediaryServer implements Runnable {
      *
      * @param clientType the type of client (CONTROL_PANEL or GREENHOUSE)
      * @param clientId   the unique identifier for the client
-     * @param socket     the socket connection for the client
+     * @param clientHandler     the client handler for the client
      * @throws UnknownClientException if the client type is not recognized
      */
-    public synchronized void addClient(Clients clientType, String clientId, Socket socket) {
-
-        this.clients.put(clientType + clientId, socket);
+    public synchronized void addClient(Clients clientType, String clientId, ClientHandler clientHandler) {
+        this.clients.put(clientType + clientId, clientHandler);
         Logger.info("Connected " + clientType + " with ID: " + clientId);
     }
 
@@ -93,14 +91,14 @@ public class IntermediaryServer implements Runnable {
      *
      * @param clientType the type of client (CONTROL_PANEL or GREENHOUSE)
      * @param clientId   the unique identifier for the client
-     * @return the socket connection for the client, or null if not found
+     * @return the client handler for the client, or null if not found
      */
-    public Socket getClient(Clients clientType, String clientId) {
+    public ClientHandler getClient(Clients clientType, String clientId) {
         return this.clients.get(clientType + clientId);
     }
 
-    public ArrayList<Socket> getClients(Clients clientType){
-        ArrayList<Socket> sockets = new ArrayList<>();
+    public ArrayList<ClientHandler> getClients(Clients clientType){
+        ArrayList<ClientHandler> sockets = new ArrayList<>();
         
         for (String key : this.clients.keySet()){
             if (key.startsWith(clientType.getValue())){

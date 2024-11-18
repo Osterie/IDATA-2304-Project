@@ -64,8 +64,8 @@ a reply with an error code?
 Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
 - [x] SEBASTIAN Commands to turn on/off all actuators for a node. 
 - [x] ADRIAN. Lage klasse som applikasjonen kan kjøres fra.
-- [ ] ADRIAN Refaktorer client handler felt, kanskje bruke egen klasse for å lagre klient type og klient id.
-- [ ] ADRIAN Instead of storing sockets in server, store clienthandler?
+- [x] ADRIAN Refaktorer client handler felt, kanskje bruke egen klasse for å lagre klient type og klient id.
+- [x] ADRIAN Instead of storing sockets in server, store clienthandler?
 
 
 - [ ] ADRIAN:
@@ -143,8 +143,8 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
     - [X] ADRIAN send unique identifier to server so server knows id of control panel (and that it is a control panel)
     - [X] ADRIAN Ask server for nodes
     - [x] ADRIAN Control panel then asks for all their information so that it can show it, does this periodically.
-    - [ ] ADRIAN How does control panel know what info to ask for?
-    - [ ] ADRIAN How does control panel know what to do with the info it receives?
+    - [x] ADRIAN How does control panel know what info to ask for?
+    - [x] ADRIAN How does control panel know what to do with the info it receives?
 
 - [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. koble til multiple control panels til intermediary server.
