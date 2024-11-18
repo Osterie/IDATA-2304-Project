@@ -50,7 +50,7 @@ a reply with an error code?
     - [x] Control panel
     - [x] Greenhouse
 
-- [ ] ADRIAN. Make identifier message follow our protocol.
+- [x] ADRIAN. Make identifier message follow our protocol.
 
 - [x] Adrian Implement Header/Body messages for control panel 
 - [x] Adrian Implement Header/Body messages for intermediary server
@@ -115,6 +115,8 @@ Each sensor-node can do the following:
 
 # INTERMEDIARY SERVER
 
+- [x] ADRIAN One Thread for writing and one for reading.
+- [x] ADRIAN Refactor intermediary server
 - [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. Lage en intermediary server som kan brukes for å tilrettelegge kommunikasjon mellom greenhouse nodes og control panel.
 - [x] ADRIAN. Ta i mot klienter som vil koble seg til.

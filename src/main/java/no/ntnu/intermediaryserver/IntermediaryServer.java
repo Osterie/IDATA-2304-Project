@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import no.ntnu.Clients;
@@ -19,19 +20,8 @@ public class IntermediaryServer implements Runnable {
     private boolean isTcpServerRunning;
 
     // Thread-safe collections for managing client sockets
-    private final ConcurrentHashMap<String, Socket> controlPanels = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, Socket> greenhouseNodes = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Socket> clients = new ConcurrentHashMap<>();
     private ServerSocket listeningSocket;
-
-    /**
-     * Main method to start the Intermediary Server.
-     *
-     * @throws IOException if there is an error starting the server
-     */
-    public static void main(String[] args) throws IOException {
-        Logger.info("Starting Intermediary Server...");
-        new IntermediaryServer().startServer();
-    }
 
     /**
      * Starts the server and listens for incoming client connections on the specified port.
@@ -45,9 +35,9 @@ public class IntermediaryServer implements Runnable {
 
             // Runs the whole time while application is up
             while (isTcpServerRunning) {
-                Socket clientSocket = acceptNextClientConnection();
-                if (clientSocket != null) {
-                    new Thread(new ClientHandler(clientSocket, this)).start();
+                ClientHandler clientHandler = acceptNextClientConnection();
+                if (clientHandler != null) {
+                    clientHandler.start();
                 }
             }
         }
@@ -79,102 +69,25 @@ public class IntermediaryServer implements Runnable {
      * @throws UnknownClientException if the client type is not recognized
      */
     public synchronized void addClient(Clients clientType, String clientId, Socket socket) {
-        if (clientType == Clients.GREENHOUSE) {
-            addGreenhouseNode(clientId, socket);
-        } else if (clientType == Clients.CONTROL_PANEL) {
-            addControlPanel(clientId, socket);
-        } else {
-            Logger.error("Unknown client type: " + clientType);
-            throw new UnknownClientException("Unknown client type: " + clientType);
-        }
+
+        this.clients.put(clientType + clientId, socket);
         Logger.info("Connected " + clientType + " with ID: " + clientId);
-    }
-
-    /**
-     * Adds a greenhouse node to the collection of connected greenhouse nodes.
-     *
-     * @param nodeId the unique identifier for the greenhouse node
-     * @param socket the socket connection for the greenhouse node
-     */
-    public synchronized void addGreenhouseNode(String nodeId, Socket socket) {
-        greenhouseNodes.put(nodeId, socket);
-        Logger.info("Greenhouse node added: " + nodeId);
-    }
-
-    /**
-     * Adds a control panel to the collection of connected control panels.
-     *
-     * @param panelId the unique identifier for the control panel
-     * @param socket  the socket connection for the control panel
-     */
-    public synchronized void addControlPanel(String panelId, Socket socket) {
-        controlPanels.put(panelId, socket);
-        Logger.info("Control panel added: " + panelId);
     }
 
     /**
      * Removes a client from the collection based on client ID and type.
      *
      * @param clientId    the unique identifier for the client
-     * @param isGreenhouse true if the client is a greenhouse node; false if a control panel
      */
-    public synchronized void removeClient(String clientId, boolean isGreenhouse) {
-        if (isGreenhouse) {
-            greenhouseNodes.remove(clientId);
-            Logger.info("Greenhouse node removed: " + clientId);
-        } else {
-            controlPanels.remove(clientId);
-            Logger.info("Control panel removed: " + clientId);
+    public synchronized void removeClient(Clients clientType, String clientId) {
+        if (this.clients.remove(clientType + clientId) == null) {
+            Logger.error("Could not remove client, does not exist: " + clientType + clientId);
+        }
+        else{
+            Logger.info("Disconnected " + clientType + " with ID: " + clientId);
         }
     }
-
-    /**
-     * Retrieves a specific greenhouse node by ID.
-     *
-     * @param nodeId the unique identifier for the greenhouse node
-     * @return the socket connection for the greenhouse node, or null if not found
-     */
-    public Socket getGreenhouseNode(String nodeId) {
-        return greenhouseNodes.get(nodeId);
-    }
-
-    /**
-     * Retrieves a list of all connected greenhouse nodes.
-     *
-     * @return an ArrayList of sockets representing the greenhouse nodes
-     */
-    public ArrayList<Socket> getGreenhouseNodes() {
-        return new ArrayList<>(greenhouseNodes.values());
-    }
-
-    /**
-     * Retrieves a list of all greenhouse node IDs.
-     *
-     * @return an ArrayList of strings representing greenhouse node IDs
-     */
-    public ArrayList<String> getGreenhouseNodeIds() {
-        return new ArrayList<>(greenhouseNodes.keySet());
-    }
-
-    /**
-     * Retrieves a specific control panel by ID.
-     *
-     * @param panelId the unique identifier for the control panel
-     * @return the socket connection for the control panel, or null if not found
-     */
-    public Socket getControlPanel(String panelId) {
-        return controlPanels.get(panelId);
-    }
-
-    /**
-     * Retrieves a list of all connected control panels.
-     *
-     * @return an ArrayList of sockets representing the control panels
-     */
-    public ArrayList<Socket> getControlPanels() {
-        return new ArrayList<>(controlPanels.values());
-    }
-
+    
     /**
      * Retrieves a specific client socket based on client type and ID.
      *
@@ -183,47 +96,36 @@ public class IntermediaryServer implements Runnable {
      * @return the socket connection for the client, or null if not found
      */
     public Socket getClient(Clients clientType, String clientId) {
-        Socket clientSocket = null;
-
-        if (clientType == Clients.GREENHOUSE) {
-            clientSocket = getGreenhouseNode(clientId);
-        } else if (clientType == Clients.CONTROL_PANEL) {
-            clientSocket = getControlPanel(clientId);
-        }
-
-        return clientSocket;
+        return this.clients.get(clientType + clientId);
     }
 
-    /**
-     * Retrieves all connected clients of a specific type.
-     *
-     * @param clientType the type of clients to retrieve (CONTROL_PANEL or GREENHOUSE)
-     * @return an ArrayList of sockets for the specified client type
-     */
-    public ArrayList<Socket> getAllClients(Clients clientType) {
-        ArrayList<Socket> clients = new ArrayList<>();
-
-        if (clientType == Clients.GREENHOUSE) {
-            clients = this.getGreenhouseNodes();
-        } else if (clientType == Clients.CONTROL_PANEL) {
-            clients = this.getControlPanels();
+    public ArrayList<Socket> getClients(Clients clientType){
+        ArrayList<Socket> sockets = new ArrayList<>();
+        
+        for (String key : this.clients.keySet()){
+            if (key.startsWith(clientType.getValue())){
+                sockets.add(this.clients.get(key));
+            }
         }
-        return clients;
-    }
+
+        return sockets;
+    }   
 
     /**
      * Accepts the next client connection.
      *
      * @return the socket representing the client connection, or null if an error occurs
      */
-    private Socket acceptNextClientConnection() {
-        Socket clientSocket = null;
+    private ClientHandler acceptNextClientConnection() {
+        ClientHandler clientHandler = null;
         try {
-            clientSocket = listeningSocket.accept();
+          Socket clientSocket = listeningSocket.accept();
+          Logger.info("New client connected from " + clientSocket.getRemoteSocketAddress());
+          clientHandler = new ClientHandler(clientSocket, this);
         } catch (IOException e) {
-            System.err.println("Could not accept client connection: " + e.getMessage());
+          Logger.error("Could not accept client connection: " + e.getMessage());
         }
-        return clientSocket;
+        return clientHandler;
     }
 
     /**

@@ -168,7 +168,7 @@ public class ClientHandler extends Thread {
     }
 
     private ArrayList<Socket> getAllClients(MessageHeader header){
-        return server.getAllClients(header.getReceiver());
+        return server.getClients(header.getReceiver());
     }
 
     /**
