@@ -8,9 +8,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import no.ntnu.Clients;
-import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
+import no.ntnu.messages.commands.ClientIdentificationCommand;
+import no.ntnu.messages.commands.Command;
+import no.ntnu.messages.greenhousecommands.GreenhouseCommand;
 import no.ntnu.messages.Message;
+import no.ntnu.messages.MessageBody;
 import no.ntnu.tools.Logger;
 
 /**
@@ -60,7 +63,7 @@ public class ClientHandler extends Thread {
      */
     @Override
     public void run() {
-        this.identifyClientType();
+        this.identifyClientType(0);
         this.handleClient();
     }
 
@@ -171,14 +174,24 @@ public class ClientHandler extends Thread {
     /**
      * Identifies the type of the client (control panel or greenhouse).
      */
-    private void identifyClientType() {
+    private void identifyClientType(int attempts) {
+
+        if (attempts > 3) {
+            Logger.error("Failed to identify client type after 3 attempts, closing connection");
+            this.closeStreams();
+            return;
+        }
+
         String identification = this.readClientRequest();
         if (identification == null) {
-            Logger.error("Error identifying client type");
+            Logger.error("Error identifying client type, listening for identification message...");
+            this.identifyClientType(attempts+1); // TODO check that this works
             return;
         }
 
         if (!this.processIdentification(identification)) {
+            Logger.error("Could not identify client type, listening for identification message...");
+            this.identifyClientType(attempts+1);
             return;
         }
     
@@ -192,19 +205,45 @@ public class ClientHandler extends Thread {
      * @return true if identification was successful, false otherwise
      */
     private boolean processIdentification(String identification) {
-        boolean identificationSuccess = false;
-        try {
-            this.clientIdentifier.identifyClientType(identification);
-            identificationSuccess = true;    
-        } catch (IllegalArgumentException e) {
+
+        boolean success = false;
+
+        Message message = Message.fromProtocolString(identification);
+        if (message == null) {
             Logger.error("Invalid identification message: " + identification);
             this.closeStreams();
         }
-        
-        this.clientType = this.clientIdentifier.getClientType();
-        this.clientId = this.clientIdentifier.getClientId();
 
-        return identificationSuccess;
+        MessageBody body = message.getBody();
+        Command command = body.getCommand();
+
+        if (command instanceof ClientIdentificationCommand) {
+            ClientIdentificationCommand clientIdentificationCommand = (ClientIdentificationCommand) command;
+            this.clientType = clientIdentificationCommand.getClient();
+            this.clientId = clientIdentificationCommand.getId();
+            success = true;
+        }
+        else{
+            Logger.error("Invalid identification message: " + identification);
+            this.closeStreams();
+        }
+
+        return success;
+
+
+        // boolean identificationSuccess = false;
+        // try {
+        //     this.clientIdentifier.identifyClientType(identification);
+        //     identificationSuccess = true;    
+        // } catch (IllegalArgumentException e) {
+        //     Logger.error("Invalid identification message: " + identification);
+        //     this.closeStreams();
+        // }
+        
+        // this.clientType = this.clientIdentifier.getClientType();
+        // this.clientId = this.clientIdentifier.getClientId();
+
+        // return identificationSuccess;
     }
 
     /**

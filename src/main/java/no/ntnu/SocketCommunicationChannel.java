@@ -7,6 +7,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import no.ntnu.messages.Message;
+import no.ntnu.messages.MessageBody;
+import no.ntnu.messages.MessageHeader;
+import no.ntnu.messages.commands.ClientIdentificationCommand;
 import no.ntnu.tools.Logger;
 
 
@@ -100,11 +103,23 @@ public abstract class SocketCommunicationChannel {
     }
 
   // TODO this should be done in another way, use a protocol with header and body instead and such?
-  protected void establishConnectionWithServer(Clients client, String id) {
+  protected void establishConnectionWithServer(Clients client, String id)  {
 
     // Send initial identifier to server
     // TODO server should send a response back with something to indicate the connection was successful.
-    String identifierMessage = client.getValue() + ";" + id;
-    this.socketWriter.println(identifierMessage);
+    // String identifierMessage = client.getValue() + ";" + id;
+
+    if (client == null || id == null) {
+      Logger.error("Client type or ID is null, cannot establish connection.");
+      return;
+    }
+
+    
+    ClientIdentificationCommand identificationCommand = new ClientIdentificationCommand(client, id);
+    
+    MessageBody body = new MessageBody(identificationCommand);
+    MessageHeader header = new MessageHeader(Clients.NONE, "none");
+    Message identificationMessage = new Message(header, body);
+    this.sendCommandToServer(identificationMessage);
   }
 }

@@ -1,5 +1,7 @@
 package no.ntnu.messages;
 
+import no.ntnu.tools.Logger;
+
 public class Message {
     private static final String HEADER_BODY_DELIMITER = Delimiters.HEADER_BODY_DELIMITER.getValue();
 
@@ -41,6 +43,7 @@ public class Message {
     public static Message fromProtocolString(String protocolString) {
         String[] parts = protocolString.split(HEADER_BODY_DELIMITER, 2);
         if (parts.length < 2) {
+            Logger.error("Invalid message format: " + protocolString);
             throw new IllegalArgumentException("Invalid message format");
         }
         MessageHeader header = MessageHeader.fromProtocolString(parts[0]);

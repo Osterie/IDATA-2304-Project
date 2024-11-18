@@ -49,21 +49,7 @@ public class MessageHeader {
             return;
         }
 
-        // Validate if `id` can be parsed as an integer
-        if (!isInteger(id)) {
-            throw new IllegalArgumentException("ID must be an integer");
-        }
-
         this.id = id;
-    }
-
-    private boolean isInteger(String id) {
-        try {
-            Integer.parseInt(id);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
     }
 
     public String getDataType() {

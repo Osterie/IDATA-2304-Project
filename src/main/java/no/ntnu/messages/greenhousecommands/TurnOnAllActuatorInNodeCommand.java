@@ -1,4 +1,4 @@
-package no.ntnu.messages.commands;
+package no.ntnu.messages.greenhousecommands;
 
 import no.ntnu.Clients;
 import no.ntnu.greenhouse.NodeLogic;
@@ -6,19 +6,21 @@ import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 
-public class GetSensorDataCommand extends Command {
-    public GetSensorDataCommand() {
-        super("GET_SENSOR_DATA");
+/**
+ * Command to turn on all actuators in a node.
+ */
+public class TurnOnAllActuatorInNodeCommand extends GreenhouseCommand {
+
+    public TurnOnAllActuatorInNodeCommand() {
+        super("TURN_ON_ALL_ACTUATORS");
     }
 
+    //TODO Change id to what is should be.
     @Override
     public Message execute(NodeLogic nodeLogic) {
+        nodeLogic.getNode().setAllActuators(true);
         MessageHeader header = new MessageHeader(Clients.CONTROL_PANEL, "0", this.toProtocolString());
-
-        // spawner.advertiseSensorData("4;temperature=27.4 °C,temperature=26.8 °C,humidity=80 %", START_DELAY + 2);
-
-        String sensorData = nodeLogic.getSensorData();
-        MessageBody response = new MessageBody(this, sensorData);
+        MessageBody response = new MessageBody(this, "TURN_ON_ALL_ACTUATORS_SUCCESS");
         return new Message(header, response);
     }
 
@@ -26,4 +28,5 @@ public class GetSensorDataCommand extends Command {
     public String toProtocolString() {
         return this.getCommandString();
     }
+    
 }

@@ -18,11 +18,9 @@ import no.ntnu.tools.Logger;
 
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
-import no.ntnu.messages.commands.ActuatorChangeCommand;
-import no.ntnu.messages.commands.GetNodeCommand;
-import no.ntnu.messages.commands.GetNodeIdCommand;
-import no.ntnu.messages.commands.GetSensorDataCommand;
-import no.ntnu.messages.Delimiters;
+import no.ntnu.messages.greenhousecommands.ActuatorChangeCommand;
+import no.ntnu.messages.greenhousecommands.GetNodeCommand;
+import no.ntnu.messages.greenhousecommands.GetSensorDataCommand;
 import no.ntnu.messages.Message;
 
 /**

@@ -1,4 +1,4 @@
-package no.ntnu.messages.commands;
+package no.ntnu.messages.greenhousecommands;
 
 import no.ntnu.Clients;
 import no.ntnu.greenhouse.NodeLogic;
@@ -9,7 +9,7 @@ import no.ntnu.messages.MessageHeader;
 /**
  * Command to turn on all actuators in a node.
  */
-public class TurnOffAllActuatorInNodeCommand extends Command {
+public class TurnOffAllActuatorInNodeCommand extends GreenhouseCommand {
 
     public TurnOffAllActuatorInNodeCommand() {
         super("TURN_OFF_ALL_ACTUATORS");

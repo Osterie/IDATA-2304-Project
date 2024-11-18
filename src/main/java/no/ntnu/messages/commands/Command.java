@@ -24,10 +24,10 @@ public abstract class Command {
         this.commandString = commandString;
     }
 
-    /**
-     * Abstract method for executing command
-     */
-    public abstract Message execute(NodeLogic logic);
+    // /**
+    //  * Abstract method for executing command
+    //  */
+    // public abstract Message execute(NodeLogic logic);
 
     /**
      * Abstract method for converting command to string

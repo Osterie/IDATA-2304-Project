@@ -1,4 +1,4 @@
-package no.ntnu.messages.commands;
+package no.ntnu.messages.greenhousecommands;
 
 import no.ntnu.Clients;
 import no.ntnu.greenhouse.NodeLogic;
@@ -6,8 +6,9 @@ import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
+import no.ntnu.messages.commands.Parameters;
 
-public class ActuatorChangeCommand extends ParameterizedCommand {
+public class ActuatorChangeCommand extends GreenhouseCommand implements Parameters {
 
     private int actuatorId;
     private boolean isOn;
@@ -16,6 +17,10 @@ public class ActuatorChangeCommand extends ParameterizedCommand {
         super("ACTUATOR_CHANGE");
         this.actuatorId = actuatorId;
         this.isOn = isOn;
+    }
+
+    public ActuatorChangeCommand() {
+        super("ACTUATOR_CHANGE");
     }
 
     @Override

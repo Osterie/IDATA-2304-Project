@@ -1,4 +1,4 @@
-package no.ntnu.messages.commands;
+package no.ntnu.messages.greenhousecommands;
 
 import no.ntnu.Clients;
 import no.ntnu.greenhouse.NodeLogic;
@@ -7,7 +7,7 @@ import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.tools.Logger;
 
-public class GetNodeIdCommand extends Command {
+public class GetNodeIdCommand extends GreenhouseCommand {
 
     public GetNodeIdCommand() {
         super("GET_NODE_ID");

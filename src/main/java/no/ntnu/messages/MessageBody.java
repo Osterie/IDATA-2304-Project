@@ -1,7 +1,7 @@
 package no.ntnu.messages;
 
-import no.ntnu.messages.commands.Command;
 import no.ntnu.messages.commands.CommandTranslator;
+import no.ntnu.messages.commands.Command;
 
 /**
  * Represents the body of a message.

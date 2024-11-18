@@ -5,6 +5,8 @@
 # GENERAL
 
 - [ ] Fix test file structure.
+- [ ] Look over and fix bad javadoc
+- [ ] When using copilot to write javadoc, check that the javadoc is correct
 
 - [x] TOBIAS. Gjør om bilde til string, også den stringen til bilde. (for å sende over socket)
 - [ ] TOBIAS. Klasse for control panel som kan gjøre om den mottatte informasjonen til riktig format.
@@ -137,14 +139,14 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
     - [X] ADRIAN Connect to server
     - [X] ADRIAN send unique identifier to server so server knows id of control panel (and that it is a control panel)
     - [X] ADRIAN Ask server for nodes
-    - [ ] ADRIAN Control panel then asks for all their information so that it can show it, does this periodically.
+    - [x] ADRIAN Control panel then asks for all their information so that it can show it, does this periodically.
     - [ ] ADRIAN How does control panel know what info to ask for?
     - [ ] ADRIAN How does control panel know what to do with the info it receives?
 
 - [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. koble til multiple control panels til intermediary server.
 - [x] ADRIAN. lage kommunikasjons klasse for control panel
-- [ ] ADRIAN. Spør hele tiden om informasjon for noden som vises i control panel GUI.
+- [x] ADRIAN. Spør hele tiden om informasjon for noden som vises i control panel GUI.
 - [x] ADRIAN. Send kommandoer til sensor nodes. For eksempel, spør om hvilke noder som finnes, spør om data, skru på en vifte, skru av en vifte, skru på en varmeovn, skru av en varmeovn, åpne et vindu, lukke et vindu, osv.
 - [ ] ADRIAN. Receive actuator status data from any sensor node. For example, is a window open or closed, is the fan on or off? 
 - [ ] For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)

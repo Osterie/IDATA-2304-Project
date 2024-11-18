@@ -2,7 +2,8 @@ package no.ntnu.messages;
 
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.greenhouse.SensorActuatorNode;
-import no.ntnu.messages.commands.TurnOnAllActuatorInNodeCommand;
+import no.ntnu.messages.greenhousecommands.TurnOnAllActuatorInNodeCommand;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
