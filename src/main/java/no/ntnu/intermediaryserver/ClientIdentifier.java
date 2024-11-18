@@ -32,9 +32,18 @@ public class ClientIdentifier {
      *                                  or if clientType is not a recognized type
      */
     public void identifyClientType(String identification) {
-        String[] parts = this.identifyParts(identification);
-        this.setClientType(parts[0]);
-        this.setClientId(parts[1]);
+        if (identification == null || identification.trim().isEmpty()) {
+            Logger.error("Identification string cannot be null or empty");
+            throw new IllegalArgumentException("Identification string cannot be null or empty");
+        }
+        try {
+            String[] parts = this.identifyParts(identification);
+            this.setClientType(parts[0]);
+            this.setClientId(parts[1]);
+        } catch (IllegalArgumentException e) {
+            Logger.error("Failed to identify client: " + e.getMessage());
+            throw e;
+        }
     }
 
     /**

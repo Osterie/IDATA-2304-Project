@@ -44,12 +44,17 @@ public class ClientHandler extends Thread {
      */
     private void initializeStreams() {
         try {
-            this.clientSocket.setKeepAlive(true); // Enable keep-alive on the socket
-            this.socketReader = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
-            this.socketWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
-            Logger.info("New client connected from " + this.clientSocket.getRemoteSocketAddress());
+            if (this.clientSocket != null) {
+                this.clientSocket.setKeepAlive(true); // Enable keep-alive on the socket
+                this.socketReader = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+                this.socketWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
+                Logger.info("New client connected from " + this.clientSocket.getRemoteSocketAddress());
+            } else {
+                Logger.error("Client socket is null");
+            }
         } catch (IOException e) {
             Logger.error("Could not open reader or writer: " + e.getMessage());
+            this.closeStreams();
         }
     }
 
@@ -58,8 +63,14 @@ public class ClientHandler extends Thread {
      */
     @Override
     public void run() {
-        this.identifyClientType(0);
-        this.handleClient();
+        try {
+            this.identifyClientType(0);
+            this.handleClient();
+        } catch (Exception e) {
+            Logger.error("Error in client handler: " + e.getMessage());
+        } finally {
+            this.closeStreams();
+        }
     }
 
     /**
@@ -88,7 +99,11 @@ public class ClientHandler extends Thread {
     private String readClientRequest() {
         String clientRequest = null;
         try {
-            clientRequest = this.socketReader.readLine();
+            if (this.socketReader != null) {
+                clientRequest = this.socketReader.readLine();
+            } else {
+                Logger.error("Socket reader is null");
+            }
         } catch (IOException e) {
             Logger.error("Could not receive client request: " + e.getMessage());
         }
@@ -140,6 +155,9 @@ public class ClientHandler extends Thread {
     private void sendMessage(Message message) {
         if (message == null) {
             Logger.error("Message is null");
+            return;
+        } else if (receiver == null) {
+            Logger.error("Receiver is null");
             return;
         }
         this.socketWriter.println(message.toProtocolString());
@@ -206,6 +224,7 @@ public class ClientHandler extends Thread {
         if (message == null) {
             Logger.error("Invalid identification message: " + identification);
             this.closeStreams();
+            return false;
         }
 
         MessageBody body = message.getBody();
