@@ -2,21 +2,34 @@ package no.ntnu.greenhouse.sensors;
 
 /**
  * A sensor that can read the environment in a way.
- * The sensor has a unique ID, a type and a reading.
+ * The sensor has a unique ID and and a reading.
  */
 public abstract class Sensor {
     protected SensorReading reading;
 
+    private final int id;
+
     // The next ID to be assigned to a sensor, every time a new sensor is created, this value will be incremented.
-    private static int nextId = 1;
+    private static int nextId = 0;
     
     /**
      * Create a sensor. An ID will be auto-generated.
      */
     protected Sensor() {
         this.reading = null;
-        nextId = generateUniqueId();
+        this.id = generateUniqueId();
     }
+
+   /**
+   * Get the ID of the sensor.
+   *
+   * @return An ID which is guaranteed to be unique at a node level, not necessarily unique at
+   *     the whole greenhouse-network level.
+   */
+    public int getId() {
+        return id;
+    }
+
     
     /**
      * Returns the type of the sensor.
