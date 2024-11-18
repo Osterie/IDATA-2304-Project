@@ -9,7 +9,7 @@ public class NumericSensor extends Sensor {
   private final double max;
 
   /**
-   * Create a sensor.
+   * Create a numeric sensor.
    *
    * @param type    The type of the sensor. Examples: "temperature", "humidity"
    * @param min     Minimum allowed value
@@ -25,6 +25,11 @@ public class NumericSensor extends Sensor {
     ensureValueBoundsAndPrecision(current);
   }
 
+  /**
+   * Get the type of the sensor.
+   *
+   * @return The type of the sensor
+   */
   public String getType() {
     return reading.getType();
   }
@@ -42,6 +47,7 @@ public class NumericSensor extends Sensor {
    * Create a clone of this sensor.
    *
    * @return A clone of this sensor, where all the fields are the same
+   * @throws IllegalStateException if the sensor reading is null
    */
   public NumericSensor createClone() {
     if (this.reading == null) {
@@ -52,13 +58,18 @@ public class NumericSensor extends Sensor {
   }
 
   /**
-   * Add a random noise to the sensors to simulate realistic values.
+   * Add a random noise to the sensor to simulate realistic values.
    */
   public void addRandomNoise() {
     double newValue = this.reading.getValue() + generateRealisticNoise();
     ensureValueBoundsAndPrecision(newValue);
   }
 
+  /**
+   * Ensure the value is within bounds and has the correct precision.
+   *
+   * @param newValue The new value to check
+   */
   private void ensureValueBoundsAndPrecision(double newValue) {
     newValue = roundToTwoDecimals(newValue);
     if (newValue < min) {
@@ -69,10 +80,21 @@ public class NumericSensor extends Sensor {
     reading.setValue(newValue);
   }
 
+  /**
+   * Round a value to two decimal places.
+   *
+   * @param value The value to round
+   * @return The rounded value
+   */
   private double roundToTwoDecimals(double value) {
     return Math.round(value * 100.0) / 100.0;
   }
 
+  /**
+   * Generate realistic noise to add to the sensor value.
+   *
+   * @return The generated noise
+   */
   private double generateRealisticNoise() {
     final double wholeRange = max - min;
     final double onePercentOfRange = wholeRange / 100.0;
@@ -90,6 +112,11 @@ public class NumericSensor extends Sensor {
     ensureValueBoundsAndPrecision(newValue);
   }
 
+  /**
+   * Get a string representation of the sensor.
+   *
+   * @return A string representation of the sensor
+   */
   @Override
   public String toString() {
     return reading.toString();

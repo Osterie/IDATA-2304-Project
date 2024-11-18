@@ -2,7 +2,8 @@ package no.ntnu;
 
 public enum Clients {
     CONTROL_PANEL("CONTROL_PANEL"),
-    GREENHOUSE("GREENHOUSE");
+    GREENHOUSE("GREENHOUSE"),
+    NONE("NONE");
 
 
 

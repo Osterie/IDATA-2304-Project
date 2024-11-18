@@ -18,9 +18,11 @@ import no.ntnu.tools.Logger;
 
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
-import no.ntnu.messages.commands.ActuatorChangeCommand;
-import no.ntnu.messages.commands.GetNodeCommand;
-import no.ntnu.messages.commands.GetNodeIdCommand;
+import no.ntnu.messages.commands.Command;
+import no.ntnu.messages.greenhousecommands.ActuatorChangeCommand;
+import no.ntnu.messages.greenhousecommands.GetNodeCommand;
+import no.ntnu.messages.greenhousecommands.GetSensorDataCommand;
+import no.ntnu.messages.greenhousecommands.GreenhouseCommand;
 import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Message;
 
@@ -31,13 +33,18 @@ import no.ntnu.messages.Message;
  */
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
+  private String targetId = "1";
 
   public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) {
     super(host, port);
     this.logic = logic;
+
     // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
+    // Don't use chatgpt or copilot and preferably, remember design patterns, cohesion, coupling and such.
+
     this.listenForMessages();
     this.establishConnectionWithServer(Clients.CONTROL_PANEL, "0");
+    this.askForSensorDataPeriodically(5); //TODO change id to be the id of the current panel. changes when changing panel.
   }
 
   @Override
@@ -70,23 +77,53 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
   }
 
+  // TODO refactor.
   private void handleGreenhouseCommandResponse(MessageBody body) {
     // TODO CHANGE!
-    String respondedToCommand = body.getCommand().toProtocolString();
+    Command command = body.getCommand();
     String response = body.getData();
 
-    Logger.info("Handling greenhouse command response: " + respondedToCommand);
+    Logger.info("Handling greenhouse command response: " + command.toProtocolString());
     
+    if (!(command instanceof GreenhouseCommand)) {
+      Logger.error("Invalid command type: " + command.getClass().getName());
+      return;
+    }
+
     // TODO should someone else do this? another class?
-    switch (respondedToCommand.trim()) {
+
+    switch (command.getCommandString()) {
       case "GET_NODE_ID":
         this.spawnNode(response, 5);
         break;
       case "GET_NODE":
         this.addNode(response);
         break;
+      case "GET_SENSOR_DATA":
+        Logger.info("Received sensor data: " + response);
+        this.advertiseSensorData(response, 1);
+        break;
+      case "ACTUATOR_CHANGE":
+        Logger.info("Received actuator change response: " + response);
+        String[] parts = response.split(Delimiters.BODY_PARAMETERS_DELIMITER.getValue());
+        if (parts.length != 3) {
+          Logger.error("Invalid actuator change response: " + response);
+          return;
+        }
+        String nodeId = parts[0];
+        String actuatorId = parts[1];
+        String actuatorState = parts[2];
+
+        if (actuatorState.equals("ON") || actuatorState.equals("OFF")) {
+          boolean isOn = actuatorState.equals("ON");
+          this.advertiseActuatorState(Integer.parseInt(nodeId), Integer.parseInt(actuatorId), isOn, 1);
+        } 
+        else {
+          Logger.error("Invalid actuator state: " + actuatorState);
+        }
+        break;
       default:
-        Logger.error("Unknown command: " + respondedToCommand);
+        Logger.error("Unknown command: " + command.toProtocolString());
     }
   }
 
@@ -105,11 +142,45 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-    String nodeIdStr = Integer.toString(nodeId);
-    MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeIdStr);
-    MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
-    Message message = new Message(header, body);
-    this.sendCommandToServer(message);
+    // TODO do not just catch exception. No clue what exception is caught.
+    // Does creating the message cause an exception?
+    // Does sending the message cause an exception?
+    // By having both in try catch, seems like both can fail, but in reality probably only sending can fail.
+    // Have custom exceptions.
+    // don't use chatgpt or copilot preferably...
+    try {
+      String nodeIdStr = Integer.toString(nodeId);
+      MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeIdStr);
+      MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
+      Message message = new Message(header, body);
+      this.sendCommandToServer(message);
+    } catch (Exception e) {
+      Logger.error("Failed to send actuator change: " + e.getMessage());
+    }
+  }
+
+  public void setSensorNodeTarget(String targetId){
+    this.targetId = targetId;
+  }
+
+  public String getSensorNoderTarget(){
+    return this.targetId;
+  }
+
+  public void askForSensorDataPeriodically(int period) {
+
+    ControlPanelCommunicationChannel self = this;
+
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        MessageHeader header = new MessageHeader(Clients.GREENHOUSE, self.getSensorNoderTarget());
+        MessageBody body = new MessageBody(new GetSensorDataCommand());
+        Message message = new Message(header, body);
+        sendCommandToServer(message);
+      }
+    }, 3000, period * 1000L);
   }
 
   /**
@@ -123,17 +194,31 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    *                      [actuator_count_M] underscore [actuator_type_M]
    */
   public void askForNodes() {
+    // TODO do not just catch exception. No clue what exception is caught.
+    // Does creating the message cause an exception?
+    // Does sending the message cause an exception?
+    // By having both in try catch, seems like both can fail, but in reality probably only sending can fail.
+    // Have custom exceptions.
+    // don't use chatgpt or copilot preferably...
+    try {
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, "ALL");
     MessageBody body = new MessageBody(new GetNodeCommand());
     Message message = new Message(header, body);
     this.sendCommandToServer(message);
+    } catch (Exception e) {
+      Logger.error("Failed to ask for nodes: " + e.getMessage());
+    }
   }
 
   public void spawnNode(String nodeId, int START_DELAY) {
-    MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeId);
-    MessageBody body = new MessageBody(new GetNodeCommand());
-    Message message = new Message(header, body);
-    this.sendCommandToServer(message);
+    try {
+      MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeId);
+      MessageBody body = new MessageBody(new GetNodeCommand());
+      Message message = new Message(header, body);
+      this.sendCommandToServer(message);
+    } catch (Exception e) {
+      Logger.error("Failed to spawn node: " + e.getMessage());
+    }
   }
 
   // TODO someone else should do this.
@@ -153,6 +238,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   }
 
   private void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info) {
+    if (actuatorSpecification == null || actuatorSpecification.isEmpty()) {
+      throw new IllegalArgumentException("Actuator specification can't be empty");
+    }
     String[] parts = actuatorSpecification.split(";");
     for (String part : parts) {
       this.parseActuatorInfo(part, info);
@@ -160,6 +248,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   }
 
   private void parseActuatorInfo(String s, SensorActuatorNodeInfo info) {
+    if (s == null || s.isEmpty()) {
+      throw new IllegalArgumentException("Actuator info can't be empty");
+    }
     String[] actuatorInfo = s.split("_");
     if (actuatorInfo.length != 2) {
       throw new IllegalArgumentException("Invalid actuator info format: " + s);
@@ -169,9 +260,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     int  actuatorId = parseIntegerOrError(actuatorInfo[1],
         "Invalid actuator count: " + actuatorInfo[0]);
 
-      Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
-      actuator.setListener(logic);
-      info.addActuator(actuator);
+    Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
+    actuator.setListener(logic);
+    info.addActuator(actuator);
   }
 
   /**
@@ -223,8 +314,11 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   }
 
   private List<SensorReading> parseSensors(String sensorInfo) {
+    if (sensorInfo == null || sensorInfo.isEmpty()) {
+      throw new IllegalArgumentException("Sensor info can't be empty");
+    }
     List<SensorReading> readings = new LinkedList<>();
-    String[] readingInfo = sensorInfo.split(";");
+    String[] readingInfo = sensorInfo.split(",");
     for (String reading : readingInfo) {
       readings.add(parseReading(reading));
     }
@@ -233,6 +327,10 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
   // TODO improve...
   private SensorReading parseReading(String reading) {
+    Logger.info("Reading: " + reading);
+    if (reading == null || reading.isEmpty()) {
+      throw new IllegalArgumentException("Sensor reading can't be empty");
+    }
     String[] assignmentParts = reading.split("=");
     if (assignmentParts.length != 2) {
       throw new IllegalArgumentException("Invalid sensor reading specified: " + reading);

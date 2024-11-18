@@ -1,4 +1,4 @@
-package no.ntnu.messages.commands;
+package no.ntnu.messages.greenhousecommands;
 
 import no.ntnu.Clients;
 import no.ntnu.greenhouse.NodeLogic;
@@ -9,18 +9,18 @@ import no.ntnu.messages.MessageHeader;
 /**
  * Command to turn on all actuators in a node.
  */
-public class TurnOnAllActuatorInNodeCommand extends Command {
+public class TurnOffAllActuatorInNodeCommand extends GreenhouseCommand {
 
-    public TurnOnAllActuatorInNodeCommand() {
-        super("TURN_ON_ALL_ACTUATORS");
+    public TurnOffAllActuatorInNodeCommand() {
+        super("TURN_OFF_ALL_ACTUATORS");
     }
 
     //TODO Change id to what is should be.
     @Override
     public Message execute(NodeLogic nodeLogic) {
-        nodeLogic.getNode().setAllActuators(true);
+        nodeLogic.getNode().setAllActuators(false);
         MessageHeader header = new MessageHeader(Clients.CONTROL_PANEL, "0", this.toProtocolString());
-        MessageBody response = new MessageBody(this, "TURN_ON_ALL_ACTUATORS_SUCCESS");
+        MessageBody response = new MessageBody(this, "TURN_OFF_ALL_ACTUATORS_SUCCESS");
         return new Message(header, response);
     }
 

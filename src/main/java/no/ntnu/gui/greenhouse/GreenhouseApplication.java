@@ -57,10 +57,10 @@ public class GreenhouseApplication extends Application implements NodeStateListe
    *
    * @param fake When true, the simulator emulates fake events instead of opening real sockets.
    */
-  public static void startApp(boolean fake) {
+  public static void startApp() {
     Logger.info("Running greenhouse simulator with JavaFX GUI...");
     // Initialize the simulator with the option to fake events
-    simulator = new GreenhouseSimulator(fake);
+    simulator = new GreenhouseSimulator();
     // Launch the JavaFX application
     launch();
   }
@@ -88,7 +88,7 @@ public class GreenhouseApplication extends Application implements NodeStateListe
   @Override
   public void run() {
     // Start the application without fake events
-    startApp(false);
+    startApp();
   }
 
   /**

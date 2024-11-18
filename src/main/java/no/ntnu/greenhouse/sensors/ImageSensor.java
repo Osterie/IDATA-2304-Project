@@ -1,6 +1,5 @@
 package no.ntnu.greenhouse.sensors;
 
-import java.awt.image.BufferedImage;
 
 /**
  * An image sensor which can sense the environment in a specific way.
@@ -12,7 +11,7 @@ public class ImageSensor extends Sensor {
   // TODO do not give image, just have a constant image
 
   /**
-   * Create a sensor.
+   * Create an image sensor.
    *
    * @param type    The type of the sensor.
    * @param currentImage The current (starting) image of the sensor
@@ -22,6 +21,11 @@ public class ImageSensor extends Sensor {
     this.imagesFilePath = imagesFilePath;
   }
 
+  /**
+   * Returns the type of the sensor.
+   * 
+   * @return The type of the sensor.
+   */
   public String getType() {
     return reading.getType();
   }
@@ -63,6 +67,11 @@ public class ImageSensor extends Sensor {
     this.reading.generateRandomImage(imagesFilePath);
   }
 
+  /**
+     * Get a string representation of the sensor reading.
+     *
+     * @return A string representation of the sensor reading
+     */
   @Override
   public String toString() {
     return reading.toString();

@@ -10,7 +10,7 @@ import no.ntnu.tools.Logger;
  * sensors attached to this same node.
  */
 public class Actuator {
-  private static int nextId = 1;
+  private static int nextId = 0;
   private final String type;
   private final int nodeId;
   private final int id;

@@ -1,4 +1,4 @@
-package no.ntnu.messages.commands;
+package no.ntnu.messages.greenhousecommands;
 
 import java.util.HashMap;
 
@@ -11,7 +11,7 @@ import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.tools.Logger;
 
-public class GetNodeCommand extends Command {
+public class GetNodeCommand extends GreenhouseCommand {
     
 
     public GetNodeCommand() {

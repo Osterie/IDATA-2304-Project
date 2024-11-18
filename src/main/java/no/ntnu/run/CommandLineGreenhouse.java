@@ -16,12 +16,7 @@ public class CommandLineGreenhouse {
    */
   public static void main(String[] args) {
     Logger.info("Running greenhouse simulator in command line (without GUI)...");
-    boolean fake = false;
-    if (args.length == 1 && "fake".equals(args[0])) {
-      fake = true;
-      Logger.info("Using FAKE events");
-    }
-    GreenhouseSimulator simulator = new GreenhouseSimulator(fake);
+    GreenhouseSimulator simulator = new GreenhouseSimulator();
     simulator.initialize();
     simulator.start();
   }

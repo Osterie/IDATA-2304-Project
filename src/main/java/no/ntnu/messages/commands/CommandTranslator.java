@@ -4,6 +4,10 @@ import java.util.HashMap;
 
 import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Message;
+import no.ntnu.messages.greenhousecommands.ActuatorChangeCommand;
+import no.ntnu.messages.greenhousecommands.GetNodeCommand;
+import no.ntnu.messages.greenhousecommands.GetNodeIdCommand;
+import no.ntnu.messages.greenhousecommands.GetSensorDataCommand;
 import no.ntnu.tools.Logger;
 
 public class CommandTranslator {
@@ -18,7 +22,9 @@ public class CommandTranslator {
         this.commandMap = new HashMap<>();
         this.commandMap.put(new GetNodeIdCommand().getCommandString(), new GetNodeIdCommand());
         this.commandMap.put(new GetNodeCommand().getCommandString(), new GetNodeCommand());
-        this.commandMap.put(new ActuatorChangeCommand(0, false).getCommandString(), new ActuatorChangeCommand(0, false));
+        this.commandMap.put(new ActuatorChangeCommand().getCommandString(), new ActuatorChangeCommand());
+        this.commandMap.put(new GetSensorDataCommand().getCommandString(), new GetSensorDataCommand());
+        this.commandMap.put(new ClientIdentificationCommand().getCommandString(), new ClientIdentificationCommand());
 
         // TODO: Add commands
     }
@@ -31,15 +37,16 @@ public class CommandTranslator {
      */
     public Command toCommand(String string) {
 
+        Logger.info("Converting string to command: " + string);
         String[] parts = string.split(Delimiters.BODY_PARAMETERS_DELIMITER.getValue(), 2);
         String commandString = parts[0];
         
-        Command command = null;;
+        Command command = null;
         if (this.commandMap.containsKey(commandString)) {
             command = this.commandMap.get(commandString);
-            if (command instanceof ParameterizedCommand) {
+            if (command instanceof Parameters) {
                 String[] parameters = parts[1].split(Delimiters.BODY_PARAMETERS_DELIMITER.getValue());
-                ((ParameterizedCommand) command).setParameters(parameters);
+                ((Parameters) command).setParameters(parameters);
             }
         }
         else{
