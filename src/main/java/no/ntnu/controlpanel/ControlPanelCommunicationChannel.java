@@ -37,31 +37,11 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     super(host, port);
     this.logic = logic;
 
-    int attempt = 0;
-    boolean connected = false;
+    // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
+    // Don't use chatgpt or copilot and preferably, remember design patterns, cohesion, coupling and such.
 
-    while (attempt < 3 && !connected) {
-      try {
-        this.listenForMessages();
-        this.establishConnectionWithServer(Clients.CONTROL_PANEL, "0");
-        connected = true;
-      } catch (IOException e) {
-        attempt++;
-        Logger.error("Failed to establish connection with server (attempt " + attempt + "): " + e.getMessage());
-        if (!connected) {
-          try {
-            Thread.sleep(1000); // Wait for 1 second before retrying
-          } catch (InterruptedException ie) {
-            Thread.currentThread().interrupt();
-            Logger.error("Retry interrupted: " + ie.getMessage());
-          }
-        }
-      }
-      if (attempt < 3) {
-        Logger.error("Failed to establish connection with server after 3 attempts.");
-      }
-
-    }
+    this.listenForMessages();
+    this.establishConnectionWithServer(Clients.CONTROL_PANEL, "0");
     this.askForSensorDataPeriodically(1, 5);
   }
 
@@ -126,24 +106,26 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
-        try {
-          Logger.info("Spawning node " + response);
-          logic.onNodeAdded(nodeInfo);
-        } catch (Exception e) {
-          Logger.error("Failed to add node: " + e.getMessage());
-        }
+        Logger.info("Spawning node " + response);
+        logic.onNodeAdded(nodeInfo);
       }
     }, 5 * 1000L);
   }
 
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
+    // TODO do not just catch exception. No clue what exception is caught.
+    // Does creating the message cause an exception?
+    // Does sending the message cause an exception?
+    // By having both in try catch, seems like both can fail, but in reality probably only sending can fail.
+    // Have custom exceptions.
+    // don't use chatgpt or copilot preferably...
     try {
-    String nodeIdStr = Integer.toString(nodeId);
-    MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeIdStr);
-    MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
-    Message message = new Message(header, body);
-    this.sendCommandToServer(message);
+      String nodeIdStr = Integer.toString(nodeId);
+      MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeIdStr);
+      MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
+      Message message = new Message(header, body);
+      this.sendCommandToServer(message);
     } catch (Exception e) {
       Logger.error("Failed to send actuator change: " + e.getMessage());
     }
@@ -176,6 +158,12 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    *                      [actuator_count_M] underscore [actuator_type_M]
    */
   public void askForNodes() {
+    // TODO do not just catch exception. No clue what exception is caught.
+    // Does creating the message cause an exception?
+    // Does sending the message cause an exception?
+    // By having both in try catch, seems like both can fail, but in reality probably only sending can fail.
+    // Have custom exceptions.
+    // don't use chatgpt or copilot preferably...
     try {
     MessageHeader header = new MessageHeader(Clients.GREENHOUSE, "ALL");
     MessageBody body = new MessageBody(new GetNodeCommand());

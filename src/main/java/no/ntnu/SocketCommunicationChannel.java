@@ -100,15 +100,11 @@ public abstract class SocketCommunicationChannel {
     }
 
   // TODO this should be done in another way, use a protocol with header and body instead and such?
-  protected void establishConnectionWithServer(Clients client, String id) throws IOException {
+  protected void establishConnectionWithServer(Clients client, String id) {
 
     // Send initial identifier to server
     // TODO server should send a response back with something to indicate the connection was successful.
-    try {
-      String identifierMessage = client.getValue() + ";" + id;
-      this.socketWriter.println(identifierMessage);
-    } catch (Exception e) {
-      throw new IOException("Could not establish connection to the server: " + e.getMessage());
-    }
+    String identifierMessage = client.getValue() + ";" + id;
+    this.socketWriter.println(identifierMessage);
   }
 }

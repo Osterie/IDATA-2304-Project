@@ -45,31 +45,24 @@ public class DeviceFactory {
    */
   public static SensorActuatorNode createNode(int temperatureSensorCount, int humiditySensorCount,
                                               int windowCount, int fanCount, int heaterCount, int cameraCount) {
-    if (temperatureSensorCount < 0 || humiditySensorCount < 0 || windowCount < 0 || fanCount < 0 || heaterCount < 0 || cameraCount < 0) {
-      throw new IllegalArgumentException("Sensor and actuator counts must be positive");
-    }
     SensorActuatorNode node = new SensorActuatorNode(generateUniqueNodeId());
-    try {
-      if (temperatureSensorCount > 0) {
-        node.addSensors(DeviceFactory.createTemperatureSensor(), temperatureSensorCount);
-      }
-      if (humiditySensorCount > 0) {
-        node.addSensors(DeviceFactory.createHumiditySensor(), humiditySensorCount);
-      }
-      if (windowCount > 0) {
-        addActuators(node, DeviceFactory.createWindow(node.getId()), windowCount);
-      }
-      if (fanCount > 0) {
-        addActuators(node, DeviceFactory.createFan(node.getId()), fanCount);
-      }
-      if (heaterCount > 0) {
-        addActuators(node, DeviceFactory.createHeater(node.getId()), heaterCount);
-      }
-      if (cameraCount > 0) {
-        node.addSensors(DeviceFactory.createImageSensor(), cameraCount);
-      }
-    } catch (IllegalArgumentException e) {
-      throw new IllegalArgumentException("Failed to create a node: " + e.getMessage());
+    if (temperatureSensorCount > 0) {
+      node.addSensors(DeviceFactory.createTemperatureSensor(), temperatureSensorCount);
+    }
+    if (humiditySensorCount > 0) {
+      node.addSensors(DeviceFactory.createHumiditySensor(), humiditySensorCount);
+    }
+    if (windowCount > 0) {
+      addActuators(node, DeviceFactory.createWindow(node.getId()), windowCount);
+    }
+    if (fanCount > 0) {
+      addActuators(node, DeviceFactory.createFan(node.getId()), fanCount);
+    }
+    if (heaterCount > 0) {
+      addActuators(node, DeviceFactory.createHeater(node.getId()), heaterCount);
+    }
+    if (cameraCount > 0) {
+      node.addSensors(DeviceFactory.createImageSensor(), cameraCount);
     }
     return node;
   }
