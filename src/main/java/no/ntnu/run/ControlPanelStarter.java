@@ -15,7 +15,7 @@ import static no.ntnu.intermediaryserver.IntermediaryServer.PORT_NUMBER;
  */
 public class ControlPanelStarter implements Runnable {
 
-  private CommunicationChannel channel;
+  private ControlPanelCommunicationChannel channel;
 
   public ControlPanelStarter() {
     // Empty
@@ -59,7 +59,7 @@ public class ControlPanelStarter implements Runnable {
   }
 
 
-  private CommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
+  private ControlPanelCommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
       ControlPanelCommunicationChannel channel = new ControlPanelCommunicationChannel(logic, "localhost", PORT_NUMBER);
       logic.setCommunicationChannel(channel);
       channel.askForNodes();

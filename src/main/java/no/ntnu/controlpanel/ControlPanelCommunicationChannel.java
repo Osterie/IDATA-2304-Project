@@ -33,6 +33,7 @@ import no.ntnu.messages.Message;
  */
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
+  private String targetId = "1";
 
   public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) {
     super(host, port);
@@ -43,7 +44,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
     this.listenForMessages();
     this.establishConnectionWithServer(Clients.CONTROL_PANEL, "0");
-    this.askForSensorDataPeriodically(1, 5);
+    this.askForSensorDataPeriodically(5); //TODO change id to be the id of the current panel. changes when changing panel.
   }
 
   @Override
@@ -158,20 +159,28 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
   }
 
-  public void askForSensorDataPeriodically(int nodeId, int period) {
-    Thread thread = new Thread(() -> {
-      Timer timer = new Timer();
-      timer.schedule(new TimerTask() {
-        @Override
-        public void run() {
-          MessageHeader header = new MessageHeader(Clients.GREENHOUSE, Integer.toString(nodeId));
-          MessageBody body = new MessageBody(new GetSensorDataCommand());
-          Message message = new Message(header, body);
-          sendCommandToServer(message);
-        }
-      }, 0, period * 1000L);
-    });
-    thread.start();
+  public void setSensorNodeTarget(String targetId){
+    this.targetId = targetId;
+  }
+
+  public String getSensorNoderTarget(){
+    return this.targetId;
+  }
+
+  public void askForSensorDataPeriodically(int period) {
+
+    ControlPanelCommunicationChannel self = this;
+
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        MessageHeader header = new MessageHeader(Clients.GREENHOUSE, self.getSensorNoderTarget());
+        MessageBody body = new MessageBody(new GetSensorDataCommand());
+        Message message = new Message(header, body);
+        sendCommandToServer(message);
+      }
+    }, 3000, period * 1000L);
   }
 
   /**

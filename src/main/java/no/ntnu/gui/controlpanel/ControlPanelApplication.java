@@ -12,7 +12,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import no.ntnu.controlpanel.CommunicationChannel;
+import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.Actuator;
@@ -31,7 +31,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   private static ControlPanelLogic logic;
   private static final int WIDTH = 500;
   private static final int HEIGHT = 400;
-  private static CommunicationChannel channel;
+  private static ControlPanelCommunicationChannel channel;
 
   private TabPane nodeTabPane;
   private Scene mainScene;
@@ -48,7 +48,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
    * @param logic   The logic of the control panel node
    * @param channel Communication channel for sending control commands and receiving events
    */
-  public void startApp(ControlPanelLogic logic, CommunicationChannel channel) {
+  public void startApp(ControlPanelLogic logic, ControlPanelCommunicationChannel channel) {
     if (logic == null) {
       throw new IllegalArgumentException("Control panel logic can't be null");
     }
@@ -173,8 +173,9 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
       nodeTabPane = new TabPane();
       mainScene.setRoot(nodeTabPane);
     }
-    Tab nodeTab = nodeTabs.get(nodeInfo.getId());
-    if (nodeTab == null) {
+    Tab existingNodeTab = nodeTabs.get(nodeInfo.getId());
+    if (existingNodeTab == null) {
+      
       nodeInfos.put(nodeInfo.getId(), nodeInfo);
       nodeTabPane.getTabs().add(createNodeTab(nodeInfo));
     } else {
@@ -190,6 +191,19 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     actuatorPanes.put(nodeInfo.getId(), actuatorPane);
     tab.setContent(new VBox(sensorPane, actuatorPane));
     nodeTabs.put(nodeInfo.getId(), tab);
+
+    if (nodeTabs.size() == 1) {
+      this.channel.setSensorNodeTarget(String.valueOf(nodeInfo.getId()));
+    }
+      
+    
+    tab.setOnSelectionChanged(event -> {
+      if (tab.isSelected()) {
+        Logger.info("Selected node " + nodeInfo.getId());
+        this.channel.setSensorNodeTarget(String.valueOf(nodeInfo.getId()));
+      }
+    });
+
     return tab;
   }
 
