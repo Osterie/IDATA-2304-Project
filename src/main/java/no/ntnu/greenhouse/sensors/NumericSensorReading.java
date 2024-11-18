@@ -23,18 +23,38 @@ public class NumericSensorReading extends SensorReading {
     this.unit = unit;
   }
 
+  /**
+   * Get the current value of the sensor.
+   *
+   * @return The current value of the sensor
+   */
   public double getValue() {
     return value;
   }
 
+  /**
+   * Get the unit of the sensor reading.
+   *
+   * @return The unit of the sensor reading
+   */
   public String getUnit() {
     return unit;
   }
 
+  /**
+   * Set a new value for the sensor reading.
+   *
+   * @param newValue The new value to set
+   */
   public void setValue(double newValue) {
     this.value = newValue;
   }
 
+  /**
+   * Get a string representation of the sensor reading.
+   *
+   * @return A string representation of the sensor reading
+   */
   @Override
   public String toString() {
     return "{ type=" + this.type + ", value=" + value + ", unit=" + unit + " }";
@@ -49,6 +69,13 @@ public class NumericSensorReading extends SensorReading {
     return this.getType() + "=" + this.value + " " + this.unit;
   }
 
+
+  /**
+   * Indicates whether some other object is "equal to" this one.
+   * 
+   * @param o the reference object with which to compare.
+   * @return {@code true} if this object is the same as the obj argument; {@code false} otherwise.
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -63,6 +90,11 @@ public class NumericSensorReading extends SensorReading {
         && Objects.equals(unit, that.unit);
   }
 
+  /**
+   * Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by {@link java.util.HashMap}.
+   * 
+   * @return a hash code value for this object.
+   */
   @Override
   public int hashCode() {
     return Objects.hash(type, value, unit);

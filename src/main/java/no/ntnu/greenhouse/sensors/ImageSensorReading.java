@@ -9,23 +9,42 @@ import javax.imageio.ImageIO;
 
 import no.ntnu.tools.Logger;
 
+/**
+ * Represents a sensor reading that contains an image.
+ */
 public class ImageSensorReading extends SensorReading{
 
     private BufferedImage currentImage;
     private String fileExtension;
 
+    /**
+     * Create an image sensor reading with no initial image.
+     *
+     * @param type The type of sensor being read
+     */
     public ImageSensorReading(String type) {
         super(type);
         this.currentImage = null;
         this.fileExtension = null;
     }
 
+    /**
+     * Create an image sensor reading with an initial image.
+     *
+     * @param type  The type of sensor being read
+     * @param image The initial image
+     */
     public ImageSensorReading(String type, BufferedImage image) {
         super(type);
         this.currentImage = image;
         this.fileExtension = null;
     }
 
+    /**
+     * Generate a random image from the given file path.
+     *
+     * @param imagesFilePath The file path to search for images
+     */
     public void generateRandomImage(String imagesFilePath) {
         // Gets a random image from the given file path.
 
@@ -54,14 +73,31 @@ public class ImageSensorReading extends SensorReading{
         // Update current image if an image was successfully loaded
         this.currentImage = gottenImage;
     }
+
+    /**
+     * Get the current image.
+     *
+     * @return The current image
+     */
     public BufferedImage getImage() {
         return currentImage;
     }
 
+    /**
+     * Get the file extension of the current image.
+     *
+     * @return The file extension of the current image
+     */
     public String getFileExtension() {
         return fileExtension;
     }
 
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     *
+     * @param o the reference object with which to compare.
+     * @return {@code true} if this object is the same as the obj argument; {@code false} otherwise.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -74,16 +110,31 @@ public class ImageSensorReading extends SensorReading{
         return currentImage.equals(that.currentImage);
     }
 
+    /**
+     * Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by {@link java.util.HashMap}.
+     *
+     * @return a hash code value for this object.
+     */
     @Override
     public int hashCode() {
         return currentImage.hashCode();
     }
 
+    /**
+     * Get a string representation of the sensor reading.
+     *
+     * @return A string representation of the sensor reading
+     */
     @Override
     public String toString() {
         return "{ type=" + this.type + ", image=" + this.currentImage.toString() + ", fileExtension=" + this.fileExtension + " }";
     }
 
+    /**
+     * Get a human-readable (formatted) version of the current reading.
+     *
+     * @return The sensor reading and the unit
+     */
     @Override
     public String getFormatted() {
         return "Image";
