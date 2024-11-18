@@ -237,7 +237,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     actuator.toggle();
   }
 
-  private Actuator getActuator(int actuatorId) {
+  public Actuator getActuator(int actuatorId) {
     return actuators.get(actuatorId);
   }
 

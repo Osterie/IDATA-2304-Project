@@ -26,10 +26,6 @@ public class GreenhouseSimulator {
   private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>(); //TODO remove me. Testing only?
   private final Map<Integer, NodeConnectionHandler> nodeConnections = new HashMap<>();  // Store connections for each node
 
-  private Socket socket;
-  private PrintWriter socketWriter;
-  private BufferedReader socketReader;
-
   public GreenhouseSimulator() {
     // Empty
   }
