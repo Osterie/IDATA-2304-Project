@@ -13,6 +13,8 @@ import no.ntnu.messages.commands.ClientIdentificationCommand;
 import no.ntnu.messages.commands.Command;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
+import no.ntnu.messages.commands.FailureCommand;
+import no.ntnu.messages.commands.SuccessCommand;
 import no.ntnu.tools.Logger;
 
 /**
@@ -122,9 +124,21 @@ public class ClientHandler extends Thread {
 
         if (targetId.equalsIgnoreCase("ALL")) {
             this.broadcastMessage(message);
-        }
-        else{
-            this.sendMessageToClient(message);
+        } else {
+            boolean success = this.sendMessageToClient(message);
+            //try {
+
+            //    if (success) {
+            //        SuccessCommand successCommand = new SuccessCommand("Operation completed successfully");
+            //        this.sendMessage(new Message(successCommand.toProtocolString()), this.clientSocket);
+            //    } else {
+            //    FailureCommand failureCommand = new FailureCommand("Operation failed");
+            //        this.sendMessage(new Message(failureCommand.toProtocolString()), this.clientSocket);
+            //   }
+            //} catch (Exception e) {
+            //    FailureCommand failureCommand = new FailureCommand("Operation failed: " + e.getMessage());
+            //    this.sendMessage(new Message(failureCommand.toProtocolString()), this.clientSocket);
+            //}
         }
     }
 
@@ -139,17 +153,22 @@ public class ClientHandler extends Thread {
         }
     }
 
-    private void sendMessageToClient(Message message) {
+    private boolean sendMessageToClient(Message message) {
         ClientHandler receiver = this.getClientHandler(message.getHeader());
         message.setHeader(this.generateNewHeader());
+        try {
+            if (receiver == null) {
+                Logger.error("Not found: " + message.getHeader().getReceiver() + " " + message.getHeader().getId());
+                return false;
+            }
 
-        if (receiver == null) {
-            Logger.error("Not found: " + message.getHeader().getReceiver() + " " + message.getHeader().getId());
-            return;
+            Logger.info("Sending message to " + message.getHeader().getReceiver() + " " + message.getHeader().getId() + ": " + message.toProtocolString());
+            receiver.sendMessage(message);
+            return true;
+        } catch (Exception e) {
+            Logger.error("Could not send message to client: " + e.getMessage());
+            return false;
         }
-
-        Logger.info("Sending message to " + message.getHeader().getReceiver() + " " + message.getHeader().getId() + ": " + message.toProtocolString());
-        receiver.sendMessage(message);
     }
 
     private void sendMessage(Message message) {
