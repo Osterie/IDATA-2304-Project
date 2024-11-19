@@ -22,8 +22,9 @@ public class NodeLogic {
     }
 
     /**
-     * Returns the node 
-     * @return
+     * Returns the node.
+     *
+     * @return The node.
      */
     public SensorActuatorNode getNode(){
         return this.node;
