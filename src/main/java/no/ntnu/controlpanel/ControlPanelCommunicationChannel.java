@@ -18,9 +18,12 @@ import no.ntnu.tools.Logger;
 
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
+import no.ntnu.messages.commands.Command;
 import no.ntnu.messages.greenhousecommands.ActuatorChangeCommand;
 import no.ntnu.messages.greenhousecommands.GetNodeCommand;
 import no.ntnu.messages.greenhousecommands.GetSensorDataCommand;
+import no.ntnu.messages.greenhousecommands.GreenhouseCommand;
+import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Message;
 
 /**
@@ -30,6 +33,7 @@ import no.ntnu.messages.Message;
  */
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
+  private String targetId = "1";
 
   public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) {
     super(host, port);
@@ -40,7 +44,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
     this.listenForMessages();
     this.establishConnectionWithServer(Clients.CONTROL_PANEL, "0");
-    this.askForSensorDataPeriodically(1, 5);
+    this.askForSensorDataPeriodically(5); //TODO change id to be the id of the current panel. changes when changing panel.
   }
 
   @Override
@@ -73,15 +77,22 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
   }
 
+  // TODO refactor.
   private void handleGreenhouseCommandResponse(MessageBody body) {
     // TODO CHANGE!
-    String respondedToCommand = body.getCommand().toProtocolString();
+    Command command = body.getCommand();
     String response = body.getData();
 
-    Logger.info("Handling greenhouse command response: " + respondedToCommand);
+    Logger.info("Handling greenhouse command response: " + command.toProtocolString());
     
+    if (!(command instanceof GreenhouseCommand)) {
+      Logger.error("Invalid command type: " + command.getClass().getName());
+      return;
+    }
+
     // TODO should someone else do this? another class?
-    switch (respondedToCommand.trim()) {
+
+    switch (command.getCommandString()) {
       case "GET_NODE_ID":
         this.spawnNode(response, 5);
         break;
@@ -92,8 +103,27 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         Logger.info("Received sensor data: " + response);
         this.advertiseSensorData(response, 1);
         break;
+      case "ACTUATOR_CHANGE":
+        Logger.info("Received actuator change response: " + response);
+        String[] parts = response.split(Delimiters.BODY_PARAMETERS_DELIMITER.getValue());
+        if (parts.length != 3) {
+          Logger.error("Invalid actuator change response: " + response);
+          return;
+        }
+        String nodeId = parts[0];
+        String actuatorId = parts[1];
+        String actuatorState = parts[2];
+
+        if (actuatorState.equals("ON") || actuatorState.equals("OFF")) {
+          boolean isOn = actuatorState.equals("ON");
+          this.advertiseActuatorState(Integer.parseInt(nodeId), Integer.parseInt(actuatorId), isOn, 1);
+        } 
+        else {
+          Logger.error("Invalid actuator state: " + actuatorState);
+        }
+        break;
       default:
-        Logger.error("Unknown command: " + respondedToCommand);
+        Logger.error("Unknown command: " + command.toProtocolString());
     }
   }
 
@@ -129,20 +159,28 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
   }
 
-  public void askForSensorDataPeriodically(int nodeId, int period) {
-    Thread thread = new Thread(() -> {
-      Timer timer = new Timer();
-      timer.schedule(new TimerTask() {
-        @Override
-        public void run() {
-          MessageHeader header = new MessageHeader(Clients.GREENHOUSE, Integer.toString(nodeId));
-          MessageBody body = new MessageBody(new GetSensorDataCommand());
-          Message message = new Message(header, body);
-          sendCommandToServer(message);
-        }
-      }, 0, period * 1000L);
-    });
-    thread.start();
+  public void setSensorNodeTarget(String targetId){
+    this.targetId = targetId;
+  }
+
+  public String getSensorNoderTarget(){
+    return this.targetId;
+  }
+
+  public void askForSensorDataPeriodically(int period) {
+
+    ControlPanelCommunicationChannel self = this;
+
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        MessageHeader header = new MessageHeader(Clients.GREENHOUSE, self.getSensorNoderTarget());
+        MessageBody body = new MessageBody(new GetSensorDataCommand());
+        Message message = new Message(header, body);
+        sendCommandToServer(message);
+      }
+    }, 3000, period * 1000L);
   }
 
   /**

@@ -11,7 +11,6 @@ import no.ntnu.Clients;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.commands.ClientIdentificationCommand;
 import no.ntnu.messages.commands.Command;
-import no.ntnu.messages.greenhousecommands.GreenhouseCommand;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.tools.Logger;
@@ -26,11 +25,8 @@ public class ClientHandler extends Thread {
     private BufferedReader socketReader;
     private PrintWriter socketWriter;
 
-    private ClientIdentifier clientIdentifier;
+    private ClientIdentification clientIdentification;
     
-    private Clients clientType;  // Clients.CONTROL_PANEL or Clients.GREENHOUSE
-    private String clientId;    // Unique ID for the greenhouse node or control panel
-
     /**
      * Constructs a ClientHandler for a given client socket and server.
      *
@@ -40,7 +36,6 @@ public class ClientHandler extends Thread {
     public ClientHandler(Socket socket, IntermediaryServer server) {
         this.clientSocket = socket;
         this.server = server;
-        this.clientIdentifier = new ClientIdentifier();
         this.initializeStreams();
     }
 
@@ -49,12 +44,17 @@ public class ClientHandler extends Thread {
      */
     private void initializeStreams() {
         try {
-            this.clientSocket.setKeepAlive(true); // Enable keep-alive on the socket
-            this.socketReader = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
-            this.socketWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
-            Logger.info("New client connected from " + this.clientSocket.getRemoteSocketAddress());
+            if (this.clientSocket != null) {
+                this.clientSocket.setKeepAlive(true); // Enable keep-alive on the socket
+                this.socketReader = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+                this.socketWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
+                Logger.info("New client connected from " + this.clientSocket.getRemoteSocketAddress());
+            } else {
+                Logger.error("Client socket is null");
+            }
         } catch (IOException e) {
             Logger.error("Could not open reader or writer: " + e.getMessage());
+            this.closeStreams();
         }
     }
 
@@ -63,8 +63,14 @@ public class ClientHandler extends Thread {
      */
     @Override
     public void run() {
-        this.identifyClientType(0);
-        this.handleClient();
+        try {
+            this.identifyClientType(0);
+            this.handleClient();
+        } catch (Exception e) {
+            Logger.error("Error in client handler: " + e.getMessage());
+        } finally {
+            this.closeStreams();
+        }
     }
 
     /**
@@ -93,7 +99,11 @@ public class ClientHandler extends Thread {
     private String readClientRequest() {
         String clientRequest = null;
         try {
-            clientRequest = this.socketReader.readLine();
+            if (this.socketReader != null) {
+                clientRequest = this.socketReader.readLine();
+            } else {
+                Logger.error("Socket reader is null");
+            }
         } catch (IOException e) {
             Logger.error("Could not receive client request: " + e.getMessage());
         }
@@ -111,64 +121,63 @@ public class ClientHandler extends Thread {
         String targetId = message.getHeader().getId();
 
         if (targetId.equalsIgnoreCase("ALL")) {
-            this.sendMessageToAllClients(message);
+            this.broadcastMessage(message);
         }
         else{
             this.sendMessageToClient(message);
         }
     }
 
-    private void sendMessageToAllClients(Message message) {
-        ArrayList<Socket> clients = this.getAllClients(message.getHeader());
+    private void broadcastMessage(Message message) {
+        // Gets the client handlers for the client type specified in the message header.
+        ArrayList<ClientHandler> clientHandlers = this.getAllClientHandlers(message.getHeader());
         message.setHeader(this.generateNewHeader());
         
-        
-        // PrintWriter receiverWriter;
         Logger.info("Sending message to all clients: " + message.toProtocolString());
-        for (Socket client : clients) {
-            this.sendMessage(message, client);
+        for (ClientHandler clientHandler : clientHandlers) {
+            clientHandler.sendMessage(message);
         }
     }
 
     private void sendMessageToClient(Message message) {
-        Socket receiver = this.getClient(message.getHeader());
+        ClientHandler receiver = this.getClientHandler(message.getHeader());
         message.setHeader(this.generateNewHeader());
-
 
         if (receiver == null) {
             Logger.error("Not found: " + message.getHeader().getReceiver() + " " + message.getHeader().getId());
             return;
         }
 
-        // Logger.info("Sending message to " + message.getHeader().getReceiver() + " " + message.getHeader().getId() + ": " + message.toProtocolString());
-        this.sendMessage(message, receiver);
+        Logger.info("Sending message to " + message.getHeader().getReceiver() + " " + message.getHeader().getId() + ": " + message.toProtocolString());
+        receiver.sendMessage(message);
     }
 
-    private void sendMessage(Message message, Socket receiver) {
+    private void sendMessage(Message message) {
         if (message == null) {
             Logger.error("Message is null");
             return;
-        }
-        try {
-            PrintWriter receiverWriter = new PrintWriter(receiver.getOutputStream(), true);
-            // Logger.info("Sending response to " + targetClientType + " " + receiver.getRemoteSocketAddress() + ": " + message.toProtocolString());
-
-            receiverWriter.println(message.toProtocolString());
-        } catch (IOException e) {
-            // Logger.error("Failed to send response to " + targetClientType + ": " + e.getMessage());
-        }
+        } 
+        this.socketWriter.println(message.toProtocolString());
     }
 
     private MessageHeader generateNewHeader(){
-        return new MessageHeader(this.clientType, this.clientId);
+        return new MessageHeader(this.getClientType(), this.getClientId());
     }
 
-    private Socket getClient(MessageHeader header){
+    private ClientHandler getClientHandler(MessageHeader header){
         return server.getClient(header.getReceiver(), header.getId());
     }
 
-    private ArrayList<Socket> getAllClients(MessageHeader header){
-        return server.getAllClients(header.getReceiver());
+    private ArrayList<ClientHandler> getAllClientHandlers(MessageHeader header){
+        return server.getClients(header.getReceiver());
+    }
+
+    private Clients getClientType(){
+        return this.clientIdentification.getClientType();
+    }
+
+    private String getClientId(){
+        return this.clientIdentification.getClientId();
     }
 
     /**
@@ -212,6 +221,7 @@ public class ClientHandler extends Thread {
         if (message == null) {
             Logger.error("Invalid identification message: " + identification);
             this.closeStreams();
+            return false;
         }
 
         MessageBody body = message.getBody();
@@ -219,8 +229,9 @@ public class ClientHandler extends Thread {
 
         if (command instanceof ClientIdentificationCommand) {
             ClientIdentificationCommand clientIdentificationCommand = (ClientIdentificationCommand) command;
-            this.clientType = clientIdentificationCommand.getClient();
-            this.clientId = clientIdentificationCommand.getId();
+            Clients clientType = clientIdentificationCommand.getClient();
+            String clientId = clientIdentificationCommand.getId();
+            this.clientIdentification = new ClientIdentification(clientType, clientId);
             success = true;
         }
         else{
@@ -251,9 +262,9 @@ public class ClientHandler extends Thread {
      */
     private void addClient() {
         try {
-            server.addClient(this.clientType, this.clientId, this.clientSocket);
+            server.addClient(this.getClientType(), this.getClientId(), this);
         } catch (UnknownClientException e) {
-            Logger.error("Unknown client type: " + this.clientType);
+            Logger.error("Unknown client type: " + this.getClientType());
             this.closeStreams();
         }
     }

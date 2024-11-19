@@ -50,7 +50,7 @@ a reply with an error code?
     - [x] Control panel
     - [x] Greenhouse
 
-- [ ] ADRIAN. Make identifier message follow our protocol.
+- [x] ADRIAN. Make identifier message follow our protocol.
 
 - [x] Adrian Implement Header/Body messages for control panel 
 - [x] Adrian Implement Header/Body messages for intermediary server
@@ -58,16 +58,17 @@ a reply with an error code?
 - [ ] DANIEL Handling connection errors and messaging errors properly.
 - [x] ADRIAN. gitignore fil.
 - [x] ADRIAN. Implementere Message og Command interfacer/klasser
+- [x] ADRIAN. Command classes for client identification. 
 - [x] ADRIAN. Lage ulike Message/Command underklasser
 - [ ] SEBASTIAN PROTOKOLL (IKKE GUI) Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
 Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
 - [x] SEBASTIAN Commands to turn on/off all actuators for a node. 
 - [x] ADRIAN. Lage klasse som applikasjonen kan kjøres fra.
-- [ ] ADRIAN Refaktorer client handler felt, kanskje bruke egen klasse for å lagre klient type og klient id.
-- [ ] ADRIAN Instead of storing sockets in server, store clienthandler?
+- [x] ADRIAN Refaktorer client handler felt, kanskje bruke egen klasse for å lagre klient type og klient id.
+- [x] ADRIAN Instead of storing sockets in server, store clienthandler?
 
 
-- [ ] ADRIAN:
+- [x] ADRIAN:
 How to notify all clients about state update?
 • Keep a reference list of connected clients in the server, update when
 	• new client connects
@@ -114,6 +115,8 @@ Each sensor-node can do the following:
 
 # INTERMEDIARY SERVER
 
+- [x] ADRIAN One Thread for writing and one for reading.
+- [x] ADRIAN Refactor intermediary server
 - [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. Lage en intermediary server som kan brukes for å tilrettelegge kommunikasjon mellom greenhouse nodes og control panel.
 - [x] ADRIAN. Ta i mot klienter som vil koble seg til.
@@ -140,16 +143,18 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
     - [X] ADRIAN send unique identifier to server so server knows id of control panel (and that it is a control panel)
     - [X] ADRIAN Ask server for nodes
     - [x] ADRIAN Control panel then asks for all their information so that it can show it, does this periodically.
-    - [ ] ADRIAN How does control panel know what info to ask for?
-    - [ ] ADRIAN How does control panel know what to do with the info it receives?
+    - [x] ADRIAN How does control panel know what info to ask for?
+    - [x] ADRIAN How does control panel know what to do with the info it receives?
 
 - [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. koble til multiple control panels til intermediary server.
 - [x] ADRIAN. lage kommunikasjons klasse for control panel
 - [x] ADRIAN. Spør hele tiden om informasjon for noden som vises i control panel GUI.
 - [x] ADRIAN. Send kommandoer til sensor nodes. For eksempel, spør om hvilke noder som finnes, spør om data, skru på en vifte, skru av en vifte, skru på en varmeovn, skru av en varmeovn, åpne et vindu, lukke et vindu, osv.
-- [ ] ADRIAN. Receive actuator status data from any sensor node. For example, is a window open or closed, is the fan on or off? 
+- [x] ADRIAN. Receive actuator status data from any sensor node. For example, is a window open or closed, is the fan on or off? 
 - [ ] For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)
+- [x] ADRIAN receive sensor data periodically only for current tab in control panel.
+- [ ] SEBASTIAN. Send image data from greenhouse to control panel. Parse reading in control panel.
 
 ## GUI
 
@@ -177,7 +182,7 @@ either using public-key cryptography or other methods.
 
 - [x] 4. SEBASTIAN/ADRIAN Images/files as sensor data. 
 
-- [ ] ADRIAN Imagine a scenario when a web camera is attached to a sensor node and the image frames it captures could be transmitted to the control panel. Image transfer poses some extra challenges. It is therefore considered an extra feature if you manage to integrate it in your protocol and implement it in your source code.
+- [ ] ADRIAN BLOCKED Imagine a scenario when a web camera is attached to a sensor node and the image frames it captures could be transmitted to the control panel. Image transfer poses some extra challenges. It is therefore considered an extra feature if you manage to integrate it in your protocol and implement it in your source code.
 - [ ] 5. KANSKJE Support of more flexible actuator commands. By default, it is expected that a command is sent to a specific sensor node, specific actuator. If you manage to support also either broadcast commands (to all sensor nodes at a time), or multicast (to specific groups of sensor nodes), this is considered an extra.
 
 
