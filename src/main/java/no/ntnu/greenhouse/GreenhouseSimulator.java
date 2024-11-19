@@ -30,6 +30,9 @@ public class GreenhouseSimulator {
   private PrintWriter socketWriter;
   private BufferedReader socketReader;
 
+  /**
+   * Create a new greenhouse simulator.
+   */
   public GreenhouseSimulator() {
     // Empty
   }
@@ -45,6 +48,16 @@ public class GreenhouseSimulator {
     Logger.info("Greenhouse initialized");
   }
 
+  /**
+   * Create a new node in the greenhouse.
+   * 
+   * @param temperature number of temperature sensors
+   * @param humidity number of humidity sensors
+   * @param windows number of window actuators
+   * @param fans number of fan actuators
+   * @param heaters number of heater actuators
+   * @param cameras number of camera sensors
+   */
   private void createNode(int temperature, int humidity, int windows, int fans, int heaters, int cameras) {
     SensorActuatorNode node = DeviceFactory.createNode(
         temperature, humidity, windows, fans, heaters, cameras);

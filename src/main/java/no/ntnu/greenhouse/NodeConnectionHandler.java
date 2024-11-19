@@ -9,15 +9,28 @@ import no.ntnu.messages.commands.Command;
 import no.ntnu.messages.greenhousecommands.GreenhouseCommand;
 import no.ntnu.tools.Logger;
 
+/**
+ * Handles the connection to the server for a node.
+ */
 public class NodeConnectionHandler extends SocketCommunicationChannel implements Runnable {
     private final NodeLogic nodeLogic;
 
+    /**
+     * Create a new connection handler for a node.
+     *
+     * @param node The node to handle the connection for.
+     * @param host The host to connect to.
+     * @param port The port to connect to.
+     */
     public NodeConnectionHandler(SensorActuatorNode node, String host, int port) {
         super(host, port);
         this.nodeLogic = new NodeLogic(node);
         this.establishConnectionWithServer(Clients.GREENHOUSE, String.valueOf(node.getId()));
     }
 
+    /**
+     * Start listening for messages from the server.
+     */
     @Override
     public void run() {
         this.listenForMessages();
