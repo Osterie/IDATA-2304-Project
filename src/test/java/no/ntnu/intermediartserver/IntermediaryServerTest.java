@@ -1,6 +1,7 @@
 package no.ntnu.intermediartserver;
 
 import no.ntnu.Clients;
+import no.ntnu.constants.PortNumber;
 import no.ntnu.contpanel.MockControlPanel;
 import no.ntnu.greenhouse.MockGreenhouseNode;
 import no.ntnu.intermediaryserver.IntermediaryServer;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class IntermediaryServerTest {
   private IntermediaryServer server;
-  private static final int PORT = 50500;
+  private static final int PORT = PortNumber.PORT_NUMBER.getPort();
   private MockGreenhouseNode mockGreenhouseNode;
   private MockControlPanel mockControlPanel;
 

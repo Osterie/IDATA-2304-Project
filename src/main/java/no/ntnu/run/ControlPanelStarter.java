@@ -6,7 +6,7 @@ import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.tools.Logger;
 
-import static no.ntnu.intermediaryserver.IntermediaryServer.PORT_NUMBER;
+import static no.ntnu.intermediaryserver.IntermediaryServer.PORT;
 
 /**
  * Starter class for the control panel.
@@ -60,7 +60,7 @@ public class ControlPanelStarter implements Runnable {
 
 
   private ControlPanelCommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-      ControlPanelCommunicationChannel channel = new ControlPanelCommunicationChannel(logic, "localhost", PORT_NUMBER);
+      ControlPanelCommunicationChannel channel = new ControlPanelCommunicationChannel(logic, "localhost", PORT);
       logic.setCommunicationChannel(channel);
       channel.askForNodes();
       return channel;

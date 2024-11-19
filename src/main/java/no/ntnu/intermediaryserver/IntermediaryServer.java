@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import no.ntnu.Clients;
+import no.ntnu.constants.PortNumber;
 import no.ntnu.tools.Logger;
 
 /**
@@ -15,7 +16,7 @@ import no.ntnu.tools.Logger;
  * connections, then assigns each client to a handler thread for processing.
  */
 public class IntermediaryServer implements Runnable {
-    public static final int PORT_NUMBER = 50500;
+    public static final int PORT = PortNumber.PORT_NUMBER.getPort();
     private boolean isTcpServerRunning;
 
     // Thread-safe collections for managing client sockets
@@ -27,10 +28,10 @@ public class IntermediaryServer implements Runnable {
      * Creates a new thread to handle each client connection.
      */
     public void startServer() {
-        listeningSocket = this.openListeningSocket(PORT_NUMBER);
+        listeningSocket = this.openListeningSocket(PORT);
         if (listeningSocket != null) {
             this.isTcpServerRunning = true;
-            Logger.info("Server started on port " + PORT_NUMBER);
+            Logger.info("Server started on port " + PORT);
 
             // Runs the whole time while application is up
             while (isTcpServerRunning) {
