@@ -156,10 +156,7 @@ public class ClientHandler extends Thread {
         if (message == null) {
             Logger.error("Message is null");
             return;
-        } else if (receiver == null) {
-            Logger.error("Receiver is null");
-            return;
-        }
+        } 
         this.socketWriter.println(message.toProtocolString());
     }
 
