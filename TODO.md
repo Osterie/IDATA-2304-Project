@@ -157,6 +157,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 
 ## GUI
 
+- [ ] KNUT. Implement ComponentBuilder class
 - [ ] KNUT. Visualize charts.
 - [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
 - [ ] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
