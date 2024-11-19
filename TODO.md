@@ -60,8 +60,7 @@ a reply with an error code?
 - [x] ADRIAN. Implementere Message og Command interfacer/klasser
 - [x] ADRIAN. Command classes for client identification. 
 - [x] ADRIAN. Lage ulike Message/Command underklasser
-- [ ] SEBASTIAN PROTOKOLL (IKKE GUI) Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
-Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
+- [ ] SEBASTIAN PROTOKOLL (IKKE GUI) Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
 - [x] SEBASTIAN Commands to turn on/off all actuators for a node. 
 - [x] ADRIAN. Lage klasse som applikasjonen kan kjøres fra.
 - [x] ADRIAN Refaktorer client handler felt, kanskje bruke egen klasse for å lagre klient type og klient id.
@@ -138,7 +137,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 
 - [x] ADRIAN One Thread for writing and one for reading.
 
-- [ ] what to do when creating a new control panel?
+- [x] what to do when creating a new control panel?
     - [X] ADRIAN Connect to server
     - [X] ADRIAN send unique identifier to server so server knows id of control panel (and that it is a control panel)
     - [X] ADRIAN Ask server for nodes
@@ -152,18 +151,17 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [x] ADRIAN. Spør hele tiden om informasjon for noden som vises i control panel GUI.
 - [x] ADRIAN. Send kommandoer til sensor nodes. For eksempel, spør om hvilke noder som finnes, spør om data, skru på en vifte, skru av en vifte, skru på en varmeovn, skru av en varmeovn, åpne et vindu, lukke et vindu, osv.
 - [x] ADRIAN. Receive actuator status data from any sensor node. For example, is a window open or closed, is the fan on or off? 
-- [ ] For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)
+- [x] For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)
 - [x] ADRIAN receive sensor data periodically only for current tab in control panel.
 - [ ] SEBASTIAN. Send image data from greenhouse to control panel. Parse reading in control panel.
 
 ## GUI
 
 - [ ] KNUT. Visualize charts.
-- [ ] KNUT. Visualize actuator status for each sensor node. Simple, textual visualization is enough (images and such).
-- [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19."
-Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
+- [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
 - [ ] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
 - [x] ADRIAN. Make actuator buttons send data. 
+- [ ] KNUT. Do the TODO which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
 
 # EXTRA WORK
 
@@ -182,8 +180,7 @@ either using public-key cryptography or other methods.
 
 - [x] 4. SEBASTIAN/ADRIAN Images/files as sensor data. 
 
-- [ ] ADRIAN BLOCKED Imagine a scenario when a web camera is attached to a sensor node and the image frames it captures could be transmitted to the control panel. Image transfer poses some extra challenges. It is therefore considered an extra feature if you manage to integrate it in your protocol and implement it in your source code.
-- [ ] 5. KANSKJE Support of more flexible actuator commands. By default, it is expected that a command is sent to a specific sensor node, specific actuator. If you manage to support also either broadcast commands (to all sensor nodes at a time), or multicast (to specific groups of sensor nodes), this is considered an extra.
+- [x] 5. ADRIAN Support of more flexible actuator commands. By default, it is expected that a command is sent to a specific sensor node, specific actuator. If you manage to support also either broadcast commands (to all sensor nodes at a time), or multicast (to specific groups of sensor nodes), this is considered an extra.
 
 
 # WORK PROCESS DOCUMENTATION REQUIREMENTS
