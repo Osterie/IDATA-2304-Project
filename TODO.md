@@ -5,23 +5,25 @@
 # GENERAL
 
 
-- [ ] add a reload button to control panel
+- [ ] SEBASTIAN add a reload button to control panel
 
-- [ ] sometimes spawning node happens after gui is ready. resulst in not worki
+- [ ] KNUT sometimes spawning node happens after gui is ready. resulst in not worki
 
-- [ ] when changing actuator state in node, should notify all the control panels. 
+- [ ] DANIEL when changing actuator state in node, should notify all the control panels.
 
-- [ ] the node asks for data a bit late? It is always 1 tick behind
+- [ ] SEBASTIAN When the control panel asks for sensor data, perhaps it does this a bit infrequently? Currenlty i believe it does it every 5 seconds. But do not change this to be too often. Is there another solution?
 
-- [ ] after sending a message, the controller should expect a response. If no response received, send again, max 3 times. Response should be OK or ERROR or something.
+- [ ] TOBIAS after sending a message, the controller should expect a response. If no response received, send again, max 3 times. Response should be OK or ERROR or something.
 
-- [ ] a constant for the broadcast id? (ALL)
+- [x] DANIEL a constant for the broadcast id? (ALL)
 
-- [ ] handle if port address already in use, can increement by 1 until it is OK. Should update a global enum or something idk. how will other people know what the new port is????
+- [ ] SEBASTIAN handle if port address already in use, can increement by 1 until it is OK. Should update a global enum or something idk. how will other people know what the new port is????
 
-- [ ] handle if Enpoint is "server" in intermediaryserver
+- [ ] ADRIAN handle if Enpoint is "server" in intermediaryserver
 
-- [ ] support multiple control panesl, unique id
+- [ ] ADRIAN support multiple control panesl, unique id
+
+
 
 - [ ] Fix test file structure.
 - [ ] Look over and fix bad javadoc
