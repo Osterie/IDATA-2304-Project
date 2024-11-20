@@ -10,8 +10,21 @@
 
 - [x] TOBIAS. Gjør om bilde til string, også den stringen til bilde. (for å sende over socket)
 - [ ] TOBIAS. Klasse for control panel som kan gjøre om den mottatte informasjonen til riktig format.
+
+# JAVADOC
+
 - [ ] ADRIAN/DANIEL/KNUT/SEBASTIAN/TOBIAS. JAVADOC FOLKENS, JAVADOC.
- 
+- [ ] TOBIAS Skriv javadoc for messages-klasser.
+- [x] TOBIAS Skriv javadoc for listeners-klasser.
+- [x] TOBIAS Skriv javadoc for intermidiary-klasser.
+- [x] TOBIAS Skriv javadoc for sensor-klasser.
+- [ ] Skriv javadoc for greenhouse-klasser.
+- [ ] Skriv javadoc for GUI-klasser.
+- [ ] Skriv javadoc for control-panel-klasser.
+- [ ] Skriv javadoc for run-klasser.
+- [x] TOBIAS Skriv javadoc for tools-klasser.
+
+- [ ] Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
 
 - [x] ADRIAN. Følge protokoll, en header og en body. Header inneholer mottaker, mottakerID, datatype Body inneholder dataen.
 
