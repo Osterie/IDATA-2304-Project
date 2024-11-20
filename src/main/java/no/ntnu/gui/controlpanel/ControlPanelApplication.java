@@ -6,10 +6,9 @@ import java.util.Map;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
@@ -66,20 +65,55 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   public void start(Stage stage) {
     if (channel == null) {
       throw new IllegalStateException(
-          "No communication channel. See the README on how to use fake event spawner!");
+              "No communication channel. See the README on how to use fake event spawner!");
     }
 
     stage.setMinWidth(WIDTH);
     stage.setMinHeight(HEIGHT);
     stage.setTitle("Control panel");
-    mainScene = new Scene(createEmptyContent(), WIDTH, HEIGHT);
+
+    VBox rootLayout = new VBox(); // Vertical layout
+    Node ribbon = createRibbon();
+    rootLayout.getChildren().add(ribbon);
+
+    // Initialize with the empty content first
+    rootLayout.getChildren().add(createEmptyContent());
+
+    mainScene = new Scene(rootLayout, WIDTH, HEIGHT);
     stage.setScene(mainScene);
     stage.show();
+
     logic.addListener(this);
     logic.setCommunicationChannelListener(this);
     if (!channel.isOpen()) {
       logic.onCommunicationChannelClosed();
     }
+  }
+
+  /**
+   * Creates a ribbon to be displayed at the top of the Control Panel window.
+   * The ribbon is a toolbar containing various controls such as buttons and menus
+   * to facilitate user interaction.
+   *
+   * Example controls that may be included in the ribbon:
+   * - Refresh button to update the displayed data.
+   * - Settings button to open configuration options.
+   *
+   * @return A {@link Node} representing the ribbon, which can be added to the GUI layout.
+   */
+  private Node createRibbon() {
+    ToolBar ribbon = new ToolBar();
+
+    // Refresh button
+    Button refreshButton = new Button("Refresh");
+    refreshButton.setOnAction(event -> Logger.info("Refresh clicked"));
+
+    // TODO: If settings is not needed, delete
+    Button settingsButton = new Button("Settings");
+    settingsButton.setOnAction(event -> Logger.info("Settings clicked"));
+
+    ribbon.getItems().addAll(refreshButton, settingsButton);
+    return ribbon;
   }
 
   private static Label createEmptyContent() {
@@ -111,7 +145,8 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   }
 
   private void removeNodeTabPane() {
-    mainScene.setRoot(createEmptyContent());
+    VBox rootLayout = (VBox) mainScene.getRoot();
+    rootLayout.getChildren().set(1, createEmptyContent());
     nodeTabPane = null;
   }
 
@@ -171,11 +206,12 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   private void addNodeTab(SensorActuatorNodeInfo nodeInfo) {
     if (nodeTabPane == null) {
       nodeTabPane = new TabPane();
-      mainScene.setRoot(nodeTabPane);
+      VBox rootLayout = (VBox) mainScene.getRoot();
+      rootLayout.getChildren().set(1, nodeTabPane);
     }
+
     Tab existingNodeTab = nodeTabs.get(nodeInfo.getId());
     if (existingNodeTab == null) {
-      
       nodeInfos.put(nodeInfo.getId(), nodeInfo);
       nodeTabPane.getTabs().add(createNodeTab(nodeInfo));
     } else {
