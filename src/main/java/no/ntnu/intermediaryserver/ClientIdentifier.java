@@ -1,6 +1,6 @@
 package no.ntnu.intermediaryserver;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 import no.ntnu.tools.Logger;
 
 /**
@@ -10,7 +10,7 @@ import no.ntnu.tools.Logger;
 public class ClientIdentifier {
 
     //Enum representing the client type, such as Clients.CONTROL_PANEL or Clients.GREENHOUSE
-    private Clients clientType;
+    private Endpoints clientType;
 
     //Unique ID for the greenhouse node or control panel
     private String clientId;
@@ -51,7 +51,7 @@ public class ClientIdentifier {
      *
      * @return the client type as an instance of the Clients enum
      */
-    public Clients getClientType() {
+    public Endpoints getClientType() {
         return this.clientType;
     }
 
@@ -75,7 +75,7 @@ public class ClientIdentifier {
             Logger.error("Invalid client type: " + identifiedClientType);
             throw new IllegalArgumentException("Invalid client type: " + identifiedClientType);
         }
-        this.clientType = Clients.fromString(identifiedClientType);
+        this.clientType = Endpoints.fromString(identifiedClientType);
     }
 
     /**
@@ -112,7 +112,7 @@ public class ClientIdentifier {
      */
     private boolean isValidClientType(String identifiedClientType) {
         boolean isValid = false;
-        if (Clients.fromString(identifiedClientType) != null) {
+        if (Endpoints.fromString(identifiedClientType) != null) {
             Logger.info("Recognized client type: " + identifiedClientType);
             isValid = true;
         }

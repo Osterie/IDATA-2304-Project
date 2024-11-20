@@ -1,6 +1,6 @@
 package no.ntnu.messages.greenhousecommands;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
@@ -13,7 +13,7 @@ public class GetSensorDataCommand extends GreenhouseCommand {
 
     @Override
     public Message execute(NodeLogic nodeLogic) {
-        MessageHeader header = new MessageHeader(Clients.CONTROL_PANEL, "0", this.toProtocolString());
+        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0", this.toProtocolString());
 
         // spawner.advertiseSensorData("4;temperature=27.4 °C,temperature=26.8 °C,humidity=80 %", START_DELAY + 2);
 

@@ -1,12 +1,12 @@
 package no.ntnu.intermediaryserver;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 
 /**
  * Represents a client identification containing the type and ID of a client.
  */
 public class ClientIdentification {
-    private Clients clientType;
+    private Endpoints clientType;
     private String clientId;
 
     /**
@@ -16,7 +16,7 @@ public class ClientIdentification {
      * @param clientId the unique ID of the client
      * @throws UnknownClientException if the clientType is null, empty, or invalid
      */
-    public ClientIdentification(Clients clientType, String clientId) {
+    public ClientIdentification(Endpoints clientType, String clientId) {
         if (clientType == null) {
             throw new UnknownClientException("clientType cannot be null");
         }
@@ -34,7 +34,7 @@ public class ClientIdentification {
      * @param clientType the client type as a Clients enum
      * @throws UnknownClientException if the client type is invalid
      */
-    private void setClientType(Clients clientType) {
+    private void setClientType(Endpoints clientType) {
         if (clientType == null) {
             throw new UnknownClientException("Invalid client type: " + clientType);
         }
@@ -55,7 +55,7 @@ public class ClientIdentification {
      *
      * @return the client type as an instance of the Clients enum
      */
-    public Clients getClientType() {
+    public Endpoints getClientType() {
         return this.clientType;
     }
 

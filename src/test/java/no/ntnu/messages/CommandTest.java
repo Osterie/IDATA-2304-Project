@@ -1,6 +1,6 @@
 package no.ntnu.messages;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 import no.ntnu.constants.PortNumber;
 import no.ntnu.contpanel.MockControlPanel;
 import no.ntnu.greenhouse.MockGreenhouseNode;
@@ -52,7 +52,7 @@ public class CommandTest {
    */
   @Test
   public void testCreatingCommandWithNullBody() throws IOException {
-    MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
+    MessageHeader messageHeader = new MessageHeader(Endpoints.CONTROL_PANEL, "2");
     Message message = new Message(messageHeader, null);
 
     try {

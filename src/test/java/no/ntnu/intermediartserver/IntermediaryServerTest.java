@@ -1,6 +1,6 @@
 package no.ntnu.intermediartserver;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 import no.ntnu.constants.PortNumber;
 import no.ntnu.contpanel.MockControlPanel;
 import no.ntnu.greenhouse.MockGreenhouseNode;
@@ -153,7 +153,7 @@ public class IntermediaryServerTest {
   @Test
   public void testCreateMessageWithNullCommand() throws IOException {
     MessageBody messageBody = new MessageBody(null, "1");
-    MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
+    MessageHeader messageHeader = new MessageHeader(Endpoints.CONTROL_PANEL, "2");
     Message message = new Message(messageHeader, messageBody);
 
     try {

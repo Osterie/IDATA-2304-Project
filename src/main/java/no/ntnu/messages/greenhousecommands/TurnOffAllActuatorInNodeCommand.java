@@ -1,6 +1,6 @@
 package no.ntnu.messages.greenhousecommands;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
@@ -19,7 +19,7 @@ public class TurnOffAllActuatorInNodeCommand extends GreenhouseCommand {
     @Override
     public Message execute(NodeLogic nodeLogic) {
         nodeLogic.getNode().setAllActuators(false);
-        MessageHeader header = new MessageHeader(Clients.CONTROL_PANEL, "0", this.toProtocolString());
+        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0", this.toProtocolString());
         MessageBody response = new MessageBody(this, "TURN_OFF_ALL_ACTUATORS_SUCCESS");
         return new Message(header, response);
     }

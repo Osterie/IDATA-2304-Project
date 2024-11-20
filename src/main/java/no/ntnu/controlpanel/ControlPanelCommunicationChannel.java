@@ -9,7 +9,7 @@ import java.util.TimerTask;
 import static no.ntnu.tools.Parser.parseDoubleOrError;
 import static no.ntnu.tools.Parser.parseIntegerOrError;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.sensors.NumericSensor;
@@ -43,7 +43,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // Don't use chatgpt or copilot and preferably, remember design patterns, cohesion, coupling and such.
 
     this.listenForMessages();
-    this.establishConnectionWithServer(Clients.CONTROL_PANEL, "0");
+    this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, "0");
     this.askForSensorDataPeriodically(5); //TODO change id to be the id of the current panel. changes when changing panel.
   }
 
@@ -67,10 +67,10 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // Extract header and body
     MessageHeader header = message.getHeader();
     MessageBody body = message.getBody();
-    Clients client = header.getReceiver();
+    Endpoints client = header.getReceiver();
 
     // Handle based on client type
-    if (client == Clients.GREENHOUSE) {
+    if (client == Endpoints.GREENHOUSE) {
       this.handleGreenhouseCommandResponse(body);
     } else {
       Logger.error("Unknown client: " + client);
@@ -150,7 +150,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // don't use chatgpt or copilot preferably...
     try {
       String nodeIdStr = Integer.toString(nodeId);
-      MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeIdStr);
+      MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, nodeIdStr);
       MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
       Message message = new Message(header, body);
       this.sendCommandToServer(message);
@@ -175,7 +175,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
-        MessageHeader header = new MessageHeader(Clients.GREENHOUSE, self.getSensorNoderTarget());
+        MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, self.getSensorNoderTarget());
         MessageBody body = new MessageBody(new GetSensorDataCommand());
         Message message = new Message(header, body);
         sendCommandToServer(message);
@@ -201,7 +201,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // Have custom exceptions.
     // don't use chatgpt or copilot preferably...
     try {
-    MessageHeader header = new MessageHeader(Clients.GREENHOUSE, "ALL");
+    MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, "ALL");
     MessageBody body = new MessageBody(new GetNodeCommand());
     Message message = new Message(header, body);
     this.sendCommandToServer(message);
@@ -212,7 +212,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
   public void spawnNode(String nodeId, int START_DELAY) {
     try {
-      MessageHeader header = new MessageHeader(Clients.GREENHOUSE, nodeId);
+      MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, nodeId);
       MessageBody body = new MessageBody(new GetNodeCommand());
       Message message = new Message(header, body);
       this.sendCommandToServer(message);

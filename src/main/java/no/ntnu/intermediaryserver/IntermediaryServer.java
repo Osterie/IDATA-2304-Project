@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 import no.ntnu.constants.PortNumber;
 import no.ntnu.tools.Logger;
 
@@ -68,7 +68,7 @@ public class IntermediaryServer implements Runnable {
      * @param clientHandler     the client handler for the client
      * @throws UnknownClientException if the client type is not recognized
      */
-    public synchronized void addClient(Clients clientType, String clientId, ClientHandler clientHandler) {
+    public synchronized void addClient(Endpoints clientType, String clientId, ClientHandler clientHandler) {
         this.clients.put(clientType + clientId, clientHandler);
         Logger.info("Connected " + clientType + " with ID: " + clientId);
     }
@@ -78,7 +78,7 @@ public class IntermediaryServer implements Runnable {
      *
      * @param clientId    the unique identifier for the client
      */
-    public synchronized void removeClient(Clients clientType, String clientId) {
+    public synchronized void removeClient(Endpoints clientType, String clientId) {
         if (this.clients.remove(clientType + clientId) == null) {
             Logger.error("Could not remove client, does not exist: " + clientType + clientId);
         }
@@ -94,11 +94,11 @@ public class IntermediaryServer implements Runnable {
      * @param clientId   the unique identifier for the client
      * @return the client handler for the client, or null if not found
      */
-    public ClientHandler getClient(Clients clientType, String clientId) {
+    public ClientHandler getClient(Endpoints clientType, String clientId) {
         return this.clients.get(clientType + clientId);
     }
 
-    public ArrayList<ClientHandler> getClients(Clients clientType){
+    public ArrayList<ClientHandler> getClients(Endpoints clientType){
         ArrayList<ClientHandler> sockets = new ArrayList<>();
         
         for (String key : this.clients.keySet()){

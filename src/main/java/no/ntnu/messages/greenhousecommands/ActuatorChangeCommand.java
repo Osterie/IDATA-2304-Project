@@ -1,6 +1,6 @@
 package no.ntnu.messages.greenhousecommands;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Message;
@@ -30,7 +30,7 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
         nodeLogic.getNode().setActuator(this.actuatorId, this.isOn);
 
         // TODO improve.
-        MessageHeader header = new MessageHeader(Clients.CONTROL_PANEL, "ALL", this.toProtocolString());
+        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "ALL", this.toProtocolString());
         // MessageBody response = new MessageBody(this, "ACTUATOR_CHANGE_SUCCESS");
 
         String actuatorState = this.isOn ? "ON" : "OFF";

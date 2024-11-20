@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.commands.ClientIdentificationCommand;
 import no.ntnu.messages.commands.Command;
@@ -191,7 +191,7 @@ public class ClientHandler extends Thread {
         return server.getClients(header.getReceiver());
     }
 
-    private Clients getClientType(){
+    private Endpoints getClientType(){
         return this.clientIdentification.getClientType();
     }
 
@@ -248,7 +248,7 @@ public class ClientHandler extends Thread {
 
         if (command instanceof ClientIdentificationCommand) {
             ClientIdentificationCommand clientIdentificationCommand = (ClientIdentificationCommand) command;
-            Clients clientType = clientIdentificationCommand.getClient();
+            Endpoints clientType = clientIdentificationCommand.getClient();
             String clientId = clientIdentificationCommand.getId();
             this.clientIdentification = new ClientIdentification(clientType, clientId);
             success = true;

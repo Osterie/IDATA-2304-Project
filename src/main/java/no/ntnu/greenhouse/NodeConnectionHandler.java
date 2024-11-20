@@ -1,6 +1,6 @@
 package no.ntnu.greenhouse;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
@@ -25,7 +25,7 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
     public NodeConnectionHandler(SensorActuatorNode node, String host, int port) {
         super(host, port);
         this.nodeLogic = new NodeLogic(node);
-        this.establishConnectionWithServer(Clients.GREENHOUSE, String.valueOf(node.getId()));
+        this.establishConnectionWithServer(Endpoints.GREENHOUSE, String.valueOf(node.getId()));
     }
 
     /**

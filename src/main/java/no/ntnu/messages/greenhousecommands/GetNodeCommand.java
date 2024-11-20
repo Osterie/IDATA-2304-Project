@@ -2,7 +2,7 @@ package no.ntnu.messages.greenhousecommands;
 
 import java.util.HashMap;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.greenhouse.NodeLogic;
@@ -53,7 +53,7 @@ public class GetNodeCommand extends GreenhouseCommand {
         // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
         Logger.info(resultString);
 
-        MessageHeader header = new MessageHeader(Clients.CONTROL_PANEL, "0");
+        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0");
         // MessageBody body = new MessageBody(this, resultString);
         MessageBody body = new MessageBody(this, nodeLogic.getId() + resultString);
         return new Message(header, body);

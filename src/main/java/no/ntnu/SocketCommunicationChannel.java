@@ -20,26 +20,22 @@ public abstract class SocketCommunicationChannel {
     protected boolean isOn;
 
     protected SocketCommunicationChannel(String host, int port) {
-        try{
-            this.initializeStreams(host, port);
-        }
-        catch (IOException e) {
-            Logger.error("Could not establish connection to the server: " + e.getMessage());
-        }
+      this.initializeStreams(host, port);
     }
 
-    private void initializeStreams(String host, int port) throws IOException {
-        try {
-            this.socket = new Socket(host, port);
-            this.socket.setKeepAlive(true);
-            this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-            this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
-            this.isOn = true;
-            Logger.info("Socket connection established with " + host + ":" + port);
+    private void initializeStreams(String host, int port) {
+      try {
+          Logger.info("Trying to establish connection to " + host + ":" + port);
+          this.socket = new Socket(host, port);
+          this.socket.setKeepAlive(true);
+          this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+          this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
+          this.isOn = true;
+          Logger.info("Socket connection established with " + host + ":" + port);
 
-            } catch (IOException e) {
-            Logger.error("Could not establish connection to the server: " + e.getMessage());
-        }
+        } catch (IOException e) {
+        Logger.error("Could not establish connection to the server: " + e.getMessage());
+      }
     }
 
     protected void listenForMessages(){
@@ -102,24 +98,22 @@ public abstract class SocketCommunicationChannel {
       return closed;
     }
 
-  // TODO this should be done in another way, use a protocol with header and body instead and such?
-  protected void establishConnectionWithServer(Clients client, String id)  {
-
-    // Send initial identifier to server
-    // TODO server should send a response back with something to indicate the connection was successful.
-    // String identifierMessage = client.getValue() + ";" + id;
-
+  protected void establishConnectionWithServer(Endpoints client, String id)  {
     if (client == null || id == null) {
       Logger.error("Client type or ID is null, cannot establish connection.");
       return;
     }
 
-    
-    ClientIdentificationCommand identificationCommand = new ClientIdentificationCommand(client, id);
-    
-    MessageBody body = new MessageBody(identificationCommand);
-    MessageHeader header = new MessageHeader(Clients.NONE, "none");
-    Message identificationMessage = new Message(header, body);
+    // TODO server should send a response back with something to indicate the connection was successful.
+    // Send initial identifier to server
+    Message identificationMessage = this.createIdentificationMessage(client, id);
     this.sendCommandToServer(identificationMessage);
+  }
+
+  private Message createIdentificationMessage(Endpoints client, String id) {
+    ClientIdentificationCommand identificationCommand = new ClientIdentificationCommand(client, id);
+    MessageBody body = new MessageBody(identificationCommand);
+    MessageHeader header = new MessageHeader(Endpoints.SERVER, "none");
+    return new Message(header, body);
   }
 }

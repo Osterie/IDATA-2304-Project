@@ -1,6 +1,6 @@
 package no.ntnu.messages;
 
-import no.ntnu.Clients;
+import no.ntnu.Endpoints;
 
 /**
  * Represents the header of a message.
@@ -8,29 +8,29 @@ import no.ntnu.Clients;
  */
 public class MessageHeader {
     private static final String FIELD_DELIMITER = Delimiters.HEADER_DELIMITER.getValue();
-    private Clients receiver;
+    private Endpoints receiver;
     private String id;
     private String dataType;
 
     // Constructor
-    public MessageHeader(Clients receiver, String id, String dataType) {
+    public MessageHeader(Endpoints receiver, String id, String dataType) {
         this.setReceiver(receiver);
         this.setId(id);
         this.setDataType(dataType);
     }
 
-    public MessageHeader(Clients receiver, String id) {
+    public MessageHeader(Endpoints receiver, String id) {
         this.setReceiver(receiver);
         this.setId(id);
         this.dataType = "";
     }
 
     // Setters and Getters
-    public Clients getReceiver() {
+    public Endpoints getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(Clients receiver) {
+    public void setReceiver(Endpoints receiver) {
         this.receiver = receiver;
     }
 
@@ -87,7 +87,7 @@ public class MessageHeader {
             throw new IllegalArgumentException("Invalid header format. Expected 2 or 3 parts separated by '" + FIELD_DELIMITER + "'");
         }
 
-        Clients clientType = Clients.fromString(parts[0]);
+        Endpoints clientType = Endpoints.fromString(parts[0]);
         if (clientType == null) {
             throw new IllegalArgumentException("Unknown client type: " + parts[0]);
         }
