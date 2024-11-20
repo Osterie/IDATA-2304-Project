@@ -1,7 +1,7 @@
 package no.ntnu.intermediartserver;
 
 import no.ntnu.Endpoints;
-import no.ntnu.constants.PortNumber;
+import no.ntnu.constants.CommandConstants;
 import no.ntnu.contpanel.MockControlPanel;
 import no.ntnu.greenhouse.MockGreenhouseNode;
 import no.ntnu.intermediaryserver.IntermediaryServer;
@@ -12,6 +12,7 @@ import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 
+import static no.ntnu.constants.CommandConstants.PORT_NUMBER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class IntermediaryServerTest {
   private IntermediaryServer server;
-  private static final int PORT = PortNumber.PORT_NUMBER.getPort();
+  private static final int PORT = PORT_NUMBER.getIntValue();
   private MockGreenhouseNode mockGreenhouseNode;
   private MockControlPanel mockControlPanel;
 

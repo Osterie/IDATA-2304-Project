@@ -7,7 +7,7 @@
 - **Team Members:**
 - Tobias Olsen Reiakvam - TobyJavascript 
 - Adrian Gjøsund Bjørge - Osterie / Adrian Gjøsund Bjørge
-- Daniel Selbervik - PizzaMachine
+- Daniel Selbervik - Daniel
 - Sebastian Olsen - Sebastian Olsen
 - Knut Olav Leknes - Knut Olav
 
