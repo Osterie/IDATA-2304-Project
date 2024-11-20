@@ -72,7 +72,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     stage.setMinHeight(HEIGHT);
     stage.setTitle("Control panel");
 
-    VBox rootLayout = new VBox(); // Vertical layout
+    VBox rootLayout = new VBox();
     Node ribbon = createRibbon();
     rootLayout.getChildren().add(ribbon);
 
@@ -106,7 +106,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
 
     // Refresh button
     Button refreshButton = new Button("Refresh");
-    refreshButton.setOnAction(event -> Logger.info("Refresh clicked"));
+    refreshButton.setOnAction(event -> refreshControlPanel());
 
     // TODO: If settings is not needed, delete
     Button settingsButton = new Button("Settings");
@@ -114,6 +114,36 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
 
     ribbon.getItems().addAll(refreshButton, settingsButton);
     return ribbon;
+  }
+
+  /**
+   * Refresh the control panel application by closing and reopening it.
+   */
+  private void refreshControlPanel() {
+    Logger.info("Refreshing Control Panel...");
+    Platform.runLater(() -> {
+      Stage currentStage = (Stage) mainScene.getWindow();
+      currentStage.close(); // Close the current window
+
+      // Optionally reset data or reload nodes
+      resetControlPanelLogic();
+
+      // Reopen the control panel
+      start(new Stage());
+    });
+  }
+
+  /**
+   * Reset control panel logic for a clean state (if required).
+   */
+  private void resetControlPanelLogic() {
+    nodeTabs.clear();
+    sensorPanes.clear();
+    actuatorPanes.clear();
+    nodeInfos.clear();
+    if (logic != null) {
+      logic.resetState(); // Hypothetical method in ControlPanelLogic to reset internal state.
+    }
   }
 
   private static Label createEmptyContent() {
