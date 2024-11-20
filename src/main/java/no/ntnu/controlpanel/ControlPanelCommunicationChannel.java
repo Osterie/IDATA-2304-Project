@@ -35,11 +35,19 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   private final ControlPanelLogic logic;
   private String targetId = "1";
 
+  /**
+   * Create a communication channel for the control panel.
+   * Initializes the communication channel with the specified logic, host, and port.
+   *
+   * @param logic The control panel logic
+   * @param host  The server host
+   * @param port  The server port
+   */
   public ControlPanelCommunicationChannel(ControlPanelLogic logic, String host, int port) {
     super(host, port);
     this.logic = logic;
 
-    // TODO should perhaps try to establsih connection with server. (try catch). And if it fails, try like 3 more times.
+    // TODO should perhaps try to establish connection with server. (try catch). And if it fails, try like 3 more times.
     // Don't use chatgpt or copilot and preferably, remember design patterns, cohesion, coupling and such.
 
     this.listenForMessages();
@@ -47,6 +55,12 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     this.askForSensorDataPeriodically(5); //TODO change id to be the id of the current panel. changes when changing panel.
   }
 
+  /**
+   * Handle a message received from the server.
+   * Parses the server message and processes it based on the client type.
+   *
+   * @param serverMessage The message received from the server
+   */
   @Override
   protected void handleMessage(String serverMessage) {
     // Attempt to parse the server message
@@ -77,7 +91,12 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
   }
 
-  // TODO refactor.
+  /**
+   * Handle a response to a greenhouse command.
+   * Processes the command response and performs actions based on the command type.
+   *
+   * @param body The message body containing the command response
+   */
   private void handleGreenhouseCommandResponse(MessageBody body) {
     // TODO CHANGE!
     Command command = body.getCommand();
@@ -127,6 +146,12 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
   }
 
+  /**
+   * Add a node based on the response.
+   * Creates a new node and schedules its addition to the control panel logic.
+   *
+   * @param response The response containing node information
+   */
   private void addNode(String response) {
     SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(response);
 
@@ -140,6 +165,14 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }, 5 * 1000L);
   }
 
+  /**
+   * Send an actuator change command to the server.
+   * Constructs and sends a message to change the state of an actuator.
+   *
+   * @param nodeId     The ID of the node
+   * @param actuatorId The ID of the actuator
+   * @param isOn       The desired state of the actuator
+   */
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
     // TODO do not just catch exception. No clue what exception is caught.
@@ -159,16 +192,31 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
   }
 
+  /**
+   * Set the target sensor node ID.
+   *
+   * @param targetId The target sensor node ID
+   */
   public void setSensorNodeTarget(String targetId){
     this.targetId = targetId;
   }
 
+  /**
+   * Get the target sensor node ID.
+   *
+   * @return The target sensor node ID
+   */
   public String getSensorNoderTarget(){
     return this.targetId;
   }
 
+  /**
+   * Request sensor data periodically.
+   * Schedules periodic requests for sensor data from the server.
+   *
+   * @param period The period in seconds between requests
+   */
   public void askForSensorDataPeriodically(int period) {
-
     ControlPanelCommunicationChannel self = this;
 
     Timer timer = new Timer();
@@ -201,15 +249,22 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // Have custom exceptions.
     // don't use chatgpt or copilot preferably...
     try {
-    MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, "ALL");
-    MessageBody body = new MessageBody(new GetNodeCommand());
-    Message message = new Message(header, body);
-    this.sendCommandToServer(message);
+      MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, "ALL");
+      MessageBody body = new MessageBody(new GetNodeCommand());
+      Message message = new Message(header, body);
+      this.sendCommandToServer(message);
     } catch (Exception e) {
       Logger.error("Failed to ask for nodes: " + e.getMessage());
     }
   }
 
+  /**
+   * Spawn a new sensor/actuator node information after a given delay.
+   * Sends a command to the server to spawn a new node after a specified delay.
+   *
+   * @param nodeId The ID of the node to spawn
+   * @param START_DELAY The delay in seconds before spawning the node
+   */
   public void spawnNode(String nodeId, int START_DELAY) {
     try {
       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, nodeId);
@@ -221,6 +276,13 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
   }
 
+  /**
+   * Create a SensorActuatorNodeInfo object from a specification string.
+   * Parses the specification string to create a SensorActuatorNodeInfo object.
+   *
+   * @param specification The specification string
+   * @return The created SensorActuatorNodeInfo object
+   */
   // TODO someone else should do this.
   private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
     Logger.info("specification: " + specification);
@@ -237,6 +299,13 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     return info;
   }
 
+  /**
+   * Parse actuators from a specification string and add them to the node info.
+   * Extracts actuator information from the specification string and adds it to the node info.
+   *
+   * @param actuatorSpecification The actuator specification string
+   * @param info The SensorActuatorNodeInfo object to add actuators to
+   */
   private void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info) {
     if (actuatorSpecification == null || actuatorSpecification.isEmpty()) {
       throw new IllegalArgumentException("Actuator specification can't be empty");
@@ -247,6 +316,13 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
   }
 
+  /**
+   * Parse actuator information from a string and add it to the node info.
+   * Extracts individual actuator details from the string and adds them to the node info.
+   *
+   * @param s The actuator information string
+   * @param info The SensorActuatorNodeInfo object to add the actuator to
+   */
   private void parseActuatorInfo(String s, SensorActuatorNodeInfo info) {
     if (s == null || s.isEmpty()) {
       throw new IllegalArgumentException("Actuator info can't be empty");
@@ -267,7 +343,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
   /**
    * Advertise new sensor readings.
-   *
+   * Notifies the control panel logic of new sensor readings after a specified delay.
+   * 
    * @param specification Specification of the readings in the following format:
    *                      [nodeID]
    *                      semicolon
@@ -299,6 +376,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
   /**
    * Advertise that a node is removed.
+   * Notifies the control panel logic that a node has been removed after a specified delay.
    *
    * @param nodeId ID of the removed node
    * @param delay  Delay in seconds
@@ -313,6 +391,13 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }, delay * 1000L);
   }
 
+  /**
+   * Parse sensor readings from a string.
+   * Extracts sensor readings from the provided string and returns them as a list.
+   *
+   * @param sensorInfo The sensor information string
+   * @return A list of parsed sensor readings
+   */
   private List<SensorReading> parseSensors(String sensorInfo) {
     if (sensorInfo == null || sensorInfo.isEmpty()) {
       throw new IllegalArgumentException("Sensor info can't be empty");
@@ -325,7 +410,13 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     return readings;
   }
 
-  // TODO improve...
+  /**
+   * Parse a sensor reading from a string.
+   * Extracts the details of a sensor reading from the provided string.
+   *
+   * @param reading The sensor reading string
+   * @return The parsed sensor reading
+   */
   private SensorReading parseReading(String reading) {
     Logger.info("Reading: " + reading);
     if (reading == null || reading.isEmpty()) {
@@ -347,13 +438,13 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   }
 
   /**
-   * Advertise that an actuator has changed it's state.
+   * Advertise that an actuator has changed its state.
+   * Notifies the control panel logic of an actuator state change after a specified delay.
    *
    * @param nodeId     ID of the node to which the actuator is attached
-   * @param actuatorId ID of the actuator.
-   * @param on         When true, actuator is on; off when false.
-   * @param delay      The delay in seconds after which the advertisement will be
-   *                   generated
+   * @param actuatorId ID of the actuator
+   * @param on         When true, actuator is on; off when false
+   * @param delay      The delay in seconds after which the advertisement will be generated
    */
   public void advertiseActuatorState(int nodeId, int actuatorId, boolean on, int delay) {
     Timer timer = new Timer();
