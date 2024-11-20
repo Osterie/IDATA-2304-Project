@@ -8,7 +8,7 @@ ADRIAN
 - **Sprint Goal:** Create a comprehensive TODO list and distribute tasks among team members, complete some TODOs
 - **Team Members:**:
     - Tobias Olsen Reiakvam - TobyJavascript
-    - Adrian Gjøsund Bjørge - Osterie
+    - Adrian Gjøsund Bjørge - Osterie / Adrian Gjøsund Bjørge
     - Daniel Selbervik - PizzaMachine
     - Sebastian Olsen - Sebastian Olsen
     - Knut Olav Leknes - Knut Olav
