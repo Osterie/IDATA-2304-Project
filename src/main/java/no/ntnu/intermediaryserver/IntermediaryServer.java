@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import no.ntnu.Endpoints;
-import no.ntnu.constants.PortNumber;
+import no.ntnu.constants.CommandConstants;
 import no.ntnu.tools.Logger;
+
+import static no.ntnu.constants.CommandConstants.PORT_NUMBER;
 
 /**
  * The IntermediaryServer class is responsible for managing the connections
@@ -16,7 +18,7 @@ import no.ntnu.tools.Logger;
  * connections, then assigns each client to a handler thread for processing.
  */
 public class IntermediaryServer implements Runnable {
-    public static final int PORT = PortNumber.PORT_NUMBER.getPort();
+    public static final int PORT = PORT_NUMBER.getIntValue();
     private boolean isTcpServerRunning;
 
     // Thread-safe collections for managing client sockets
