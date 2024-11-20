@@ -1,6 +1,6 @@
 # **Sprint Report**
 
-Knut Olav
+Sprint master: Knut Olav
 
 ## **Sprint Overview**
 - **Sprint Number:** Sprint 3
@@ -30,15 +30,6 @@ Knut Olav
 ## **Sprint Progress**
 | Task | Assignee | Status (Completed, In Progress, Blocked) |
 |--|----------|------------------------------------------|
-
----
-
-## **Key Metrics**
-- **Velocity:** [Story points completed in this sprint]
-- **Burndown Chart:** [Link or attachment to burndown chart]
-- **Cycle Time:** [Average time taken for a task from start to completion]
-- **Lead Time:** [Average time from task creation to completion]
-- **Defect Rate:** [Number of defects per story point or task]
 
 ---
 

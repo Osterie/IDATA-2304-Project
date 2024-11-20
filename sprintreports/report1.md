@@ -1,5 +1,7 @@
 # **Sprint Report**
 
+Sprint master: Daniel
+
 ## **Sprint Overview**
   - **Sprint Number:** 1
 - **Duration:** [30.09.2024 - 14.10.2024]

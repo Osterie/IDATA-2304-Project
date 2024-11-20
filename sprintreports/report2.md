@@ -1,6 +1,6 @@
 # **Sprint Report**
 
-ADRIAN
+Sprint master: ADRIAN
 
 ## **Sprint Overview**
 - **Sprint Number:** Sprint 2
@@ -16,42 +16,44 @@ ADRIAN
 ---
 
 ## **Sprint Summary**
-- **Total Planned Work:** 
+- **Total Planned Work:**
   - Create a comprehensive TODO list and distribute tasks among team members.
   - Implement Message and Command interfaces/classes.
   - Create different Message/Command subclasses.
   - Send messages between intermediary server and clients.
 
 - **Completed Work:**
-  - Create a comprehensive TODO list and distribute tasks among team members.
+  - Created a comprehensive TODO list and distributed tasks.
+  - Enhanced functionality for the control panel to handle actuator states and sensor readings.
+  - Added Base64 image encoder and corresponding test classes.
+  - Added tests for cipher encryption.
 
 - **Carried Over Work:**
-  - Unfinished Story Points: [Total]
-  - Carried Over Stories/Tasks: [List or Number of carried-over stories/tasks]
+  - Unfinished Story Points: [TBD]
+  - Carried Over Stories/Tasks: Send messages between intermediary server and clients.
 
 ---
 
 ## **Sprint Progress**
-| Task   | Assignee | Status (Completed, In Progress, Blocked) |
-|--------------|----------|------------------------------------------|
-| Create TODOs | [Adrian] | [Completed]                              |
-| Story 2      | [Name]   | [Status]                                 |
-| Story 3      | [Name]   | [Status]                                 |
-
----
-
-## **Key Metrics**
-- **Velocity:** [Story points completed in this sprint]
-- **Burndown Chart:** [Link or attachment to burndown chart]
-- **Cycle Time:** [Average time taken for a task from start to completion]
-- **Lead Time:** [Average time from task creation to completion]
-- **Defect Rate:** [Number of defects per story point or task]
+| Task                                         | Assignee          | Status       |
+|----------------------------------------------|-------------------|--------------|
+| Create TODOs                                 | Adrian            | Completed    |
+| Add thread for listening in control panel    | Adrian            | Completed    |
+| Add CSS to classes                           | Tobias            | Completed    |
+| Enable control panel to accept readings      | Sebastian         | Completed    |
+| Allow control panel to change actuator state | Adrian         | Completed    |
+| Retrieve actuators from greenhouse           | Adrian            | Completed    |
+| Add Base64 image encoder                     | Tobias            | Completed    |
+| Add test class for Base64 encoder            | Tobias            | Completed    |
+| Reformat ControlPanelCommunicationChannel    | Adrian            | Completed    |
+| Add tests for cipher encryption              | Tobias            | Completed    |
 
 ---
 
 ## **Challenges/Blockers**
-- **Challenge 1:** [Description, impact, and proposed solution or action]
-- **Challenge 2:** [Description, impact, and proposed solution or action]
+- **Challenge 1:** Limited clarity on sending messages between intermediary server and clients.
+  - **Impact:** Delay in progress for messaging functionality.
+  - **Proposed Solution:** Conduct a team meeting to discuss and break down the task into smaller, more actionable subtasks.
 
 ---
 
@@ -62,12 +64,17 @@ ADRIAN
 ---
 
 ## **Retrospective Summary**
-- **What Went Well:** [List successful practices, teamwork highlights]
-- **What Could Be Improved:** [Areas needing improvement, e.g., planning, communication]
-- **Actions for Next Sprint:** [Action items or changes planned for the next sprint]
+- **What Went Well:**
+  - Good collaboration between team members.
+  - Successful implementation of new features and corresponding tests.
+  - Effective communication during task distribution with new TODO list.
 
+- **What Could Be Improved:**
+  - Better documentation for ongoing development tasks to reduce knowledge gaps.
+  - Earlier identification of blockers to minimize delays.
 ---
 
 ## **Next Steps**
-- **Upcoming Goals:** [Brief summary of objectives for the next sprint]
-- **Key Focus Areas:** [Specific areas the team will prioritize, e.g., technical debt, improving speed]
+- Focus on completing messaging functionality.
+- Improve communication on cross-functional dependencies.
+
