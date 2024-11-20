@@ -1,12 +1,17 @@
 package no.ntnu.messages.greenhousecommands;
 
+import no.ntnu.constants.CommandConstants;
 import no.ntnu.Endpoints;
+import no.ntnu.constants.PortNumber;
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.commands.Parameters;
+
+import static no.ntnu.constants.CommandConstants.ALL;
+import static no.ntnu.constants.CommandConstants.PORT_NUMBER;
 
 // TODO refactor class. what should be in command and what should be in data?
 public class ActuatorChangeCommand extends GreenhouseCommand implements Parameters {
@@ -30,7 +35,7 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
         nodeLogic.getNode().setActuator(this.actuatorId, this.isOn);
 
         // TODO improve.
-        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "ALL", this.toProtocolString());
+        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, ALL.toString(), this.toProtocolString());
         // MessageBody response = new MessageBody(this, "ACTUATOR_CHANGE_SUCCESS");
 
         String actuatorState = this.isOn ? "ON" : "OFF";
