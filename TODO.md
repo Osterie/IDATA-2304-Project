@@ -4,6 +4,25 @@
 
 # GENERAL
 
+
+- [ ] add a reload button to control panel
+
+- [ ] sometimes spawning node happens after gui is ready. resulst in not worki
+
+- [ ] when changing actuator state in node, should notify all the control panels. 
+
+- [ ] the node asks for data a bit late? It is always 1 tick behind
+
+- [ ] after sending a message, the controller should expect a response. If no response received, send again, max 3 times. Response should be OK or ERROR or something.
+
+- [ ] a constant for the broadcast id? (ALL)
+
+- [ ] handle if port address already in use, can increement by 1 until it is OK. Should update a global enum or something idk. how will other people know what the new port is????
+
+- [ ] handle if Enpoint is "server" in intermediaryserver
+
+- [ ] support multiple control panesl, unique id
+
 - [ ] Fix test file structure.
 - [ ] Look over and fix bad javadoc
 - [ ] When using copilot to write javadoc, check that the javadoc is correct
@@ -56,7 +75,7 @@ a reply with an error code?
 - [x] 13. TOBIAS (Tidligere daniel, men var lett å skrive om begge). The security mechanisms in your protocol, if you have any
 - [x] 14. TOBIAS Må skrive meir om security fordi eg he endra på klassene.
 
-# General TODO
+# General - [ ]
 
 - [x] Adrian use Clients enum constants instead of strings.
     - [x] Intermediary server
@@ -175,7 +194,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
 - [ ] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
 - [x] ADRIAN. Make actuator buttons send data. 
-- [ ] KNUT. Do the TODO which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
+- [ ] KNUT. Do the - [ ] which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
 
 # EXTRA WORK
 

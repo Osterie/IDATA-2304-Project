@@ -8,7 +8,7 @@ Knut Olav
 - **Sprint Goal:** TODO
 - **Team Members:**:
     - Tobias Olsen Reiakvam - TobyJavascript
-    - Adrian Gjøsund Bjørge - Osterie
+    - Adrian Gjøsund Bjørge - Osterie / Adrian Gjøsund Bjørge
     - Daniel Selbervik - PizzaMachine
     - Sebastian Olsen - Sebastian Olsen
     - Knut Olav Leknes - Knut Olav
