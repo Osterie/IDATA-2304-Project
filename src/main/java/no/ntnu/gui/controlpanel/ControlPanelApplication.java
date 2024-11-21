@@ -157,7 +157,8 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     if (sensorPane != null) {
       sensorPane.update(sensors);
     } else {
-      Logger.error("No sensor section for node " + nodeId);
+      Logger.error("No sensor section for node " + nodeId + ", asking for node info again");
+      channel.askForNodes();
     }
   }
 
