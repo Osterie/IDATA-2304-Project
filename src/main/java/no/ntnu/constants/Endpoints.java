@@ -5,6 +5,7 @@ public enum Endpoints {
     CONTROL_PANEL("CONTROL_PANEL"), // Used for the receiver in header of a Packet
     GREENHOUSE("GREENHOUSE"), // Used for the receiver in header of a Packet
     SERVER("SERVER"), // Used for the receiver in header of a Packet
+    
     BROADCAST("BROADCAST"), // Used for the ID in header of a Packet, sends to all clients, no matter the actual ID.
     NONE("NONE");
 

@@ -17,12 +17,19 @@
 
 - [x] DANIEL a constant for the broadcast id? (ALL)
 
-- [x] ADRIAN handle if port address already in use, can increement by 1 until it is OK. Should update a global enum or something idk. how will other people know what the new port is????
+- [x] ADRIAN handle if port address already in use.
 
-- [ ] ADRIAN handle if Enpoint is "server" in intermediaryserver
+- [ ] ADRIAN handle if Endpoint is "server" in intermediaryserver
 
 - [ ] ADRIAN support multiple control panesl, unique id
 
+
+- [x] ADRIAN if "no sensor section for node x", ask for nodes again.
+- [x] ADRIAN Refactor enums.
+- [x] ADRIAN Create Transmission class which Response class and Command class can inherit from.
+- [x] ADRIAN Create Response class
+- [x] ADRIAN Implement Response class
+- [x] ADRIAN Implement Success and Failuer responses.
 
 
 - [ ] Fix test file structure.
