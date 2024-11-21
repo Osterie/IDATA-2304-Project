@@ -9,8 +9,8 @@ import java.util.TimerTask;
 import static no.ntnu.tools.Parser.parseDoubleOrError;
 import static no.ntnu.tools.Parser.parseIntegerOrError;
 
-import no.ntnu.Endpoints;
 import no.ntnu.SocketCommunicationChannel;
+import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.sensors.NumericSensor;
 import no.ntnu.greenhouse.sensors.SensorReading;
@@ -97,6 +97,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    *
    * @param body The message body containing the command response
    */
+    // TODO refactor.
   private void handleGreenhouseCommandResponse(MessageBody body) {
     // TODO CHANGE!
     Command command = body.getCommand();

@@ -1,6 +1,6 @@
 package no.ntnu.messages;
 
-import no.ntnu.Endpoints;
+import no.ntnu.constants.Endpoints;
 
 /**
  * Represents the header of a message.

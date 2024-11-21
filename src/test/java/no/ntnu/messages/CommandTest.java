@@ -1,7 +1,6 @@
 package no.ntnu.messages;
 
-import no.ntnu.Endpoints;
-
+import no.ntnu.constants.Endpoints;
 import no.ntnu.contpanel.MockControlPanel;
 import no.ntnu.greenhouse.MockGreenhouseNode;
 import no.ntnu.intermediaryserver.IntermediaryServer;

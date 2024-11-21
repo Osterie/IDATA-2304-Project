@@ -2,7 +2,7 @@ package no.ntnu.messages.greenhousecommands;
 
 import java.util.HashMap;
 
-import no.ntnu.Endpoints;
+import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.greenhouse.NodeLogic;

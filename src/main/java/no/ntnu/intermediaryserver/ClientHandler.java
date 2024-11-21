@@ -7,10 +7,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import no.ntnu.Endpoints;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.commands.ClientIdentificationCommand;
 import no.ntnu.messages.commands.Command;
+import no.ntnu.constants.Endpoints;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.commands.FailureCommand;

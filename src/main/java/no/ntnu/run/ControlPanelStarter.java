@@ -4,9 +4,8 @@ import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
+import no.ntnu.intermediaryserver.ServerConfig;
 import no.ntnu.tools.Logger;
-
-import static no.ntnu.intermediaryserver.IntermediaryServer.PORT;
 
 /**
  * Starter class for the control panel.
@@ -55,12 +54,12 @@ public class ControlPanelStarter implements Runnable {
 
   private void initiateCommunication(ControlPanelLogic logic) {
     Logger.info("initiating socket communication");
-    this.channel = initiateSocketCommunication(logic);
+    this.channel = initiateSocketCommunication(logic); 
   }
 
 
   private ControlPanelCommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-      ControlPanelCommunicationChannel channel = new ControlPanelCommunicationChannel(logic, "localhost", PORT);
+      ControlPanelCommunicationChannel channel = new ControlPanelCommunicationChannel(logic, "localhost", ServerConfig.getPortNumber());
       logic.setCommunicationChannel(channel);
       channel.askForNodes();
       return channel;

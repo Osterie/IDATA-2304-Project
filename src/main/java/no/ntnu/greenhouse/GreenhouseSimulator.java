@@ -5,10 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import no.ntnu.intermediaryserver.ServerConfig;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.tools.Logger;
-
-import static no.ntnu.intermediaryserver.IntermediaryServer.PORT;
 
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -90,7 +89,7 @@ public class GreenhouseSimulator {
   }
 
   private void startNodeHandler(SensorActuatorNode node) {
-    NodeConnectionHandler nodeHandler = new NodeConnectionHandler(node, "localhost", PORT);
+    NodeConnectionHandler nodeHandler = new NodeConnectionHandler(node, "localhost", ServerConfig.getPortNumber());
     this.nodeConnections.put(node.getId(), nodeHandler);
     new Thread(nodeHandler).start();  // Each node runs in its own thread
   }

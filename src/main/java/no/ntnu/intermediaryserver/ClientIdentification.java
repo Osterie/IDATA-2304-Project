@@ -1,6 +1,6 @@
 package no.ntnu.intermediaryserver;
 
-import no.ntnu.Endpoints;
+import no.ntnu.constants.Endpoints;
 
 /**
  * Represents a client identification containing the type and ID of a client.

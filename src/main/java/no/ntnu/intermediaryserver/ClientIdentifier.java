@@ -1,6 +1,6 @@
 package no.ntnu.intermediaryserver;
 
-import no.ntnu.Endpoints;
+import no.ntnu.constants.Endpoints;
 import no.ntnu.tools.Logger;
 
 /**

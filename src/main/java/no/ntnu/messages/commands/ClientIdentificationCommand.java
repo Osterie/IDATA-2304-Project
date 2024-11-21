@@ -1,6 +1,6 @@
 package no.ntnu.messages.commands;
 
-import no.ntnu.Endpoints;
+import no.ntnu.constants.Endpoints;
 import no.ntnu.messages.Delimiters;
 
 public class ClientIdentificationCommand extends Command implements Parameters{

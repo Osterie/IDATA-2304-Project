@@ -1,7 +1,7 @@
 package no.ntnu.greenhouse;
 
-import no.ntnu.Endpoints;
 import no.ntnu.SocketCommunicationChannel;
+import no.ntnu.constants.Endpoints;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
