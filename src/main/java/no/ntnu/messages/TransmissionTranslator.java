@@ -54,9 +54,7 @@ public class TransmissionTranslator {
      */
     public Transmission toTransmission(String string) {
 
-        // SUCCESS,GET_NODE,
-        Logger.info("Converting string to command: " + string);
-        // string = "SUCCESS,GET_NODE,;window_1"
+        Logger.info("Converting string to transmission: " + string);
         String[] parts = string.split(Delimiters.BODY_FIELD_PARAMETERS.getValue(), 2);
         String transmissionType = parts[0];
         
@@ -67,8 +65,10 @@ public class TransmissionTranslator {
         }
 
         if (transmission instanceof Parameters) {
-            String[] parameters = parts[1].split(Delimiters.BODY_FIELD_PARAMETERS.getValue());
-            ((Parameters) transmission).setParameters(parameters);
+            if (parts.length > 1) {
+                String[] parameters = parts[1].split(Delimiters.BODY_FIELD_PARAMETERS.getValue());
+                ((Parameters) transmission).setParameters(parameters);
+            }
         }
         else if (transmission instanceof Response) {
 
@@ -80,12 +80,8 @@ public class TransmissionTranslator {
 
             ((Response) transmission).setCommand(command);
             ((Response) transmission).setResponseData(responseData);
-            // ((Response) transmission.setResponseData(parts[2]));
-            // String[] parameters = parts[1].split(Delimiters.BODY_FIELD_PARAMETERS.getValue());
-            // ((Response) transmission).
         }
 
-        Logger.info("Converted string to command: " + transmission.toProtocolString());
         return transmission;
     }
 

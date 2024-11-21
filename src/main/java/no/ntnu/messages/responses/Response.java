@@ -34,7 +34,7 @@ public abstract class Response extends Transmission {
     public String toProtocolString() {
         String protocolString = this.getTransmissionString();
         protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
-        protocolString += this.command.toProtocolString();
+        protocolString += this.command.getTransmissionString();
         protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
         protocolString += this.responseData;
         return protocolString;

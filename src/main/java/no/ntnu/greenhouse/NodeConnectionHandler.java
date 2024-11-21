@@ -55,13 +55,10 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
         if (command instanceof GreenhouseCommand) {
             GreenhouseCommand greenhouseCommand = (GreenhouseCommand) command;
             
-            Response response = greenhouseCommand.execute(this.nodeLogic);
-            MessageHeader responseHeader = new MessageHeader(Endpoints.CONTROL_PANEL, "0", "string"); // TODO change endpoint and id from hardcoded to something better. Use information above.
-            MessageBody responseBody = new MessageBody(response);
-            Message responseMessage = new Message(responseHeader, responseBody);
+            Message response = greenhouseCommand.execute(this.nodeLogic);
             
-            Logger.info("Received command for node, sending response " + sender + ";" + senderID + ";" + response.toProtocolString());
-            socketWriter.println(responseMessage.toProtocolString());
+            Logger.info("Received command for node, sending response: " + response.toProtocolString());
+            socketWriter.println(response.toProtocolString());
         }
         else{
             Logger.error("Received invalid command for node: " + command.toProtocolString());

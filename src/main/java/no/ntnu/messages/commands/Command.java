@@ -19,7 +19,7 @@ public abstract class Command extends Transmission {
     /**
      * Abstract method for executing command
      */
-    public abstract Response execute(NodeLogic logic);
+    public abstract Message execute(NodeLogic logic);
 
     // /**
     //  * Abstract method for converting command to string

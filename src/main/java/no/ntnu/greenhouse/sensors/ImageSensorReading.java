@@ -52,8 +52,8 @@ public class ImageSensorReading extends SensorReading{
 
         try {
             File dir = new File(imagesFilePath);
-            Logger.info("Looking for image files in: " + dir.getAbsolutePath());
-            Logger.info("Files in directory: " + dir.listFiles().length);
+            // Logger.info("Looking for image files in: " + dir.getAbsolutePath());
+            // Logger.info("Files in directory: " + dir.listFiles().length);
             File[] files = dir.listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg"));
             if (files != null && files.length > 0) {
                 int randomIndex = new Random().nextInt(files.length);

@@ -69,7 +69,6 @@ public abstract class SocketCommunicationChannel {
 
     protected void sendCommandToServer(Message message) {
       if (isOn && socketWriter != null) {
-        Logger.info("Trying to send message...");
         socketWriter.println(message.toProtocolString());
         Logger.info("Sent message to server: " + message.toProtocolString());
       } else {

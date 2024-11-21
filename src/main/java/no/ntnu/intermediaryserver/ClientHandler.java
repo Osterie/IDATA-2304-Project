@@ -71,6 +71,7 @@ public class ClientHandler extends Thread {
             this.handleClient();
         } catch (Exception e) {
             Logger.error("Error in client handler: " + e.getMessage());
+            e.printStackTrace();
         } finally {
             this.closeStreams();
         }
@@ -123,7 +124,8 @@ public class ClientHandler extends Thread {
         Message message = Message.fromProtocolString(request);
         String targetId = message.getHeader().getId();
 
-        if (targetId.equalsIgnoreCase("ALL")) {
+        // TODO change this
+        if (targetId.equalsIgnoreCase("BROADCAST")) {
             this.broadcastMessage(message);
         } else {
             boolean success = this.sendMessageToClient(message);

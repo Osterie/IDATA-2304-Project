@@ -278,7 +278,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // Have custom exceptions.
     // don't use chatgpt or copilot preferably...
     try {
-      MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, "ALL");
+      MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, Endpoints.BROADCAST.getValue());
       MessageBody body = new MessageBody(new GetNodeCommand());
       Message message = new Message(header, body);
       this.sendCommandToServer(message);

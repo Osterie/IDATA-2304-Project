@@ -7,7 +7,7 @@ import no.ntnu.constants.Endpoints;
  * The header contains metadata about the message, including:
  * <ul>
  *     <li>The receiver of the message (an {@link Endpoints} object).</li>
- *     <li>The ID of the receiver (e.g., a specific target identifier or "ALL").</li>
+ *     <li>The ID of the receiver (e.g., a specific target identifier or "BRODACAST").</li>
  *     <li>The data type of the message, if applicable.</li>
  * </ul>
  * This class provides methods to convert between protocol string representations and objects.
@@ -77,17 +77,13 @@ public class MessageHeader {
      * Sets the receiver's ID.
      *
      * @param id The ID to set. Must not be null or empty.
-     *           Accepts the special value "ALL".
+     *
      */
     public void setId(String id) {
         if (id == null || id.trim().isEmpty()) {
             throw new IllegalArgumentException("ID cannot be null or empty");
         }
-        if (id.equalsIgnoreCase("ALL")) {
-            this.id = id;
-        } else {
-            this.id = id;
-        }
+        this.id = id;
     }
 
     /**
