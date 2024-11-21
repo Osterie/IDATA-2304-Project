@@ -4,7 +4,6 @@ import no.ntnu.constants.PortNumberOutOfRangeException;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -19,10 +18,9 @@ public class ServerConfig {
         // Empty. Prevent instantiation.
     }
 
-    private static final String CONFIG_FILE = "config/server_config.txt"; // File to store port number
-    private static final int DEFAULT_PORT_NUMBER = 50500; // Default port number
-    private static final int MAX_PORT_NUMBER = 65535; // Maximum allowed port number
-    private static int CURRENT_PORT_NUMBER = DEFAULT_PORT_NUMBER; // Current port number
+    private static final String CONFIG_FILE = "config/server_config.txt";  // File to store port number
+    private static int DEFAULT_PORT_NUMBER = 50500; // Default port number
+    private static int CURRENT_PORT_NUMBER = DEFAULT_PORT_NUMBER; // Default port number
 
     static {
         // Read the port number from the file on class load
@@ -45,14 +43,11 @@ public class ServerConfig {
         if (!isPortValid(portNumber)) {
             throw new PortNumberOutOfRangeException(portNumber);
         }
-        if (isPortInUse(portNumber)) {
-            System.err.println("Port " + portNumber + " is already in use. Incrementing to find an available port...");
-            portNumber = findAvailablePort(portNumber);
-        }
         ServerConfig.CURRENT_PORT_NUMBER = portNumber;
         // Write the new port number to the file
         writePortToFile(portNumber);
     }
+
 
     private static void writePortToFile(int portNumber) {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(CONFIG_FILE))) {
@@ -84,25 +79,6 @@ public class ServerConfig {
     }
 
     private static boolean isPortValid(int portNumber) {
-        return portNumber >= 0 && portNumber <= MAX_PORT_NUMBER;
-    }
-
-    private static boolean isPortInUse(int portNumber) {
-        try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
-            return false; // If we can bind successfully, the port is not in use
-        } catch (IOException e) {
-            return true; // Port is in use
-        }
-    }
-
-    private static int findAvailablePort(int startingPort) {
-        int port = startingPort;
-        while (port <= MAX_PORT_NUMBER) {
-            if (!isPortInUse(port)) {
-                return port;
-            }
-            port++;
-        }
-        throw new RuntimeException("No available ports found in the range " + startingPort + " to " + MAX_PORT_NUMBER);
+        return portNumber >= 0 && portNumber <= 65535;
     }
 }
