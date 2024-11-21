@@ -17,7 +17,7 @@
 
 - [x] DANIEL a constant for the broadcast id? (ALL)
 
-- [ ] SEBASTIAN handle if port address already in use, can increement by 1 until it is OK. Should update a global enum or something idk. how will other people know what the new port is????
+- [x] SEBASTIAN handle if port address already in use, can increement by 1 until it is OK. Should update a global enum or something idk. how will other people know what the new port is????
 
 - [ ] ADRIAN handle if Enpoint is "server" in intermediaryserver
 
@@ -39,7 +39,7 @@
 - [ ] TOBIAS Skriv javadoc for command-klasser.
 - [x] TOBIAS Skriv javadoc for listeners-klasser.
 - [x] TOBIAS Skriv javadoc for intermidiary-klasser.
-- [x] TOBIAS Skriv javadoc for sensor-klasser.
+- [x] SEBASTIAN Skriv javadoc for sensor-klasser.
 - [ ] Skriv javadoc for greenhouse-klasser.
 - [ ] Skriv javadoc for GUI-klasser.
 - [ ] Skriv javadoc for control-panel-klasser.
@@ -144,7 +144,7 @@ Each sensor-node can do the following:
 - [x] SEBASTIAN. Act as an actuator node as well. That is, each sensor node is a "sensor and actuator node", which can have several actuators attached
 - [x] SEBASTIAN. Support different actuators. For example, fan, heater, window opener, door lock, shower opener.
 
-- [ ] SEBASTIAN. Hint: if your protocol will support only one instance of each sensor type on a node (only one temperature sensor per node, one humidity sensor, etc.), it is probably enough to address the sensors by their type. If you want to support multiple instances of the same sensor type per node, you need to introduce the addressing of the sensors (and actuators). For example, temperature sensors 1 and 2 on the sensor node 7, humidity sensors 1, 2 and 3 on sensor node 12, etc.
+- [x] SEBASTIAN. Hint: if your protocol will support only one instance of each sensor type on a node (only one temperature sensor per node, one humidity sensor, etc.), it is probably enough to address the sensors by their type. If you want to support multiple instances of the same sensor type per node, you need to introduce the addressing of the sensors (and actuators). For example, temperature sensors 1 and 2 on the sensor node 7, humidity sensors 1, 2 and 3 on sensor node 12, etc.
 
 
 # INTERMEDIARY SERVER
