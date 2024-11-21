@@ -7,11 +7,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import no.ntnu.constants.Endpoints;
+import no.ntnu.messages.Transmission;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
-import no.ntnu.messages.commands.ClientIdentificationCommand;
+import no.ntnu.messages.commands.ClientIdentificationTransmission;
 import no.ntnu.tools.Logger;
+
 
 
 public abstract class SocketCommunicationChannel {
@@ -112,7 +114,7 @@ public abstract class SocketCommunicationChannel {
   }
 
   private Message createIdentificationMessage(Endpoints client, String id) {
-    ClientIdentificationCommand identificationCommand = new ClientIdentificationCommand(client, id);
+    Transmission identificationCommand = new ClientIdentificationTransmission(client, id);
     MessageBody body = new MessageBody(identificationCommand);
     MessageHeader header = new MessageHeader(Endpoints.SERVER, "none");
     return new Message(header, body);

@@ -1,11 +1,12 @@
 package no.ntnu.messages.commands;
 
 import no.ntnu.messages.Delimiters;
+import no.ntnu.messages.Transmission;
 
-public class FailureCommand extends Command {
+public class FailureTransmission extends Transmission {
   private String errorMessage;
 
-  public FailureCommand(String errorMessage) {
+  public FailureTransmission(String errorMessage) {
     super("FAILURE");
     this.errorMessage = errorMessage;
   }
@@ -20,7 +21,7 @@ public class FailureCommand extends Command {
 
   @Override
   public String toProtocolString() {
-    return this.getCommandString() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.errorMessage;
+    return this.getTransmissionString() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.errorMessage;
   }
 
 

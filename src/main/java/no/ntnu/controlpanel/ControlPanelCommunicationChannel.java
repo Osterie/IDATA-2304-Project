@@ -18,6 +18,7 @@ import no.ntnu.tools.Logger;
 
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
+import no.ntnu.messages.Transmission;
 import no.ntnu.messages.commands.Command;
 import no.ntnu.messages.greenhousecommands.ActuatorChangeCommand;
 import no.ntnu.messages.greenhousecommands.GetNodeCommand;
@@ -100,7 +101,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // TODO refactor.
   private void handleGreenhouseCommandResponse(MessageBody body) {
     // TODO CHANGE!
-    Command command = body.getCommand();
+    Transmission command = body.getTransmission();
     String response = body.getData();
 
     Logger.info("Handling greenhouse command response: " + command.toProtocolString());
@@ -112,7 +113,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
     // TODO should someone else do this? another class?
 
-    switch (command.getCommandString()) {
+    switch (command.getTransmissionString()) {
       case "GET_NODE_ID":
         this.spawnNode(response, 5);
         break;

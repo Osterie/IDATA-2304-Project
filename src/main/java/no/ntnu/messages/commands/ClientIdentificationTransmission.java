@@ -2,12 +2,13 @@ package no.ntnu.messages.commands;
 
 import no.ntnu.constants.Endpoints;
 import no.ntnu.messages.Delimiters;
+import no.ntnu.messages.Transmission;
 
-public class ClientIdentificationCommand extends Command implements Parameters{
+public class ClientIdentificationTransmission extends Transmission implements Parameters {
     protected String id;
     protected Endpoints client;
 
-    public ClientIdentificationCommand(Endpoints client, String id) {
+    public ClientIdentificationTransmission(Endpoints client, String id) {
         super("CLIENT_IDENTIFICATION");
         if (id == null) {
             throw new IllegalArgumentException("ID cannot be null");
@@ -16,7 +17,7 @@ public class ClientIdentificationCommand extends Command implements Parameters{
         this.id = id;
     }
 
-    public ClientIdentificationCommand() {
+    public ClientIdentificationTransmission() {
         super("CLIENT_IDENTIFICATION");
     }
 
@@ -38,7 +39,7 @@ public class ClientIdentificationCommand extends Command implements Parameters{
 
     @Override
     public String toProtocolString() {
-        String protocolString = this.getCommandString();
+        String protocolString = this.getTransmissionString();
         protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
         protocolString += this.client;
         protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();

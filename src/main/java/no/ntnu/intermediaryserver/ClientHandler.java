@@ -8,13 +8,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import no.ntnu.messages.MessageHeader;
-import no.ntnu.messages.commands.ClientIdentificationCommand;
+import no.ntnu.messages.Transmission;
+import no.ntnu.messages.commands.ClientIdentificationTransmission;
 import no.ntnu.messages.commands.Command;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
-import no.ntnu.messages.commands.FailureCommand;
-import no.ntnu.messages.commands.SuccessCommand;
+import no.ntnu.messages.commands.FailureTransmission;
+import no.ntnu.messages.commands.SuccessTransmission;
 import no.ntnu.tools.Logger;
 
 /**
@@ -244,10 +245,10 @@ public class ClientHandler extends Thread {
         }
 
         MessageBody body = message.getBody();
-        Command command = body.getCommand();
+        Transmission command = body.getTransmission();
 
-        if (command instanceof ClientIdentificationCommand) {
-            ClientIdentificationCommand clientIdentificationCommand = (ClientIdentificationCommand) command;
+        if (command instanceof ClientIdentificationTransmission) {
+            ClientIdentificationTransmission clientIdentificationCommand = (ClientIdentificationTransmission) command;
             Endpoints clientType = clientIdentificationCommand.getClient();
             String clientId = clientIdentificationCommand.getId();
             this.clientIdentification = new ClientIdentification(clientType, clientId);

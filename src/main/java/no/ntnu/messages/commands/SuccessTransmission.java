@@ -1,11 +1,12 @@
 package no.ntnu.messages.commands;
 
 import no.ntnu.messages.Delimiters;
+import no.ntnu.messages.Transmission;
 
-public class SuccessCommand extends Command {
+public class SuccessTransmission extends Transmission {
   private String message;
 
-  public SuccessCommand(String message) {
+  public SuccessTransmission(String message) {
     super("SUCCESS");
     this.message = message;
   }
@@ -20,9 +21,8 @@ public class SuccessCommand extends Command {
 
   @Override
   public String toProtocolString() {
-    return this.getCommandString() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.message;
+    return this.getTransmissionString() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.message;
   }
-
 
   public void setParameters(String[] parameters) {
     if (parameters.length != 1) {

@@ -24,6 +24,6 @@ public class GetSensorDataCommand extends GreenhouseCommand {
 
     @Override
     public String toProtocolString() {
-        return this.getCommandString();
+        return this.getTransmissionString();
     }
 }

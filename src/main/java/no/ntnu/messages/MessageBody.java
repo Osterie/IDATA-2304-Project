@@ -1,64 +1,64 @@
 package no.ntnu.messages;
 
-import no.ntnu.messages.commands.CommandTranslator;
+import no.ntnu.messages.commands.TransmissionTranslator;
 import no.ntnu.messages.commands.Command;
 
 /**
  * Represents the body of a message.
- * The body consists of a command and its associated data.
+ * The body consists of a transmission and its associated data.
  * It serves as the content of the message, providing specific instructions or information.
  */
 public class MessageBody {
     private static final String FIELD_DELIMITER = Delimiters.BODY_FIELD.getValue();
-    // The command associated with this message body
-    private Command command;
-    // Optional additional data for the command
+    // The transmission associated with this message body
+    private Transmission transmission;
+    // Optional additional data for the transmission
     private String data;
 
     /**
-     * Constructs a MessageBody with both a command and data.
+     * Constructs a MessageBody with both a transmission and data.
      *
-     * @param command The command to include in the message body. Must not be null.
-     * @param data    The data associated with the command. Can be empty or null.
+     * @param transmission The transmission to include in the message body. Must not be null.
+     * @param data    The data associated with the transmission. Can be empty or null.
      */
-    public MessageBody(Command command, String data) {
-        this.command = command;
+    public MessageBody(Transmission transmission, String data) {
+        this.transmission = transmission;
         this.data = data;
     }
 
     /**
-     * Constructs a MessageBody with only a command.
+     * Constructs a MessageBody with only a transmission.
      *
-     * @param command The command to include in the message body. Must not be null.
+     * @param transmission The transmission to include in the message body. Must not be null.
      */
-    public MessageBody(Command command) {
-        this.command = command;
+    public MessageBody(Transmission transmission) {
+        this.transmission = transmission;
         this.data = "";
     }
 
     /**
-     * Gets the command of the message body.
+     * Gets the transmission of the message body.
      *
-     * @return The command.
+     * @return The transmission.
      */
-    public Command getCommand() {
-        return this.command;
+    public Transmission getTransmission() {
+        return this.transmission;
     }
 
     /**
-     * Sets the command of the message body.
+     * Sets the transmission of the message body.
      *
-     * @param command The command to set. Must not be null.
+     * @param transmission The transmission to set. Must not be null.
      */
-    public void setCommand(Command command) {
-        if (command == null) {
+    public void setTransmission(Transmission transmission) {
+        if (transmission == null) {
             throw new IllegalArgumentException("Command cannot be null");
         }
-        this.command = command;
+        this.transmission = transmission;
     }
 
     /**
-     * Gets the data associated with the command.
+     * Gets the data associated with the transmission.
      *
      * @return The data.
      */
@@ -67,7 +67,7 @@ public class MessageBody {
     }
 
     /**
-     * Sets the data associated with the command.
+     * Sets the data associated with the transmission.
      *
      * @param data The data to set. Can be null or empty.
      */
@@ -77,22 +77,22 @@ public class MessageBody {
 
     /**
      * Converts this message body to its protocol string representation.
-     * The format is: `command[FIELD_DELIMITER]data` or `command` if data is null or empty.
+     * The format is: `transmission[FIELD_DELIMITER]data` or `transmission` if data is null or empty.
      *
      * @return The protocol string representation of the message body.
      */
     public String toProtocolString() {
         if (data == null || data.isEmpty()) {
-            return command.toProtocolString();
+            return transmission.toProtocolString();
         } else {
-            return String.join(FIELD_DELIMITER, command.toProtocolString(), data);
+            return String.join(FIELD_DELIMITER, transmission.toProtocolString(), data);
         }
     }
 
     /**
      * Parses a MessageBody from its protocol string representation.
      *
-     * @param protocolString The protocol string to parse. Expected format: `command[FIELD_DELIMITER]data`.
+     * @param protocolString The protocol string to parse. Expected format: `transmission[FIELD_DELIMITER]data`.
      * @return The parsed {@link MessageBody} object.
      * @throws IllegalArgumentException If the protocol string is invalid or malformed.
      */
@@ -102,9 +102,9 @@ public class MessageBody {
             throw new IllegalArgumentException("Invalid message format");
         }
 
-        CommandTranslator commandTranslator = new CommandTranslator();
-        Command command = commandTranslator.toCommand(parts[0]);
+        TransmissionTranslator transmissionTranslator = new TransmissionTranslator();
+        Transmission transmission = transmissionTranslator.toTransmission(parts[0]);
         String data = parts.length > 1 ? parts[1] : ""; // Use empty string if data is not provided
-        return new MessageBody(command, data);
+        return new MessageBody(transmission, data);
     }
 }

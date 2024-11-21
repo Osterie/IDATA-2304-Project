@@ -47,7 +47,7 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
 
     @Override
     public String toProtocolString() {
-        return this.getCommandString() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.actuatorId + Delimiters.BODY_FIELD_PARAMETERS.getValue() + (this.isOn ? "ON" : "OFF");
+        return this.getTransmissionString() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.actuatorId + Delimiters.BODY_FIELD_PARAMETERS.getValue() + (this.isOn ? "ON" : "OFF");
     }
 
     @Override

@@ -2,6 +2,7 @@ package no.ntnu.messages.greenhousecommands;
 
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Message;
+import no.ntnu.messages.Transmission;
 import no.ntnu.messages.commands.Command;
 
 /**
