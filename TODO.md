@@ -19,8 +19,6 @@
 
 - [x] ADRIAN handle if port address already in use.
 
-- [ ] ADRIAN handle if Endpoint is "server" in intermediaryserver
-
 - [ ] ADRIAN support multiple control panesl, unique id
 
 

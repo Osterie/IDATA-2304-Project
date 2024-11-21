@@ -44,9 +44,9 @@ public abstract class SocketCommunicationChannel {
     protected void listenForMessages(){
         Thread messageListener = new Thread(() -> {
             try {
-            while (isOn) {
-                if (socketReader.ready()) {
-                  String serverMessage = socketReader.readLine();
+            while (this.isOn) {
+                if (this.socketReader.ready()) {
+                  String serverMessage = this.socketReader.readLine();
                   if (serverMessage != null) {
                       Logger.info("Received from server: " + serverMessage);
                       this.handleMessage(serverMessage);

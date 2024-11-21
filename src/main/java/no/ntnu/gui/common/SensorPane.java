@@ -101,13 +101,15 @@ public class SensorPane extends TitledPane {
       imageSensor.generateRandomImage("images/");
       BufferedImage bufferedImage = imageSensor.getImage();
       if (bufferedImage == null) {
-        throw new IllegalArgumentException("Buffered image is null");
+        Logger.error("Buffered image is null");
+        return new Label("No image found");
       }
       Image image = SwingFXUtils.toFXImage(bufferedImage, null);
       ImageView imageView = new ImageView(image);
       return imageView;
     } else {
-      throw new IllegalArgumentException("Unknown sensor type: " + sensor.getClass());
+      return new Label("Unknown sensor type: " + sensor.getClass());
+      // throw new IllegalArgumentException("Unknown sensor type: " + sensor.getClass());
     }
     // SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
     // sensorProps.add(props);
