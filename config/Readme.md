@@ -1,0 +1,1 @@
+This folder contains config for server. Which is only information about the port number.
