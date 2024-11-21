@@ -14,8 +14,8 @@ import no.ntnu.messages.commands.Command;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
-import no.ntnu.messages.commands.FailureTransmission;
-import no.ntnu.messages.commands.SuccessTransmission;
+import no.ntnu.messages.responses.FailureResponse;
+import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.tools.Logger;
 
 /**

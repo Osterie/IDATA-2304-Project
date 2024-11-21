@@ -8,6 +8,7 @@ import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
 import no.ntnu.messages.commands.Command;
 import no.ntnu.messages.greenhousecommands.GreenhouseCommand;
+import no.ntnu.messages.responses.Response;
 import no.ntnu.tools.Logger;
 
 /**
@@ -53,12 +54,17 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
 
         if (command instanceof GreenhouseCommand) {
             GreenhouseCommand greenhouseCommand = (GreenhouseCommand) command;
-            Message response = greenhouseCommand.execute(this.nodeLogic);
-            Logger.info("Received command for node, sending response " + sender + ";" + senderID + ";" + response.getBody().getTransmission().toString());
-            socketWriter.println(response.toProtocolString());
+            
+            Response response = greenhouseCommand.execute(this.nodeLogic);
+            MessageHeader responseHeader = new MessageHeader(Endpoints.CONTROL_PANEL, "0", "string"); // TODO change endpoint and id from hardcoded to something better. Use information above.
+            MessageBody responseBody = new MessageBody(response);
+            Message responseMessage = new Message(responseHeader, responseBody);
+            
+            Logger.info("Received command for node, sending response " + sender + ";" + senderID + ";" + response.toProtocolString());
+            socketWriter.println(responseMessage.toProtocolString());
         }
         else{
-            Logger.error("Received invalid command for node: " + command.toString());
+            Logger.error("Received invalid command for node: " + command.toProtocolString());
         }        
     }
 }

@@ -4,6 +4,7 @@ import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.Transmission;
 import no.ntnu.messages.commands.Command;
+import no.ntnu.messages.responses.Response;
 
 /**
  * Represents a general command
@@ -19,5 +20,5 @@ public abstract class GreenhouseCommand extends Command {
     /**
      * Abstract method for executing command
      */
-    public abstract Message execute(NodeLogic logic);
+    public abstract Response execute(NodeLogic logic);
 }

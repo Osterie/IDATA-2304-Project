@@ -1,5 +1,6 @@
 package no.ntnu.messages.greenhousecommands;
 
+import java.net.ResponseCache;
 import java.util.HashMap;
 
 import no.ntnu.constants.Endpoints;
@@ -9,6 +10,8 @@ import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
+import no.ntnu.messages.responses.Response;
+import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.tools.Logger;
 
 public class GetNodeCommand extends GreenhouseCommand {
@@ -18,7 +21,7 @@ public class GetNodeCommand extends GreenhouseCommand {
         super("GET_NODE");
     }
 
-    public Message execute(NodeLogic nodeLogic) {
+    public Response execute(NodeLogic nodeLogic) {
         // Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + this.nodeLogic.getId());
         
         ActuatorCollection actuators = nodeLogic.getNode().getActuators();
@@ -53,12 +56,16 @@ public class GetNodeCommand extends GreenhouseCommand {
         // socketWriter.println(sender + ";" + senderID + ";" + node.getId());
         Logger.info(resultString);
 
-        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0");
+        // MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0");
         // MessageBody body = new MessageBody(this, resultString);
-        MessageBody body = new MessageBody(this, nodeLogic.getId() + resultString);
-        return new Message(header, body);
-        
+        // MessageBody body = new MessageBody(this, nodeLogic.getId() + resultString);
+        // return new Message(header, body);
         // socketWriter.println(Clients.CONTROL_PANEL + ";0-GET_NODE;" + this.nodeLogic.getId() + resultString); // TODO add sensor data and actuator data.
+
+        resultString = nodeLogic.getId() + resultString;
+        SuccessResponse response = new SuccessResponse(this, resultString);
+        return response;
+        
     }
 
     @Override

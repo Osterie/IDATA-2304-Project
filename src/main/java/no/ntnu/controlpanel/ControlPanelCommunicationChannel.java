@@ -24,6 +24,9 @@ import no.ntnu.messages.greenhousecommands.ActuatorChangeCommand;
 import no.ntnu.messages.greenhousecommands.GetNodeCommand;
 import no.ntnu.messages.greenhousecommands.GetSensorDataCommand;
 import no.ntnu.messages.greenhousecommands.GreenhouseCommand;
+import no.ntnu.messages.responses.FailureResponse;
+import no.ntnu.messages.responses.Response;
+import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Message;
 
@@ -101,10 +104,32 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // TODO refactor.
   private void handleGreenhouseCommandResponse(MessageBody body) {
     // TODO CHANGE!
-    Transmission command = body.getTransmission();
-    String response = body.getData();
 
-    Logger.info("Handling greenhouse command response: " + command.toProtocolString());
+    Transmission transmission = body.getTransmission();
+    if (!(transmission instanceof SuccessResponse || transmission instanceof FailureResponse)) {
+      Logger.error("Invalid command type: " + transmission.getClass().getName());
+      return;
+    }
+
+    Response response = (Response) transmission;
+    SuccessResponse successResponse;
+    if (response instanceof FailureResponse){
+      Logger.error("Failed to execute command: " + response.toProtocolString());
+      return;
+      // TODO try to execute command again? If this is done, in the future perhaps an attempts field should be added, 
+      // which shows how many times the transmission has been tried sent.
+    }
+    else if (response instanceof SuccessResponse) {
+      successResponse = (SuccessResponse) response;
+    }
+    else {
+      Logger.error("Invalid response type: " + response.getClass().getName());
+      return;
+    }
+
+    Logger.info("Handling greenhouse command response: " + response.toProtocolString());
+
+    Command command = successResponse.getCommand();
     
     if (!(command instanceof GreenhouseCommand)) {
       Logger.error("Invalid command type: " + command.getClass().getName());
@@ -113,22 +138,24 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
     // TODO should someone else do this? another class?
 
+    String responseData = successResponse.getResponseData();
+
     switch (command.getTransmissionString()) {
       case "GET_NODE_ID":
-        this.spawnNode(response, 5);
+        this.spawnNode(responseData, 5);
         break;
       case "GET_NODE":
-        this.addNode(response);
+        this.addNode(responseData);
         break;
       case "GET_SENSOR_DATA":
-        Logger.info("Received sensor data: " + response);
-        this.advertiseSensorData(response, 1);
+        Logger.info("Received sensor data: " + responseData);
+        this.advertiseSensorData(responseData, 1);
         break;
       case "ACTUATOR_CHANGE":
-        Logger.info("Received actuator change response: " + response);
-        String[] parts = response.split(Delimiters.BODY_FIELD_PARAMETERS.getValue());
+        Logger.info("Received actuator change response: " + responseData);
+        String[] parts = responseData.split(Delimiters.BODY_FIELD_PARAMETERS.getValue());
         if (parts.length != 3) {
-          Logger.error("Invalid actuator change response: " + response);
+          Logger.error("Invalid actuator change response: " + responseData);
           return;
         }
         String nodeId = parts[0];

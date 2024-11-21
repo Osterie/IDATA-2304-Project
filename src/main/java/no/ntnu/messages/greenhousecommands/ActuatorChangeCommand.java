@@ -7,6 +7,8 @@ import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.commands.Parameters;
+import no.ntnu.messages.responses.Response;
+import no.ntnu.messages.responses.SuccessResponse;
 
 // TODO refactor class. what should be in command and what should be in data?
 public class ActuatorChangeCommand extends GreenhouseCommand implements Parameters {
@@ -25,7 +27,7 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
     }
 
     @Override
-    public Message execute(NodeLogic nodeLogic) {
+    public Response execute(NodeLogic nodeLogic) {
 
         nodeLogic.getNode().setActuator(this.actuatorId, this.isOn);
 
@@ -40,8 +42,11 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
         responseData += Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.actuatorId;
         responseData += Delimiters.BODY_FIELD_PARAMETERS.getValue() + actuatorState;
 
-        MessageBody response = new MessageBody(this, responseData);
-        return new Message(header, response);
+        // MessageBody response = new MessageBody(this, responseData);
+        // return new Message(header, response);
+
+        SuccessResponse response = new SuccessResponse(this, responseData);
+        return response;
     }
 
 

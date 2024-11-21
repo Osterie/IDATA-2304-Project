@@ -5,18 +5,18 @@ package no.ntnu.messages;
  */
 public abstract class Transmission {
     
-    public Transmission(String transmissionString) {
-        this.setTransmissionString(transmissionString);
+    public Transmission(String protocolString) {
+        this.setTransmissionString(protocolString);
     }
 
-    protected String transmissionString;
+    protected String protocolString;
 
     public String getTransmissionString(){
-        return this.transmissionString;
+        return this.protocolString;
     }
 
-    private void setTransmissionString(String transmissionString){
-        this.transmissionString = transmissionString;
+    private void setTransmissionString(String protocolString){
+        this.protocolString = protocolString;
     }
 
     /**
