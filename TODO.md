@@ -15,6 +15,8 @@
 
 - [ ] TOBIAS after sending a message, the controller should expect a response. If no response received, send again, max 3 times. Response should be OK or ERROR or something.
 
+- [ ] TOBIAS Implement encryption
+
 - [x] DANIEL a constant for the broadcast id? (ALL)
 
 - [x] ADRIAN handle if port address already in use.
