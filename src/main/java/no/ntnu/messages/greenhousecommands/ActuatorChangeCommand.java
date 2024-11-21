@@ -37,8 +37,8 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
         String nodeId = Integer.toString(nodeLogic.getId());
         
         String responseData = nodeId;
-        responseData += Delimiters.BODY_PARAMETERS_DELIMITER.getValue() + this.actuatorId;
-        responseData += Delimiters.BODY_PARAMETERS_DELIMITER.getValue() + actuatorState;
+        responseData += Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.actuatorId;
+        responseData += Delimiters.BODY_FIELD_PARAMETERS.getValue() + actuatorState;
 
         MessageBody response = new MessageBody(this, responseData);
         return new Message(header, response);
@@ -47,7 +47,7 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
 
     @Override
     public String toProtocolString() {
-        return this.getCommandString() + Delimiters.BODY_PARAMETERS_DELIMITER.getValue() + this.actuatorId + Delimiters.BODY_PARAMETERS_DELIMITER.getValue() + (this.isOn ? "ON" : "OFF");
+        return this.getCommandString() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.actuatorId + Delimiters.BODY_FIELD_PARAMETERS.getValue() + (this.isOn ? "ON" : "OFF");
     }
 
     @Override

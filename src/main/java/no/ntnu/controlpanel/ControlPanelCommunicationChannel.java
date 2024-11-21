@@ -125,7 +125,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         break;
       case "ACTUATOR_CHANGE":
         Logger.info("Received actuator change response: " + response);
-        String[] parts = response.split(Delimiters.BODY_PARAMETERS_DELIMITER.getValue());
+        String[] parts = response.split(Delimiters.BODY_FIELD_PARAMETERS.getValue());
         if (parts.length != 3) {
           Logger.error("Invalid actuator change response: " + response);
           return;

@@ -38,14 +38,14 @@ public class CommandTranslator {
     public Command toCommand(String string) {
 
         Logger.info("Converting string to command: " + string);
-        String[] parts = string.split(Delimiters.BODY_PARAMETERS_DELIMITER.getValue(), 2);
+        String[] parts = string.split(Delimiters.BODY_FIELD_PARAMETERS.getValue(), 2);
         String commandString = parts[0];
         
         Command command = null;
         if (this.commandMap.containsKey(commandString)) {
             command = this.commandMap.get(commandString);
             if (command instanceof Parameters) {
-                String[] parameters = parts[1].split(Delimiters.BODY_PARAMETERS_DELIMITER.getValue());
+                String[] parameters = parts[1].split(Delimiters.BODY_FIELD_PARAMETERS.getValue());
                 ((Parameters) command).setParameters(parameters);
             }
         }

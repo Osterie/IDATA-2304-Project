@@ -39,9 +39,9 @@ public class ClientIdentificationCommand extends Command implements Parameters{
     @Override
     public String toProtocolString() {
         String protocolString = this.getCommandString();
-        protocolString += Delimiters.BODY_PARAMETERS_DELIMITER.getValue();
+        protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
         protocolString += this.client;
-        protocolString += Delimiters.BODY_PARAMETERS_DELIMITER.getValue();
+        protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
         protocolString += this.id;
         return protocolString;
     }

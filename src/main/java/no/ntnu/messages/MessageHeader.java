@@ -13,7 +13,7 @@ import no.ntnu.constants.Endpoints;
  * This class provides methods to convert between protocol string representations and objects.
  */
 public class MessageHeader {
-    private static final String FIELD_DELIMITER = Delimiters.HEADER_DELIMITER.getValue();
+    private static final String FIELD_DELIMITER = Delimiters.HEADER_FIELD.getValue();
     private Endpoints receiver;  // The receiver of the message
     private String id;           // The ID of the receiver
     private String dataType;     // Optional data type of the message

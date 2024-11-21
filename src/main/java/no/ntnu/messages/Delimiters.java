@@ -8,16 +8,16 @@ package no.ntnu.messages;
 public enum Delimiters {
 
     /** Delimiter between the header and body of a message. */
-    HEADER_BODY_DELIMITER("-"),
+    HEADER_BODY("-"),
 
     /** Delimiter between fields in the header of a message. */
-    HEADER_DELIMITER(";"),
+    HEADER_FIELD(";"),
 
     /** Delimiter between fields in the body of a message, defaulting to the header delimiter. */
-    BODY_DELIMITER(HEADER_DELIMITER.getValue()),
+    BODY_FIELD(HEADER_FIELD.getValue()),
 
     /** Delimiter between parameters in the body of a message. */
-    BODY_PARAMETERS_DELIMITER(",");
+    BODY_FIELD_PARAMETERS(",");
 
     private final String value;
 

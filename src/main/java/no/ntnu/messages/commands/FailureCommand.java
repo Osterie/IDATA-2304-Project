@@ -20,7 +20,7 @@ public class FailureCommand extends Command {
 
   @Override
   public String toProtocolString() {
-    return this.getCommandString() + Delimiters.BODY_PARAMETERS_DELIMITER.getValue() + this.errorMessage;
+    return this.getCommandString() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.errorMessage;
   }
 
 

@@ -7,7 +7,7 @@ import no.ntnu.tools.Logger;
  * This class provides functionality to convert messages to and from their protocol string representation.
  */
 public class Message {
-    private static final String HEADER_BODY_DELIMITER = Delimiters.HEADER_BODY_DELIMITER.getValue();
+    private static final String HEADER_BODY_DELIMITER = Delimiters.HEADER_BODY.getValue();
 
     // The message header containing metadata
     private MessageHeader header;

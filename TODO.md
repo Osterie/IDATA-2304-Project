@@ -17,7 +17,7 @@
 
 - [x] DANIEL a constant for the broadcast id? (ALL)
 
-- [x] SEBASTIAN handle if port address already in use, can increement by 1 until it is OK. Should update a global enum or something idk. how will other people know what the new port is????
+- [x] ADRIAN handle if port address already in use, can increement by 1 until it is OK. Should update a global enum or something idk. how will other people know what the new port is????
 
 - [ ] ADRIAN handle if Enpoint is "server" in intermediaryserver
 

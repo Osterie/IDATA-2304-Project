@@ -20,7 +20,7 @@ public class SuccessCommand extends Command {
 
   @Override
   public String toProtocolString() {
-    return this.getCommandString() + Delimiters.BODY_PARAMETERS_DELIMITER.getValue() + this.message;
+    return this.getCommandString() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.message;
   }
 
 
