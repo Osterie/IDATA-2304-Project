@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import no.ntnu.constants.Endpoints;
-import no.ntnu.constants.PortNumberOutOfRangeException;
 import no.ntnu.tools.Logger;
 
 /**
@@ -27,11 +26,10 @@ public class IntermediaryServer implements Runnable {
      * Creates a new thread to handle each client connection.
      */
     public void startServer() {
-        ServerConfig.ensureDefaultPort();
-        listeningSocket = this.openListeningSocket(0);
+        listeningSocket = this.openListeningSocket();
         if (listeningSocket != null) {
             this.isTcpServerRunning = true;
-            Logger.info("Server started on port " + ServerConfig.getPortNumber());
+            Logger.info("Server started on port " + listeningSocket.getLocalPort());
 
             // Runs the whole time while application is up
             while (isTcpServerRunning) {
@@ -128,64 +126,12 @@ public class IntermediaryServer implements Runnable {
     }
 
     /**
-     * Opens a listening socket on the specified port.
+     * Opens a listening socket on an available port.
      *
-     * @param port the port number for the server to listen on
      * @return the ServerSocket if successful, or null if an error occurs
      */
-    // private ServerSocket openListeningSocketOld(int port, int attempt) {
-
-    //     if (attempt > 4) {
-    //         Logger.error("Could not open server socket on port " + port + ": Max attempts reached");
-    //         return null;
-    //     }
-
-    //     try {
-    //         ServerSocket serverSocket = new ServerSocket(port);
-    //         Logger.info("Server listening on port " + port);
-    //         // Update the enum value to the new port number
-    //         CommandConstants.PORT_NUMBER.setIntValue(port);
-    //         return serverSocket;
-    //     } 
-    //     catch (IOException e) {
-    //         Logger.error("Could not open server socket on port " + port + ": " + e.getMessage());
-    //         return this.openListeningSocket(port + 100, attempt + 1);
-    //     }
-    //     catch (PortNumberOutOfRangeException e) {
-    //         Logger.error("Attempted port number was out of range, trying lower port number");
-    //         return this.openListeningSocket(port - 10, attempt + 1);
-    //     }
-    // }
-
-
-    /**
-     * Opens a listening socket on the specified port.
-     *
-     * @param attempt the number of attempts made to open a port
-     * @return the ServerSocket if successful, or null if an error occurs
-     */
-    private ServerSocket openListeningSocket(int attempt) {
-        int port = ServerConfig.getPortNumber(); // Get the port from ServerConfig
-
-        if (attempt > 4) {
-            Logger.error("Could not open server socket on port " + port + ": Max attempts reached");
-            return null;
-        }
-
-        try {
-            ServerSocket serverSocket = new ServerSocket(port);
-            Logger.info("Server listening on port " + port);
-            ServerConfig.setPortNumber(port); // Update the port number
-            return serverSocket;
-        } catch (IOException e) {
-            Logger.error("Could not open server socket on port " + port + ": " + e.getMessage());
-            ServerConfig.setPortNumber(port + 100); // Update the port number and write to file
-            return this.openListeningSocket(attempt + 1);
-        } catch (PortNumberOutOfRangeException e) {
-            Logger.error("Attempted port number was out of range, trying lower port number");
-            ServerConfig.setPortNumber(port - 10); // Update the port number and write to file
-            return this.openListeningSocket(attempt + 1);
-        }
+    private ServerSocket openListeningSocket() {
+        return ServerSocketCreator.getAvailableServerSocket();
     }
     
 

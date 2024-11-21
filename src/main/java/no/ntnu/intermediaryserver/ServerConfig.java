@@ -19,8 +19,9 @@ public class ServerConfig {
     }
 
     private static final String CONFIG_FILE = "config/server_config.txt";  // File to store port number
-    private static int DEFAULT_PORT_NUMBER = 50500; // Default port number
-    private static int CURRENT_PORT_NUMBER = DEFAULT_PORT_NUMBER; // Default port number
+    private static final int DEFAULT_PORT_NUMBER = 50500; // Default port number
+
+    private static int currentPort = DEFAULT_PORT_NUMBER; // Default port number
 
     static {
         // Read the port number from the file on class load
@@ -29,25 +30,24 @@ public class ServerConfig {
 
     public static int getPortNumber() {
         readPortFromFile();
-        return ServerConfig.CURRENT_PORT_NUMBER;
+        return ServerConfig.currentPort;
     }
 
     public static void ensureDefaultPort() {
-        if (ServerConfig.CURRENT_PORT_NUMBER != DEFAULT_PORT_NUMBER) {
-            ServerConfig.CURRENT_PORT_NUMBER = DEFAULT_PORT_NUMBER;
+        if (ServerConfig.currentPort != DEFAULT_PORT_NUMBER) {
+            ServerConfig.currentPort = DEFAULT_PORT_NUMBER;
             writePortToFile(DEFAULT_PORT_NUMBER);
         }
     }
 
     public static void setPortNumber(int portNumber) {
-        if (!isPortValid(portNumber)) {
+        if (!isValidPort(portNumber)) {
             throw new PortNumberOutOfRangeException(portNumber);
         }
-        ServerConfig.CURRENT_PORT_NUMBER = portNumber;
+        ServerConfig.currentPort = portNumber;
         // Write the new port number to the file
         writePortToFile(portNumber);
     }
-
 
     private static void writePortToFile(int portNumber) {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(CONFIG_FILE))) {
@@ -64,8 +64,8 @@ public class ServerConfig {
                 String portString = new String(Files.readAllBytes(Paths.get(CONFIG_FILE))).trim();
                 if (!portString.isEmpty()) {
                     int port = Integer.parseInt(portString);
-                    if (isPortValid(port)) {
-                        ServerConfig.CURRENT_PORT_NUMBER = port;
+                    if (isValidPort(port)) {
+                        ServerConfig.currentPort = port;
                     } else {
                         System.err.println("Port number in file is invalid. Using default port.");
                     }
@@ -78,7 +78,7 @@ public class ServerConfig {
         }
     }
 
-    private static boolean isPortValid(int portNumber) {
+    private static boolean isValidPort(int portNumber) {
         return portNumber >= 0 && portNumber <= 65535;
     }
 }
