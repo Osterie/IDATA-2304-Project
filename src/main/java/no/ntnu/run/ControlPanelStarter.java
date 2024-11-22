@@ -4,9 +4,8 @@ import no.ntnu.controlpanel.CommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
+import no.ntnu.intermediaryserver.ServerConfig;
 import no.ntnu.tools.Logger;
-
-import static no.ntnu.intermediaryserver.IntermediaryServer.PORT_NUMBER;
 
 /**
  * Starter class for the control panel.
@@ -40,30 +39,27 @@ public class ControlPanelStarter implements Runnable {
     starter.start();
   }
 
+
+  // TODO refactor
   public void start() {
     ControlPanelLogic logic = new ControlPanelLogic();
-    this.initiateCommunication(logic);
+    this.channel = this.createCommunicationChannel(logic);
 
     Logger.info("Starting control panel application");
     ControlPanelApplication controlPanelApplication = new ControlPanelApplication();
     controlPanelApplication.startApp(logic, this.channel);
+
+    logic.setCommunicationChannel(this.channel);
+    this.channel.askForNodes();
+
 
     // This code is reached only after the GUI-window is closed
     Logger.info("Exiting the control panel application");
     stopCommunication();
   }
 
-  private void initiateCommunication(ControlPanelLogic logic) {
-    Logger.info("initiating socket communication");
-    this.channel = initiateSocketCommunication(logic);
-  }
-
-
-  private ControlPanelCommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-      ControlPanelCommunicationChannel channel = new ControlPanelCommunicationChannel(logic, "localhost", PORT_NUMBER);
-      logic.setCommunicationChannel(channel);
-      channel.askForNodes();
-      return channel;
+  private ControlPanelCommunicationChannel createCommunicationChannel(ControlPanelLogic logic) {
+    return new ControlPanelCommunicationChannel(logic, ServerConfig.getHost(), ServerConfig.getPortNumber());
   }
 
   private void stopCommunication() {

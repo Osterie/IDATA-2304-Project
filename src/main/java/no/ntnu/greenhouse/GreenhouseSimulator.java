@@ -5,10 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import no.ntnu.intermediaryserver.ServerConfig;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.tools.Logger;
-
-import static no.ntnu.intermediaryserver.IntermediaryServer.PORT_NUMBER;
 
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -26,6 +25,13 @@ public class GreenhouseSimulator {
   private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>(); //TODO remove me. Testing only?
   private final Map<Integer, NodeConnectionHandler> nodeConnections = new HashMap<>();  // Store connections for each node
 
+  private Socket socket;
+  private PrintWriter socketWriter;
+  private BufferedReader socketReader;
+
+  /**
+   * Create a new greenhouse simulator.
+   */
   public GreenhouseSimulator() {
     // Empty
   }
@@ -41,6 +47,16 @@ public class GreenhouseSimulator {
     Logger.info("Greenhouse initialized");
   }
 
+  /**
+   * Create a new node in the greenhouse.
+   * 
+   * @param temperature number of temperature sensors
+   * @param humidity number of humidity sensors
+   * @param windows number of window actuators
+   * @param fans number of fan actuators
+   * @param heaters number of heater actuators
+   * @param cameras number of camera sensors
+   */
   private void createNode(int temperature, int humidity, int windows, int fans, int heaters, int cameras) {
     SensorActuatorNode node = DeviceFactory.createNode(
         temperature, humidity, windows, fans, heaters, cameras);
@@ -73,7 +89,7 @@ public class GreenhouseSimulator {
   }
 
   private void startNodeHandler(SensorActuatorNode node) {
-    NodeConnectionHandler nodeHandler = new NodeConnectionHandler(node, "localhost", PORT_NUMBER);
+    NodeConnectionHandler nodeHandler = new NodeConnectionHandler(node, ServerConfig.getHost(), ServerConfig.getPortNumber());
     this.nodeConnections.put(node.getId(), nodeHandler);
     new Thread(nodeHandler).start();  // Each node runs in its own thread
   }

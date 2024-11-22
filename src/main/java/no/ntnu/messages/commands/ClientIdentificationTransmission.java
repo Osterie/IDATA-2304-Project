@@ -1,13 +1,14 @@
 package no.ntnu.messages.commands;
 
-import no.ntnu.Clients;
+import no.ntnu.constants.Endpoints;
 import no.ntnu.messages.Delimiters;
+import no.ntnu.messages.Transmission;
 
-public class ClientIdentificationCommand extends Command implements Parameters{
+public class ClientIdentificationTransmission extends Transmission implements Parameters {
     protected String id;
-    protected Clients client;
+    protected Endpoints client;
 
-    public ClientIdentificationCommand(Clients client, String id) {
+    public ClientIdentificationTransmission(Endpoints client, String id) {
         super("CLIENT_IDENTIFICATION");
         if (id == null) {
             throw new IllegalArgumentException("ID cannot be null");
@@ -16,7 +17,7 @@ public class ClientIdentificationCommand extends Command implements Parameters{
         this.id = id;
     }
 
-    public ClientIdentificationCommand() {
+    public ClientIdentificationTransmission() {
         super("CLIENT_IDENTIFICATION");
     }
 
@@ -28,20 +29,20 @@ public class ClientIdentificationCommand extends Command implements Parameters{
         this.id = id;
     }
 
-    public Clients getClient() {
+    public Endpoints getClient() {
         return this.client;
     }
 
-    public void setClient(Clients client) {
+    public void setClient(Endpoints client) {
         this.client = client;
     }
 
     @Override
     public String toProtocolString() {
-        String protocolString = this.getCommandString();
-        protocolString += Delimiters.BODY_PARAMETERS_DELIMITER.getValue();
+        String protocolString = this.getTransmissionString();
+        protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
         protocolString += this.client;
-        protocolString += Delimiters.BODY_PARAMETERS_DELIMITER.getValue();
+        protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
         protocolString += this.id;
         return protocolString;
     }
@@ -54,10 +55,10 @@ public class ClientIdentificationCommand extends Command implements Parameters{
         if (parameters[0] == null || parameters[1] == null) {
             throw new IllegalArgumentException("Parameters cannot be null");
         }
-        if (Clients.valueOf(parameters[0]) == null) {
+        if (Endpoints.valueOf(parameters[0]) == null) {
             throw new IllegalArgumentException("Invalid client");
         }
-        this.client = Clients.valueOf(parameters[0]);
+        this.client = Endpoints.valueOf(parameters[0]);
         this.id = parameters[1];
     }
 }

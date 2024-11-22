@@ -1,13 +1,15 @@
 # **Sprint Report**
 
+Sprint master: Daniel
+
 ## **Sprint Overview**
   - **Sprint Number:** 1
 - **Duration:** [30.09.2024 - 14.10.2024]
 - **Sprint Goal:** Get to know the project and finish assigned tasks.
 - **Team Members:**
 - Tobias Olsen Reiakvam - TobyJavascript 
-- Adrian Gjøsund Bjørge - Osterie
-- Daniel Selbervik - PizzaMachine
+- Adrian Gjøsund Bjørge - Osterie / Adrian Gjøsund Bjørge
+- Daniel Selbervik - Daniel
 - Sebastian Olsen - Sebastian Olsen
 - Knut Olav Leknes - Knut Olav
 

@@ -67,6 +67,13 @@ public class DeviceFactory {
     return node;
   }
 
+  /**
+   * Add actuators to a node.
+   *
+   * @param node     The node to which the actuators will be added
+   * @param template The template actuator to use for creating new actuators
+   * @param n        The number of actuators to add
+   */
   static void addActuators(SensorActuatorNode node, Actuator template, int n) {
     if (template == null) {
       throw new IllegalArgumentException("Actuator template is missing");
@@ -138,8 +145,12 @@ public class DeviceFactory {
     return actuator;
   }
 
-  
-public static Sensor createImageSensor() {
+  /**
+   * Create a image sensor.
+   *
+   * @return The image sensor
+   */
+  public static Sensor createImageSensor() {
     return new ImageSensor(SENSOR_TYPE_IMAGE, PATH_TO_IMAGES);
   }
 

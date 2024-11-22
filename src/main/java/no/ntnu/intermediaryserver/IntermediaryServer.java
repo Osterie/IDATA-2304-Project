@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import no.ntnu.Clients;
+import no.ntnu.constants.Endpoints;
 import no.ntnu.tools.Logger;
 
 /**
@@ -15,7 +15,6 @@ import no.ntnu.tools.Logger;
  * connections, then assigns each client to a handler thread for processing.
  */
 public class IntermediaryServer implements Runnable {
-    public static final int PORT_NUMBER = 50500;
     private boolean isTcpServerRunning;
 
     // Thread-safe collections for managing client sockets
@@ -27,10 +26,10 @@ public class IntermediaryServer implements Runnable {
      * Creates a new thread to handle each client connection.
      */
     public void startServer() {
-        listeningSocket = this.openListeningSocket(PORT_NUMBER);
+        listeningSocket = this.openListeningSocket();
         if (listeningSocket != null) {
             this.isTcpServerRunning = true;
-            Logger.info("Server started on port " + PORT_NUMBER);
+            Logger.info("Server started on port " + listeningSocket.getLocalPort());
 
             // Runs the whole time while application is up
             while (isTcpServerRunning) {
@@ -67,7 +66,7 @@ public class IntermediaryServer implements Runnable {
      * @param clientHandler     the client handler for the client
      * @throws UnknownClientException if the client type is not recognized
      */
-    public synchronized void addClient(Clients clientType, String clientId, ClientHandler clientHandler) {
+    public synchronized void addClient(Endpoints clientType, String clientId, ClientHandler clientHandler) {
         this.clients.put(clientType + clientId, clientHandler);
         Logger.info("Connected " + clientType + " with ID: " + clientId);
     }
@@ -77,7 +76,7 @@ public class IntermediaryServer implements Runnable {
      *
      * @param clientId    the unique identifier for the client
      */
-    public synchronized void removeClient(Clients clientType, String clientId) {
+    public synchronized void removeClient(Endpoints clientType, String clientId) {
         if (this.clients.remove(clientType + clientId) == null) {
             Logger.error("Could not remove client, does not exist: " + clientType + clientId);
         }
@@ -93,11 +92,11 @@ public class IntermediaryServer implements Runnable {
      * @param clientId   the unique identifier for the client
      * @return the client handler for the client, or null if not found
      */
-    public ClientHandler getClient(Clients clientType, String clientId) {
+    public ClientHandler getClient(Endpoints clientType, String clientId) {
         return this.clients.get(clientType + clientId);
     }
 
-    public ArrayList<ClientHandler> getClients(Clients clientType){
+    public ArrayList<ClientHandler> getClients(Endpoints clientType){
         ArrayList<ClientHandler> sockets = new ArrayList<>();
         
         for (String key : this.clients.keySet()){
@@ -127,21 +126,14 @@ public class IntermediaryServer implements Runnable {
     }
 
     /**
-     * Opens a listening socket on the specified port.
+     * Opens a listening socket on an available port.
      *
-     * @param port the port number for the server to listen on
      * @return the ServerSocket if successful, or null if an error occurs
      */
-    private ServerSocket openListeningSocket(int port) {
-        try {
-            ServerSocket serverSocket = new ServerSocket(port);
-            Logger.info("Server listening on port " + port);
-            return serverSocket;
-        } catch (IOException e) {
-            Logger.error("Could not open server socket on port " + port + ": " + e.getMessage());
-        }
-        return null;
+    private ServerSocket openListeningSocket() {
+        return ServerSocketCreator.getAvailableServerSocket();
     }
+    
 
     /**
      * The entry point for the server thread, calls startServer to initialize the server.
