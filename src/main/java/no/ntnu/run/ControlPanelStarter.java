@@ -39,30 +39,27 @@ public class ControlPanelStarter implements Runnable {
     starter.start();
   }
 
+
+  // TODO refactor
   public void start() {
     ControlPanelLogic logic = new ControlPanelLogic();
-    this.initiateCommunication(logic);
+    this.channel = this.createCommunicationChannel(logic);
 
     Logger.info("Starting control panel application");
     ControlPanelApplication controlPanelApplication = new ControlPanelApplication();
     controlPanelApplication.startApp(logic, this.channel);
+
+    logic.setCommunicationChannel(this.channel);
+    this.channel.askForNodes();
+
 
     // This code is reached only after the GUI-window is closed
     Logger.info("Exiting the control panel application");
     stopCommunication();
   }
 
-  private void initiateCommunication(ControlPanelLogic logic) {
-    Logger.info("initiating socket communication");
-    this.channel = initiateSocketCommunication(logic); 
-  }
-
-
-  private ControlPanelCommunicationChannel initiateSocketCommunication(ControlPanelLogic logic) {
-      ControlPanelCommunicationChannel channel = new ControlPanelCommunicationChannel(logic, "localhost", ServerConfig.getPortNumber());
-      logic.setCommunicationChannel(channel);
-      channel.askForNodes();
-      return channel;
+  private ControlPanelCommunicationChannel createCommunicationChannel(ControlPanelLogic logic) {
+    return new ControlPanelCommunicationChannel(logic, "localhost", ServerConfig.getPortNumber());
   }
 
   private void stopCommunication() {

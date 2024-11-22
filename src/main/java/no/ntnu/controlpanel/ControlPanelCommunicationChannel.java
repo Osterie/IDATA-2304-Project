@@ -30,6 +30,8 @@ import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Message;
 
+// TODO refactor this class. it does sooooo much
+
 /**
  * A communication channel for the control panel. This class is responsible for
  * sending commands to the server and receiving responses. It also listens for
@@ -56,7 +58,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
     this.listenForMessages();
     this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, "0");
-    this.askForSensorDataPeriodically(5); //TODO change id to be the id of the current panel. changes when changing panel.
+    this.askForSensorDataPeriodically(4);
   }
 
   /**
@@ -257,7 +259,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         Message message = new Message(header, body);
         sendCommandToServer(message);
       }
-    }, 3000, period * 1000L);
+    }, 5000, period * 1000L);
   }
 
   /**
@@ -434,7 +436,12 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     List<SensorReading> readings = new LinkedList<>();
     String[] readingInfo = sensorInfo.split(",");
     for (String reading : readingInfo) {
-      readings.add(parseReading(reading));
+      try{
+        readings.add(parseReading(reading));
+      }
+      catch (IllegalArgumentException e){
+        Logger.error("Failed to parse sensor reading: " + e.getMessage());
+      }
     }
     return readings;
   }
