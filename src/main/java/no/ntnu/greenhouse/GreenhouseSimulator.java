@@ -89,7 +89,7 @@ public class GreenhouseSimulator {
   }
 
   private void startNodeHandler(SensorActuatorNode node) {
-    NodeConnectionHandler nodeHandler = new NodeConnectionHandler(node, "localhost", ServerConfig.getPortNumber());
+    NodeConnectionHandler nodeHandler = new NodeConnectionHandler(node, ServerConfig.getHost(), ServerConfig.getPortNumber());
     this.nodeConnections.put(node.getId(), nodeHandler);
     new Thread(nodeHandler).start();  // Each node runs in its own thread
   }

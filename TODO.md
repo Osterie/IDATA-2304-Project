@@ -24,6 +24,8 @@
 
 - [ ] ADRIAN support multiple control panesl, unique id
 
+- [x] ADRIAN create host localhost constant or something
+
 
 - [x] ADRIAN if "no sensor section for node x", ask for nodes again.
 - [x] ADRIAN Refactor enums.

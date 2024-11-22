@@ -59,7 +59,7 @@ public class ControlPanelStarter implements Runnable {
   }
 
   private ControlPanelCommunicationChannel createCommunicationChannel(ControlPanelLogic logic) {
-    return new ControlPanelCommunicationChannel(logic, "localhost", ServerConfig.getPortNumber());
+    return new ControlPanelCommunicationChannel(logic, ServerConfig.getHost(), ServerConfig.getPortNumber());
   }
 
   private void stopCommunication() {

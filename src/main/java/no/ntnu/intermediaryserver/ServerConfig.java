@@ -21,11 +21,21 @@ public class ServerConfig {
     private static final String CONFIG_FILE = "config/server_config.txt";  // File to store port number
     private static final int DEFAULT_PORT_NUMBER = 50500; // Default port number
 
+    private static final int MIN_PORT_NUMBER = 20000; // Minimum port number
+    private static final int MAX_PORT_NUMBER = 65535; // Maximum port number
+
+    private static final String HOST = "localhost";
+
     private static int currentPort = DEFAULT_PORT_NUMBER; // Default port number
+
 
     static {
         // Read the port number from the file on class load
         readPortFromFile();
+    }
+
+    public static String getHost() {
+        return HOST;
     }
 
     public static int getPortNumber() {
@@ -79,6 +89,6 @@ public class ServerConfig {
     }
 
     private static boolean isValidPort(int portNumber) {
-        return portNumber >= 0 && portNumber <= 65535;
+        return portNumber >= MIN_PORT_NUMBER && portNumber <= MAX_PORT_NUMBER;
     }
 }
