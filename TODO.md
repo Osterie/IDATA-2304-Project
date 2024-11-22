@@ -1,4 +1,5 @@
 # TOP PRIROTY
+
 - Clean code.
 - Good code.
 
@@ -40,7 +41,7 @@
 - [ ] When using copilot to write javadoc, check that the javadoc is correct
 
 - [x] TOBIAS. Gjør om bilde til string, også den stringen til bilde. (for å sende over socket)
-- [ ] TOBIAS. Klasse for control panel som kan gjøre om den mottatte informasjonen til riktig format.
+- [ ] ?TOBIAS. Klasse for control panel som kan gjøre om den mottatte informasjonen til riktig format.
 
 # JAVADOC
 
@@ -50,6 +51,7 @@
 - [x] TOBIAS Skriv javadoc for listeners-klasser.
 - [x] TOBIAS Skriv javadoc for intermidiary-klasser.
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
+
 - [ ] Skriv javadoc for greenhouse-klasser.
 - [ ] Skriv javadoc for GUI-klasser.
 - [ ] Skriv javadoc for control-panel-klasser.
