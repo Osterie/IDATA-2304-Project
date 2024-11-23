@@ -4,16 +4,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import no.ntnu.intermediaryserver.ServerConfig;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.tools.Logger;
-
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.io.BufferedReader;
-import java.io.IOException;
-
 
 /**
  * Application entrypoint - a simulator for a greenhouse.
@@ -25,9 +21,8 @@ public class GreenhouseSimulator {
   private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>(); //TODO remove me. Testing only?
   private final Map<Integer, NodeConnectionHandler> nodeConnections = new HashMap<>();  // Store connections for each node
 
-  private Socket socket;
-  private PrintWriter socketWriter;
-  private BufferedReader socketReader;
+  private final ExecutorService threadPool = Executors.newCachedThreadPool();
+
 
   /**
    * Create a new greenhouse simulator.
@@ -91,7 +86,7 @@ public class GreenhouseSimulator {
   private void startNodeHandler(SensorActuatorNode node) {
     NodeConnectionHandler nodeHandler = new NodeConnectionHandler(node, ServerConfig.getHost(), ServerConfig.getPortNumber());
     this.nodeConnections.put(node.getId(), nodeHandler);
-    new Thread(nodeHandler).start();  // Each node runs in its own thread
+    threadPool.submit(nodeHandler);
   }
 
   public void stop() {
@@ -99,6 +94,7 @@ public class GreenhouseSimulator {
     for (SensorActuatorNode node : nodes.values()) {
         node.stop();
     }
+    threadPool.shutdown();
 }
 
   // TODO remove me after learning what is to learn. Method from teacher

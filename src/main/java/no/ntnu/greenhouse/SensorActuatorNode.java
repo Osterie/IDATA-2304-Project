@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import no.ntnu.greenhouse.sensors.ImageSensorReading;
 import no.ntnu.greenhouse.sensors.NumericSensorReading;
@@ -31,7 +34,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   private final List<ActuatorListener> actuatorListeners = new LinkedList<>();
   private final List<NodeStateListener> stateListeners = new LinkedList<>();
 
-  Timer sensorReadingTimer;
+  private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
   private boolean running;
   private final Random random = new Random();
@@ -171,21 +174,13 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   private void startPeriodicSensorReading() {
-    sensorReadingTimer = new Timer();
-    TimerTask newSensorValueTask = new TimerTask() {
-      @Override
-      public void run() {
-        generateNewSensorValues();
-      }
-    };
+    Runnable newSensorValueTask = this::generateNewSensorValues;
     long randomStartDelay = random.nextLong(SENSING_DELAY);
-    sensorReadingTimer.scheduleAtFixedRate(newSensorValueTask, randomStartDelay, SENSING_DELAY);
+    scheduler.scheduleAtFixedRate(newSensorValueTask, randomStartDelay, SENSING_DELAY, TimeUnit.MILLISECONDS);
   }
 
   private void stopPeriodicSensorReading() {
-    if (sensorReadingTimer != null) {
-      sensorReadingTimer.cancel();
-    }
+    scheduler.shutdownNow();
   }
 
   /**
@@ -199,9 +194,10 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   private void addRandomNoiseToSensors() {
-    for (Sensor sensor : sensors) {
-      sensor.addRandomNoise();
-    }
+    sensors.parallelStream().forEach(Sensor::addRandomNoise);
+    // for (Sensor sensor : sensors) {
+    //   sensor.addRandomNoise();
+    // }
   }
 
   private void debugPrint() {

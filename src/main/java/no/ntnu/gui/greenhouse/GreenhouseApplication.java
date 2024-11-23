@@ -2,6 +2,10 @@ package no.ntnu.gui.greenhouse;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -19,6 +23,8 @@ public class GreenhouseApplication extends Application implements NodeStateListe
   private static GreenhouseSimulator simulator; // The greenhouse simulator instance
   private final Map<SensorActuatorNode, NodeGuiWindow> nodeWindows = new HashMap<>(); // Mapping of nodes to their GUI windows
   private Stage mainStage; // The primary stage for the JavaFX application
+
+  private ScheduledExecutorService simulatorScheduler;
 
   /**
    * Initializes the GUI and sets up the simulation environment.
@@ -47,6 +53,10 @@ public class GreenhouseApplication extends Application implements NodeStateListe
     // Set up a listener for closing the application
     mainStage.setOnCloseRequest(event -> closeApplication());
 
+
+    // // Schedule simulator updates
+    // simulatorScheduler = Executors.newScheduledThreadPool(1);
+    // simulatorScheduler.scheduleAtFixedRate(simulator::update, 0, 100, TimeUnit.MILLISECONDS);
     // Start the simulator
     simulator.start();
   }
