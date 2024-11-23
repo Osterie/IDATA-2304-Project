@@ -8,9 +8,6 @@ import no.ntnu.tools.Logger;
 
 /**
  * Starter class for the control panel.
- * Note: we could launch the Application class directly, but then we would have
- * issues with the
- * debugger (JavaFX modules not found)
  */
 public class ControlPanelStarter implements Runnable {
 
@@ -27,14 +24,6 @@ public class ControlPanelStarter implements Runnable {
 
   /**
    * Entrypoint for the application.
-   *
-   * @param args Command line arguments, only the first one of them used: when it
-   *             is "fake",
-   *             emulate fake events, when it is either something else or not
-   *             present,
-   *             use real socket communication. Go to Run → Edit Configurations.
-   *             Add "fake" to the Program Arguments field.
-   *             Apply the changes.
    */
   public static void main(String[] args) {
     ControlPanelStarter starter = new ControlPanelStarter();
