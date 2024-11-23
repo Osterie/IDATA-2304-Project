@@ -31,13 +31,28 @@ public class IntermediaryServer implements Runnable {
             this.isTcpServerRunning = true;
             Logger.info("Server started on port " + listeningSocket.getLocalPort());
 
+            // TODO refactor.
             // Runs the whole time while application is up
             while (isTcpServerRunning) {
-                ClientHandler clientHandler = acceptNextClientConnection();
-                if (clientHandler != null) {
-                    clientHandler.start();
+                try {
+                    ClientHandler clientHandler = acceptNextClientConnection();
+                    if (clientHandler != null) {
+                        clientHandler.start();
+                    }
+                } catch (Exception e) {
+                    Logger.error("Error in server loop: " + e.getMessage());
                 }
-            }
+                delay(10);
+            }            
+        }
+    }
+
+    private void delay(int delay) {
+        // Add a small delay to prevent excessive CPU usage
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            Logger.error("Error sleeping server thread: " + e.getMessage());
         }
     }
 

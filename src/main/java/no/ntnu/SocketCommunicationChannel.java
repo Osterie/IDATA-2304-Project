@@ -45,12 +45,12 @@ public abstract class SocketCommunicationChannel {
         Thread messageListener = new Thread(() -> {
             try {
             while (this.isOn) {
-                if (this.socketReader.ready()) {
+                // if (this.socketReader.ready()) {
                   String serverMessage = this.socketReader.readLine();
                   if (serverMessage != null) {
                       Logger.info("Received from server: " + serverMessage);
                       this.handleMessage(serverMessage);
-                  }
+                  // }
                   // TODO handle if null and such
                 }
             }
@@ -83,7 +83,7 @@ public abstract class SocketCommunicationChannel {
     public boolean close() {
   
       boolean closed = false;
-  
+      // TODO refactor, if the close fails for any part, the next part wont be closed.
       try {
         if (socket != null)
           socket.close();

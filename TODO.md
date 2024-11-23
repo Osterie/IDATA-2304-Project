@@ -1,4 +1,4 @@
-# TOP PRIROTY
+sssss# TOP PRIROTY
 
 - Clean code.
 - Good code.
@@ -6,10 +6,11 @@
 # GENERAL
 
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
+- [x] ADRIAN Fix application using all available resources.
 
 - [ ] SEBASTIAN add a reload button to control panel
 
-- [x] ADRIAN sometimes spawning node happens after gui is ready. resulst in not worki
+- [x] ADRIAN fix nodes sometimes not being created in gui.
 
 - [ ] DANIEL when changing actuator state in Sensor Node GUI, should notify all the control panels.
 

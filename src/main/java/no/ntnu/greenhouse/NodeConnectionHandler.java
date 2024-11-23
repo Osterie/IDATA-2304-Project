@@ -6,9 +6,7 @@ import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
-import no.ntnu.messages.commands.Command;
 import no.ntnu.messages.greenhousecommands.GreenhouseCommand;
-import no.ntnu.messages.responses.Response;
 import no.ntnu.tools.Logger;
 
 /**
