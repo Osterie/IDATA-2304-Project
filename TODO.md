@@ -36,6 +36,7 @@ sssss# TOP PRIROTY
 - [x] ADRIAN Implement Response class
 - [x] ADRIAN Implement Success and Failuer responses.
 
+- [ ] Handle display if image better. Fix image displaying in greenhouse nodes. For example a small version of the image, which when clicked opens a new window with the full image.
 - [ ] when closing the node tab in control panel, close in greenhouse too? Or not.
 - [ ] when closing the node tab in greenhouse, close in control panel too? Or not.
 - [ ] Fix test file structure.
