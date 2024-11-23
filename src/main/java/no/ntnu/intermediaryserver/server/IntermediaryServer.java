@@ -1,4 +1,4 @@
-package no.ntnu.intermediaryserver;
+package no.ntnu.intermediaryserver.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import no.ntnu.constants.Endpoints;
+import no.ntnu.intermediaryserver.clienthandler.ClientHandler;
 import no.ntnu.tools.Logger;
 
 /**

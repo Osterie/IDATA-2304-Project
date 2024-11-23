@@ -36,7 +36,8 @@ sssss# TOP PRIROTY
 - [x] ADRIAN Implement Response class
 - [x] ADRIAN Implement Success and Failuer responses.
 
-
+- [ ] when closing the node tab in control panel, close in greenhouse too? Or not.
+- [ ] when closing the node tab in greenhouse, close in control panel too? Or not.
 - [ ] Fix test file structure.
 - [ ] Look over and fix bad javadoc
 - [ ] When using copilot to write javadoc, check that the javadoc is correct

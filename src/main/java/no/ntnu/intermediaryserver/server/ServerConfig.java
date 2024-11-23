@@ -1,6 +1,4 @@
-package no.ntnu.intermediaryserver;
-
-import no.ntnu.constants.PortNumberOutOfRangeException;
+package no.ntnu.intermediaryserver.server;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

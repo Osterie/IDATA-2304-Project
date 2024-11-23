@@ -1,4 +1,4 @@
-package no.ntnu.intermediaryserver;
+package no.ntnu.intermediaryserver.clienthandler;
 
 /**
  * Custom exception thrown when a client type is unknown or unrecognized.

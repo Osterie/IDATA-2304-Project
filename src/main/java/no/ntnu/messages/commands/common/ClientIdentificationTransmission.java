@@ -1,8 +1,9 @@
-package no.ntnu.messages.commands;
+package no.ntnu.messages.commands.common;
 
 import no.ntnu.constants.Endpoints;
 import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Transmission;
+import no.ntnu.messages.commands.Parameters;
 
 public class ClientIdentificationTransmission extends Transmission implements Parameters {
     protected String id;

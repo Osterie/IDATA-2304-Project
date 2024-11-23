@@ -1,4 +1,4 @@
-package no.ntnu.intermediaryserver;
+package no.ntnu.intermediaryserver.clienthandler;
 
 import no.ntnu.constants.Endpoints;
 

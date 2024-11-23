@@ -1,4 +1,4 @@
-package no.ntnu.intermediaryserver;
+package no.ntnu.intermediaryserver.clienthandler;
 
 /**
  * Custom exception thrown when an identification message provided by a client is invalid.

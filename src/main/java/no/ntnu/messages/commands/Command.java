@@ -3,7 +3,6 @@ package no.ntnu.messages.commands;
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.Transmission;
-import no.ntnu.messages.responses.Response;
 
 /**
  * Represents a general command

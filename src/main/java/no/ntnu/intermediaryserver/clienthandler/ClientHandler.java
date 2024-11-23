@@ -1,4 +1,4 @@
-package no.ntnu.intermediaryserver;
+package no.ntnu.intermediaryserver.clienthandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,8 +9,9 @@ import java.util.ArrayList;
 
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
-import no.ntnu.messages.commands.ClientIdentificationTransmission;
+import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
 import no.ntnu.constants.Endpoints;
+import no.ntnu.intermediaryserver.server.IntermediaryServer;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.tools.Logger;

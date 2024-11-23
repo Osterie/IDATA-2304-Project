@@ -1,4 +1,4 @@
-package no.ntnu.messages.greenhousecommands;
+package no.ntnu.messages.commands.greenhouse;
 
 import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.NodeLogic;
@@ -7,22 +7,18 @@ import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.responses.SuccessResponse;
 
-/**
- * Command to turn on all actuators in a node.
- */
-public class TurnOffAllActuatorInNodeCommand extends GreenhouseCommand {
-
-    public TurnOffAllActuatorInNodeCommand() {
-        super("TURN_OFF_ALL_ACTUATORS");
+public class GetSensorDataCommand extends GreenhouseCommand {
+    public GetSensorDataCommand() {
+        super("GET_SENSOR_DATA");
     }
 
-    //TODO Change id to what is should be.
     @Override
     public Message execute(NodeLogic nodeLogic) {
-        nodeLogic.getNode().setAllActuators(false);
+        // TODO change id.
         MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0", this.toProtocolString());
 
-        SuccessResponse response = new SuccessResponse(this, "TURN_OFF_ALL_ACTUATORS_SUCCESS");
+        String sensorData = nodeLogic.getSensorData();
+        SuccessResponse response = new SuccessResponse(this, sensorData);
         MessageBody body = new MessageBody(response);
         return new Message(header, body);
     }
@@ -31,5 +27,4 @@ public class TurnOffAllActuatorInNodeCommand extends GreenhouseCommand {
     public String toProtocolString() {
         return this.getTransmissionString();
     }
-    
 }

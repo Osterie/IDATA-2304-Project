@@ -1,4 +1,4 @@
-package no.ntnu.messages.greenhousecommands;
+package no.ntnu.messages.commands.greenhouse;
 
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Message;
