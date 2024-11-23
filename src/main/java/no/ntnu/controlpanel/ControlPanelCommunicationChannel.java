@@ -58,7 +58,6 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
     this.listenForMessages();
     this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, "0");
-    this.askForSensorDataPeriodically(4);
   }
 
   /**

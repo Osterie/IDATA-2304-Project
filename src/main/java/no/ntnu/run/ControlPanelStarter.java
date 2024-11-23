@@ -1,6 +1,9 @@
 package no.ntnu.run;
 
 import no.ntnu.controlpanel.ControlPanelLogic;
+
+import java.util.ResourceBundle.Control;
+
 import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.intermediaryserver.ServerConfig;
@@ -34,21 +37,21 @@ public class ControlPanelStarter implements Runnable {
   public void start() {
     ControlPanelLogic logic = new ControlPanelLogic();
     this.channel = this.createCommunicationChannel(logic);
-
-    Logger.info("Starting control panel application");
-    ControlPanelApplication controlPanelApplication = new ControlPanelApplication();
-    controlPanelApplication.startApp(logic, this.channel);
-
-    Logger.info("Setting communication channel to the logic");
     logic.setCommunicationChannel(this.channel);
-    Logger.info("Asking for node data");
     this.channel.askForNodes();
-    // this.channel.askForSensorDataPeriodically(4);
+    this.channel.askForSensorDataPeriodically(4);
 
+    this.startGui(logic);
 
     // This code is reached only after the GUI-window is closed
     Logger.info("Exiting the control panel application");
     stopCommunication();
+  }
+
+  private void startGui(ControlPanelLogic logic) {
+    Logger.info("Starting control panel application");
+    ControlPanelApplication controlPanelApplication = new ControlPanelApplication();
+    controlPanelApplication.startApp(logic, this.channel);
   }
 
   private ControlPanelCommunicationChannel createCommunicationChannel(ControlPanelLogic logic) {
@@ -61,6 +64,5 @@ public class ControlPanelStarter implements Runnable {
       this.channel.close();
       Logger.info("Communication channel closed.");
     }
-
   }
 }
