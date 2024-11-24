@@ -8,7 +8,6 @@ import no.ntnu.messages.commands.Command;
  * Represents an abstract response to a command in the messaging system.
  * A response contains a protocol string, the command that triggered the response,
  * and any additional response data.
- *
  * Subclasses should define specific types of responses, such as success or failure responses.
  */
 public abstract class Response extends Transmission {
@@ -63,6 +62,9 @@ public abstract class Response extends Transmission {
     public String getResponseData() {
         return responseData;
     }
+
+    @Override
+    public String getData(){return responseData;}
 
     /**
      * Converts this response into its protocol string representation.

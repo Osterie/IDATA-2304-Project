@@ -19,6 +19,8 @@ public abstract class Transmission {
         this.protocolString = protocolString;
     }
 
+    public String getData(){return protocolString;}
+
     /**
      * Abstract method for converting transmission to string
      */
