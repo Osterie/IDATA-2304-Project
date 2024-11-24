@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
@@ -22,14 +23,12 @@ import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.controlpanel.GreenhouseEventListener;
 import no.ntnu.tools.Logger;
 
-/**
- * Run a control panel with a graphical user interface (GUI), with JavaFX.
- */
-public class ControlPanelApplication extends Application implements GreenhouseEventListener,
-    CommunicationChannelListener {
+//TODO fix bug where actuators turn themselves off and on
+
+public class ControlPanelApplication extends Application implements GreenhouseEventListener, CommunicationChannelListener {
   private static ControlPanelLogic logic;
   private static final int WIDTH = 500;
-  private static final int HEIGHT = 400;
+  private static final int HEIGHT = 420;
   private static ControlPanelCommunicationChannel channel;
 
   private TabPane nodeTabPane;
@@ -39,14 +38,9 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   private final Map<Integer, SensorActuatorNodeInfo> nodeInfos = new HashMap<>();
   private final Map<Integer, Tab> nodeTabs = new HashMap<>();
 
-  /**
-   * Application entrypoint for the GUI of a control panel.
-   * Note - this is a workaround to avoid problems with JavaFX not finding the modules!
-   * We need to use another wrapper-class for the debugger to work.
-   *
-   * @param logic   The logic of the control panel node
-   * @param channel Communication channel for sending control commands and receiving events
-   */
+  private ComboBox<String> nodeSelector; // Dropdown menu for selecting nodes
+  private Button turnOffAllButton; // Button for turning off all actuators
+
   public void startApp(ControlPanelLogic logic, ControlPanelCommunicationChannel channel) {
     if (logic == null) {
       throw new IllegalArgumentException("Control panel logic can't be null");
@@ -58,7 +52,6 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     ControlPanelApplication.channel = channel;
     Logger.info("Running control panel GUI...");
     launch();
-    // this.start(new Stage());
   }
 
   @Override
@@ -72,11 +65,10 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     stage.setMinHeight(HEIGHT);
     stage.setTitle("Control panel");
 
-    VBox rootLayout = new VBox(); // Vertical layout
+    VBox rootLayout = new VBox();
     Node ribbon = createRibbon();
     rootLayout.getChildren().add(ribbon);
 
-    // Initialize with the empty content first
     rootLayout.getChildren().add(createEmptyContent());
 
     mainScene = new Scene(rootLayout, WIDTH, HEIGHT);
@@ -90,30 +82,50 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     }
   }
 
-  /**
-   * Creates a ribbon to be displayed at the top of the Control Panel window.
-   * The ribbon is a toolbar containing various controls such as buttons and menus
-   * to facilitate user interaction.
-   *
-   * Example controls that may be included in the ribbon:
-   * - Refresh button to update the displayed data.
-   * - Settings button to open configuration options.
-   *
-   * @return A {@link Node} representing the ribbon, which can be added to the GUI layout.
-   */
   private Node createRibbon() {
     ToolBar ribbon = new ToolBar();
 
-    // Refresh button
     Button refreshButton = new Button("Refresh");
     refreshButton.setOnAction(event -> Logger.info("Refresh clicked"));
 
-    // TODO: If settings is not needed, delete
     Button settingsButton = new Button("Settings");
     settingsButton.setOnAction(event -> Logger.info("Settings clicked"));
 
-    ribbon.getItems().addAll(refreshButton, settingsButton);
+    //TODO make the ui look better maybe move the nodeSelector and turnOffAllButton under refresh and settings
+
+    nodeSelector = new ComboBox<>();
+    nodeSelector.setPromptText("Select Node");
+    nodeSelector.setOnAction(event -> updateTurnOffButtonState());
+
+    turnOffAllButton = new Button("Turn Off All Actuators");
+    turnOffAllButton.setDisable(true); // disabled until you select a node
+    turnOffAllButton.setOnAction(event -> turnOffAllActuators());
+
+    HBox nodeControlBox = new HBox(nodeSelector, turnOffAllButton);
+    nodeControlBox.setSpacing(10);
+
+    ribbon.getItems().addAll(refreshButton, settingsButton, nodeControlBox);
     return ribbon;
+  }
+
+  private void updateTurnOffButtonState() {turnOffAllButton.setDisable(nodeSelector.getValue() == null);}
+
+  private void turnOffAllActuators() {
+    String selectedNode = nodeSelector.getValue();
+    if (selectedNode != null) {
+      int nodeId = Integer.parseInt(selectedNode);
+      Logger.info("Turning off all actuators for node " + nodeId);
+
+      SensorActuatorNodeInfo nodeInfo = nodeInfos.get(nodeId);
+      if (nodeInfo != null) {
+        nodeInfo.getActuators().forEach(actuator -> {
+          actuator.turnOff();
+          actuatorPanes.get(nodeId).update(actuator); // Update the actuator pane
+        });
+      } else {
+        Logger.error("Node " + nodeId + " not found");
+      }
+    }
   }
 
   private static Label createEmptyContent() {
@@ -124,7 +136,10 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
 
   @Override
   public void onNodeAdded(SensorActuatorNodeInfo nodeInfo) {
-    Platform.runLater(() -> addNodeTab(nodeInfo));
+    Platform.runLater(() -> {
+      addNodeTab(nodeInfo);
+      nodeSelector.getItems().add(String.valueOf(nodeInfo.getId()));
+    });
   }
 
   @Override
@@ -134,6 +149,8 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
       Platform.runLater(() -> {
         removeNodeTab(nodeId, nodeTab);
         forgetNodeInfo(nodeId);
+        nodeSelector.getItems().remove(String.valueOf(nodeId));
+        updateTurnOffButtonState();
         if (nodeInfos.isEmpty()) {
           removeNodeTabPane();
         }
@@ -152,7 +169,6 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
 
   @Override
   public void onSensorData(int nodeId, List<SensorReading> sensors) {
-    Logger.info("Sensor data from node " + nodeId);
     SensorPane sensorPane = sensorPanes.get(nodeId);
     if (sensorPane != null) {
       sensorPane.update(sensors);
@@ -164,8 +180,6 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
 
   @Override
   public void onActuatorStateChanged(int nodeId, int actuatorId, boolean isOn) {
-    String state = isOn ? "ON" : "off";
-    Logger.info("actuator[" + actuatorId + "] on node " + nodeId + " is " + state);
     ActuatorPane actuatorPane = actuatorPanes.get(nodeId);
     if (actuatorPane != null) {
       Actuator actuator = getStoredActuator(nodeId, actuatorId);
@@ -177,7 +191,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
         }
         actuatorPane.update(actuator);
       } else {
-        Logger.error(" actuator not found");
+        Logger.error("Actuator not found");
       }
     } else {
       Logger.error("No actuator section for node " + nodeId);
@@ -185,12 +199,8 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   }
 
   private Actuator getStoredActuator(int nodeId, int actuatorId) {
-    Actuator actuator = null;
     SensorActuatorNodeInfo nodeInfo = nodeInfos.get(nodeId);
-    if (nodeInfo != null) {
-      actuator = nodeInfo.getActuator(actuatorId);
-    }
-    return actuator;
+    return nodeInfo != null ? nodeInfo.getActuator(actuatorId) : null;
   }
 
   private void forgetNodeInfo(int nodeId) {
@@ -228,18 +238,6 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     actuatorPanes.put(nodeInfo.getId(), actuatorPane);
     tab.setContent(new VBox(sensorPane, actuatorPane));
     nodeTabs.put(nodeInfo.getId(), tab);
-
-    if (nodeTabs.size() == 1) {
-      this.channel.setSensorNodeTarget(String.valueOf(nodeInfo.getId()));
-    }
-      
-    
-    tab.setOnSelectionChanged(event -> {
-      if (tab.isSelected()) {
-        Logger.info("Selected node " + nodeInfo.getId());
-        this.channel.setSensorNodeTarget(String.valueOf(nodeInfo.getId()));
-      }
-    });
 
     return tab;
   }
