@@ -14,6 +14,8 @@
 
 - [ ] DANIEL when changing actuator state in Sensor Node GUI, should notify all the control panels.
 
+- [ ] DANIEL When sending sensor data (GetSensorDataCommand), the message should contain the data type, for the numberSensorReading, can be For example NUM, for imagesensorreading, can be IMG.
+
 - [x] ADRIAN When the control panel asks for sensor data, perhaps it does this a bit infrequently? Currenlty i believe it does it every 5 seconds. But do not change this to be too often. Is there another solution?
 
 - [ ] TOBIAS after sending a message, the controller should expect a response. If no response received, send again, max 3 times. Response should be OK or ERROR or something. PERHAPS THIS IS NOT NEEDED. If you deem this unnecessary, then write why.
@@ -104,7 +106,7 @@ a reply with an error code?
 - [x] Adrian Implement Header/Body messages for control panel 
 - [x] Adrian Implement Header/Body messages for intermediary server
 - [x] Adrian Implement Header/Body messages for greenhouse
-- [ ] DANIEL Handling connection errors and messaging errors properly.
+- [ ] ADRIAN Handling connection errors and messaging errors properly.
 - [x] ADRIAN. gitignore fil.
 - [x] ADRIAN. Implementere Message og Command interfacer/klasser
 - [x] ADRIAN. Command classes for client identification. 
@@ -148,7 +150,7 @@ _
 
 - [x] ADRIAN One Thread for writing and one for reading.
 
-- [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
+- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN lage kommunikasjons klasse for greenhouse nodes.
 - [x] ADRIAN. Koble til multiple greenhouse nodes til intermediary server.
 
@@ -164,7 +166,7 @@ Each sensor-node can do the following:
 
 - [x] ADRIAN One Thread for writing and one for reading.
 - [x] ADRIAN Refactor intermediary server
-- [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
+- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. Lage en intermediary server som kan brukes for å tilrettelegge kommunikasjon mellom greenhouse nodes og control panel.
 - [x] ADRIAN. Ta i mot klienter som vil koble seg til.
 - [x] ADRIAN. Motta meldinger fra klienter.
@@ -193,7 +195,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
     - [x] ADRIAN How does control panel know what info to ask for?
     - [x] ADRIAN How does control panel know what to do with the info it receives?
 
-- [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
+- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. koble til multiple control panels til intermediary server.
 - [x] ADRIAN. lage kommunikasjons klasse for control panel
 - [x] ADRIAN. Spør hele tiden om informasjon for noden som vises i control panel GUI.
