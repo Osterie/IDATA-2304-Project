@@ -24,6 +24,7 @@ sssss# TOP PRIROTY
 
 - [x] ADRIAN handle if port address already in use.
 
+- [ ] ADRIAN automatic generation of unique identifier for control panel.
 - [x] ADRIAN support multiple control panesl, unique id
 
 - [x] ADRIAN create host localhost constant or something
@@ -36,15 +37,16 @@ sssss# TOP PRIROTY
 - [x] ADRIAN Implement Response class
 - [x] ADRIAN Implement Success and Failuer responses.
 
-- [ ] Handle display if image better. Fix image displaying in greenhouse nodes. For example a small version of the image, which when clicked opens a new window with the full image.
-- [ ] when closing the node tab in control panel, close in greenhouse too? Or not.
-- [ ] when closing the node tab in greenhouse, close in control panel too? Or not.
-- [ ] Fix test file structure.
-- [ ] Look over and fix bad javadoc
+- [ ] NOT ASSIGNED Handle display if image better. Fix image displaying in greenhouse nodes. For example a small version of the image, which when clicked opens a new window with the full image.
+- [ ] NOT ASSIGNED when closing the node tab in control panel, close in greenhouse too? Or not.
+- [ ] NOT ASSIGNED when closing the node tab in greenhouse, close in control panel too? Or not.
+- [ ] NOT ASSIGNED Fix test file structure.
+- [ ] NOT ASSIGNED Look over and fix bad javadoc
 - [ ] When using copilot to write javadoc, check that the javadoc is correct
 
 - [x] TOBIAS. Gjør om bilde til string, også den stringen til bilde. (for å sende over socket)
 - [ ] ?TOBIAS. Klasse for control panel som kan gjøre om den mottatte informasjonen til riktig format.
+- [x] ADRIAN. Følge protokoll, en header og en body. Header inneholer mottaker, mottakerID, datatype Body inneholder dataen.
 
 # JAVADOC
 
@@ -55,15 +57,13 @@ sssss# TOP PRIROTY
 - [x] TOBIAS Skriv javadoc for intermidiary-klasser.
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
 
-- [ ] Skriv javadoc for greenhouse-klasser.
-- [ ] Skriv javadoc for GUI-klasser.
-- [ ] Skriv javadoc for control-panel-klasser.
-- [ ] Skriv javadoc for run-klasser.
+- [ ] NOT ASSIGNED Skriv javadoc for greenhouse-klasser.
+- [ ] NOT ASSIGNED Skriv javadoc for GUI-klasser.
+- [ ] NOT ASSIGNED Skriv javadoc for control-panel-klasser.
+- [ ] NOT ASSIGNED Skriv javadoc for run-klasser.
 - [x] TOBIAS Skriv javadoc for tools-klasser.
 
-- [ ] Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
-
-- [x] ADRIAN. Følge protokoll, en header og en body. Header inneholer mottaker, mottakerID, datatype Body inneholder dataen.
+- [ ] NOT ASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
 
 # PROTOCOL DESCRIPTION REQUIREMENTS
 
@@ -76,7 +76,7 @@ For each of the design choices provide a short justification: why did you choose
 - [ ] 5. SEBASTIAN. The overall architecture:
 - [ ]   SEBASTIAN. • Who are the actors (nodes) in your solution?
 - [ ]   SEBASTIAN. • Who are the clients, who is/are the server(s)?
-- [ ] 6. ADRIAN The flow of information: when and how the messages are sent?
+- [ ] ADRIAN 6. The flow of information: when and how the messages are sent?
 - [ ] 7. KNUT. The type of your protocol:
 - [ ]   KNUT. • Is your protocol connection-oriented or connection-less?
 - [ ]   KNUT. • Is the protocol state-full or state-less?
@@ -137,13 +137,12 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 - [X] DANIEL. Test at de kobler seg til serveren riktig, at de blir identifisert av serveren på riktig måte. Test hva som skjer om protokoller ikke blir fulgt, for eksemepel om første melding til server ikke er en identifiserende melding. 
 - [ ] KNUT: Test å sende kommandoer, sjekk respons.
 - [ ] SEBASTIAN Test med flere kontrollere koblet til server, også spør om informasjon fra noder samtidig, både fra ulike noder og fra samme node og slikt.
-- [ ] Finn på tester selv, pass på at koden er robust og at feil blir håndtert riktig. 
-- [ ] Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
+- [ ] NOT ASSIGNED Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
 
 ## OTHER
 
 - [ ] TOBIAS - Lag tester for alle klasser som kan testes.
-- [ ] Test protokoll
+- [ ] NOT ASSIGNED Test protokoll
 - [ ] TOBIAS - Test Message og Command klasser
 _
 # GREENHOUSE
@@ -212,7 +211,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
 - [ ] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
 - [x] ADRIAN. Make actuator buttons send data. 
-- [ ] KNUT. Do the - [ ] which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
+- [ ] KNUT. Do the task which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
 
 # EXTRA WORK
 
@@ -227,7 +226,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 either using public-key cryptography or other methods.
 - [x] TOBIAS Convert symmetric encryption to RSA.
 
-- [x] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line argument). But you can design automated-address assignments as part of your protocol. For example, look at DHCP as an inspiration.
+- [ ] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line argument). But you can design automated-address assignments as part of your protocol. For example, look at DHCP as an inspiration.
 
 - [x] 4. SEBASTIAN/ADRIAN Images/files as sensor data. 
 
