@@ -134,7 +134,7 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 
 - [X] DANIEL. Lag test klasser som tester kommunikasjon mellom intermediary server og klientene (greenhouse nodes og control panels).
 - [X] DANIEL. Test at de kobler seg til serveren riktig, at de blir identifisert av serveren på riktig måte. Test hva som skjer om protokoller ikke blir fulgt, for eksemepel om første melding til server ikke er en identifiserende melding. 
-- [ ] KNUT: Test å sende kommandoer, sjekk respons.
+- [X] KNUT: Test å sende kommandoer, sjekk respons.
 - [ ] SEBASTIAN Test med flere kontrollere koblet til server, også spør om informasjon fra noder samtidig, både fra ulike noder og fra samme node og slikt.
 - [ ] NOT ASSIGNED Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
 
@@ -206,10 +206,11 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 ## GUI
 
 - [ ] KNUT. Implement ComponentBuilder class
-- [ ] KNUT. Visualize charts.
-- [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
-- [ ] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
-- [x] ADRIAN. Make actuator buttons send data. 
+- [X] KNUT. Visualize charts.
+- [X] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
+- [ ] KNUT. Utbedre UI for ControlPanelApplication, Sett TurnOffAllActuators button til actuatorPane og fjern nodeSelect
+- [X] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
+- [x] ADRIAN. Make actuator buttons send data.
 - [ ] DANIEL. Do the task which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
 
 # EXTRA WORK
