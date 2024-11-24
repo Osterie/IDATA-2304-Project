@@ -41,7 +41,7 @@ sssss# TOP PRIROTY
 - [ ] NOT ASSIGNED when closing the node tab in control panel, close in greenhouse too? Or not.
 - [ ] NOT ASSIGNED when closing the node tab in greenhouse, close in control panel too? Or not.
 - [ ] NOT ASSIGNED Fix test file structure.
-- [ ] NOT ASSIGNED Look over and fix bad javadoc
+- [ ] TOBIAS AND OTHERS? Look over and fix bad javadoc
 - [ ] When using copilot to write javadoc, check that the javadoc is correct
 
 - [x] TOBIAS. Gjør om bilde til string, også den stringen til bilde. (for å sende over socket)
