@@ -18,13 +18,13 @@ public class TurnOnAllActuatorInNodeCommand extends GreenhouseCommand {
 
     //TODO Change id to what is should be.
     @Override
-    public Message execute(NodeLogic nodeLogic) {
+    public Message execute(NodeLogic nodeLogic, MessageHeader fromHeader) {
         nodeLogic.getNode().setAllActuators(true);
-        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0", this.toProtocolString());
+        // MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0", this.toProtocolString());
 
         SuccessResponse response = new SuccessResponse(this, "TURN_ON_ALL_ACTUATORS_SUCCESS");
         MessageBody body = new MessageBody(response);
-        return new Message(header, body);
+        return new Message(fromHeader, body);
     }
 
     @Override

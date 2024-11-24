@@ -16,7 +16,7 @@ public class GetNodeCommand extends GreenhouseCommand {
         super("GET_NODE");
     }
 
-    public Message execute(NodeLogic nodeLogic) {
+    public Message execute(NodeLogic nodeLogic, MessageHeader fromHeader) {
         // Logger.info("Received request for node from server, sending response " + sender + ";" + senderID + ";" + this.nodeLogic.getId());
         
         ActuatorCollection actuators = nodeLogic.getNode().getActuators();
@@ -31,10 +31,10 @@ public class GetNodeCommand extends GreenhouseCommand {
         String resultString = actuatorString.toString();
         
         resultString = nodeLogic.getId() + resultString;
-        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0");
+        // MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0");
         SuccessResponse response = new SuccessResponse(this, resultString);
         MessageBody body = new MessageBody(response);
-        return new Message(header, body);
+        return new Message(fromHeader, body);
         
     }
 

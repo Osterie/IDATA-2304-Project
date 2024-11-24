@@ -24,7 +24,7 @@ sssss# TOP PRIROTY
 
 - [x] ADRIAN handle if port address already in use.
 
-- [ ] ADRIAN support multiple control panesl, unique id
+- [x] ADRIAN support multiple control panesl, unique id
 
 - [x] ADRIAN create host localhost constant or something
 

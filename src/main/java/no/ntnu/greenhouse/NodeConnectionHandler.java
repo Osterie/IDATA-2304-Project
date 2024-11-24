@@ -53,7 +53,7 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
         if (command instanceof GreenhouseCommand) {
             GreenhouseCommand greenhouseCommand = (GreenhouseCommand) command;
             
-            Message response = greenhouseCommand.execute(this.nodeLogic);
+            Message response = greenhouseCommand.execute(this.nodeLogic, header);
             
             Logger.info("Received command for node, sending response: " + response.toProtocolString());
             socketWriter.println(response.toProtocolString());

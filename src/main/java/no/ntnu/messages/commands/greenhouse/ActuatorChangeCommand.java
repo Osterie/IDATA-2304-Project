@@ -26,12 +26,13 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
     }
 
     @Override
-    public Message execute(NodeLogic nodeLogic) {
+    public Message execute(NodeLogic nodeLogic, MessageHeader fromHeader) {
 
         nodeLogic.getNode().setActuator(this.actuatorId, this.isOn);
 
         // TODO improve.
-        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, Endpoints.BROADCAST.getValue(), this.toProtocolString());
+        // MessageHeader header = new MessageHeader(fromHeader.getReceiver(), Endpoints.BROADCAST.getValue(), this.toProtocolString());
+        MessageHeader header = new MessageHeader(fromHeader.getReceiver(), Endpoints.BROADCAST.getValue());
         // MessageBody response = new MessageBody(this, "ACTUATOR_CHANGE_SUCCESS");
 
         String actuatorState = this.isOn ? "ON" : "OFF";

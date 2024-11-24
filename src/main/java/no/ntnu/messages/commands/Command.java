@@ -2,6 +2,7 @@ package no.ntnu.messages.commands;
 
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Message;
+import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
 
 /**
@@ -18,7 +19,7 @@ public abstract class Command extends Transmission {
     /**
      * Abstract method for executing command
      */
-    public abstract Message execute(NodeLogic logic);
+    public abstract Message execute(NodeLogic logic, MessageHeader fromHeader);
 
     // /**
     //  * Abstract method for converting command to string

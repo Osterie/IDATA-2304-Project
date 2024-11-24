@@ -2,6 +2,7 @@ package no.ntnu.messages.commands.greenhouse;
 
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Message;
+import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.commands.Command;
 
 /**
@@ -18,5 +19,5 @@ public abstract class GreenhouseCommand extends Command {
     /**
      * Abstract method for executing command
      */
-    public abstract Message execute(NodeLogic logic);
+    public abstract Message execute(NodeLogic logic, MessageHeader fromHeader);
 }

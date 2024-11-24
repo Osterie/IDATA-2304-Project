@@ -251,6 +251,9 @@ public class ClientHandler extends Thread {
             ClientIdentificationTransmission clientIdentificationCommand = (ClientIdentificationTransmission) command;
             Endpoints clientType = clientIdentificationCommand.getClient();
             String clientId = clientIdentificationCommand.getId();
+            if (clientId.equals("?")) {
+                clientId = this.clientSocket.getRemoteSocketAddress().toString();
+            }
             this.clientIdentification = new ClientIdentification(clientType, clientId);
             success = true;
         }

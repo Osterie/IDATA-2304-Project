@@ -57,7 +57,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // Don't use chatgpt or copilot and preferably, remember design patterns, cohesion, coupling and such.
 
     this.listenForMessages();
-    this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, "0");
+    this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, "?");
   }
 
   /**
