@@ -8,7 +8,7 @@ sssss# TOP PRIROTY
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
 - [x] ADRIAN Fix application using all available resources.
 
-- [ ] SEBASTIAN add a reload button to control panel
+- [ ] TOBIAS (SEBASTIAN: Håpe du ikkje he laga det allereie) add a refresh button to control panel
 
 - [x] ADRIAN fix nodes sometimes not being created in gui.
 
