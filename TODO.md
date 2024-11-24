@@ -18,8 +18,6 @@
 
 - [x] ADRIAN When the control panel asks for sensor data, perhaps it does this a bit infrequently? Currenlty i believe it does it every 5 seconds. But do not change this to be too often. Is there another solution?
 
-- [ ] TOBIAS after sending a message, the controller should expect a response. If no response received, send again, max 3 times. Response should be OK or ERROR or something. PERHAPS THIS IS NOT NEEDED. If you deem this unnecessary, then write why.
-
 - [ ] TOBIAS Implement encryption
 
 - [x] DANIEL a constant for the broadcast id? (ALL)
