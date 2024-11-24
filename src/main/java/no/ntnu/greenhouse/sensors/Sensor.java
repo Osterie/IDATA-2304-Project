@@ -2,7 +2,7 @@ package no.ntnu.greenhouse.sensors;
 
 /**
  * A sensor that can read the environment in a way.
- * The sensor has a unique ID and and a reading.
+ * The sensor has a unique ID and a reading.
  */
 public abstract class Sensor {
     protected SensorReading reading;
