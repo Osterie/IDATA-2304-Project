@@ -39,7 +39,7 @@ import no.ntnu.messages.Message;
  */
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
-  private String targetId = "1";
+  private String targetId = "1"; // Used to target a greenhouse node for sensor data requests
 
   /**
    * Create a communication channel for the control panel.
