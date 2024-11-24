@@ -63,9 +63,6 @@ public abstract class Response extends Transmission {
         return responseData;
     }
 
-    @Override
-    public String getData(){return responseData;}
-
     /**
      * Converts this response into its protocol string representation.
      * The format is: `TRANSMISSION_STRING | COMMAND | RESPONSE_DATA`.

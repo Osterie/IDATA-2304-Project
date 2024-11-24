@@ -38,7 +38,7 @@ public class GetNodeCommandTest {
 
         Message result = command.execute(nodeLogic, header);
 
-        assertEquals("123;TypeA_1;TypeB_2", result.getBody().getTransmission().getData());
+        assertEquals("123;TypeA_1;TypeB_2", result.getBody().getTransmission().getTransmissionString());
     }
 
     @Test

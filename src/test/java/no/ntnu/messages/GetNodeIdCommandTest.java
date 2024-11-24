@@ -27,7 +27,7 @@ public class GetNodeIdCommandTest {
 
         Message result = command.execute(nodeLogic, header);
 
-        assertEquals("456", result.getBody().getTransmission().getData());
+        assertEquals("456", result.getBody().getTransmission().getTransmissionString());
     }
 
     @Test

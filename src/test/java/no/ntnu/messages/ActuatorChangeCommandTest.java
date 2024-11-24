@@ -32,7 +32,7 @@ public class ActuatorChangeCommandTest {
         Message result = command.execute(nodeLogic, header);
 
         verify(node, times(1)).setActuator(1, true);
-        assertEquals("1;ON", result.getBody().getTransmission().getData());
+        assertEquals("1;ON", result.getBody().getTransmission().getTransmissionString());
     }
 
     @Test

@@ -27,7 +27,7 @@ public class GetSensorDataCommandTest {
 
         Message result = command.execute(nodeLogic, header);
 
-        assertEquals("Temperature=25;Humidity=60", result.getBody().getTransmission().getData());
+        assertEquals("Temperature=25;Humidity=60", result.getBody().getTransmission().getTransmissionString());
     }
 
     @Test
