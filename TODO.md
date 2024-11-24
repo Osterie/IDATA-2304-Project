@@ -1,4 +1,4 @@
-sssss# TOP PRIROTY
+# TOP PRIROTY
 
 - Clean code.
 - Good code.
@@ -24,7 +24,7 @@ sssss# TOP PRIROTY
 
 - [x] ADRIAN handle if port address already in use.
 
-- [ ] ADRIAN automatic generation of unique identifier for control panel.
+- [x] ADRIAN automatic generation of unique identifier for control panel.
 - [x] ADRIAN support multiple control panesl, unique id
 
 - [x] ADRIAN create host localhost constant or something
@@ -37,10 +37,9 @@ sssss# TOP PRIROTY
 - [x] ADRIAN Implement Response class
 - [x] ADRIAN Implement Success and Failuer responses.
 
-- [ ] NOT ASSIGNED Handle display if image better. Fix image displaying in greenhouse nodes. For example a small version of the image, which when clicked opens a new window with the full image.
-- [ ] NOT ASSIGNED when closing the node tab in control panel, close in greenhouse too? Or not.
-- [ ] NOT ASSIGNED when closing the node tab in greenhouse, close in control panel too? Or not.
-- [ ] NOT ASSIGNED Fix test file structure.
+- [ ] SEBASTIAN Handle display if image better. Fix image displaying in greenhouse nodes. For example a small version of the image, which when clicked opens a new window with the full image.
+- [ ] TOBIAS when closing the node tab in control panel, close in greenhouse too? Or not.
+- [ ] SEBASTIAN Fix test file structure.
 - [ ] TOBIAS AND OTHERS? Look over and fix bad javadoc
 - [ ] When using copilot to write javadoc, check that the javadoc is correct
 
@@ -211,7 +210,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
 - [ ] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
 - [x] ADRIAN. Make actuator buttons send data. 
-- [ ] KNUT. Do the task which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
+- [ ] DANIEL. Do the task which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
 
 # EXTRA WORK
 
@@ -260,7 +259,7 @@ member? How did you work with the sprints? Were there any general themes for the
 of each? Preferably, include model’s diagrams here. (1-2min)
 - [ ] TOBIAS OG DANIEL 5. Your communication protocol. Summarize it in a clear yet concise way. (3-4min)
 - [ ] KNUT 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
-- [ ] 7. SEBASTIAN / TOBIAS / ADRIAN Explain what extra work you have done (if any) for this to be considered an excellent project.
+- [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project.
 (1-3min)
 - [ ] ADRIAN 8. Reflect on potential improvements and future work. (1 min)
 
