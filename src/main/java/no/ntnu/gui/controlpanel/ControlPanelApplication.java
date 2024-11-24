@@ -87,7 +87,8 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
 
     Button refreshButton = new Button("Refresh");
     refreshButton.setOnAction(event -> Logger.info("Refresh clicked"));
-
+    
+    // TODO: If settings is not needed, delete
     Button settingsButton = new Button("Settings");
     settingsButton.setOnAction(event -> Logger.info("Settings clicked"));
 
@@ -238,6 +239,17 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     actuatorPanes.put(nodeInfo.getId(), actuatorPane);
     tab.setContent(new VBox(sensorPane, actuatorPane));
     nodeTabs.put(nodeInfo.getId(), tab);
+
+    if (nodeTabs.size() == 1) {
+      ControlPanelApplication.channel.setSensorNodeTarget(String.valueOf(nodeInfo.getId()));
+    }
+    
+    tab.setOnSelectionChanged(event -> {
+      if (tab.isSelected()) {
+        Logger.info("Selected node " + nodeInfo.getId());
+        ControlPanelApplication.channel.setSensorNodeTarget(String.valueOf(nodeInfo.getId()));
+      }
+    });
 
     return tab;
   }
