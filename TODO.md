@@ -258,7 +258,7 @@ member? How did you work with the sprints? Were there any general themes for the
 - [ ] DANIEL 4. The architecture of your solution. What nodes are communicating? What is the responsibility
 of each? Preferably, include model’s diagrams here. (1-2min)
 - [ ] TOBIAS OG DANIEL 5. Your communication protocol. Summarize it in a clear yet concise way. (3-4min)
-- [ ] KNUT 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
+- [ ] ALLE 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
 - [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project.
 (1-3min)
 - [ ] ADRIAN 8. Reflect on potential improvements and future work. (1 min)
