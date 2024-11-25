@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
 import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
+import no.ntnu.messages.responses.FailureReason;
+import no.ntnu.messages.responses.FailureResponse;
+import no.ntnu.messages.responses.Response;
+import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.intermediaryserver.server.IntermediaryServer;
 import no.ntnu.messages.Message;
@@ -49,7 +53,6 @@ public class ClientHandler extends Thread {
                 this.clientSocket.setKeepAlive(true); // Enable keep-alive on the socket
                 this.socketReader = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
                 this.socketWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
-                Logger.info("New client connected from " + this.clientSocket.getRemoteSocketAddress());
             } else {
                 Logger.error("Client socket is null");
             }
@@ -177,10 +180,16 @@ public class ClientHandler extends Thread {
             Logger.error("Message is null");
             return;
         } 
+        Logger.info(this.clientSocket.getRemoteSocketAddress() + " Sending message: " + message.toProtocolString());
         this.socketWriter.println(message.toProtocolString());
+        this.socketWriter.flush(); // Ensure the message is transmitted
     }
 
     private MessageHeader generateNewHeader(){
+        if (this.getClientType() == null || this.getClientId() == null) {
+            Logger.error("Client type or id is null");
+            return null;
+        }
         return new MessageHeader(this.getClientType(), this.getClientId());
     }
 
@@ -200,6 +209,7 @@ public class ClientHandler extends Thread {
         return this.clientIdentification.getClientId();
     }
 
+    // TODO identification should be handle in another way. Another class?
     /**
      * Identifies the type of the client (control panel or greenhouse).
      */
@@ -218,13 +228,58 @@ public class ClientHandler extends Thread {
             return;
         }
 
-        if (!this.processIdentification(identification)) {
+        // TODO rename to incommingMessage
+        Message message = Message.fromProtocolString(identification);
+        Response response = this.processIdentification(message);
+
+        // MessageHeader header = message.getHeader();
+        MessageHeader header = new MessageHeader(Endpoints.SERVER, Endpoints.NONE.getValue());
+        MessageBody body = message.getBody();
+
+        MessageBody newBody = new MessageBody(response);
+        Message responseMessage = new Message(header, newBody);
+
+        if (response == null) {
+            // Logger.error("Could not identify client type, listening for identification message...");
+            // this.identifyClientType(attempts+1);
+
+            // message.setBody(new MessageBody(response));
+            Logger.error("Could not identify client type, sending failure response: " + responseMessage.toProtocolString());
+
+            this.sendMessage(responseMessage);
+            this.identifyClientType(attempts+1);
+            return;
+        }
+        else if (response instanceof FailureResponse) {
+            // message.setBody(new MessageBody(response));
+            Logger.error("Could not identify client type, sending failure response: " + responseMessage.toProtocolString());
+
+            this.sendMessage(responseMessage);
+            this.identifyClientType(attempts+1);
+            // this.closeStreams();
+            // Send message
+            return;
+        }
+        else if (response instanceof SuccessResponse) {
+            message.setBody(new MessageBody(response));
+            this.sendMessage(message);
+            this.addClient();
+        }
+        else {
             Logger.error("Could not identify client type, listening for identification message...");
             this.identifyClientType(attempts+1);
             return;
         }
+
+
+
+        // if (!this.processIdentification(identification)) {
+        //     Logger.error("Could not identify client type, listening for identification message...");
+        //     this.identifyClientType(attempts+1);
+        //     return;
+        // }
     
-        this.addClient();
+        // this.addClient();
     }
 
     // TODO refactor
@@ -234,36 +289,35 @@ public class ClientHandler extends Thread {
      * @param identification The identification message
      * @return true if identification was successful, false otherwise
      */
-    private boolean processIdentification(String identification) {
+    private Response processIdentification(Message identification) {
 
-        boolean success = false;
-
-        Message message = Message.fromProtocolString(identification);
-        if (message == null) {
-            Logger.error("Invalid identification message: " + identification);
-            this.closeStreams();
-            return false;
+        if (identification == null) {
+            Logger.error("Invalid identification message: null");
+            return new FailureResponse(new ClientIdentificationTransmission(), FailureReason.FAILED_TO_IDENTIFY_CLIENT);
         }
 
-        MessageBody body = message.getBody();
+        Response response;
+        MessageBody body = identification.getBody();
         Transmission command = body.getTransmission();
 
         if (command instanceof ClientIdentificationTransmission) {
             ClientIdentificationTransmission clientIdentificationCommand = (ClientIdentificationTransmission) command;
             Endpoints clientType = clientIdentificationCommand.getClient();
             String clientId = clientIdentificationCommand.getId();
+
             if (clientId.equals(Endpoints.NOT_PREDEFINED.getValue())) {
                 clientId = this.clientSocket.getRemoteSocketAddress().toString();
             }
+            
             this.clientIdentification = new ClientIdentification(clientType, clientId);
-            success = true;
+            response = new SuccessResponse(command, "Identification successful");
         }
         else{
-            Logger.error("Invalid identification message: " + identification);
-            this.closeStreams();
+            Logger.error("Invalid identification message: " + identification.toProtocolString());
+            response = new FailureResponse(new ClientIdentificationTransmission(), FailureReason.FAILED_TO_IDENTIFY_CLIENT);
         }
 
-        return success;
+        return response;
     }
 
     /**

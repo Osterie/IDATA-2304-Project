@@ -1,20 +1,29 @@
 package no.ntnu.messages.responses;
 
-import no.ntnu.messages.commands.Command;
+import no.ntnu.messages.Transmission;
 
 /**
- * Represents a failure response to a command.
- * This response is used to indicate that the execution of a command has failed.
+ * Represents a failure response to a transmission.
+ * This response is used to indicate that the execution of a transmission has failed.
  */
 public class FailureResponse extends Response {
 
   /**
-   * Constructs a {@code FailureResponse} with the specified command and response data.
+   * Constructs a {@code FailureResponse} with the specified transmission and response data.
    *
-   * @param command      The {@link Command} associated with this failure response.
-   * @param responseData The data describing the failure or additional details. Can be empty or null.
+   * @param transmission      The {@link Transmission} associated with this failure response.
+   * @param failureReason The data describing why failure occured
    */
-  public FailureResponse(Command command, String responseData) {
-    super("FAILURE", command, responseData);
+  public FailureResponse(Transmission transmission, FailureReason failureReason) {
+    super("FAILURE", transmission, failureReason.toString());
   }
+
+  public FailureResponse(){
+    super("FAILURE", null, null);
+  }
+
+  public FailureReason getFailureReason() {
+    return FailureReason.fromString(this.getResponseData());
+  }
+
 }

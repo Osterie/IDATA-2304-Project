@@ -20,11 +20,11 @@ public class MessageBodyTest {
     @Test
     public void testFromProtocolString() {
         MessageBody message = MessageBody.fromProtocolString("command;data");
-        assertEquals("command", message.getCommand());
+        assertEquals("command", message.getTransmission());
         assertEquals("data", message.getTransmissionString());
 
         MessageBody noDataMessage = MessageBody.fromProtocolString("command");
-        assertEquals("command", noDataMessage.getCommand());
+        assertEquals("command", noDataMessage.getTransmission());
         assertEquals("", noDataMessage.getTransmissionString());
     }
 

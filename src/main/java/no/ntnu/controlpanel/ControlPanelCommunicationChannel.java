@@ -19,11 +19,12 @@ import no.ntnu.tools.Logger;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
-import no.ntnu.messages.commands.Command;
+import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
 import no.ntnu.messages.commands.greenhouse.ActuatorChangeCommand;
 import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
 import no.ntnu.messages.commands.greenhouse.GetSensorDataCommand;
 import no.ntnu.messages.commands.greenhouse.GreenhouseCommand;
+import no.ntnu.messages.responses.FailureReason;
 import no.ntnu.messages.responses.FailureResponse;
 import no.ntnu.messages.responses.Response;
 import no.ntnu.messages.responses.SuccessResponse;
@@ -40,6 +41,7 @@ import no.ntnu.messages.Message;
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
   private String targetId = "1"; // Used to target a greenhouse node for sensor data requests
+  
 
   /**
    * Create a communication channel for the control panel.
@@ -56,8 +58,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // TODO should perhaps try to establish connection with server. (try catch). And if it fails, try like 3 more times.
     // Don't use chatgpt or copilot and preferably, remember design patterns, cohesion, coupling and such.
 
-    this.listenForMessages();
-    this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, "?");
+    this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
   }
 
   /**
@@ -83,6 +84,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       return;
     }
 
+    Logger.info("Received message from server: " + serverMessage);
+
     // Extract header and body
     MessageHeader header = message.getHeader();
     MessageBody body = message.getBody();
@@ -90,8 +93,11 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
     // Handle based on client type
     if (client == Endpoints.GREENHOUSE) {
-      this.handleGreenhouseCommandResponse(body);
-    } else {
+      this.handleGreenhouseResponse(body);
+    } else if (client == Endpoints.SERVER){
+      this.handleServerResponse(body);
+    }
+    else{
       Logger.error("Unknown client: " + client);
     }
   }
@@ -103,7 +109,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    * @param body The message body containing the command response
    */
     // TODO refactor.
-  private void handleGreenhouseCommandResponse(MessageBody body) {
+  private void handleGreenhouseResponse(MessageBody body) {
     // TODO CHANGE!
 
     Transmission transmission = body.getTransmission();
@@ -130,7 +136,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
     Logger.info("Handling greenhouse command response: " + response.toProtocolString());
 
-    Command command = successResponse.getCommand();
+    Transmission command = successResponse.getTransmission();
     
     if (!(command instanceof GreenhouseCommand)) {
       Logger.error("Invalid command type: " + command.getClass().getName());
@@ -176,6 +182,43 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
   }
 
+  // TODO refactor
+  private void handleServerResponse(MessageBody body){
+    // TODO CHANGE!
+
+    Transmission transmission = body.getTransmission();
+    if (!(transmission instanceof SuccessResponse || transmission instanceof FailureResponse)) {
+      Logger.error("Invalid response type: " + transmission.getClass().getName());
+      return;
+    }
+
+    Response response = (Response) transmission;
+    SuccessResponse successResponse;
+    if (response instanceof FailureResponse){
+
+      FailureResponse failureResponse = (FailureResponse) response;
+
+      Logger.error("Failed to execute command, sending again: " + response.toProtocolString());
+
+      if (failureResponse.getFailureReason() == FailureReason.FAILED_TO_IDENTIFY_CLIENT){
+        this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
+      }
+      else{
+        Logger.error("Unknown command: " + response.toProtocolString());
+      }
+      // MessageBody bodyToSend = new MessageBody(response.getTransmission());
+
+      // Message message = new Message(header, bodyToSend);
+
+      // TODO try to execute command again? If this is done, in the future perhaps an attempts field should be added, 
+      // which shows how many times the transmission has been tried sent.
+    }
+    else if (response instanceof SuccessResponse) {
+      successResponse = (SuccessResponse) response;
+      Logger.info("Success response: " + successResponse.toProtocolString());
+    }
+  }
+
   /**
    * Add a node based on the response.
    * Creates a new node and schedules its addition to the control panel logic.
@@ -216,7 +259,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, nodeIdStr);
       MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
       Message message = new Message(header, body);
-      this.sendCommandToServer(message);
+      this.sendMessage(message);
     } catch (Exception e) {
       Logger.error("Failed to send actuator change: " + e.getMessage());
     }
@@ -256,7 +299,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, self.getSensorNoderTarget());
         MessageBody body = new MessageBody(new GetSensorDataCommand());
         Message message = new Message(header, body);
-        sendCommandToServer(message);
+        sendMessage(message);
       }
     }, 5000, period * 1000L);
   }
@@ -282,7 +325,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, Endpoints.BROADCAST.getValue());
       MessageBody body = new MessageBody(new GetNodeCommand());
       Message message = new Message(header, body);
-      this.sendCommandToServer(message);
+      this.sendMessage(message);
     } catch (Exception e) {
       Logger.error("Failed to ask for nodes: " + e.getMessage());
     }
@@ -300,7 +343,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, nodeId);
       MessageBody body = new MessageBody(new GetNodeCommand());
       Message message = new Message(header, body);
-      this.sendCommandToServer(message);
+      this.sendMessage(message);
     } catch (Exception e) {
       Logger.error("Failed to spawn node: " + e.getMessage());
     }
