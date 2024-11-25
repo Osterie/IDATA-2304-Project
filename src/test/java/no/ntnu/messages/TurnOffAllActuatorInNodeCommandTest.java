@@ -38,6 +38,6 @@ public class TurnOffAllActuatorInNodeCommandTest {
 
     @Test
     public void testToProtocolString() {
-        assertEquals("TURN_OFF_ALL_ACTUATORS", command.toProtocolString());
+        assertEquals("TURN_OFF_ALL_ACTUATORS", command);
     }
 }

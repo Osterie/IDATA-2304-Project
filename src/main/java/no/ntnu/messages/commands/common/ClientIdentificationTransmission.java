@@ -75,22 +75,6 @@ public class ClientIdentificationTransmission extends Transmission implements Pa
     }
 
     /**
-     * Converts the transmission to its protocol string representation.
-     * The format is: `TRANSMISSION_STRING | CLIENT | ID`
-     *
-     * @return The protocol string representation of this transmission.
-     */
-    @Override
-    public String toProtocolString() {
-        String protocolString = this.getTransmissionString();
-        protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
-        protocolString += this.client;
-        protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
-        protocolString += this.id;
-        return protocolString;
-    }
-
-    /**
      * Sets the parameters of this transmission from an array of strings.
      *
      * @param parameters An array containing exactly two parameters: client type and client ID.
@@ -110,5 +94,21 @@ public class ClientIdentificationTransmission extends Transmission implements Pa
         }
         this.client = Endpoints.valueOf(parameters[0]);
         this.id = parameters[1];
+    }
+
+    /**
+     * Converts the transmission to its protocol string representation.
+     * The format is: `TRANSMISSION_STRING | CLIENT | ID`
+     *
+     * @return The protocol string representation of this transmission.
+     */
+    @Override
+    public String toString() {
+        String protocolString = this.getTransmissionString();
+        protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
+        protocolString += this.client;
+        protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
+        protocolString += this.id;
+        return protocolString;
     }
 }

@@ -49,7 +49,7 @@ public class ServerSocketCreator {
             ServerConfig.setPortNumber(port); // Update the port number
             return serverSocket;
         } catch (IOException e) {
-            Logger.error("Could not open server socket on port " + port + ": " + e.getMessage());
+            Logger.warn("Could not open server socket on port " + port + ", trying other port, error message:" + e.getMessage());
             return ServerSocketCreator.createServerSocket(nextAttempt);
         }
     }

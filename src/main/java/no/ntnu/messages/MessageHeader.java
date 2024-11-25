@@ -107,32 +107,13 @@ public class MessageHeader {
     // }
 
     /**
-     * Converts this header to its protocol string representation.
-     * The format is: `receiver_id[FIELD_DELIMITER]target_id[FIELD_DELIMITER]data_type`
-     * or `receiver_id[FIELD_DELIMITER]target_id` if the data type is empty.
-     *
-     * @return The protocol string representation of the header.
-     * @throws IllegalArgumentException If any required field is null.
-     */
-    public String toProtocolString() {
-        if (receiver == null || id == null) {
-            throw new IllegalArgumentException("Receiver and ID cannot be null");
-        }
-        // if (dataType.isEmpty()) {
-        return String.join(FIELD_DELIMITER, receiver.getValue(), id);
-        // } else {
-        //     return String.join(FIELD_DELIMITER, receiver.getValue(), id, dataType);
-        // }
-    }
-
-    /**
      * Parses a MessageHeader from its protocol string representation.
      *
      * @param protocolString The protocol string representing a header.
      * @return The parsed {@link MessageHeader} object.
      * @throws IllegalArgumentException If the protocol string is invalid or malformed.
      */
-    public static MessageHeader fromProtocolString(String protocolString) {
+    public static MessageHeader fromString(String protocolString) {
         if (protocolString == null || protocolString.trim().isEmpty()) {
             throw new IllegalArgumentException("Protocol string cannot be null or empty");
         }
@@ -159,6 +140,26 @@ public class MessageHeader {
         // else {
         //     String optionalField = parts[2];
         //     return new MessageHeader(clientType, targetId, optionalField);
+        // }
+    }
+
+        /**
+     * Converts this header to its protocol string representation.
+     * The format is: `receiver_id[FIELD_DELIMITER]target_id[FIELD_DELIMITER]data_type`
+     * or `receiver_id[FIELD_DELIMITER]target_id` if the data type is empty.
+     *
+     * @return The protocol string representation of the header.
+     * @throws IllegalArgumentException If any required field is null.
+     */
+    @Override
+public String toString() {
+        if (receiver == null || id == null) {
+            throw new IllegalArgumentException("Receiver and ID cannot be null");
+        }
+        // if (dataType.isEmpty()) {
+        return String.join(FIELD_DELIMITER, receiver.getValue(), id);
+        // } else {
+        //     return String.join(FIELD_DELIMITER, receiver.getValue(), id, dataType);
         // }
     }
 }

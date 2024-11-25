@@ -31,7 +31,7 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
         nodeLogic.getNode().setActuator(this.actuatorId, this.isOn);
 
         // TODO improve.
-        // MessageHeader header = new MessageHeader(fromHeader.getReceiver(), Endpoints.BROADCAST.getValue(), this.toProtocolString());
+        // MessageHeader header = new MessageHeader(fromHeader.getReceiver(), Endpoints.BROADCAST.getValue(), this);
         MessageHeader header = new MessageHeader(fromHeader.getReceiver(), Endpoints.BROADCAST.getValue());
         // MessageBody response = new MessageBody(this, "ACTUATOR_CHANGE_SUCCESS");
 
@@ -47,12 +47,6 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
         return new Message(header, response);
     }
 
-
-    @Override
-    public String toProtocolString() {
-        return this.getTransmissionString() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.actuatorId + Delimiters.BODY_FIELD_PARAMETERS.getValue() + (this.isOn ? "ON" : "OFF");
-    }
-
     @Override
     public void setParameters(String parameters[]) {
         this.actuatorId = Integer.parseInt(parameters[0]);
@@ -65,5 +59,10 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
 
     public void setIsOn(boolean isOn) {
         this.isOn = isOn;
+    }
+
+    @Override
+    public String toString() {
+        return this.getTransmissionString() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.actuatorId + Delimiters.BODY_FIELD_PARAMETERS.getValue() + (this.isOn ? "ON" : "OFF");
     }
 }

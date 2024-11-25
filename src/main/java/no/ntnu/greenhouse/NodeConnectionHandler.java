@@ -7,6 +7,8 @@ import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
 import no.ntnu.messages.commands.greenhouse.GreenhouseCommand;
+import no.ntnu.messages.responses.FailureResponse;
+import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.tools.Logger;
 
 /**
@@ -25,7 +27,6 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
     public NodeConnectionHandler(SensorActuatorNode node, String host, int port) {
         super(host, port);
         this.nodeLogic = new NodeLogic(node);
-        this.establishConnectionWithServer(Endpoints.GREENHOUSE, String.valueOf(node.getId()));
     }
 
     /**
@@ -33,7 +34,7 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
      */
     @Override
     public void run() {
-        this.listenForMessages();
+        this.establishConnectionWithServer(Endpoints.GREENHOUSE, String.valueOf(this.nodeLogic.getId()));
     }
 
     // TODO fix, improve, refactor.
@@ -42,7 +43,7 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
 
         Logger.info("Received message for node! " + this.nodeLogic.getId() + ": " + message);
 
-        Message messageObject = Message.fromProtocolString(message);
+        Message messageObject = Message.fromString(message);
         MessageHeader header = messageObject.getHeader();
         MessageBody body = messageObject.getBody();
         
@@ -55,11 +56,18 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
             
             Message response = greenhouseCommand.execute(this.nodeLogic, header);
             
-            Logger.info("Received command for node, sending response: " + response.toProtocolString());
-            socketWriter.println(response.toProtocolString());
+            Logger.info("Received command for node, sending response: " + response);
+            socketWriter.println(response);
+        }
+        else if (command instanceof SuccessResponse) {
+            Logger.info("Received success response for node: " + command);
+        }
+        else if (command instanceof FailureResponse) {
+            // TODO what are some failues which can be handled?
+            Logger.error("Received failure response for node: " + command);
         }
         else{
-            Logger.error("Received invalid command for node: " + command.toProtocolString());
+            Logger.error("Received invalid command for node: " + command);
         }        
     }
 }

@@ -43,6 +43,6 @@ public class GetNodeCommandTest {
 
     @Test
     public void testToProtocolString() {
-        assertEquals("GET_NODE", command.toProtocolString());
+        assertEquals("GET_NODE", command);
     }
 }

@@ -1,12 +1,33 @@
-sssss# TOP PRIROTY
+# TOP PRIROTY
 
 - Clean code.
 - Good code.
 
+# Next sprint
+
+- [ ] UNASSIGNED  for generateHeader method usage, what if header is null? handle this.
+- [ ] UNASSIGNED  FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
+- [ ] UNASSIGNED clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
+
 # GENERAL
 
+- [x] ADRIAN instead of a toProtocolString method, just override the toString method for transmissions?
+- [x] ADRIAN rename fromProtocolString to fromString.
+- [ ] ADRIAN use factory to create transmissions (or only commands?)?
+- [ ] ADRIAN when a client is disconnected, it should add a client identification transmission at the start of the buffer queue. So that it is sent first when the client tries to reconenct.
+- [ ] ADRIAN When control panel disconencts, pause sending of periodic sensor data until reconnected again.
+
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
+- [ ] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
 - [x] ADRIAN Fix application using all available resources.
+- [x] ADRIAN Create enum for non-predefined client id.
+- [ ] ADRIAN remove option to remove tabs in control panel
+- [ ] ADRIAN should actuator change send 0/1 instead of on/off? In that case we can show the text closed/open for window instead of on/off, for example.
+- [ ] ADRIAN in header, change from receiver to endpoint? or something else, think about it.
+- [x] ADRIAN WHen client handler for some reason disconnects, try to connect again (send identification message and such)
+- [x] ADRIAN add enums for failure responses.
+- [x] ADRIAN add colors to Logger methods. 
+- [x] ADRIAN notifyChanges method of Actuator Class, refactor this method.
 
 - [ ] TOBIAS (SEBASTIAN: Håpe du ikkje he laga det allereie) add a refresh button to control panel
 
@@ -14,9 +35,9 @@ sssss# TOP PRIROTY
 
 - [ ] DANIEL when changing actuator state in Sensor Node GUI, should notify all the control panels.
 
-- [x] ADRIAN When the control panel asks for sensor data, perhaps it does this a bit infrequently? Currenlty i believe it does it every 5 seconds. But do not change this to be too often. Is there another solution?
+- [ ] DANIEL When sending sensor data (GetSensorDataCommand), the message should contain the data type, for the numberSensorReading, can be For example NUM, for imagesensorreading, can be IMG.
 
-- [ ] TOBIAS after sending a message, the controller should expect a response. If no response received, send again, max 3 times. Response should be OK or ERROR or something. PERHAPS THIS IS NOT NEEDED. If you deem this unnecessary, then write why.
+- [x] ADRIAN When the control panel asks for sensor data, perhaps it does this a bit infrequently? Currenlty i believe it does it every 5 seconds. But do not change this to be too often. Is there another solution?
 
 - [ ] TOBIAS Implement encryption
 
@@ -24,7 +45,7 @@ sssss# TOP PRIROTY
 
 - [x] ADRIAN handle if port address already in use.
 
-- [ ] ADRIAN automatic generation of unique identifier for control panel.
+- [x] ADRIAN automatic generation of unique identifier for control panel.
 - [x] ADRIAN support multiple control panesl, unique id
 
 - [x] ADRIAN create host localhost constant or something
@@ -37,10 +58,9 @@ sssss# TOP PRIROTY
 - [x] ADRIAN Implement Response class
 - [x] ADRIAN Implement Success and Failuer responses.
 
-- [ ] NOT ASSIGNED Handle display if image better. Fix image displaying in greenhouse nodes. For example a small version of the image, which when clicked opens a new window with the full image.
-- [ ] NOT ASSIGNED when closing the node tab in control panel, close in greenhouse too? Or not.
-- [ ] NOT ASSIGNED when closing the node tab in greenhouse, close in control panel too? Or not.
-- [ ] NOT ASSIGNED Fix test file structure.
+- [ ] SEBASTIAN Handle display if image better. Fix image displaying in greenhouse nodes. For example a small version of the image, which when clicked opens a new window with the full image.
+- [ ] TOBIAS when closing the node tab in control panel, close in greenhouse too? Or not.
+- [ ] SEBASTIAN Fix test file structure.
 - [ ] TOBIAS AND OTHERS? Look over and fix bad javadoc
 - [ ] When using copilot to write javadoc, check that the javadoc is correct
 
@@ -57,13 +77,13 @@ sssss# TOP PRIROTY
 - [x] TOBIAS Skriv javadoc for intermidiary-klasser.
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
 
-- [ ] NOT ASSIGNED Skriv javadoc for greenhouse-klasser.
-- [ ] NOT ASSIGNED Skriv javadoc for GUI-klasser.
-- [ ] NOT ASSIGNED Skriv javadoc for control-panel-klasser.
-- [ ] NOT ASSIGNED Skriv javadoc for run-klasser.
+- [ ] UNASSIGNED Skriv javadoc for greenhouse-klasser.
+- [ ] UNASSIGNED Skriv javadoc for GUI-klasser.
+- [ ] UNASSIGNED Skriv javadoc for control-panel-klasser.
+- [ ] UNASSIGNED Skriv javadoc for run-klasser.
 - [x] TOBIAS Skriv javadoc for tools-klasser.
 
-- [ ] NOT ASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
+- [ ] UNASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
 
 # PROTOCOL DESCRIPTION REQUIREMENTS
 
@@ -105,7 +125,7 @@ a reply with an error code?
 - [x] Adrian Implement Header/Body messages for control panel 
 - [x] Adrian Implement Header/Body messages for intermediary server
 - [x] Adrian Implement Header/Body messages for greenhouse
-- [ ] DANIEL Handling connection errors and messaging errors properly.
+- [ ] ADRIAN Handling connection errors and messaging errors properly.
 - [x] ADRIAN. gitignore fil.
 - [x] ADRIAN. Implementere Message og Command interfacer/klasser
 - [x] ADRIAN. Command classes for client identification. 
@@ -135,21 +155,21 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 
 - [X] DANIEL. Lag test klasser som tester kommunikasjon mellom intermediary server og klientene (greenhouse nodes og control panels).
 - [X] DANIEL. Test at de kobler seg til serveren riktig, at de blir identifisert av serveren på riktig måte. Test hva som skjer om protokoller ikke blir fulgt, for eksemepel om første melding til server ikke er en identifiserende melding. 
-- [ ] KNUT: Test å sende kommandoer, sjekk respons.
+- [X] KNUT: Test å sende kommandoer, sjekk respons.
 - [ ] SEBASTIAN Test med flere kontrollere koblet til server, også spør om informasjon fra noder samtidig, både fra ulike noder og fra samme node og slikt.
-- [ ] NOT ASSIGNED Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
+- [ ] UNASSIGNED Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
 
 ## OTHER
 
 - [ ] TOBIAS - Lag tester for alle klasser som kan testes.
-- [ ] NOT ASSIGNED Test protokoll
+- [ ] UNASSIGNED Test protokoll
 - [ ] TOBIAS - Test Message og Command klasser
 _
 # GREENHOUSE
 
 - [x] ADRIAN One Thread for writing and one for reading.
 
-- [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
+- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN lage kommunikasjons klasse for greenhouse nodes.
 - [x] ADRIAN. Koble til multiple greenhouse nodes til intermediary server.
 
@@ -165,7 +185,7 @@ Each sensor-node can do the following:
 
 - [x] ADRIAN One Thread for writing and one for reading.
 - [x] ADRIAN Refactor intermediary server
-- [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
+- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. Lage en intermediary server som kan brukes for å tilrettelegge kommunikasjon mellom greenhouse nodes og control panel.
 - [x] ADRIAN. Ta i mot klienter som vil koble seg til.
 - [x] ADRIAN. Motta meldinger fra klienter.
@@ -194,7 +214,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
     - [x] ADRIAN How does control panel know what info to ask for?
     - [x] ADRIAN How does control panel know what to do with the info it receives?
 
-- [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
+- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. koble til multiple control panels til intermediary server.
 - [x] ADRIAN. lage kommunikasjons klasse for control panel
 - [x] ADRIAN. Spør hele tiden om informasjon for noden som vises i control panel GUI.
@@ -207,19 +227,21 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 ## GUI
 
 - [ ] KNUT. Implement ComponentBuilder class
-- [ ] KNUT. Visualize charts.
-- [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
-- [ ] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
-- [x] ADRIAN. Make actuator buttons send data. 
-- [ ] KNUT. Do the task which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
+- [X] KNUT. Visualize charts.
+- [X] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
+- [ ] KNUT. Utbedre UI for ControlPanelApplication, Sett TurnOffAllActuators button til actuatorPane og fjern nodeSelect
+- [X] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
+- [x] ADRIAN. Make actuator buttons send data.
+- [ ] DANIEL. Do the task which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
 
 # EXTRA WORK
 
 - [ ] ADRIAN. 1. Resilience in case of network outages. The solution functions when the network connection is temporarily lost. This means buffering data, retransmissions, reconnecting, etc
-    - [ ] When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
-    - [ ] If the connection is lost, try to reconnect. If it fails, show an error message to the user.
+    - [x] When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
+    - [x] If the connection is lost, try to reconnect. 
+    - [ ] If reconnection fails, show an error message to the user. (then they can choose to reload the control panel perhaps when the server is back up. Display a "Server down" message in the control panel)
     - [ ] If a message is not received, try to receive it again. If it fails, show an error message to the user.
-    - [ ] Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
+    - [x] Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
 
 
 - [x] TOBIAS. 2. Data encryption. You can think of different methods of integrating security into your solution,
@@ -259,8 +281,8 @@ member? How did you work with the sprints? Were there any general themes for the
 - [ ] DANIEL 4. The architecture of your solution. What nodes are communicating? What is the responsibility
 of each? Preferably, include model’s diagrams here. (1-2min)
 - [ ] TOBIAS OG DANIEL 5. Your communication protocol. Summarize it in a clear yet concise way. (3-4min)
-- [ ] KNUT 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
-- [ ] 7. SEBASTIAN / TOBIAS / ADRIAN Explain what extra work you have done (if any) for this to be considered an excellent project.
+- [ ] ALLE 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
+- [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project.
 (1-3min)
 - [ ] ADRIAN 8. Reflect on potential improvements and future work. (1 min)
 

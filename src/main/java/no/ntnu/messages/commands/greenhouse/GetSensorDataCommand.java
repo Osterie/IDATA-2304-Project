@@ -15,7 +15,7 @@ public class GetSensorDataCommand extends GreenhouseCommand {
     @Override
     public Message execute(NodeLogic nodeLogic, MessageHeader fromHeader) {
         // TODO change id.
-        // MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0", this.toProtocolString());
+        // MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0", this);
 
         String sensorData = nodeLogic.getSensorData();
         SuccessResponse response = new SuccessResponse(this, sensorData);
@@ -24,7 +24,7 @@ public class GetSensorDataCommand extends GreenhouseCommand {
     }
 
     @Override
-    public String toProtocolString() {
+    public String toString() {
         return this.getTransmissionString();
     }
 }

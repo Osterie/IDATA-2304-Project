@@ -11,27 +11,27 @@ public class MessageBodyTest {
     // @Test
     // public void testToProtocolString() {
     //     MessageBody message = new MessageBody("command", "data");
-    //     assertEquals("command;" + "data", message.toProtocolString());
+    //     assertEquals("command;" + "data", message);
 
     //     MessageBody noDataMessage = new MessageBody("command");
-    //     assertEquals("command", noDataMessage.toProtocolString());
+    //     assertEquals("command", noDataMessage);
     // }
 
     @Test
-    public void testFromProtocolString() {
-        MessageBody message = MessageBody.fromProtocolString("command;data");
-        assertEquals("command", message.getCommand());
+    public void testfromString() {
+        MessageBody message = MessageBody.fromString("command;data");
+        assertEquals("command", message.getTransmission());
         assertEquals("data", message.getTransmissionString());
 
-        MessageBody noDataMessage = MessageBody.fromProtocolString("command");
-        assertEquals("command", noDataMessage.getCommand());
+        MessageBody noDataMessage = MessageBody.fromString("command");
+        assertEquals("command", noDataMessage.getTransmission());
         assertEquals("", noDataMessage.getTransmissionString());
     }
 
     @Test
     public void testInvalidProtocolString() {
         assertThrows(IllegalArgumentException.class, () -> {
-            MessageBody.fromProtocolString("");
+            MessageBody.fromString("");
         });
     }
 }

@@ -2,47 +2,46 @@ package no.ntnu.messages.responses;
 
 import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Transmission;
-import no.ntnu.messages.commands.Command;
 
 /**
- * Represents an abstract response to a command in the messaging system.
- * A response contains a protocol string, the command that triggered the response,
+ * Represents an abstract response to a transmission in the messaging system.
+ * A response contains a protocol string, the transmission that triggered the response,
  * and any additional response data.
  * Subclasses should define specific types of responses, such as success or failure responses.
  */
 public abstract class Response extends Transmission {
     private String responseData;
-    private Command command;
+    private Transmission transmission;
 
     /**
-     * Constructs a {@code Response} with the specified protocol string, command, and response data.
+     * Constructs a {@code Response} with the specified protocol string, transmission, and response data.
      *
      * @param responseProtocolString The protocol string representing the type of response (e.g., "SUCCESS", "FAILURE").
-     * @param command                The {@link Command} that triggered this response.
+     * @param transmission                The {@link Transmission} that triggered this response.
      * @param responseData           Additional data describing the response. Can be null or empty.
      */
-    protected Response(String responseProtocolString, Command command, String responseData) {
+    protected Response(String responseProtocolString, Transmission transmission, String responseData) {
         super(responseProtocolString);
-        this.command = command;
+        this.transmission = transmission;
         this.responseData = responseData;
     }
 
     /**
-     * Sets the command associated with this response.
+     * Sets the transmission associated with this response.
      *
-     * @param command The {@link Command} to associate with this response.
+     * @param transmission The {@link Transmission} to associate with this response.
      */
-    public void setCommand(Command command) {
-        this.command = command;
+    public void setTransmission(Transmission transmission) {
+        this.transmission = transmission;
     }
 
     /**
-     * Gets the command associated with this response.
+     * Gets the transmission associated with this response.
      *
-     * @return The {@link Command} that triggered this response.
+     * @return The {@link Transmission} that triggered this response.
      */
-    public Command getCommand() {
-        return command;
+    public Transmission getTransmission() {
+        return transmission;
     }
 
     /**
@@ -70,10 +69,10 @@ public abstract class Response extends Transmission {
      * @return The protocol string representation of this response.
      */
     @Override
-    public String toProtocolString() {
+    public String toString() {
         String protocolString = this.getTransmissionString();
         protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
-        protocolString += this.command.getTransmissionString();
+        protocolString += this.transmission.getTransmissionString();
         protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
         protocolString += this.responseData;
         return protocolString;

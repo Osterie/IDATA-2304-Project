@@ -15,13 +15,4 @@ public interface CommunicationChannel {
    * @param isOn       When true, actuator must be turned on; off when false.
    */
   void sendActuatorChange(int nodeId, int actuatorId, boolean isOn);
-
-  /**
-   * Open the communication channel.
-   *
-   * @return True when the communication channel is successfully opened, false on error
-   */
-  boolean isOpen();
-
-  boolean close();
 }

@@ -6,6 +6,7 @@ package no.ntnu.tools;
  * places of our code.
  */
 public class Logger {
+
   /**
    * Not allowed to create an instance of this class.
    */
@@ -30,12 +31,25 @@ public class Logger {
     System.out.print(message);
   }
 
+  public static void success(String message) {
+    System.out.println(AnsiColors.GREEN + message + AnsiColors.RESET);
+  }
+
+  /**
+   * Log a warning message.
+   *
+   * @param message The warning message to log
+   */
+  public static void warn(String message) {
+    System.out.println(AnsiColors.YELLOW + "WARNING: " + message + AnsiColors.RESET);
+  }
+
   /**
    * Log an error message.
    *
    * @param message The error message to log
    */
   public static void error(String message) {
-    System.err.println(message);
+    System.err.println(AnsiColors.RED + "Error: " + message + AnsiColors.RESET);
   }
 }

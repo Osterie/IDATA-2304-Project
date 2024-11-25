@@ -62,26 +62,13 @@ public class Message {
     }
 
     /**
-     * Converts the message to its protocol string representation.
-     *
-     * @return The protocol string representing this message.
-     * @throws IllegalArgumentException if either the header or body is null.
-     */
-    public String toProtocolString() {
-        if (header == null || body == null) {
-            throw new IllegalArgumentException("Header and body cannot be null");
-        }
-        return header.toProtocolString() + HEADER_BODY_DELIMITER + body.toProtocolString();
-    }
-
-    /**
      * Parses a message from its protocol string representation.
      *
      * @param protocolString The protocol string representing a message.
      * @return The parsed message.
      * @throws IllegalArgumentException if the protocol string is invalid.
      */
-    public static Message fromProtocolString(String protocolString) {
+    public static Message fromString(String protocolString) {
         // Split the string into header and body using the delimiter
         String[] parts = protocolString.split(HEADER_BODY_DELIMITER, 2);
         if (parts.length < 2) {
@@ -89,8 +76,22 @@ public class Message {
             throw new IllegalArgumentException("Invalid message format");
         }
         // Parse the header and body separately
-        MessageHeader header = MessageHeader.fromProtocolString(parts[0]);
-        MessageBody body = MessageBody.fromProtocolString(parts[1]);
+        MessageHeader header = MessageHeader.fromString(parts[0]);
+        MessageBody body = MessageBody.fromString(parts[1]);
         return new Message(header, body);
+    }
+
+    /**
+     * Converts the message to its protocol string representation.
+     *
+     * @return The protocol string representing this message.
+     * @throws IllegalArgumentException if either the header or body is null.
+     */
+    @Override
+    public String toString() {
+        if (header == null || body == null) {
+            throw new IllegalArgumentException("Header and body cannot be null");
+        }
+        return header + HEADER_BODY_DELIMITER + body;
     }
 }

@@ -40,25 +40,27 @@ public class MessageBody {
     }
 
     /**
-     * Converts this message body to its protocol string representation.
-     * The format is: `transmission[FIELD_DELIMITER]data` or `transmission` if data is null or empty.
-     *
-     * @return The protocol string representation of the message body.
-     */
-    public String toProtocolString() {
-        return transmission.toProtocolString();
-    }
-
-    /**
      * Parses a MessageBody from its protocol string representation.
      *
      * @param protocolString The protocol string to parse. Expected format: `transmission[FIELD_DELIMITER]data`.
      * @return The parsed {@link MessageBody} object.
      * @throws IllegalArgumentException If the protocol string is invalid or malformed.
      */
-    public static MessageBody fromProtocolString(String protocolString) {
+    public static MessageBody fromString(String protocolString) {
         TransmissionTranslator transmissionTranslator = new TransmissionTranslator();
         Transmission transmission = transmissionTranslator.toTransmission(protocolString);
         return new MessageBody(transmission);
+    }
+
+    
+    /**
+     * Converts this message body to its protocol string representation.
+     * The format is: `transmission[FIELD_DELIMITER]data` or `transmission` if data is null or empty.
+     *
+     * @return The protocol string representation of the message body.
+     */
+    @Override
+    public String toString() {
+        return transmission.toString();
     }
 }

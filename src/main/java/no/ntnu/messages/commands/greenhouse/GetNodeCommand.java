@@ -59,7 +59,7 @@ public class GetNodeCommand extends GreenhouseCommand {
      * @return The transmission string of the command.
      */
     @Override
-    public String toProtocolString() {
+    public String toString() {
         return this.getTransmissionString();
     }
 }
