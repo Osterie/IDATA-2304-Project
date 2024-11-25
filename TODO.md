@@ -3,10 +3,20 @@
 - Clean code.
 - Good code.
 
+# Next sprint
+
+
+
 # GENERAL
 
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
+- [ ] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
 - [x] ADRIAN Fix application using all available resources.
+- [x] ADRIAN Create enum for non-predefined client id.
+- [ ] ADRIAN remove option to remove tabs in control panel
+- [ ] ADRIAN should actuator change send 0/1 instead of on/off? In that case we can show the text closed/open for window instead of on/off, for example.
+- [ ] ADRIAN in header, change from receiver to endpoint? or something else, think about it.
+- [ ] ADRIAN WHen client handler for some reason disconnects, try to connect again (send identification message and such)
 
 - [ ] TOBIAS (SEBASTIAN: Håpe du ikkje he laga det allereie) add a refresh button to control panel
 
