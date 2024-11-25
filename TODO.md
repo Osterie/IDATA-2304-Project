@@ -5,8 +5,9 @@
 
 # Next sprint
 
-- [ ] NOT ASSINGED  for generateHeader method usage, what if header is null? handle this.
-- [ ] NOT ASSINGED  FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
+- [ ] UNASSIGNED  for generateHeader method usage, what if header is null? handle this.
+- [ ] UNASSIGNED  FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
+- [ ] UNASSIGNED clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
 
 # GENERAL
 
@@ -24,7 +25,8 @@
 - [ ] ADRIAN in header, change from receiver to endpoint? or something else, think about it.
 - [x] ADRIAN WHen client handler for some reason disconnects, try to connect again (send identification message and such)
 - [x] ADRIAN add enums for failure responses.
-- [ ] ADRIAN add colors to Logger methods. 
+- [x] ADRIAN add colors to Logger methods. 
+- [x] ADRIAN notifyChanges method of Actuator Class, refactor this method.
 
 - [ ] TOBIAS (SEBASTIAN: Håpe du ikkje he laga det allereie) add a refresh button to control panel
 
@@ -74,13 +76,13 @@
 - [x] TOBIAS Skriv javadoc for intermidiary-klasser.
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
 
-- [ ] NOT ASSIGNED Skriv javadoc for greenhouse-klasser.
-- [ ] NOT ASSIGNED Skriv javadoc for GUI-klasser.
-- [ ] NOT ASSIGNED Skriv javadoc for control-panel-klasser.
-- [ ] NOT ASSIGNED Skriv javadoc for run-klasser.
+- [ ] UNASSIGNED Skriv javadoc for greenhouse-klasser.
+- [ ] UNASSIGNED Skriv javadoc for GUI-klasser.
+- [ ] UNASSIGNED Skriv javadoc for control-panel-klasser.
+- [ ] UNASSIGNED Skriv javadoc for run-klasser.
 - [x] TOBIAS Skriv javadoc for tools-klasser.
 
-- [ ] NOT ASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
+- [ ] UNASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
 
 # PROTOCOL DESCRIPTION REQUIREMENTS
 
@@ -154,12 +156,12 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 - [X] DANIEL. Test at de kobler seg til serveren riktig, at de blir identifisert av serveren på riktig måte. Test hva som skjer om protokoller ikke blir fulgt, for eksemepel om første melding til server ikke er en identifiserende melding. 
 - [X] KNUT: Test å sende kommandoer, sjekk respons.
 - [ ] SEBASTIAN Test med flere kontrollere koblet til server, også spør om informasjon fra noder samtidig, både fra ulike noder og fra samme node og slikt.
-- [ ] NOT ASSIGNED Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
+- [ ] UNASSIGNED Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
 
 ## OTHER
 
 - [ ] TOBIAS - Lag tester for alle klasser som kan testes.
-- [ ] NOT ASSIGNED Test protokoll
+- [ ] UNASSIGNED Test protokoll
 - [ ] TOBIAS - Test Message og Command klasser
 _
 # GREENHOUSE

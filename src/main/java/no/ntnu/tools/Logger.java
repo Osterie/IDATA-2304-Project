@@ -6,6 +6,13 @@ package no.ntnu.tools;
  * places of our code.
  */
 public class Logger {
+
+  // ANSI escape codes for colors
+  private static final String GREEN = "\u001B[32m";
+  private static final String YELLOW = "\u001B[33m";
+  private static final String RED = "\u001B[31m";
+  private static final String RESET = "\u001B[0m";
+
   /**
    * Not allowed to create an instance of this class.
    */
@@ -30,13 +37,17 @@ public class Logger {
     System.out.print(message);
   }
 
+  public static void success(String message) {
+    System.out.println(Logger.GREEN + message + Logger.RESET);
+  }
+
   /**
    * Log a warning message.
    *
    * @param message The warning message to log
    */
   public static void warn(String message) {
-    System.out.println("WARNING: " + message);
+    System.out.println(Logger.YELLOW + "WARNING: " + message + Logger.RESET);
   }
 
   /**
@@ -45,6 +56,6 @@ public class Logger {
    * @param message The error message to log
    */
   public static void error(String message) {
-    System.err.println(message);
+    System.err.println(Logger.RED + "Error: " + message + Logger.RESET);
   }
 }
