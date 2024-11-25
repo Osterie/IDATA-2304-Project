@@ -227,6 +227,7 @@ public class ClientHandler extends Thread {
         this.addClient();
     }
 
+    // TODO refactor
     /**
      * Processes the identification message from the client.
      *
@@ -251,7 +252,7 @@ public class ClientHandler extends Thread {
             ClientIdentificationTransmission clientIdentificationCommand = (ClientIdentificationTransmission) command;
             Endpoints clientType = clientIdentificationCommand.getClient();
             String clientId = clientIdentificationCommand.getId();
-            if (clientId.equals("?")) {
+            if (clientId.equals(Endpoints.NOT_PREDEFINED.getValue())) {
                 clientId = this.clientSocket.getRemoteSocketAddress().toString();
             }
             this.clientIdentification = new ClientIdentification(clientType, clientId);
@@ -263,21 +264,6 @@ public class ClientHandler extends Thread {
         }
 
         return success;
-
-
-        // boolean identificationSuccess = false;
-        // try {
-        //     this.clientIdentifier.identifyClientType(identification);
-        //     identificationSuccess = true;    
-        // } catch (IllegalArgumentException e) {
-        //     Logger.error("Invalid identification message: " + identification);
-        //     this.closeStreams();
-        // }
-        
-        // this.clientType = this.clientIdentifier.getClientType();
-        // this.clientId = this.clientIdentifier.getClientId();
-
-        // return identificationSuccess;
     }
 
     /**
