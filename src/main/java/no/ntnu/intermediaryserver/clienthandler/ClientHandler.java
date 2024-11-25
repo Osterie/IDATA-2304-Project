@@ -134,14 +134,14 @@ public class ClientHandler extends Thread {
 
             //    if (success) {
             //        SuccessCommand successCommand = new SuccessCommand("Operation completed successfully");
-            //        this.sendMessage(new Message(successCommand.toProtocolString()), this.clientSocket);
+            //        this.sendMessage(new Message(successCommand), this.clientSocket);
             //    } else {
             //    FailureCommand failureCommand = new FailureCommand("Operation failed");
-            //        this.sendMessage(new Message(failureCommand.toProtocolString()), this.clientSocket);
+            //        this.sendMessage(new Message(failureCommand), this.clientSocket);
             //   }
             //} catch (Exception e) {
             //    FailureCommand failureCommand = new FailureCommand("Operation failed: " + e.getMessage());
-            //    this.sendMessage(new Message(failureCommand.toProtocolString()), this.clientSocket);
+            //    this.sendMessage(new Message(failureCommand), this.clientSocket);
             //}
         }
     }
@@ -151,7 +151,7 @@ public class ClientHandler extends Thread {
         ArrayList<ClientHandler> clientHandlers = this.getAllClientHandlers(message.getHeader());
         message.setHeader(this.generateNewHeader());
         
-        Logger.info("Sending message to all clients: " + message.toProtocolString());
+        Logger.info("Sending message to all clients: " + message);
         for (ClientHandler clientHandler : clientHandlers) {
             clientHandler.sendMessage(message);
         }
@@ -166,7 +166,7 @@ public class ClientHandler extends Thread {
                 return false;
             }
 
-            Logger.info("Sending message to " + message.getHeader().getReceiver() + " " + message.getHeader().getId() + ": " + message.toProtocolString());
+            Logger.info("Sending message to " + message.getHeader().getReceiver() + " " + message.getHeader().getId() + ": " + message);
             receiver.sendMessage(message);
             return true;
         } catch (Exception e) {
@@ -180,8 +180,8 @@ public class ClientHandler extends Thread {
             Logger.error("Message is null");
             return;
         } 
-        Logger.info(this.clientSocket.getRemoteSocketAddress() + " Sending message: " + message.toProtocolString());
-        this.socketWriter.println(message.toProtocolString());
+        Logger.info(this.clientSocket.getRemoteSocketAddress() + " Sending message: " + message);
+        this.socketWriter.println(message);
         this.socketWriter.flush(); // Ensure the message is transmitted
     }
 
@@ -244,7 +244,7 @@ public class ClientHandler extends Thread {
             // this.identifyClientType(attempts+1);
 
             // message.setBody(new MessageBody(response));
-            Logger.error("Could not identify client type, sending failure response: " + responseMessage.toProtocolString());
+            Logger.error("Could not identify client type, sending failure response: " + responseMessage);
 
             this.sendMessage(responseMessage);
             this.identifyClientType(attempts+1);
@@ -252,7 +252,7 @@ public class ClientHandler extends Thread {
         }
         else if (response instanceof FailureResponse) {
             // message.setBody(new MessageBody(response));
-            Logger.error("Could not identify client type, sending failure response: " + responseMessage.toProtocolString());
+            Logger.error("Could not identify client type, sending failure response: " + responseMessage);
 
             this.sendMessage(responseMessage);
             this.identifyClientType(attempts+1);
@@ -313,7 +313,7 @@ public class ClientHandler extends Thread {
             response = new SuccessResponse(command, "Identification successful");
         }
         else{
-            Logger.error("Invalid identification message: " + identification.toProtocolString());
+            Logger.error("Invalid identification message: " + identification);
             response = new FailureResponse(new ClientIdentificationTransmission(), FailureReason.FAILED_TO_IDENTIFY_CLIENT);
         }
 

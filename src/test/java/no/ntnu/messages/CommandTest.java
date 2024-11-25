@@ -56,7 +56,7 @@
 //     Message message = new Message(messageHeader, null);
 
 //     try {
-//       String command = message.toProtocolString();
+//       String command = message;
 //     } catch (IllegalArgumentException e) {
 //       assertEquals("Header and body cannot be null", e.getMessage());
 //     }
@@ -71,7 +71,7 @@
 //   //   Message message = new Message(null, messageBody);
 
 //   //   try {
-//   //     String command = message.toProtocolString();
+//   //     String command = message;
 //   //   } catch (IllegalArgumentException e) {
 //   //     assertEquals("Header and body cannot be null", e.getMessage());
 //   //   }

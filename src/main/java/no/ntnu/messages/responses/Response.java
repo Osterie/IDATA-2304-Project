@@ -69,7 +69,7 @@ public abstract class Response extends Transmission {
      * @return The protocol string representation of this response.
      */
     @Override
-    public String toProtocolString() {
+    public String toString() {
         String protocolString = this.getTransmissionString();
         protocolString += Delimiters.BODY_FIELD_PARAMETERS.getValue();
         protocolString += this.transmission.getTransmissionString();

@@ -62,19 +62,6 @@ public class Message {
     }
 
     /**
-     * Converts the message to its protocol string representation.
-     *
-     * @return The protocol string representing this message.
-     * @throws IllegalArgumentException if either the header or body is null.
-     */
-    public String toProtocolString() {
-        if (header == null || body == null) {
-            throw new IllegalArgumentException("Header and body cannot be null");
-        }
-        return header.toProtocolString() + HEADER_BODY_DELIMITER + body.toProtocolString();
-    }
-
-    /**
      * Parses a message from its protocol string representation.
      *
      * @param protocolString The protocol string representing a message.
@@ -92,5 +79,19 @@ public class Message {
         MessageHeader header = MessageHeader.fromProtocolString(parts[0]);
         MessageBody body = MessageBody.fromProtocolString(parts[1]);
         return new Message(header, body);
+    }
+
+    /**
+     * Converts the message to its protocol string representation.
+     *
+     * @return The protocol string representing this message.
+     * @throws IllegalArgumentException if either the header or body is null.
+     */
+    @Override
+    public String toString() {
+        if (header == null || body == null) {
+            throw new IllegalArgumentException("Header and body cannot be null");
+        }
+        return header + HEADER_BODY_DELIMITER + body;
     }
 }

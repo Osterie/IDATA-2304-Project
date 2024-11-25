@@ -38,6 +38,6 @@ public class ActuatorChangeCommandTest {
     @Test
     public void testToProtocolString() {
         command.setParameters(new String[]{"1", "ON"});
-        assertEquals("ACTUATOR_CHANGE;1;ON", command.toProtocolString());
+        assertEquals("ACTUATOR_CHANGE;1;ON", command);
     }
 }

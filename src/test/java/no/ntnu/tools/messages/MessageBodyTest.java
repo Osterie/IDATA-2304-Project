@@ -11,10 +11,10 @@ public class MessageBodyTest {
     // @Test
     // public void testToProtocolString() {
     //     MessageBody message = new MessageBody("command", "data");
-    //     assertEquals("command;" + "data", message.toProtocolString());
+    //     assertEquals("command;" + "data", message);
 
     //     MessageBody noDataMessage = new MessageBody("command");
-    //     assertEquals("command", noDataMessage.toProtocolString());
+    //     assertEquals("command", noDataMessage);
     // }
 
     @Test

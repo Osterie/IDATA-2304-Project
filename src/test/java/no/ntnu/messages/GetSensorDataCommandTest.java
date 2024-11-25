@@ -32,6 +32,6 @@ public class GetSensorDataCommandTest {
 
     @Test
     public void testToProtocolString() {
-        assertEquals("GET_SENSOR_DATA", command.toProtocolString());
+        assertEquals("GET_SENSOR_DATA", command);
     }
 }

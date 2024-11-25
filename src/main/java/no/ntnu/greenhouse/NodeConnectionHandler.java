@@ -56,18 +56,18 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
             
             Message response = greenhouseCommand.execute(this.nodeLogic, header);
             
-            Logger.info("Received command for node, sending response: " + response.toProtocolString());
-            socketWriter.println(response.toProtocolString());
+            Logger.info("Received command for node, sending response: " + response);
+            socketWriter.println(response);
         }
         else if (command instanceof SuccessResponse) {
-            Logger.info("Received success response for node: " + command.toProtocolString());
+            Logger.info("Received success response for node: " + command);
         }
         else if (command instanceof FailureResponse) {
             // TODO what are some failues which can be handled?
-            Logger.error("Received failure response for node: " + command.toProtocolString());
+            Logger.error("Received failure response for node: " + command);
         }
         else{
-            Logger.error("Received invalid command for node: " + command.toProtocolString());
+            Logger.error("Received invalid command for node: " + command);
         }        
     }
 }

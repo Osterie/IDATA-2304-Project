@@ -121,7 +121,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     Response response = (Response) transmission;
     SuccessResponse successResponse;
     if (response instanceof FailureResponse){
-      Logger.error("Failed to execute command: " + response.toProtocolString());
+      Logger.error("Failed to execute command: " + response);
       return;
       // TODO try to execute command again? If this is done, in the future perhaps an attempts field should be added, 
       // which shows how many times the transmission has been tried sent.
@@ -134,7 +134,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       return;
     }
 
-    Logger.info("Handling greenhouse command response: " + response.toProtocolString());
+    Logger.info("Handling greenhouse command response: " + response);
 
     Transmission command = successResponse.getTransmission();
     
@@ -178,7 +178,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         }
         break;
       default:
-        Logger.error("Unknown command: " + command.toProtocolString());
+        Logger.error("Unknown command: " + command);
     }
   }
 
@@ -198,13 +198,13 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
       FailureResponse failureResponse = (FailureResponse) response;
 
-      Logger.error("Failed to execute command, sending again: " + response.toProtocolString());
+      Logger.error("Failed to execute command, sending again: " + response);
 
       if (failureResponse.getFailureReason() == FailureReason.FAILED_TO_IDENTIFY_CLIENT){
         this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
       }
       else{
-        Logger.error("Unknown command: " + response.toProtocolString());
+        Logger.error("Unknown command: " + response);
       }
       // MessageBody bodyToSend = new MessageBody(response.getTransmission());
 
@@ -215,7 +215,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
     else if (response instanceof SuccessResponse) {
       successResponse = (SuccessResponse) response;
-      Logger.info("Success response: " + successResponse.toProtocolString());
+      Logger.info("Success response: " + successResponse);
     }
   }
 

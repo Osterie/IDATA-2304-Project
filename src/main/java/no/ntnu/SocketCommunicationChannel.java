@@ -82,8 +82,8 @@ public abstract class SocketCommunicationChannel {
 
   protected synchronized void sendMessage(Message message) {
     if (isOn && socketWriter != null) {
-      socketWriter.println(message.toProtocolString());
-      Logger.info("Sent message to server: " + message.toProtocolString());
+      socketWriter.println(message);
+      Logger.info("Sent message to server: " + message);
     } else {
       Logger.error("Unable to send message, socket is not connected.");
       messageQueue.offer(message); // Buffer the message
@@ -144,9 +144,9 @@ public abstract class SocketCommunicationChannel {
       try {
         // Check if the socket is still open
         if (socket != null && !socket.isClosed() && socket.isConnected() && socketWriter != null) {
-          socketWriter.println(message.toProtocolString());
+          socketWriter.println(message);
           socketWriter.flush(); // Ensure the message is sent immediately
-          Logger.info("Resent buffered message: " + message.toProtocolString());
+          Logger.info("Resent buffered message: " + message);
         } else {
           throw new IOException("Socket is not open or not connected.");
         }

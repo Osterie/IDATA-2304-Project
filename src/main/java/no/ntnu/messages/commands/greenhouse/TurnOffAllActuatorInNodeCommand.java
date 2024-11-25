@@ -20,15 +20,15 @@ public class TurnOffAllActuatorInNodeCommand extends GreenhouseCommand {
     @Override
     public Message execute(NodeLogic nodeLogic, MessageHeader fromHeader) {
         nodeLogic.getNode().setAllActuators(false);
-        // MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0", this.toProtocolString());
+        // MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0", this);
 
         SuccessResponse response = new SuccessResponse(this, "TURN_OFF_ALL_ACTUATORS_SUCCESS");
         MessageBody body = new MessageBody(response);
         return new Message(fromHeader, body);
     }
-
+    
     @Override
-    public String toProtocolString() {
+    public String toString() {
         return this.getTransmissionString();
     }
     

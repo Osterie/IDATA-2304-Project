@@ -32,6 +32,6 @@ public class GetNodeIdCommandTest {
 
     @Test
     public void testToProtocolString() {
-        assertEquals("GET_NODE_ID", command.toProtocolString());
+        assertEquals("GET_NODE_ID", command);
     }
 }

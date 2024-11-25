@@ -27,7 +27,7 @@ public class GetNodeIdCommand extends GreenhouseCommand {
     }
 
     @Override
-    public String toProtocolString() {
+    public String toString() {
         return this.getTransmissionString();
     }
 }
