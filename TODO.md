@@ -14,7 +14,7 @@
 - [x] ADRIAN instead of a toProtocolString method, just override the toString method for transmissions?
 - [x] ADRIAN rename fromProtocolString to fromString.
 - [ ] ADRIAN use factory to create transmissions (or only commands?)?
-- [ ] ADRIAN when a client is disconnected, it should add a client identification transmission at the start of the buffer queue. So that it is sent first when the client tries to reconenct.
+- [ ] ADRIAN when a client is disconnected, it should send a client identification message again when it reconnects first.
 - [x] ADRIAN When control panel disconencts, pause sending of periodic sensor data until reconnected again.
 
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.

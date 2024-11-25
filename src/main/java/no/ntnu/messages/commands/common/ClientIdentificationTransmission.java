@@ -1,6 +1,7 @@
 package no.ntnu.messages.commands.common;
 
 import no.ntnu.constants.Endpoints;
+import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Transmission;
 import no.ntnu.messages.commands.Parameters;
@@ -28,6 +29,12 @@ public class ClientIdentificationTransmission extends Transmission implements Pa
         }
         this.client = client;
         this.id = id;
+    }
+
+    public ClientIdentificationTransmission(ClientIdentification clientIdentification) {
+        super("CLIENT_IDENTIFICATION");
+        this.client = clientIdentification.getClientType();
+        this.id = clientIdentification.getClientId();
     }
 
     /**

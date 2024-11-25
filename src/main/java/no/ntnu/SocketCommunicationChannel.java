@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import no.ntnu.constants.Endpoints;
+import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.messages.Transmission;
 import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
 import no.ntnu.messages.Message;
@@ -17,6 +18,7 @@ import no.ntnu.messages.MessageHeader;
 import no.ntnu.tools.Logger;
 
 public abstract class SocketCommunicationChannel {
+  protected ClientIdentification clientIdentification;
   protected Socket socket;
   protected BufferedReader socketReader;
   protected PrintWriter socketWriter;
@@ -91,16 +93,18 @@ public abstract class SocketCommunicationChannel {
     }
   }
 
-  protected void establishConnectionWithServer(Endpoints client, String id) {
-    if (client == null || id == null) {
+  protected void establishConnectionWithServer(ClientIdentification clientIdentification) {
+    if (clientIdentification == null) {
       Logger.error("Client type or ID is null, cannot establish connection.");
       return;
     }
 
+    this.clientIdentification = clientIdentification;
+
     // TODO server should send a response back with something to indicate the
     // connection was successful.
     // Send initial identifier to server
-    Message identificationMessage = this.createIdentificationMessage(client, id);
+    Message identificationMessage = this.createIdentificationMessage(clientIdentification);
     this.sendMessage(identificationMessage);
   }
 
@@ -120,6 +124,7 @@ public abstract class SocketCommunicationChannel {
         Logger.info("Reconnecting attempt " + (attempts + 1));
         this.close(); // Ensure previous resources are cleaned up
         this.initializeStreams(host, port);
+        this.establishConnectionWithServer(this.clientIdentification);
         this.flushBufferedMessages(); // Optional: flush buffered messages
         Logger.info("Reconnection successful.");
         // TODO don't have break?
@@ -158,8 +163,8 @@ public abstract class SocketCommunicationChannel {
     }
   }
 
-  private Message createIdentificationMessage(Endpoints client, String id) {
-    Transmission identificationCommand = new ClientIdentificationTransmission(client, id);
+  private Message createIdentificationMessage(ClientIdentification clientIdentification) {
+    Transmission identificationCommand = new ClientIdentificationTransmission(clientIdentification);
     MessageBody body = new MessageBody(identificationCommand);
     MessageHeader header = new MessageHeader(Endpoints.SERVER, "none");
     return new Message(header, body);

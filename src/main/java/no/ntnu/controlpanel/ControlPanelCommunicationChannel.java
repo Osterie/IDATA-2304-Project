@@ -17,6 +17,7 @@ import no.ntnu.greenhouse.sensors.ImageSensorReading;
 import no.ntnu.greenhouse.sensors.NumericSensor;
 import no.ntnu.greenhouse.sensors.NumericSensorReading;
 import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.stringification.Base64ImageEncoder;
 import no.ntnu.messages.MessageBody;
@@ -61,7 +62,10 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // TODO should perhaps try to establish connection with server. (try catch). And if it fails, try like 3 more times.
     // Don't use chatgpt or copilot and preferably, remember design patterns, cohesion, coupling and such.
 
-    this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
+    // TODO the classes that extend the sockec communication channel should be able to just call establisconnection or something without parameters.
+    // Or WHATEVER. refactor
+    ClientIdentification clientIdentification = new ClientIdentification(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
+    this.establishConnectionWithServer(clientIdentification);
   }
 
   /**
@@ -204,7 +208,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       Logger.error("Failed to execute command, sending again: " + response);
 
       if (failureResponse.getFailureReason() == FailureReason.FAILED_TO_IDENTIFY_CLIENT){
-        this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
+        ClientIdentification clientIdentification = new ClientIdentification(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
+        this.establishConnectionWithServer(clientIdentification);
       }
       else{
         Logger.error("Unknown command: " + response);

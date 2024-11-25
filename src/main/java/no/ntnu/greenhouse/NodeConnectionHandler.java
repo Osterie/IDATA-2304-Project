@@ -2,6 +2,7 @@ package no.ntnu.greenhouse;
 
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.constants.Endpoints;
+import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
@@ -34,7 +35,8 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
      */
     @Override
     public void run() {
-        this.establishConnectionWithServer(Endpoints.GREENHOUSE, String.valueOf(this.nodeLogic.getId()));
+        ClientIdentification clientIdentification = new ClientIdentification(Endpoints.GREENHOUSE, String.valueOf(this.nodeLogic.getId()));
+        this.establishConnectionWithServer(clientIdentification);
     }
 
     // TODO fix, improve, refactor.
