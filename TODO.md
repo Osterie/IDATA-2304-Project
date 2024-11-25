@@ -74,7 +74,7 @@
 
 - [ ] ADRIAN/DANIEL/KNUT/SEBASTIAN/TOBIAS. JAVADOC FOLKENS, JAVADOC.
 - [x] TOBIAS Skriv javadoc for messages-klasser.
-- [ ] TOBIAS Skriv javadoc for command-klasser.
+- [ ] ADRIAN Skriv javadoc for command-klasser.
 - [x] TOBIAS Skriv javadoc for listeners-klasser.
 - [x] TOBIAS Skriv javadoc for intermidiary-klasser.
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
