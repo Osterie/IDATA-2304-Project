@@ -5,9 +5,15 @@
 
 # Next sprint
 
-
+- [ ] NOT ASSINGED  for generateHeader method usage, what if header is null? handle this.
+- [ ] NOT ASSINGED  FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
 
 # GENERAL
+
+- [ ] ADRIAN instead of a toProtocolString method, just override the toString method for transmissions?
+- [ ] ADRIAN use factory to create transmissions (or only commands?)?
+- [ ] ADRIAN when a client is disconnected, it should add a client identification transmission at the start of the buffer queue. So that it is sent first when the client tries to reconenct.
+- [ ] ADRIAN When control panel disconencts, pause sending of periodic sensor data until reconnected again.
 
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
 - [ ] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
@@ -16,7 +22,9 @@
 - [ ] ADRIAN remove option to remove tabs in control panel
 - [ ] ADRIAN should actuator change send 0/1 instead of on/off? In that case we can show the text closed/open for window instead of on/off, for example.
 - [ ] ADRIAN in header, change from receiver to endpoint? or something else, think about it.
-- [ ] ADRIAN WHen client handler for some reason disconnects, try to connect again (send identification message and such)
+- [x] ADRIAN WHen client handler for some reason disconnects, try to connect again (send identification message and such)
+- [x] ADRIAN add enums for failure responses.
+- [ ] ADRIAN add colors to Logger methods. 
 
 - [ ] TOBIAS (SEBASTIAN: Håpe du ikkje he laga det allereie) add a refresh button to control panel
 
@@ -226,10 +234,11 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 # EXTRA WORK
 
 - [ ] ADRIAN. 1. Resilience in case of network outages. The solution functions when the network connection is temporarily lost. This means buffering data, retransmissions, reconnecting, etc
-    - [ ] When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
-    - [ ] If the connection is lost, try to reconnect. If it fails, show an error message to the user.
+    - [x] When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
+    - [x] If the connection is lost, try to reconnect. 
+    - [ ] If reconnection fails, show an error message to the user. (then they can choose to reload the control panel perhaps when the server is back up. Display a "Server down" message in the control panel)
     - [ ] If a message is not received, try to receive it again. If it fails, show an error message to the user.
-    - [ ] Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
+    - [x] Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
 
 
 - [x] TOBIAS. 2. Data encryption. You can think of different methods of integrating security into your solution,
