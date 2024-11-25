@@ -82,30 +82,45 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
     }
   }
 
-  private Node createRibbon() {
-    ToolBar ribbon = new ToolBar();
+  private VBox createRibbon() {
+    // Create a menu bar for the ribbon
+    MenuBar ribbonMenuBar = new MenuBar();
 
-    Button refreshButton = new Button("Refresh");
-    refreshButton.setOnAction(event -> refreshControlPanel());
-    // TODO: If settings is not needed, delete
-    Button settingsButton = new Button("Settings");
-    settingsButton.setOnAction(event -> Logger.info("Settings clicked"));
+    // File menu
+    Menu fileMenu = new Menu("Options");
+    MenuItem exitItem = new MenuItem("Exit");
+    MenuItem refreshItem = new MenuItem("Refresh");
+    refreshItem.setOnAction(event -> refreshControlPanel());
+    MenuItem settingsItem = new MenuItem("Settings");
+    settingsItem.setOnAction(event -> Logger.info("Settings clicked"));
+    exitItem.setOnAction(event -> Platform.exit());
 
-    //TODO make the ui look better maybe move the nodeSelector and turnOffAllButton under refresh and settings
+    fileMenu.getItems().add(refreshItem);
+    fileMenu.getItems().add(settingsItem);
+    fileMenu.getItems().add(exitItem);
 
+    // Add menus to the ribbon
+    ribbonMenuBar.getMenus().addAll(fileMenu);
+
+    // Create a toolbar for node controls below the ribbon
+    ToolBar nodeToolBar = new ToolBar();
+
+    // Node selector
     nodeSelector = new ComboBox<>();
     nodeSelector.setPromptText("Select Node");
     nodeSelector.setOnAction(event -> updateTurnOffButtonState());
 
+    // Turn Off All button
     turnOffAllButton = new Button("Turn Off All Actuators");
-    turnOffAllButton.setDisable(true); // disabled until you select a node
+    turnOffAllButton.setDisable(true); // Disabled until you select a node
     turnOffAllButton.setOnAction(event -> turnOffAllActuators());
 
-    HBox nodeControlBox = new HBox(nodeSelector, turnOffAllButton);
-    nodeControlBox.setSpacing(10);
+    // Add controls to the toolbar
+    nodeToolBar.getItems().addAll(new Label("Node Controls: "), nodeSelector, turnOffAllButton);
 
-    ribbon.getItems().addAll(refreshButton, settingsButton, nodeControlBox);
-    return ribbon;
+    // Combine the ribbon and the toolbar in a vertical layout
+    VBox ribbonContainer = new VBox(ribbonMenuBar, nodeToolBar);
+    return ribbonContainer;
   }
 
   private void updateTurnOffButtonState() {turnOffAllButton.setDisable(nodeSelector.getValue() == null);}
