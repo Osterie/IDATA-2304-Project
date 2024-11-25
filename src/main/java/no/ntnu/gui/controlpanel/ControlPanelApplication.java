@@ -148,15 +148,19 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
    */
   private void refreshControlPanel() {
     Logger.info("Refreshing Control Panel...");
+
     Platform.runLater(() -> {
+      // Close the current stage
       Stage currentStage = (Stage) mainScene.getWindow();
-      currentStage.close(); // Close the current window
+      currentStage.close();
 
-      // Optionally reset data or reload nodes
-      resetControlPanelLogic();
-
-      // Reopen the control panel
-      start(new Stage());
+      // Create a new stage and reopen the control panel
+      try {
+        start(new Stage());
+      } catch (Exception e) {
+        Logger.error("Error reopening the control panel: " + e.getMessage());
+        e.printStackTrace();
+      }
     });
   }
 

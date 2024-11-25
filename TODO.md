@@ -31,7 +31,7 @@
 - [x] ADRIAN add colors to Logger methods. 
 - [x] ADRIAN notifyChanges method of Actuator Class, refactor this method.
 
-- [ ] TOBIAS (SEBASTIAN: Håpe du ikkje he laga det allereie) add a refresh button to control panel
+- [x] TOBIAS (SEBASTIAN: Håpe du ikkje he laga det allereie) add a refresh button to control panel
 
 - [x] ADRIAN fix nodes sometimes not being created in gui.
 
