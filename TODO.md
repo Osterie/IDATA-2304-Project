@@ -8,20 +8,21 @@
 - [ ] UNASSIGNED  for generateHeader method usage, what if header is null? handle this.
 - [ ] UNASSIGNED  FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
 - [ ] UNASSIGNED clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
+- [ ] UNASSIGNED Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
 
 # GENERAL
 
 - [x] ADRIAN instead of a toProtocolString method, just override the toString method for transmissions?
 - [x] ADRIAN rename fromProtocolString to fromString.
 - [ ] ADRIAN use factory to create transmissions (or only commands?)?
-- [ ] ADRIAN when a client is disconnected, it should send a client identification message again when it reconnects first.
+- [x] ADRIAN when a client is disconnected, it should send a client identification message again when it reconnects first.
 - [x] ADRIAN When control panel disconencts, pause sending of periodic sensor data until reconnected again.
 
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
 - [ ] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
 - [x] ADRIAN Fix application using all available resources.
 - [x] ADRIAN Create enum for non-predefined client id.
-- [ ] ADRIAN remove option to remove tabs in control panel
+- [x] ADRIAN remove option to remove tabs in control panel
 - [ ] ADRIAN should actuator change send 0/1 instead of on/off? In that case we can show the text closed/open for window instead of on/off, for example.
 - [x] ADRIAN WHen client handler for some reason disconnects, try to connect again (send identification message and such)
 - [x] ADRIAN add enums for failure responses.
