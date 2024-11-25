@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+import no.ntnu.tools.stringification.Base64ImageEncoder;
 
 import javax.imageio.ImageIO;
 
@@ -92,6 +93,16 @@ public class ImageSensorReading extends SensorReading{
         return fileExtension;
     }
 
+    
+    /**
+     * Sets the file extension for the image sensor reading.
+     *
+     * @param fileExtension the file extension to set (e.g., "jpg", "png")
+     */
+    public void setFileExtension(String fileExtension) {
+        this.fileExtension = fileExtension;
+    }
+
     /**
      * Indicates whether some other object is "equal to" this one.
      *
@@ -132,11 +143,24 @@ public class ImageSensorReading extends SensorReading{
 
     /**
      * Get a human-readable (formatted) version of the current reading.
-     *
+     * 
      * @return The sensor reading and the unit
      */
     @Override
     public String getFormatted() {
-        return "Image";
+        return this.getType() + "=" + this.getImageFormatted() + " " + this.fileExtension;
+    }
+
+    /**
+     * Get a Base64 encoded string representation of the image.
+     *
+     * @return A Base64 encoded string representing the image
+     */
+    private String getImageFormatted() {
+        try {
+            return Base64ImageEncoder.imageToString(this.currentImage, this.fileExtension);
+        } catch (IOException e) {
+            return "Error encoding image";
+        }
     }
 }

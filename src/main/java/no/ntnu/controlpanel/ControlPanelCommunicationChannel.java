@@ -1,5 +1,6 @@
 package no.ntnu.controlpanel;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,10 +13,12 @@ import static no.ntnu.tools.Parser.parseIntegerOrError;
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.sensors.ImageSensorReading;
 import no.ntnu.greenhouse.sensors.NumericSensor;
+import no.ntnu.greenhouse.sensors.NumericSensorReading;
 import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.tools.Logger;
-
+import no.ntnu.tools.stringification.Base64ImageEncoder;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
@@ -445,12 +448,13 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     return readings;
   }
 
+  
   /**
-   * Parse a sensor reading from a string.
-   * Extracts the details of a sensor reading from the provided string.
+   * Parses a sensor reading from a string and returns a SensorReading object.
    *
-   * @param reading The sensor reading string
-   * @return The parsed sensor reading
+   * @param reading the sensor reading string in the format "type=value unit" or "image=base64String fileExtension"
+   * @return a SensorReading object representing the parsed sensor reading
+   * @throws IllegalArgumentException if the reading is null, empty, or not in the expected format
    */
   private SensorReading parseReading(String reading) {
     Logger.info("Reading: " + reading);
@@ -465,11 +469,29 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     if (valueParts.length != 2) {
       throw new IllegalArgumentException("Invalid sensor value/unit: " + reading);
     }
-    String sensorType = assignmentParts[0];
-    double value = parseDoubleOrError(valueParts[0], "Invalid sensor value: " + valueParts[0]);
-    String unit = valueParts[1];
-    NumericSensor sensor = new NumericSensor(sensorType, value, value, value, unit);
-    return sensor.getReading();
+    
+    if (assignmentParts[0].equals("image")) {
+      String type = assignmentParts[0];
+      String base64String = valueParts[0];
+      String fileExtension = valueParts[1];
+
+      BufferedImage image;
+      try {
+        image = Base64ImageEncoder.stringToImage(base64String);
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Failed to decode image: " + e.getMessage(), e);
+      }
+      ImageSensorReading imageReading = new ImageSensorReading(type, image);
+      imageReading.setFileExtension(fileExtension);
+      
+      return imageReading;
+    }
+    else{
+      String type = assignmentParts[0];
+      double value = parseDoubleOrError(valueParts[0], "Invalid sensor value: " + valueParts[0]);
+      String unit = valueParts[1];
+      return new NumericSensorReading(type, value, unit);
+    }
   }
 
   /**
