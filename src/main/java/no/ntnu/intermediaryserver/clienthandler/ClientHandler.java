@@ -1,4 +1,4 @@
-package no.ntnu.intermediaryserver;
+package no.ntnu.intermediaryserver.clienthandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,8 +9,9 @@ import java.util.ArrayList;
 
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
-import no.ntnu.messages.commands.ClientIdentificationTransmission;
+import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
 import no.ntnu.constants.Endpoints;
+import no.ntnu.intermediaryserver.server.IntermediaryServer;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.tools.Logger;
@@ -226,6 +227,7 @@ public class ClientHandler extends Thread {
         this.addClient();
     }
 
+    // TODO refactor
     /**
      * Processes the identification message from the client.
      *
@@ -250,6 +252,9 @@ public class ClientHandler extends Thread {
             ClientIdentificationTransmission clientIdentificationCommand = (ClientIdentificationTransmission) command;
             Endpoints clientType = clientIdentificationCommand.getClient();
             String clientId = clientIdentificationCommand.getId();
+            if (clientId.equals(Endpoints.NOT_PREDEFINED.getValue())) {
+                clientId = this.clientSocket.getRemoteSocketAddress().toString();
+            }
             this.clientIdentification = new ClientIdentification(clientType, clientId);
             success = true;
         }
@@ -259,21 +264,6 @@ public class ClientHandler extends Thread {
         }
 
         return success;
-
-
-        // boolean identificationSuccess = false;
-        // try {
-        //     this.clientIdentifier.identifyClientType(identification);
-        //     identificationSuccess = true;    
-        // } catch (IllegalArgumentException e) {
-        //     Logger.error("Invalid identification message: " + identification);
-        //     this.closeStreams();
-        // }
-        
-        // this.clientType = this.clientIdentifier.getClientType();
-        // this.clientId = this.clientIdentifier.getClientId();
-
-        // return identificationSuccess;
     }
 
     /**

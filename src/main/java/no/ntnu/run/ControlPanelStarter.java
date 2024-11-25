@@ -6,7 +6,7 @@ import java.util.ResourceBundle.Control;
 
 import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
-import no.ntnu.intermediaryserver.ServerConfig;
+import no.ntnu.intermediaryserver.server.ServerConfig;
 import no.ntnu.tools.Logger;
 
 /**

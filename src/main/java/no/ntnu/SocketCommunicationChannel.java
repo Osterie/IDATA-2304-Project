@@ -8,10 +8,10 @@ import java.net.Socket;
 
 import no.ntnu.constants.Endpoints;
 import no.ntnu.messages.Transmission;
+import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
-import no.ntnu.messages.commands.ClientIdentificationTransmission;
 import no.ntnu.tools.Logger;
 
 

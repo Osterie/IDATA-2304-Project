@@ -2,7 +2,7 @@ package no.ntnu.messages;
 
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.greenhouse.SensorActuatorNode;
-import no.ntnu.messages.greenhousecommands.TurnOnAllActuatorInNodeCommand;
+import no.ntnu.messages.commands.greenhouse.TurnOnAllActuatorInNodeCommand;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ public class TurnOnAllActuatorInNodeCommandTest {
         Message result = command.execute(nodeLogic);
         // Verifies that the setAllActuators method is called once by the node
         verify(node, times(1)).setAllActuators(true);
-        assertEquals("TURN_ON_ALL_ACTUATORS_SUCCESS", result.getBody().getData());
+        assertEquals("TURN_OFF_ALL_ACTUATORS_SUCCESS", result.getBody().getTransmission().getTransmissionString());
         assertEquals("TURN_ON_ALL_ACTUATORS", result.getHeader().getDataType());
     }
 

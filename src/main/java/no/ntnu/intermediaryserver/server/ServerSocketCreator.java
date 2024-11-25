@@ -1,9 +1,8 @@
-package no.ntnu.intermediaryserver;
+package no.ntnu.intermediaryserver.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import no.ntnu.constants.PortNumberOutOfRangeException;
 import no.ntnu.tools.Logger;
 
 public class ServerSocketCreator {

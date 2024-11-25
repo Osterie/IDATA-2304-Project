@@ -20,10 +20,10 @@ import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
 import no.ntnu.messages.commands.Command;
-import no.ntnu.messages.greenhousecommands.ActuatorChangeCommand;
-import no.ntnu.messages.greenhousecommands.GetNodeCommand;
-import no.ntnu.messages.greenhousecommands.GetSensorDataCommand;
-import no.ntnu.messages.greenhousecommands.GreenhouseCommand;
+import no.ntnu.messages.commands.greenhouse.ActuatorChangeCommand;
+import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
+import no.ntnu.messages.commands.greenhouse.GetSensorDataCommand;
+import no.ntnu.messages.commands.greenhouse.GreenhouseCommand;
 import no.ntnu.messages.responses.FailureResponse;
 import no.ntnu.messages.responses.Response;
 import no.ntnu.messages.responses.SuccessResponse;
@@ -39,7 +39,7 @@ import no.ntnu.messages.Message;
  */
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
-  private String targetId = "1";
+  private String targetId = "1"; // Used to target a greenhouse node for sensor data requests
 
   /**
    * Create a communication channel for the control panel.
@@ -57,7 +57,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // Don't use chatgpt or copilot and preferably, remember design patterns, cohesion, coupling and such.
 
     this.listenForMessages();
-    this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, "0");
+    this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, "?");
   }
 
   /**

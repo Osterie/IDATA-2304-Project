@@ -2,15 +2,15 @@ package no.ntnu.messages;
 
 import java.util.HashMap;
 
-import no.ntnu.messages.commands.ClientIdentificationTransmission;
 import no.ntnu.messages.commands.Command;
 import no.ntnu.messages.commands.Parameters;
-import no.ntnu.messages.greenhousecommands.ActuatorChangeCommand;
-import no.ntnu.messages.greenhousecommands.GetNodeCommand;
-import no.ntnu.messages.greenhousecommands.GetNodeIdCommand;
-import no.ntnu.messages.greenhousecommands.GetSensorDataCommand;
-import no.ntnu.messages.greenhousecommands.TurnOffAllActuatorInNodeCommand;
-import no.ntnu.messages.greenhousecommands.TurnOnAllActuatorInNodeCommand;
+import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
+import no.ntnu.messages.commands.greenhouse.ActuatorChangeCommand;
+import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
+import no.ntnu.messages.commands.greenhouse.GetNodeIdCommand;
+import no.ntnu.messages.commands.greenhouse.GetSensorDataCommand;
+import no.ntnu.messages.commands.greenhouse.TurnOffAllActuatorInNodeCommand;
+import no.ntnu.messages.commands.greenhouse.TurnOnAllActuatorInNodeCommand;
 import no.ntnu.messages.responses.FailureResponse;
 import no.ntnu.messages.responses.Response;
 import no.ntnu.messages.responses.SuccessResponse;

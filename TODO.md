@@ -1,4 +1,4 @@
-sssss# TOP PRIROTY
+# TOP PRIROTY
 
 - Clean code.
 - Good code.
@@ -8,15 +8,15 @@ sssss# TOP PRIROTY
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
 - [x] ADRIAN Fix application using all available resources.
 
-- [ ] SEBASTIAN add a reload button to control panel
+- [ ] TOBIAS (SEBASTIAN: Håpe du ikkje he laga det allereie) add a refresh button to control panel
 
 - [x] ADRIAN fix nodes sometimes not being created in gui.
 
 - [ ] DANIEL when changing actuator state in Sensor Node GUI, should notify all the control panels.
 
-- [x] ADRIAN When the control panel asks for sensor data, perhaps it does this a bit infrequently? Currenlty i believe it does it every 5 seconds. But do not change this to be too often. Is there another solution?
+- [ ] DANIEL When sending sensor data (GetSensorDataCommand), the message should contain the data type, for the numberSensorReading, can be For example NUM, for imagesensorreading, can be IMG.
 
-- [ ] TOBIAS after sending a message, the controller should expect a response. If no response received, send again, max 3 times. Response should be OK or ERROR or something. PERHAPS THIS IS NOT NEEDED. If you deem this unnecessary, then write why.
+- [x] ADRIAN When the control panel asks for sensor data, perhaps it does this a bit infrequently? Currenlty i believe it does it every 5 seconds. But do not change this to be too often. Is there another solution?
 
 - [ ] TOBIAS Implement encryption
 
@@ -24,7 +24,8 @@ sssss# TOP PRIROTY
 
 - [x] ADRIAN handle if port address already in use.
 
-- [ ] ADRIAN support multiple control panesl, unique id
+- [x] ADRIAN automatic generation of unique identifier for control panel.
+- [x] ADRIAN support multiple control panesl, unique id
 
 - [x] ADRIAN create host localhost constant or something
 
@@ -36,13 +37,15 @@ sssss# TOP PRIROTY
 - [x] ADRIAN Implement Response class
 - [x] ADRIAN Implement Success and Failuer responses.
 
-
-- [ ] Fix test file structure.
-- [ ] Look over and fix bad javadoc
+- [ ] SEBASTIAN Handle display if image better. Fix image displaying in greenhouse nodes. For example a small version of the image, which when clicked opens a new window with the full image.
+- [ ] TOBIAS when closing the node tab in control panel, close in greenhouse too? Or not.
+- [ ] SEBASTIAN Fix test file structure.
+- [ ] TOBIAS AND OTHERS? Look over and fix bad javadoc
 - [ ] When using copilot to write javadoc, check that the javadoc is correct
 
 - [x] TOBIAS. Gjør om bilde til string, også den stringen til bilde. (for å sende over socket)
 - [ ] ?TOBIAS. Klasse for control panel som kan gjøre om den mottatte informasjonen til riktig format.
+- [x] ADRIAN. Følge protokoll, en header og en body. Header inneholer mottaker, mottakerID, datatype Body inneholder dataen.
 
 # JAVADOC
 
@@ -53,15 +56,13 @@ sssss# TOP PRIROTY
 - [x] TOBIAS Skriv javadoc for intermidiary-klasser.
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
 
-- [ ] Skriv javadoc for greenhouse-klasser.
-- [ ] Skriv javadoc for GUI-klasser.
-- [ ] Skriv javadoc for control-panel-klasser.
-- [ ] Skriv javadoc for run-klasser.
+- [ ] NOT ASSIGNED Skriv javadoc for greenhouse-klasser.
+- [ ] NOT ASSIGNED Skriv javadoc for GUI-klasser.
+- [ ] NOT ASSIGNED Skriv javadoc for control-panel-klasser.
+- [ ] NOT ASSIGNED Skriv javadoc for run-klasser.
 - [x] TOBIAS Skriv javadoc for tools-klasser.
 
-- [ ] Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
-
-- [x] ADRIAN. Følge protokoll, en header og en body. Header inneholer mottaker, mottakerID, datatype Body inneholder dataen.
+- [ ] NOT ASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
 
 # PROTOCOL DESCRIPTION REQUIREMENTS
 
@@ -74,7 +75,7 @@ For each of the design choices provide a short justification: why did you choose
 - [ ] 5. SEBASTIAN. The overall architecture:
 - [ ]   SEBASTIAN. • Who are the actors (nodes) in your solution?
 - [ ]   SEBASTIAN. • Who are the clients, who is/are the server(s)?
-- [ ] 6. ADRIAN The flow of information: when and how the messages are sent?
+- [ ] ADRIAN 6. The flow of information: when and how the messages are sent?
 - [ ] 7. KNUT. The type of your protocol:
 - [ ]   KNUT. • Is your protocol connection-oriented or connection-less?
 - [ ]   KNUT. • Is the protocol state-full or state-less?
@@ -103,7 +104,7 @@ a reply with an error code?
 - [x] Adrian Implement Header/Body messages for control panel 
 - [x] Adrian Implement Header/Body messages for intermediary server
 - [x] Adrian Implement Header/Body messages for greenhouse
-- [ ] DANIEL Handling connection errors and messaging errors properly.
+- [ ] ADRIAN Handling connection errors and messaging errors properly.
 - [x] ADRIAN. gitignore fil.
 - [x] ADRIAN. Implementere Message og Command interfacer/klasser
 - [x] ADRIAN. Command classes for client identification. 
@@ -133,22 +134,21 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 
 - [X] DANIEL. Lag test klasser som tester kommunikasjon mellom intermediary server og klientene (greenhouse nodes og control panels).
 - [X] DANIEL. Test at de kobler seg til serveren riktig, at de blir identifisert av serveren på riktig måte. Test hva som skjer om protokoller ikke blir fulgt, for eksemepel om første melding til server ikke er en identifiserende melding. 
-- [ ] KNUT: Test å sende kommandoer, sjekk respons.
+- [X] KNUT: Test å sende kommandoer, sjekk respons.
 - [ ] SEBASTIAN Test med flere kontrollere koblet til server, også spør om informasjon fra noder samtidig, både fra ulike noder og fra samme node og slikt.
-- [ ] Finn på tester selv, pass på at koden er robust og at feil blir håndtert riktig. 
-- [ ] Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
+- [ ] NOT ASSIGNED Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
 
 ## OTHER
 
 - [ ] TOBIAS - Lag tester for alle klasser som kan testes.
-- [ ] Test protokoll
+- [ ] NOT ASSIGNED Test protokoll
 - [ ] TOBIAS - Test Message og Command klasser
 _
 # GREENHOUSE
 
 - [x] ADRIAN One Thread for writing and one for reading.
 
-- [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
+- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN lage kommunikasjons klasse for greenhouse nodes.
 - [x] ADRIAN. Koble til multiple greenhouse nodes til intermediary server.
 
@@ -164,7 +164,7 @@ Each sensor-node can do the following:
 
 - [x] ADRIAN One Thread for writing and one for reading.
 - [x] ADRIAN Refactor intermediary server
-- [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
+- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. Lage en intermediary server som kan brukes for å tilrettelegge kommunikasjon mellom greenhouse nodes og control panel.
 - [x] ADRIAN. Ta i mot klienter som vil koble seg til.
 - [x] ADRIAN. Motta meldinger fra klienter.
@@ -193,7 +193,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
     - [x] ADRIAN How does control panel know what info to ask for?
     - [x] ADRIAN How does control panel know what to do with the info it receives?
 
-- [ ] DANIEL. Håndtere situasjoner hvor feil oppstår.
+- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. koble til multiple control panels til intermediary server.
 - [x] ADRIAN. lage kommunikasjons klasse for control panel
 - [x] ADRIAN. Spør hele tiden om informasjon for noden som vises i control panel GUI.
@@ -206,11 +206,12 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 ## GUI
 
 - [ ] KNUT. Implement ComponentBuilder class
-- [ ] KNUT. Visualize charts.
-- [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
-- [ ] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
-- [x] ADRIAN. Make actuator buttons send data. 
-- [ ] KNUT. Do the - [ ] which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
+- [X] KNUT. Visualize charts.
+- [X] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
+- [ ] KNUT. Utbedre UI for ControlPanelApplication, Sett TurnOffAllActuators button til actuatorPane og fjern nodeSelect
+- [X] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
+- [x] ADRIAN. Make actuator buttons send data.
+- [ ] DANIEL. Do the task which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
 
 # EXTRA WORK
 
@@ -225,7 +226,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 either using public-key cryptography or other methods.
 - [x] TOBIAS Convert symmetric encryption to RSA.
 
-- [x] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line argument). But you can design automated-address assignments as part of your protocol. For example, look at DHCP as an inspiration.
+- [ ] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line argument). But you can design automated-address assignments as part of your protocol. For example, look at DHCP as an inspiration.
 
 - [x] 4. SEBASTIAN/ADRIAN Images/files as sensor data. 
 
@@ -258,8 +259,8 @@ member? How did you work with the sprints? Were there any general themes for the
 - [ ] DANIEL 4. The architecture of your solution. What nodes are communicating? What is the responsibility
 of each? Preferably, include model’s diagrams here. (1-2min)
 - [ ] TOBIAS OG DANIEL 5. Your communication protocol. Summarize it in a clear yet concise way. (3-4min)
-- [ ] KNUT 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
-- [ ] 7. SEBASTIAN / TOBIAS / ADRIAN Explain what extra work you have done (if any) for this to be considered an excellent project.
+- [ ] ALLE 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
+- [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project.
 (1-3min)
 - [ ] ADRIAN 8. Reflect on potential improvements and future work. (1 min)
 

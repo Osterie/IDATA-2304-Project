@@ -1,4 +1,4 @@
-package no.ntnu.messages.greenhousecommands;
+package no.ntnu.messages.commands.greenhouse;
 
 import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.NodeLogic;
@@ -15,15 +15,15 @@ public class GetNodeIdCommand extends GreenhouseCommand {
     }
 
     @Override
-    public Message execute(NodeLogic logic) {
+    public Message execute(NodeLogic logic, MessageHeader fromHeader) {
         Logger.info("Received request for node ID from server, sending response " + logic.getId());
 
         // TODO should not be 0, how to know what though?
-        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0");
+        // MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0");
         
         SuccessResponse response = new SuccessResponse(this, String.valueOf(logic.getId()));
         MessageBody body = new MessageBody(response);
-        return new Message(header, body);
+        return new Message(fromHeader, body);
     }
 
     @Override

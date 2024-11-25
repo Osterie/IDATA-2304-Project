@@ -1,4 +1,4 @@
-package no.ntnu.constants;
+package no.ntnu.intermediaryserver.server;
 
 public class PortNumberOutOfRangeException extends RuntimeException {
   public PortNumberOutOfRangeException(int portNumber) {

@@ -1,6 +1,7 @@
 package no.ntnu.messages;
 
 import no.ntnu.constants.Endpoints;
+import no.ntnu.tools.Logger;
 
 /**
  * Represents the header of a message.
@@ -16,23 +17,9 @@ public class MessageHeader {
     private static final String FIELD_DELIMITER = Delimiters.HEADER_FIELD.getValue();
     private Endpoints receiver;  // The receiver of the message
     private String id;           // The ID of the receiver
-    private String dataType;     // Optional data type of the message
 
     /**
-     * Constructs a MessageHeader with all fields.
-     *
-     * @param receiver The receiver endpoint. Must not be null.
-     * @param id       The receiver's ID. Must not be null or empty.
-     * @param dataType The type of data being sent. Can be empty but not null.
-     */
-    public MessageHeader(Endpoints receiver, String id, String dataType) {
-        this.setReceiver(receiver);
-        this.setId(id);
-        this.setDataType(dataType);
-    }
-
-    /**
-     * Constructs a MessageHeader without a data type.
+     * Constructs a MessageHeader
      *
      * @param receiver The receiver endpoint. Must not be null.
      * @param id       The receiver's ID. Must not be null or empty.
@@ -40,8 +27,20 @@ public class MessageHeader {
     public MessageHeader(Endpoints receiver, String id) {
         this.setReceiver(receiver);
         this.setId(id);
-        this.dataType = ""; // Default to an empty data type
+        // this.setDataType(dataType);
     }
+
+    // /**
+    //  * Constructs a MessageHeader without a data type.
+    //  *
+    //  * @param receiver The receiver endpoint. Must not be null.
+    //  * @param id       The receiver's ID. Must not be null or empty.
+    //  */
+    // public MessageHeader(Endpoints receiver, String id) {
+    //     this.setReceiver(receiver);
+    //     this.setId(id);
+    //     // this.dataType = ""; // Default to an empty data type
+    // }
 
     /**
      * Gets the receiver endpoint.
@@ -86,26 +85,26 @@ public class MessageHeader {
         this.id = id;
     }
 
-    /**
-     * Gets the data type of the message.
-     *
-     * @return The data type of the message.
-     */
-    public String getDataType() {
-        return dataType;
-    }
+    // /**
+    //  * Gets the data type of the message.
+    //  *
+    //  * @return The data type of the message.
+    //  */
+    // public String getDataType() {
+    //     return dataType;
+    // }
 
-    /**
-     * Sets the data type of the message.
-     *
-     * @param dataType The data type to set. Must not be null.
-     */
-    public void setDataType(String dataType) {
-        if (dataType == null) {
-            throw new IllegalArgumentException("Data type cannot be null");
-        }
-        this.dataType = dataType;
-    }
+    // /**
+    //  * Sets the data type of the message.
+    //  *
+    //  * @param dataType The data type to set. Must not be null.
+    //  */
+    // public void setDataType(String dataType) {
+    //     if (dataType == null) {
+    //         throw new IllegalArgumentException("Data type cannot be null");
+    //     }
+    //     this.dataType = dataType;
+    // }
 
     /**
      * Converts this header to its protocol string representation.
@@ -119,11 +118,11 @@ public class MessageHeader {
         if (receiver == null || id == null) {
             throw new IllegalArgumentException("Receiver and ID cannot be null");
         }
-        if (dataType.isEmpty()) {
-            return String.join(FIELD_DELIMITER, receiver.getValue(), id);
-        } else {
-            return String.join(FIELD_DELIMITER, receiver.getValue(), id, dataType);
-        }
+        // if (dataType.isEmpty()) {
+        return String.join(FIELD_DELIMITER, receiver.getValue(), id);
+        // } else {
+        //     return String.join(FIELD_DELIMITER, receiver.getValue(), id, dataType);
+        // }
     }
 
     /**
@@ -152,9 +151,14 @@ public class MessageHeader {
 
         if (parts.length == 2) {
             return new MessageHeader(clientType, targetId);
-        } else {
-            String optionalField = parts[2];
-            return new MessageHeader(clientType, targetId, optionalField);
+        } 
+        else{
+            Logger.error("Invalid header format. Expected 2 or 3 parts separated by '" + FIELD_DELIMITER + "'");
+            return null;
         }
+        // else {
+        //     String optionalField = parts[2];
+        //     return new MessageHeader(clientType, targetId, optionalField);
+        // }
     }
 }

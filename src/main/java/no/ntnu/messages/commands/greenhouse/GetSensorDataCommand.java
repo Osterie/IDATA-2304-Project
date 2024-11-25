@@ -1,4 +1,4 @@
-package no.ntnu.messages.greenhousecommands;
+package no.ntnu.messages.commands.greenhouse;
 
 import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.NodeLogic;
@@ -13,14 +13,14 @@ public class GetSensorDataCommand extends GreenhouseCommand {
     }
 
     @Override
-    public Message execute(NodeLogic nodeLogic) {
+    public Message execute(NodeLogic nodeLogic, MessageHeader fromHeader) {
         // TODO change id.
-        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0", this.toProtocolString());
+        // MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0", this.toProtocolString());
 
         String sensorData = nodeLogic.getSensorData();
         SuccessResponse response = new SuccessResponse(this, sensorData);
         MessageBody body = new MessageBody(response);
-        return new Message(header, body);
+        return new Message(fromHeader, body);
     }
 
     @Override

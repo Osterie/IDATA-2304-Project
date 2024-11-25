@@ -1,7 +1,9 @@
 package no.ntnu.intermediaryserver;
 
-import no.ntnu.constants.PortNumberOutOfRangeException;
 import org.junit.jupiter.api.*;
+
+import no.ntnu.intermediaryserver.server.PortNumberOutOfRangeException;
+import no.ntnu.intermediaryserver.server.ServerConfig;
 
 import java.io.IOException;
 import java.nio.file.Files;
