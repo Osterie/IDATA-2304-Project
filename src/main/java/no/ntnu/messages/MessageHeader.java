@@ -113,7 +113,7 @@ public class MessageHeader {
      * @return The parsed {@link MessageHeader} object.
      * @throws IllegalArgumentException If the protocol string is invalid or malformed.
      */
-    public static MessageHeader fromProtocolString(String protocolString) {
+    public static MessageHeader fromString(String protocolString) {
         if (protocolString == null || protocolString.trim().isEmpty()) {
             throw new IllegalArgumentException("Protocol string cannot be null or empty");
         }

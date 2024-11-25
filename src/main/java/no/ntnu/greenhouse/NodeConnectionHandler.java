@@ -43,7 +43,7 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
 
         Logger.info("Received message for node! " + this.nodeLogic.getId() + ": " + message);
 
-        Message messageObject = Message.fromProtocolString(message);
+        Message messageObject = Message.fromString(message);
         MessageHeader header = messageObject.getHeader();
         MessageBody body = messageObject.getBody();
         

@@ -72,7 +72,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // Attempt to parse the server message
     Message message;
     try {
-      message = Message.fromProtocolString(serverMessage);
+      message = Message.fromString(serverMessage);
     } catch (IllegalArgumentException | NullPointerException e) {
       Logger.error("Invalid server message format: " + serverMessage + ". Error: " + e.getMessage());
       return;

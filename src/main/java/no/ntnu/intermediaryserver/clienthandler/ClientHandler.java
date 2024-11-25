@@ -122,7 +122,7 @@ public class ClientHandler extends Thread {
      */
     private void sendToClient(String request) {
         Logger.info("request: " + request);
-        Message message = Message.fromProtocolString(request);
+        Message message = Message.fromString(request);
         String targetId = message.getHeader().getId();
 
         // TODO change this
@@ -229,7 +229,7 @@ public class ClientHandler extends Thread {
         }
 
         // TODO rename to incommingMessage
-        Message message = Message.fromProtocolString(identification);
+        Message message = Message.fromString(identification);
         Response response = this.processIdentification(message);
 
         // MessageHeader header = message.getHeader();

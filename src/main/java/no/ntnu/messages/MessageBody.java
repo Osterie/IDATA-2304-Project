@@ -46,7 +46,7 @@ public class MessageBody {
      * @return The parsed {@link MessageBody} object.
      * @throws IllegalArgumentException If the protocol string is invalid or malformed.
      */
-    public static MessageBody fromProtocolString(String protocolString) {
+    public static MessageBody fromString(String protocolString) {
         TransmissionTranslator transmissionTranslator = new TransmissionTranslator();
         Transmission transmission = transmissionTranslator.toTransmission(protocolString);
         return new MessageBody(transmission);
