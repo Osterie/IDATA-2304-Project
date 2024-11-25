@@ -27,20 +27,7 @@ public class MessageHeader {
     public MessageHeader(Endpoints receiver, String id) {
         this.setReceiver(receiver);
         this.setId(id);
-        // this.setDataType(dataType);
     }
-
-    // /**
-    //  * Constructs a MessageHeader without a data type.
-    //  *
-    //  * @param receiver The receiver endpoint. Must not be null.
-    //  * @param id       The receiver's ID. Must not be null or empty.
-    //  */
-    // public MessageHeader(Endpoints receiver, String id) {
-    //     this.setReceiver(receiver);
-    //     this.setId(id);
-    //     // this.dataType = ""; // Default to an empty data type
-    // }
 
     /**
      * Gets the receiver endpoint.
@@ -84,27 +71,6 @@ public class MessageHeader {
         }
         this.id = id;
     }
-
-    // /**
-    //  * Gets the data type of the message.
-    //  *
-    //  * @return The data type of the message.
-    //  */
-    // public String getDataType() {
-    //     return dataType;
-    // }
-
-    // /**
-    //  * Sets the data type of the message.
-    //  *
-    //  * @param dataType The data type to set. Must not be null.
-    //  */
-    // public void setDataType(String dataType) {
-    //     if (dataType == null) {
-    //         throw new IllegalArgumentException("Data type cannot be null");
-    //     }
-    //     this.dataType = dataType;
-    // }
 
     /**
      * Parses a MessageHeader from its protocol string representation.

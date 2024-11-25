@@ -23,7 +23,6 @@
 - [x] ADRIAN Create enum for non-predefined client id.
 - [ ] ADRIAN remove option to remove tabs in control panel
 - [ ] ADRIAN should actuator change send 0/1 instead of on/off? In that case we can show the text closed/open for window instead of on/off, for example.
-- [ ] ADRIAN in header, change from receiver to endpoint? or something else, think about it.
 - [x] ADRIAN WHen client handler for some reason disconnects, try to connect again (send identification message and such)
 - [x] ADRIAN add enums for failure responses.
 - [x] ADRIAN add colors to Logger methods. 
@@ -222,7 +221,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [x] ADRIAN. Receive actuator status data from any sensor node. For example, is a window open or closed, is the fan on or off? 
 - [x] For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)
 - [x] ADRIAN receive sensor data periodically only for current tab in control panel.
-- [ ] SEBASTIAN. Send image data from greenhouse to control panel. Parse reading in control panel.
+- [x] SEBASTIAN. Send image data from greenhouse to control panel. Parse reading in control panel.
 
 ## GUI
 
