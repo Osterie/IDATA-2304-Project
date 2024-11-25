@@ -9,7 +9,7 @@ public class MessageHeaderTest {
     @Test
     public void testInvalidProtocolString() {
         assertThrows(IllegalArgumentException.class, () -> {
-            MessageHeader.fromProtocolString("CLIENT_ONLY");
+            MessageHeader.fromString("CLIENT_ONLY");
         });
     }
 }

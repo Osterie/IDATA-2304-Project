@@ -62,7 +62,7 @@
 //   //   MessageHeader messageHeader = new MessageHeader(Clients.GREENHOUSE, "1");
 //   //   Message message = new Message(messageHeader, messageBody);
 
-//   //   String command = message.toProtocolString();
+//   //   String command = message;
 
 //   //   mockControlPanel.sendCommand(command);
 
@@ -80,7 +80,7 @@
 //   //   MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
 //   //   Message message = new Message(messageHeader, messageBody);
 
-//   //   String command = message.toProtocolString();
+//   //   String command = message;
 
 
 //   //   mockGreenhouseNode.sendCommand(command);
@@ -101,7 +101,7 @@
 //   //       MessageHeader messageHeader = new MessageHeader(Clients.GREENHOUSE, "1");
 //   //       Message message = new Message(messageHeader, messageBody);
 
-//   //       String command = message.toProtocolString();
+//   //       String command = message;
 
 //   //       try {
 //   //           mockControlPanel.sendCommand(command);
@@ -120,7 +120,7 @@
 //   //     MessageHeader messageHeader = new MessageHeader(Clients.CONTROL_PANEL, "2");
 //   //     Message message = new Message(messageHeader, messageBody);
 
-//   //     String command = message.toProtocolString();
+//   //     String command = message;
 
 //   //     try {
 //   //         mockGreenhouseNode.sendCommand(command);
@@ -140,7 +140,7 @@
 //   //   Message message = new Message(messageHeader, messageBody);
 
 //   //   try {
-//   //     String command = message.toProtocolString();
+//   //     String command = message;
 //   //     mockGreenhouseNode.sendCommand(command);
 //   //   } catch (IllegalArgumentException e) {
 //   //     assertEquals("Invalid client type", e.getMessage());
@@ -158,7 +158,7 @@
 //     Message message = new Message(messageHeader, messageBody);
 
 //     try {
-//       String command = message.toProtocolString();
+//       String command = message;
 //       mockGreenhouseNode.sendCommand(command);
 //     } catch (IllegalArgumentException e) {
 //       assertEquals("Data type cannot be null", e.getMessage());

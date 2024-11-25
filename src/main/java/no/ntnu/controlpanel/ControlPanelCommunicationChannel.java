@@ -1,5 +1,6 @@
 package no.ntnu.controlpanel;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,18 +13,22 @@ import static no.ntnu.tools.Parser.parseIntegerOrError;
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.sensors.ImageSensorReading;
 import no.ntnu.greenhouse.sensors.NumericSensor;
+import no.ntnu.greenhouse.sensors.NumericSensorReading;
 import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.tools.Logger;
-
+import no.ntnu.tools.stringification.Base64ImageEncoder;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
-import no.ntnu.messages.commands.Command;
+import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
 import no.ntnu.messages.commands.greenhouse.ActuatorChangeCommand;
 import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
 import no.ntnu.messages.commands.greenhouse.GetSensorDataCommand;
 import no.ntnu.messages.commands.greenhouse.GreenhouseCommand;
+import no.ntnu.messages.responses.FailureReason;
 import no.ntnu.messages.responses.FailureResponse;
 import no.ntnu.messages.responses.Response;
 import no.ntnu.messages.responses.SuccessResponse;
@@ -40,6 +45,7 @@ import no.ntnu.messages.Message;
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
   private String targetId = "1"; // Used to target a greenhouse node for sensor data requests
+  
 
   /**
    * Create a communication channel for the control panel.
@@ -56,8 +62,10 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // TODO should perhaps try to establish connection with server. (try catch). And if it fails, try like 3 more times.
     // Don't use chatgpt or copilot and preferably, remember design patterns, cohesion, coupling and such.
 
-    this.listenForMessages();
-    this.establishConnectionWithServer(Endpoints.CONTROL_PANEL, "?");
+    // TODO the classes that extend the sockec communication channel should be able to just call establisconnection or something without parameters.
+    // Or WHATEVER. refactor
+    ClientIdentification clientIdentification = new ClientIdentification(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
+    this.establishConnectionWithServer(clientIdentification);
   }
 
   /**
@@ -71,7 +79,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     // Attempt to parse the server message
     Message message;
     try {
-      message = Message.fromProtocolString(serverMessage);
+      message = Message.fromString(serverMessage);
     } catch (IllegalArgumentException | NullPointerException e) {
       Logger.error("Invalid server message format: " + serverMessage + ". Error: " + e.getMessage());
       return;
@@ -83,6 +91,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       return;
     }
 
+    Logger.info("Received message from server: " + serverMessage);
+
     // Extract header and body
     MessageHeader header = message.getHeader();
     MessageBody body = message.getBody();
@@ -90,8 +100,11 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
 
     // Handle based on client type
     if (client == Endpoints.GREENHOUSE) {
-      this.handleGreenhouseCommandResponse(body);
-    } else {
+      this.handleGreenhouseResponse(body);
+    } else if (client == Endpoints.SERVER){
+      this.handleServerResponse(body);
+    }
+    else{
       Logger.error("Unknown client: " + client);
     }
   }
@@ -103,7 +116,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    * @param body The message body containing the command response
    */
     // TODO refactor.
-  private void handleGreenhouseCommandResponse(MessageBody body) {
+  private void handleGreenhouseResponse(MessageBody body) {
     // TODO CHANGE!
 
     Transmission transmission = body.getTransmission();
@@ -115,7 +128,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     Response response = (Response) transmission;
     SuccessResponse successResponse;
     if (response instanceof FailureResponse){
-      Logger.error("Failed to execute command: " + response.toProtocolString());
+      Logger.error("Failed to execute command: " + response);
       return;
       // TODO try to execute command again? If this is done, in the future perhaps an attempts field should be added, 
       // which shows how many times the transmission has been tried sent.
@@ -128,9 +141,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       return;
     }
 
-    Logger.info("Handling greenhouse command response: " + response.toProtocolString());
+    Logger.info("Handling greenhouse command response: " + response);
 
-    Command command = successResponse.getCommand();
+    Transmission command = successResponse.getTransmission();
     
     if (!(command instanceof GreenhouseCommand)) {
       Logger.error("Invalid command type: " + command.getClass().getName());
@@ -163,8 +176,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         String actuatorId = parts[1];
         String actuatorState = parts[2];
 
-        if (actuatorState.equals("ON") || actuatorState.equals("OFF")) {
-          boolean isOn = actuatorState.equals("ON");
+        if (actuatorState.equals("1") || actuatorState.equals("0")) {
+          boolean isOn = actuatorState.equals("1");
           this.advertiseActuatorState(Integer.parseInt(nodeId), Integer.parseInt(actuatorId), isOn, 1);
         } 
         else {
@@ -172,7 +185,45 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         }
         break;
       default:
-        Logger.error("Unknown command: " + command.toProtocolString());
+        Logger.error("Unknown command: " + command);
+    }
+  }
+
+  // TODO refactor
+  private void handleServerResponse(MessageBody body){
+    // TODO CHANGE!
+
+    Transmission transmission = body.getTransmission();
+    if (!(transmission instanceof SuccessResponse || transmission instanceof FailureResponse)) {
+      Logger.error("Invalid response type: " + transmission.getClass().getName());
+      return;
+    }
+
+    Response response = (Response) transmission;
+    SuccessResponse successResponse;
+    if (response instanceof FailureResponse){
+
+      FailureResponse failureResponse = (FailureResponse) response;
+
+      Logger.error("Failed to execute command, sending again: " + response);
+
+      if (failureResponse.getFailureReason() == FailureReason.FAILED_TO_IDENTIFY_CLIENT){
+        ClientIdentification clientIdentification = new ClientIdentification(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
+        this.establishConnectionWithServer(clientIdentification);
+      }
+      else{
+        Logger.error("Unknown command: " + response);
+      }
+      // MessageBody bodyToSend = new MessageBody(response.getTransmission());
+
+      // Message message = new Message(header, bodyToSend);
+
+      // TODO try to execute command again? If this is done, in the future perhaps an attempts field should be added, 
+      // which shows how many times the transmission has been tried sent.
+    }
+    else if (response instanceof SuccessResponse) {
+      successResponse = (SuccessResponse) response;
+      Logger.info("Success response: " + successResponse);
     }
   }
 
@@ -216,7 +267,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, nodeIdStr);
       MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
       Message message = new Message(header, body);
-      this.sendCommandToServer(message);
+      this.sendMessage(message);
     } catch (Exception e) {
       Logger.error("Failed to send actuator change: " + e.getMessage());
     }
@@ -256,7 +307,12 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, self.getSensorNoderTarget());
         MessageBody body = new MessageBody(new GetSensorDataCommand());
         Message message = new Message(header, body);
-        sendCommandToServer(message);
+        if (self.isOn && !self.isReconnecting()) {
+          self.sendMessage(message);
+        }
+        else{
+          Logger.info("Unable to send message...");
+        }
       }
     }, 5000, period * 1000L);
   }
@@ -282,7 +338,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, Endpoints.BROADCAST.getValue());
       MessageBody body = new MessageBody(new GetNodeCommand());
       Message message = new Message(header, body);
-      this.sendCommandToServer(message);
+      this.sendMessage(message);
     } catch (Exception e) {
       Logger.error("Failed to ask for nodes: " + e.getMessage());
     }
@@ -300,7 +356,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, nodeId);
       MessageBody body = new MessageBody(new GetNodeCommand());
       Message message = new Message(header, body);
-      this.sendCommandToServer(message);
+      this.sendMessage(message);
     } catch (Exception e) {
       Logger.error("Failed to spawn node: " + e.getMessage());
     }
@@ -445,12 +501,13 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     return readings;
   }
 
+  
   /**
-   * Parse a sensor reading from a string.
-   * Extracts the details of a sensor reading from the provided string.
+   * Parses a sensor reading from a string and returns a SensorReading object.
    *
-   * @param reading The sensor reading string
-   * @return The parsed sensor reading
+   * @param reading the sensor reading string in the format "type=value unit" or "image=base64String fileExtension"
+   * @return a SensorReading object representing the parsed sensor reading
+   * @throws IllegalArgumentException if the reading is null, empty, or not in the expected format
    */
   private SensorReading parseReading(String reading) {
     Logger.info("Reading: " + reading);
@@ -465,11 +522,29 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     if (valueParts.length != 2) {
       throw new IllegalArgumentException("Invalid sensor value/unit: " + reading);
     }
-    String sensorType = assignmentParts[0];
-    double value = parseDoubleOrError(valueParts[0], "Invalid sensor value: " + valueParts[0]);
-    String unit = valueParts[1];
-    NumericSensor sensor = new NumericSensor(sensorType, value, value, value, unit);
-    return sensor.getReading();
+    
+    if (assignmentParts[0].equals("image")) {
+      String type = assignmentParts[0];
+      String base64String = valueParts[0];
+      String fileExtension = valueParts[1];
+
+      BufferedImage image;
+      try {
+        image = Base64ImageEncoder.stringToImage(base64String);
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Failed to decode image: " + e.getMessage(), e);
+      }
+      ImageSensorReading imageReading = new ImageSensorReading(type, image);
+      imageReading.setFileExtension(fileExtension);
+      
+      return imageReading;
+    }
+    else{
+      String type = assignmentParts[0];
+      double value = parseDoubleOrError(valueParts[0], "Invalid sensor value: " + valueParts[0]);
+      String unit = valueParts[1];
+      return new NumericSensorReading(type, value, unit);
+    }
   }
 
   /**

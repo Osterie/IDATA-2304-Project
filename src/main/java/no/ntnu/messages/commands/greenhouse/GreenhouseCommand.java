@@ -3,14 +3,14 @@ package no.ntnu.messages.commands.greenhouse;
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageHeader;
-import no.ntnu.messages.commands.Command;
+import no.ntnu.messages.Transmission;
 
 /**
  * Represents a general command
  *
  * excecuteCommand: Abstract method used for carrying out command
  */
-public abstract class GreenhouseCommand extends Command {
+public abstract class GreenhouseCommand extends Transmission {
 
     public GreenhouseCommand(String commandString) {
         super(commandString);

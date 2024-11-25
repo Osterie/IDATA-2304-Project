@@ -3,10 +3,32 @@
 - Clean code.
 - Good code.
 
+# Next sprint
+
+- [ ] UNASSIGNED  for generateHeader method usage, what if header is null? handle this.
+- [ ] UNASSIGNED  FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
+- [ ] UNASSIGNED clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
+- [ ] UNASSIGNED Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
+- [ ] UNASSIGNED Actuoator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such.
+
 # GENERAL
 
+- [x] ADRIAN instead of a toProtocolString method, just override the toString method for transmissions?
+- [x] ADRIAN rename fromProtocolString to fromString.
+- [ ] ADRIAN use factory to create transmissions (or only commands?)?
+- [x] ADRIAN when a client is disconnected, it should send a client identification message again when it reconnects first.
+- [x] ADRIAN When control panel disconencts, pause sending of periodic sensor data until reconnected again.
+
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
+- [ ] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
 - [x] ADRIAN Fix application using all available resources.
+- [x] ADRIAN Create enum for non-predefined client id.
+- [x] ADRIAN remove option to remove tabs in control panel
+- [x] ADRIAN should actuator change send 0/1 instead of on/off? In that case we can show the text closed/open for window instead of on/off, for example.
+- [x] ADRIAN WHen client handler for some reason disconnects, try to connect again (send identification message and such)
+- [x] ADRIAN add enums for failure responses.
+- [x] ADRIAN add colors to Logger methods. 
+- [x] ADRIAN notifyChanges method of Actuator Class, refactor this method.
 
 - [ ] TOBIAS (SEBASTIAN: Håpe du ikkje he laga det allereie) add a refresh button to control panel
 
@@ -56,13 +78,13 @@
 - [x] TOBIAS Skriv javadoc for intermidiary-klasser.
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
 
-- [ ] NOT ASSIGNED Skriv javadoc for greenhouse-klasser.
-- [ ] NOT ASSIGNED Skriv javadoc for GUI-klasser.
-- [ ] NOT ASSIGNED Skriv javadoc for control-panel-klasser.
-- [ ] NOT ASSIGNED Skriv javadoc for run-klasser.
+- [ ] UNASSIGNED Skriv javadoc for greenhouse-klasser.
+- [ ] UNASSIGNED Skriv javadoc for GUI-klasser.
+- [ ] UNASSIGNED Skriv javadoc for control-panel-klasser.
+- [ ] UNASSIGNED Skriv javadoc for run-klasser.
 - [x] TOBIAS Skriv javadoc for tools-klasser.
 
-- [ ] NOT ASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
+- [ ] UNASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
 
 # PROTOCOL DESCRIPTION REQUIREMENTS
 
@@ -136,12 +158,12 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 - [X] DANIEL. Test at de kobler seg til serveren riktig, at de blir identifisert av serveren på riktig måte. Test hva som skjer om protokoller ikke blir fulgt, for eksemepel om første melding til server ikke er en identifiserende melding. 
 - [X] KNUT: Test å sende kommandoer, sjekk respons.
 - [ ] SEBASTIAN Test med flere kontrollere koblet til server, også spør om informasjon fra noder samtidig, både fra ulike noder og fra samme node og slikt.
-- [ ] NOT ASSIGNED Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
+- [ ] UNASSIGNED Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
 
 ## OTHER
 
 - [ ] TOBIAS - Lag tester for alle klasser som kan testes.
-- [ ] NOT ASSIGNED Test protokoll
+- [ ] UNASSIGNED Test protokoll
 - [ ] TOBIAS - Test Message og Command klasser
 _
 # GREENHOUSE
@@ -201,7 +223,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [x] ADRIAN. Receive actuator status data from any sensor node. For example, is a window open or closed, is the fan on or off? 
 - [x] For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)
 - [x] ADRIAN receive sensor data periodically only for current tab in control panel.
-- [ ] SEBASTIAN. Send image data from greenhouse to control panel. Parse reading in control panel.
+- [x] SEBASTIAN. Send image data from greenhouse to control panel. Parse reading in control panel.
 
 ## GUI
 
@@ -216,10 +238,11 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 # EXTRA WORK
 
 - [ ] ADRIAN. 1. Resilience in case of network outages. The solution functions when the network connection is temporarily lost. This means buffering data, retransmissions, reconnecting, etc
-    - [ ] When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
-    - [ ] If the connection is lost, try to reconnect. If it fails, show an error message to the user.
+    - [x] When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
+    - [x] If the connection is lost, try to reconnect. 
+    - [ ] If reconnection fails, show an error message to the user. (then they can choose to reload the control panel perhaps when the server is back up. Display a "Server down" message in the control panel)
     - [ ] If a message is not received, try to receive it again. If it fails, show an error message to the user.
-    - [ ] Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
+    - [x] Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
 
 
 - [x] TOBIAS. 2. Data encryption. You can think of different methods of integrating security into your solution,

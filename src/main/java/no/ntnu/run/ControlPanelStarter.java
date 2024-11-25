@@ -2,8 +2,6 @@ package no.ntnu.run;
 
 import no.ntnu.controlpanel.ControlPanelLogic;
 
-import java.util.ResourceBundle.Control;
-
 import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.intermediaryserver.server.ServerConfig;
@@ -59,7 +57,6 @@ public class ControlPanelStarter implements Runnable {
   }
 
   private void stopCommunication() {
-    // TODO - here you stop the TCP/UDP socket communication
     if (this.channel != null) {
       this.channel.close();
       Logger.info("Communication channel closed.");

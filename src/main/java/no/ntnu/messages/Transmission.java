@@ -20,7 +20,8 @@ public abstract class Transmission {
     }
 
     /**
-     * Abstract method for converting transmission to string
+     * Abstract method for converting transmission to string.
+     * Ensures that all transmissions implement the toString method.
      */
-    public abstract String toProtocolString();
+    public abstract String toString();
 }

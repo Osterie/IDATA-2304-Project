@@ -218,6 +218,7 @@ public class ControlPanelApplication extends Application implements GreenhouseEv
   private void addNodeTab(SensorActuatorNodeInfo nodeInfo) {
     if (nodeTabPane == null) {
       nodeTabPane = new TabPane();
+      nodeTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
       VBox rootLayout = (VBox) mainScene.getRoot();
       rootLayout.getChildren().set(1, nodeTabPane);
     }

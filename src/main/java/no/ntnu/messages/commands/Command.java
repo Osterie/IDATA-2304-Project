@@ -21,8 +21,9 @@ public abstract class Command extends Transmission {
      */
     public abstract Message execute(NodeLogic logic, MessageHeader fromHeader);
 
-    // /**
-    //  * Abstract method for converting command to string
-    //  */
-    // public abstract String toProtocolString();
+    /**
+     * Abstract method for converting command to string
+     * ensuring that all commands implement the toString method
+     */
+    public abstract String toString();
 }

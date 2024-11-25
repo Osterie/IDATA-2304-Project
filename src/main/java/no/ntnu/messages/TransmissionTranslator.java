@@ -2,7 +2,7 @@ package no.ntnu.messages;
 
 import java.util.HashMap;
 
-import no.ntnu.messages.commands.Command;
+import no.ntnu.messages.Transmission;
 import no.ntnu.messages.commands.Parameters;
 import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
 import no.ntnu.messages.commands.greenhouse.ActuatorChangeCommand;
@@ -40,8 +40,8 @@ public class TransmissionTranslator {
 
         
         // Responses
-        this.transmissionMap.put(new FailureResponse(null, null).getTransmissionString(), new FailureResponse(null, null));
-        this.transmissionMap.put(new SuccessResponse(null, null).getTransmissionString(), new SuccessResponse(null, null));
+        this.transmissionMap.put(new FailureResponse().getTransmissionString(), new FailureResponse());
+        this.transmissionMap.put(new SuccessResponse().getTransmissionString(), new SuccessResponse());
 
         // TODO: Add commands
     }
@@ -74,11 +74,11 @@ public class TransmissionTranslator {
 
             String[] parameters = parts[1].split(Delimiters.BODY_FIELD_PARAMETERS.getValue(), 2);
             String commandAsString = parameters[0];
-            Command command = (Command) this.toTransmission(commandAsString);
+            Transmission command = (Transmission) this.toTransmission(commandAsString);
 
             String responseData = parameters[1];
 
-            ((Response) transmission).setCommand(command);
+            ((Response) transmission).setTransmission(command);
             ((Response) transmission).setResponseData(responseData);
         }
 
