@@ -119,7 +119,7 @@ public class SensorPane extends TitledPane {
   }
 
   private String generateSensorText(SensorReading sensor) {
-    return sensor.getType() + ": " + sensor.getFormatted();
+    return sensor.getFormatted();
   }
 
   private void updateSensorLabel(SensorReading sensor, int index) {

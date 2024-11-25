@@ -148,7 +148,7 @@ public class ImageSensorReading extends SensorReading{
      */
     @Override
     public String getFormatted() {
-        return this.getType() + "=" + this.getImageFormatted() + " " + this.fileExtension;
+        return this.getType() + " = " + this.getImageFormatted() + " " + this.fileExtension;
     }
 
     /**
