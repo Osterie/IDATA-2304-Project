@@ -16,7 +16,7 @@ public enum Delimiters {
     /** Delimiter between fields in the body of a message, defaulting to the header delimiter. */
     BODY_FIELD(HEADER_FIELD.getValue()),
 
-    /** Delimiter between parameters in the body of a message. */
+    /** Delimiter between a fields parameters in the body of a message. */
     BODY_FIELD_PARAMETERS(",");
 
     private final String value;

@@ -4,9 +4,10 @@ import no.ntnu.tools.Logger;
 
 /**
  * Represents a message with a header and body, used in communication protocols.
- * This class provides functionality to convert messages to and from their protocol string representation.
  */
 public class Message {
+
+    // TODO should this be a field?
     private static final String HEADER_BODY_DELIMITER = Delimiters.HEADER_BODY.getValue();
 
     // The message header containing metadata
@@ -19,14 +20,19 @@ public class Message {
      *
      * @param header The header of the message. Must not be null.
      * @param body   The body of the message. Must not be null.
+     * @throws IllegalArgumentException if the header or body is null.
      */
-    public Message(MessageHeader header, MessageBody body) {
+    public Message(MessageHeader header, MessageBody body) throws IllegalArgumentException {
+        if (header == null || body == null) {
+            Logger.error("Header and body cannot be null");
+            throw new IllegalArgumentException("Header and body cannot be null");
+        }
         this.header = header;
         this.body = body;
     }
 
     /**
-     * Gets the header of the message.
+     * Returns the header of the message.
      *
      * @return The message header.
      */
@@ -69,6 +75,7 @@ public class Message {
      * @throws IllegalArgumentException if the protocol string is invalid.
      */
     public static Message fromString(String protocolString) {
+        // TODO refactor
         // Split the string into header and body using the delimiter
         String[] parts = protocolString.split(HEADER_BODY_DELIMITER, 2);
         if (parts.length < 2) {
@@ -88,7 +95,7 @@ public class Message {
      * @throws IllegalArgumentException if either the header or body is null.
      */
     @Override
-    public String toString() {
+    public String toString() throws IllegalArgumentException {
         if (header == null || body == null) {
             throw new IllegalArgumentException("Header and body cannot be null");
         }

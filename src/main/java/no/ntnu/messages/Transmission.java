@@ -4,19 +4,27 @@ package no.ntnu.messages;
  * An abstract transmission sent or received.
  */
 public abstract class Transmission {
+
+    protected final String protocolString;
+
     
+    /**
+     * Constructor for Transmission.
+     * 
+     * @param protocolString the string representation of the transmission. For example "GET_INFORMATION".
+     */
     public Transmission(String protocolString) {
-        this.setTransmissionString(protocolString);
+        this.protocolString = protocolString;
+        
     }
 
-    protected String protocolString;
-
+    /**
+     * Get the transmission string.
+     * 
+     * @return the transmission string.
+     */
     public String getTransmissionString(){
         return this.protocolString;
-    }
-
-    private void setTransmissionString(String protocolString){
-        this.protocolString = protocolString;
     }
 
     /**
