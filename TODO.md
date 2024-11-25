@@ -5,8 +5,8 @@
 
 # Next sprint
 
-- [ ] UNASSIGNED  for generateHeader method usage, what if header is null? handle this.
-- [ ] UNASSIGNED  FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
+- [ ] TOBIAS  for generateHeader method usage, what if header is null? handle this.
+- [ ] Tobias FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
 - [ ] UNASSIGNED clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
 - [ ] UNASSIGNED Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
 - [ ] UNASSIGNED Actuoator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such.
@@ -31,7 +31,7 @@
 - [x] ADRIAN add colors to Logger methods. 
 - [x] ADRIAN notifyChanges method of Actuator Class, refactor this method.
 
-- [x] TOBIAS (SEBASTIAN: Håpe du ikkje he laga det allereie) add a refresh button to control panel
+- [x] TOBIAS add a refresh button to control panel
 
 - [x] ADRIAN fix nodes sometimes not being created in gui.
 
