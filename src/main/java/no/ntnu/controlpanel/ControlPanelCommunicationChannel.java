@@ -176,8 +176,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         String actuatorId = parts[1];
         String actuatorState = parts[2];
 
-        if (actuatorState.equals("ON") || actuatorState.equals("OFF")) {
-          boolean isOn = actuatorState.equals("ON");
+        if (actuatorState.equals("1") || actuatorState.equals("0")) {
+          boolean isOn = actuatorState.equals("1");
           this.advertiseActuatorState(Integer.parseInt(nodeId), Integer.parseInt(actuatorId), isOn, 1);
         } 
         else {

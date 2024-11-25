@@ -9,6 +9,7 @@
 - [ ] UNASSIGNED  FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
 - [ ] UNASSIGNED clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
 - [ ] UNASSIGNED Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
+- [ ] UNASSIGNED Actuoator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such.
 
 # GENERAL
 
@@ -23,7 +24,7 @@
 - [x] ADRIAN Fix application using all available resources.
 - [x] ADRIAN Create enum for non-predefined client id.
 - [x] ADRIAN remove option to remove tabs in control panel
-- [ ] ADRIAN should actuator change send 0/1 instead of on/off? In that case we can show the text closed/open for window instead of on/off, for example.
+- [x] ADRIAN should actuator change send 0/1 instead of on/off? In that case we can show the text closed/open for window instead of on/off, for example.
 - [x] ADRIAN WHen client handler for some reason disconnects, try to connect again (send identification message and such)
 - [x] ADRIAN add enums for failure responses.
 - [x] ADRIAN add colors to Logger methods. 
