@@ -302,7 +302,12 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, self.getSensorNoderTarget());
         MessageBody body = new MessageBody(new GetSensorDataCommand());
         Message message = new Message(header, body);
-        sendMessage(message);
+        if (self.isOn && !self.isReconnecting()) {
+          self.sendMessage(message);
+        }
+        else{
+          Logger.info("Unable to send message...");
+        }
       }
     }, 5000, period * 1000L);
   }

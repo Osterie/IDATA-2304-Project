@@ -165,6 +165,15 @@ public abstract class SocketCommunicationChannel {
     return new Message(header, body);
   }
 
+  /**
+   * Returns true if the socket is reconnecting, false otherwise.
+   * 
+   * @return true if the socket is reconnecting, false otherwise.
+   */
+  public boolean isReconnecting() {
+    return isReconnecting;
+  }
+
   public boolean isOpen() {
     return isOn;
   }
