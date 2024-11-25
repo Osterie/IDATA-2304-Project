@@ -14,14 +14,13 @@ import no.ntnu.tools.Logger;
  * The central logic of a control panel node. It uses a communication channel to send commands
  * and receive events. It supports listeners who will be notified on changes (for example, a new
  * node is added to the network, or a new sensor reading is received).
- * Note: this class may look like unnecessary forwarding of events to the GUI. In real projects
- * (read: "big projects") this logic class may do some "real processing" - such as storing events
- * in a database, doing some checks, sending emails, notifications, etc. Such things should never
- * be placed inside a GUI class (JavaFX classes). Therefore, we use proper structure here, even
- * though you may have no real control-panel logic in your projects.
+ *
+ * Note: This class demonstrates proper separation of logic from the GUI. In larger projects,
+ * this class may handle complex logic such as storing events in a database, performing checks,
+ * or sending notifications, which should never be placed inside GUI classes.
  */
 public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListener,
-    CommunicationChannelListener  {
+        CommunicationChannelListener  {
 
   private final List<GreenhouseEventListener> listeners = new LinkedList<>();
 
@@ -31,17 +30,16 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
   /**
    * Set the channel over which control commands will be sent to sensor/actuator nodes.
    *
-   * @param communicationChannel The communication channel, the event sender
+   * @param communicationChannel The communication channel, the event sender.
    */
   public void setCommunicationChannel(CommunicationChannel communicationChannel) {
     this.communicationChannel = communicationChannel;
   }
 
-  
   /**
-   * Set listener which will get notified when communication channel is closed.
+   * Set listener which will get notified when the communication channel is closed.
    *
-   * @param listener The listener
+   * @param listener The listener.
    */
   public void setCommunicationChannelListener(CommunicationChannelListener listener) {
     this.communicationChannelListener = listener;
@@ -50,12 +48,26 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
   /**
    * Add an event listener.
    *
-   * @param listener The listener who will be notified on all events
+   * @param listener The listener who will be notified on all events.
    */
   public void addListener(GreenhouseEventListener listener) {
     if (!listeners.contains(listener)) {
       listeners.add(listener);
     }
+  }
+
+  /**
+   * Reset the internal state of the control panel logic.
+   * This clears all listeners and prepares the logic for a fresh start.
+   */
+  public void resetState() {
+    Logger.info("Resetting ControlPanelLogic state...");
+    listeners.clear();
+
+    // Clear the communication channel reference
+    communicationChannel = null;
+    // Clear the communication channel listener
+    communicationChannelListener = null;
   }
 
   @Override
@@ -84,7 +96,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
       communicationChannel.sendActuatorChange(nodeId, actuator.getId(), actuator.isOn());
     }
     listeners.forEach(listener ->
-        listener.onActuatorStateChanged(nodeId, actuator.getId(), actuator.isOn())
+            listener.onActuatorStateChanged(nodeId, actuator.getId(), actuator.isOn())
     );
   }
 
