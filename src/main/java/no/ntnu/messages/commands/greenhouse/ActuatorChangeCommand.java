@@ -10,30 +10,48 @@ import no.ntnu.messages.commands.Parameters;
 import no.ntnu.messages.responses.SuccessResponse;
 
 // TODO refactor class.
+/**
+ * Command to change the state of an actuator.
+ */
 public class ActuatorChangeCommand extends GreenhouseCommand implements Parameters {
 
     private int actuatorId;
     private boolean isOn;
 
+    /**
+     * Constructs an ActuatorChangeCommand for the actuator ID and state.
+     *
+     * @param actuatorId the ID of the actuator to change
+     * @param isOn       the new state of the actuator (true for on, false for off)
+     */
     public ActuatorChangeCommand(int actuatorId, boolean isOn) {
         super("ACTUATOR_CHANGE");
         this.actuatorId = actuatorId;
         this.isOn = isOn;
     }
 
+    /**
+     * Constructs an ActuatorChangeCommand with no parameters set.
+     */
     public ActuatorChangeCommand() {
         super("ACTUATOR_CHANGE");
     }
 
+    /**
+     * Executes the command to change the state of an actuator for the node of nodeLogic.
+     *
+     * @param nodeLogic  the logic of the node where the actuator is located
+     * @param fromHeader the header of the message from which this command
+     *                   originated
+     * @return a Message indicating the result of the command execution
+     */
     @Override
     public Message execute(NodeLogic nodeLogic, MessageHeader fromHeader) {
 
         nodeLogic.getNode().setActuator(this.actuatorId, this.isOn);
 
         // TODO improve.
-        // MessageHeader header = new MessageHeader(fromHeader.getReceiver(), Endpoints.BROADCAST.getValue(), this);
         MessageHeader header = new MessageHeader(fromHeader.getReceiver(), Endpoints.BROADCAST.getValue());
-        // MessageBody response = new MessageBody(this, "ACTUATOR_CHANGE_SUCCESS");
 
         String nodeId = Integer.toString(nodeLogic.getId());
         
@@ -46,6 +64,14 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
         return new Message(header, response);
     }
 
+    /**
+     * Sets the parameters for the ActuatorChangeCommand.
+     *
+     * @param parameters an array of parameters where the first element is the
+     *                   actuator ID and the second element is the state (1 for on,
+     *                   0 for off)
+     * @throws IllegalArgumentException if the parameters are invalid
+     */
     @Override
     public void setParameters(String parameters[]) throws IllegalArgumentException {
         if (parameters.length != 2) {
@@ -63,14 +89,29 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
         }
     }
 
+    /**
+     * Sets the actuator ID to change state for.
+     *
+     * @param actuatorId the ID of the actuator to change state for.
+     */
     public void setActuatorId(int actuatorId) {
         this.actuatorId = actuatorId;
     }
 
+    /**
+     * Sets the state of the actuator.
+     *
+     * @param isOn the new state of the actuator (true for on, false for off)
+     */
     public void setIsOn(boolean isOn) {
         this.isOn = isOn;
     }
 
+    /**
+     * Returns a string representation of the ActuatorChangeCommand, which follows the protocol.
+     *
+     * @return a string representation of the command, formatted according to the protocol.
+     */
     @Override
     public String toString() {
         // TODO refactor

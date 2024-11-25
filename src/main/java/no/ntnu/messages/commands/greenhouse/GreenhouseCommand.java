@@ -6,12 +6,17 @@ import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
 
 /**
- * Represents a general command
+ * Represents a general greenhouse command
  *
- * excecuteCommand: Abstract method used for carrying out command
+ * excecute: Abstract method used executing command.
  */
 public abstract class GreenhouseCommand extends Transmission {
 
+    /**
+     * Constructor for GreenhouseCommand.
+     * 
+     * @param commandString the string representation of the command. For example "TURN_OFF_ALL_ACTUATORS".
+     */
     public GreenhouseCommand(String commandString) {
         super(commandString);
     }
