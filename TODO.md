@@ -15,11 +15,20 @@
 - [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
 - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED fix issue with images not being replaced, but instead being added when displaying images 
 - [ ] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
+<<<<<<< Updated upstream
 - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
 - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
 - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Actuator for sensors should be more flexible, for example window actuator should not be ON/OFF, but instead close/open, and so on.
 - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
 
+=======
+- [ ] UNASSIGNED Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
+- [ ] UNASSIGNED Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
+- [ ] UNASSIGNED Actuator for sensors should be more flexible, for example window actuator should not be ON/OFF, but instead close/open, and so on.
+- [ ] UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
+- [ ] TOBIAS Implement encryption. Måtte flytte det til neste sprint.
+- 
+>>>>>>> Stashed changes
 # GENERAL
 
 - [x] ADRIAN when hovering image in sensors, change cursor to a hand to indicate it can be clicked.
@@ -50,8 +59,6 @@
 - [ ] DANIEL When sending sensor data (GetSensorDataCommand), the message should contain the data type, for the numberSensorReading, can be For example NUM, for imagesensorreading, can be IMG.
 
 - [x] ADRIAN When the control panel asks for sensor data, perhaps it does this a bit infrequently? Currenlty i believe it does it every 5 seconds. But do not change this to be too often. Is there another solution?
-
-- [ ] TOBIAS Implement encryption
 
 - [x] DANIEL a constant for the broadcast id? (ALL)
 
@@ -95,6 +102,13 @@
 - [x] TOBIAS Skriv javadoc for tools-klasser.
 
 - [ ] UNASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
+
+# Fill in reports from meeting notes
+
+- [x] TOBIAS report1
+- [x] TOBIAS report2
+- [ ] KNUT? report3
+- [ ] TOBIAS report4
 
 # PROTOCOL DESCRIPTION REQUIREMENTS
 

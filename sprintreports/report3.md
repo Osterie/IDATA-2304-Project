@@ -56,3 +56,11 @@ Sprint stenographer: Tobias
 ## **Next Steps**
 - **Upcoming Goals:** [Brief summary of objectives for the next sprint]
 - **Key Focus Areas:** [Specific areas the team will prioritize, e.g., technical debt, improving speed]
+- Add javadoc to 90% of classes
+- Add public encryption and implement it
+- Add more tests
+- Implement necessary commands and messages
+- Implement periodical data requests
+- Refactor intermediary server
+- Add more error handling
+- Add more control panel functionality 
