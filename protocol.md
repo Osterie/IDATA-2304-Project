@@ -3,18 +3,19 @@
 This document describes the protocol used for communication between the different nodes of the
 distributed application.
 
-## Terminology
+## **Terminology**
 
-* Sensor - a device which senses the environment and describes it with a value (an integer value in
-  the context of this project). Examples: temperature sensor, humidity sensor.
-* Actuator - a device which can influence the environment. Examples: a fan, a window opener/closer,
-  door opener/closer, heater.
-* Sensor and actuator node - a computer which has direct access to a set of sensors, a set of
-  actuators and is connected to the Internet.
-* Control-panel node - a device connected to the Internet which visualizes status of sensor and
-  actuator nodes and sends control commands to them.
-* Graphical User Interface (GUI) - A graphical interface where users of the system can interact with
-  it.
+* **Greenhouse** - The simulated environment representing the project context, including sensors and actuators.
+* **Sensor** - A device which senses the environment and describes it with a value (an integer value in the context of this project). Examples: temperature sensor, humidity sensor.
+* **Actuator** - A device which can influence the environment. Examples: a fan, a window opener/closer, door opener/closer, heater.
+* **Sensor and actuator node** - A computer which has direct access to a set of sensors, a set of actuators, and is connected to the Internet.
+* **Control-panel node** - A device connected to the Internet which visualizes the status of sensor and actuator nodes and sends control commands to them.
+* **Graphical User Interface (GUI)** - A graphical interface where users of the system can interact with it.
+* **Intermediary for managing commands** - A software layer responsible for handling and routing commands between nodes.
+* **AES encryption (symmetric)** - A symmetric encryption method where the same key is used for both encryption and decryption.
+* **RSA encryption (asymmetric)** - An encryption method where a public key is used for encryption and a private key for decryption.
+* **TCP** - Transmission Control Protocol, a communication standard enabling reliable data transfer over a network.
+
 
 ## The underlying transport protocol
 
@@ -91,18 +92,17 @@ example scenario could be as follows:
 ## Reliability and security
 
 ### Security:
-  - For security of the data the AES encryption method is used.
 
-  - Justification for AES: AES (Advanced Encryption Standard) is a widely used, efficient, and secure
-  symmetric encryption algorithm. It provides confidentiality by ensuring that the data sent
-  over the network cannot be read by anyone who doesn’t have the encryption key. AES is
-  chosen because it balances performance and security, making it suitable for both small and
-  large-scale applications. It is considered highly secure when using proper key management.
+**Justification for RSA**: RSA is a well-established cryptographic algorithm offering strong security
+for encrypting sensitive data or securely exchanging keys. Its public/private key mechanism
+ensures that only authorized users with the private key can decrypt the data.
 
-  - Justification for symmetric encryption: Using symmetric encryption simplifies the process because the same key is
-  used for both encryption and decryption. This avoids the complexity of key pair
-  management (as seen in asymmetric encryption like RSA), which makes it suitable for
-  applications where the sender and receiver can securely share a common secret key.
+**Justification for asymmetric encryption**: Unlike symmetric encryption, RSA does not require both
+parties to share a secret key beforehand, which simplifies key distribution and enhances
+security for scenarios where secure communication is required over untrusted networks.
+
+<p>Note: This class uses 2048-bit RSA keys, providing robust security. For even greater protection,
+consider using 3072 or 4096-bit keys, depending on performance and security requirements.
 
 ### Reliability:
   - For reliability a hashing algorithm is being used.
