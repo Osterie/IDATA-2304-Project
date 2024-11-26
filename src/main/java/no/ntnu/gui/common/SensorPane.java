@@ -112,6 +112,7 @@ public class SensorPane extends TitledPane {
     return label;
   }
 
+  // TODO wtf
   private Node createImageSensorNode(SensorReading sensor){
     Logger.info("Creating image view for thumbnail");
     ImageSensorReading imageSensor = (ImageSensorReading) sensor;

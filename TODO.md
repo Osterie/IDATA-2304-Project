@@ -225,7 +225,8 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [x] ADRIAN. Receive actuator status data from any sensor node. For example, is a window open or closed, is the fan on or off? 
 - [x] For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)
 - [x] ADRIAN receive sensor data periodically only for current tab in control panel.
-- [x] SEBASTIAN. Send image data from greenhouse to control panel. Parse reading in control panel.
+- [x] SEBASTIAN. Send image data from greenhouse to control panel. 
+- [ ] SEBASTIAN Parse image reading in control panel.
 
 ## GUI
 
