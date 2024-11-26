@@ -14,6 +14,11 @@
 - [ ] UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution.
 - [ ] UNASSIGNED When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
 - [ ] UNASSIGNED fix issue with images not being replaced, but instead being added when displaying images 
+- [ ] UNASSIGNED sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
+- [ ] UNASSIGNED Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
+- [ ] UNASSIGNED Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
+- [ ] UNASSIGNED Actuator for sensors should be more flexible, for example window actuator should not be ON/OFF, but instead close/open, and so on.
+- [ ] UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
 
 # GENERAL
 
