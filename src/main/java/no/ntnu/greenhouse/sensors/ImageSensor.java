@@ -31,6 +31,15 @@ public class ImageSensor extends Sensor {
   }
 
   /**
+   * Get the file path to the images.
+   * 
+   * @return The file path to the images.
+   */
+  public String getImagesFilePath() {
+    return imagesFilePath;
+  }
+
+  /**
    * Get the current sensor reading.
    *
    * @return The current sensor reading (value)

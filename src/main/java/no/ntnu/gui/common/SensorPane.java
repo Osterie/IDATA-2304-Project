@@ -9,11 +9,14 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import no.ntnu.greenhouse.sensors.ImageSensorReading;
 import no.ntnu.greenhouse.sensors.NumericSensorReading;
 import no.ntnu.greenhouse.sensors.Sensor;
@@ -26,6 +29,7 @@ import no.ntnu.tools.Logger;
 public class SensorPane extends TitledPane {
   private final List<SimpleStringProperty> sensorProps = new ArrayList<>();
   private final VBox contentBox = new VBox();
+  private final List<Node> thumbnailList = new LinkedList<>();
 
   /**
    * Create a sensor pane.
@@ -109,18 +113,68 @@ public class SensorPane extends TitledPane {
   }
 
   private Node createImageSensorNode(SensorReading sensor){
-    Logger.info("Creating image view");
-      ImageSensorReading imageSensor = (ImageSensorReading) sensor;
-      imageSensor.generateRandomImage("images/");
-      BufferedImage bufferedImage = imageSensor.getImage();
-      if (bufferedImage == null) {
+    Logger.info("Creating image view for thumbnail");
+    ImageSensorReading imageSensor = (ImageSensorReading) sensor;
+
+    // Generate image
+    imageSensor.generateRandomImage("images/");
+    BufferedImage bufferedImage = imageSensor.getImage();
+    if (bufferedImage == null) {
         Logger.error("Buffered image is null");
         return new Label("No image found");
-      }
-      Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-      ImageView imageView = new ImageView(image);
-    return imageView;
+    }
+
+    // Convert to JavaFX Image
+    Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+
+    // Create a small thumbnail
+    ImageView thumbnail = new ImageView(image);
+    thumbnail.setFitWidth(100); // Set desired thumbnail width
+    thumbnail.setPreserveRatio(true); // Maintain aspect ratio
+
+    // Add click listener to open a new window
+    thumbnail.setOnMouseClicked(event -> showFullImage(image));
+
+    // Add thumbnail to the list and update the UI
+    addThumbnailToUI(thumbnail);
+
+    return thumbnail;
   }
+
+  private void addThumbnailToUI(Node thumbnail) {
+    // Add the new thumbnail to the list
+    thumbnailList.add(thumbnail);
+
+    // If there are more than 3 thumbnails, remove the oldest
+    if (thumbnailList.size() > 3) {
+        thumbnailList.remove(0);
+    }
+
+    // Update the VBox to show only the thumbnails in the list
+    Platform.runLater(() -> {
+        contentBox.getChildren().clear();
+        contentBox.getChildren().addAll(thumbnailList);
+    });
+  }
+
+  private void showFullImage(Image image) {
+    // Create a new Stage (window)
+    Stage fullImageStage = new Stage();
+    fullImageStage.setTitle("Full Image");
+
+    // Create an ImageView for the full image
+    ImageView fullImageView = new ImageView(image);
+    fullImageView.setPreserveRatio(true);
+    fullImageView.setFitWidth(800); // Optional: Set window size
+    fullImageView.setFitHeight(600);
+
+    // Add the full image to the scene
+    Scene scene = new Scene(new StackPane(fullImageView), 800, 600); // Optional: Set initial size
+    fullImageStage.setScene(scene);
+
+    // Show the stage
+    fullImageStage.show();
+}
 
   private String generateSensorText(SensorReading sensor) {
     return sensor.getFormatted();
