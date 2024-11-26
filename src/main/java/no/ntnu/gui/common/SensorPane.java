@@ -30,7 +30,7 @@ import no.ntnu.tools.Logger;
 public class SensorPane extends TitledPane {
   private final List<SimpleStringProperty> sensorProps = new ArrayList<>();
   private final VBox contentBox = new VBox();
-  private final List<Node> thumbnailList = new LinkedList<>();
+  private final List<Node> thumbnailList = new LinkedList<>(); // TODO why?
 
   /**
    * Create a sensor pane.
@@ -45,9 +45,9 @@ public class SensorPane extends TitledPane {
   private void initialize(Iterable<SensorReading> sensors) {
     setText("Sensors");
     sensors.forEach(sensor ->
-        contentBox.getChildren().add(createAndRememberSensorLabel(sensor))
+        this.contentBox.getChildren().add(createAndRememberSensorLabel(sensor))
     );
-    setContent(contentBox);
+    setContent(this.contentBox);
   }
 
   /**
@@ -144,6 +144,7 @@ public class SensorPane extends TitledPane {
     return thumbnail;
   }
 
+  // TODO wtf?
   private void addThumbnailToUI(Node thumbnail) {
     // Add the new thumbnail to the list
     thumbnailList.add(thumbnail);
