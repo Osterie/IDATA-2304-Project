@@ -44,7 +44,7 @@ import no.ntnu.messages.Message;
  */
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
-  private String targetId = "1"; // Used to target a greenhouse node for sensor data requests
+  private String targetId = Endpoints.BROADCAST.getValue(); // Used to target a greenhouse node for sensor data requests
   
 
   /**
