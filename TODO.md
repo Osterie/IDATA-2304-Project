@@ -39,6 +39,7 @@
 - [x] ADRIAN add enums for failure responses.
 - [x] ADRIAN add colors to Logger methods. 
 - [x] ADRIAN notifyChanges method of Actuator Class, refactor this method.
+- [x] ADRIAN image sensor should have image: [Actual image]
 
 - [x] TOBIAS add a refresh button to control panel
 

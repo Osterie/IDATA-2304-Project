@@ -114,7 +114,8 @@ public class SensorPane extends TitledPane {
   }
 
   // TODO wtf
-  private Node createImageSensorNode(SensorReading sensor){
+  // TODO refactor
+  private Node createImageSensorNode(SensorReading sensor) {
     Logger.info("Creating image view for thumbnail");
     ImageSensorReading imageSensor = (ImageSensorReading) sensor;
 
@@ -138,10 +139,14 @@ public class SensorPane extends TitledPane {
     // Add click listener to open a new window
     thumbnail.setOnMouseClicked(event -> showFullImage(image));
 
-    // Add thumbnail to the list and update the UI
-    addThumbnailToUI(thumbnail);
+    Label imageLabel = new Label("Image: ");
+    VBox imageNode = new VBox(5); // Add spacing between items
+    imageNode.getChildren().addAll(imageLabel, thumbnail);
 
-    return thumbnail;
+    // Add thumbnail to the UI
+    addThumbnailToUI(imageNode);
+
+    return imageNode;
   }
 
   // TODO wtf?
