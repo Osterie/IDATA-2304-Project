@@ -11,6 +11,7 @@
 - [ ] UNASSIGNED Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
 - [ ] UNASSIGNED Actuator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such.
 - [ ] UNASSIGNED Currently Message and MessageHeader i think have fromString methods. Perhaps another class should be used for this?
+- [ ] UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution.
 
 # GENERAL
 
