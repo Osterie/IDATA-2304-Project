@@ -87,16 +87,29 @@ public class SensorPane extends TitledPane {
   // TODO refactor this logic. Create a method above this method and such. This method should create a label and then another for images.
   // Alternatively, would not be necessary when we have implemented the component builder class.
   private Node createAndRememberSensorLabel(SensorReading sensor) {
-
+    Node nodeToReturn;
     
     if (sensor instanceof NumericSensorReading) {
-      SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
+      nodeToReturn = createNumericSensorLabel(sensor);
+    } else if (sensor instanceof ImageSensorReading) {
+      nodeToReturn = createImageSensorNode(sensor);
+    } else {
+      return new Label("Unknown sensor type: " + sensor.getClass());
+      // throw new IllegalArgumentException("Unknown sensor type: " + sensor.getClass());
+    }
+    return nodeToReturn;
+  }
+
+  private Node createNumericSensorLabel(SensorReading sensor){
+    SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
       sensorProps.add(props);
       Label label = new Label();
       label.textProperty().bind(props);
-      return label;
-    } else if (sensor instanceof ImageSensorReading) {
-      Logger.info("Creating image view");
+    return label;
+  }
+
+  private Node createImageSensorNode(SensorReading sensor){
+    Logger.info("Creating image view");
       ImageSensorReading imageSensor = (ImageSensorReading) sensor;
       imageSensor.generateRandomImage("images/");
       BufferedImage bufferedImage = imageSensor.getImage();
@@ -106,16 +119,7 @@ public class SensorPane extends TitledPane {
       }
       Image image = SwingFXUtils.toFXImage(bufferedImage, null);
       ImageView imageView = new ImageView(image);
-      return imageView;
-    } else {
-      return new Label("Unknown sensor type: " + sensor.getClass());
-      // throw new IllegalArgumentException("Unknown sensor type: " + sensor.getClass());
-    }
-    // SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
-    // sensorProps.add(props);
-    // Label label = new Label();
-    // label.textProperty().bind(props);
-    // return label;
+    return imageView;
   }
 
   private String generateSensorText(SensorReading sensor) {
