@@ -1,6 +1,7 @@
 # **Sprint Report**
 
 Sprint master: Knut Olav
+Sprint stenographer: Tobias
 
 ## **Sprint Overview**
 - **Sprint Number:** Sprint 3
