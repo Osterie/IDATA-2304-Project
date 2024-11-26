@@ -514,7 +514,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     if (reading == null || reading.isEmpty()) {
       throw new IllegalArgumentException("Sensor reading can't be empty");
     }
-    String[] assignmentParts = reading.split("=");
+    String[] assignmentParts = reading.split(" = ");
     if (assignmentParts.length != 2) {
       throw new IllegalArgumentException("Invalid sensor reading specified: " + reading);
     }
