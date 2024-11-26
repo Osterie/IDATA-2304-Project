@@ -23,6 +23,7 @@ import no.ntnu.greenhouse.sensors.Sensor;
 import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.tools.Logger;
 
+// TODO refactor, create classes for alot of the logic in this class. This class does too much.
 /**
  * A section of GUI displaying sensor data.
  */
@@ -132,6 +133,7 @@ public class SensorPane extends TitledPane {
     ImageView thumbnail = new ImageView(image);
     thumbnail.setFitWidth(100); // Set desired thumbnail width
     thumbnail.setPreserveRatio(true); // Maintain aspect ratio
+    thumbnail.cursorProperty().setValue(javafx.scene.Cursor.HAND);
 
     // Add click listener to open a new window
     thumbnail.setOnMouseClicked(event -> showFullImage(image));

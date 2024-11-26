@@ -16,6 +16,7 @@
 
 # GENERAL
 
+- [x] ADRIAN when hovering image in sensors, change cursor to a hand to indicate it can be clicked.
 - [x] ADRIAN instead of a toProtocolString method, just override the toString method for transmissions?
 - [x] ADRIAN rename fromProtocolString to fromString.
 - [ ] ADRIAN use factory to create transmissions (or only commands?)?
