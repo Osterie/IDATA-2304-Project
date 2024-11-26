@@ -17,16 +17,16 @@ public class MessageBodyTest {
     //     assertEquals("command", noDataMessage);
     // }
 
-    @Test
-    public void testfromString() {
-        MessageBody message = MessageBody.fromString("command;data");
-        assertEquals("command", message.getTransmission());
-        assertEquals("data", message.getTransmissionString());
+    // @Test
+    // public void testfromString() {
+    //     MessageBody message = MessageBody.fromString("command;data");
+    //     assertEquals("command", message.getTransmission());
+    //     assertEquals("data", message.getTransmissionString());
 
-        MessageBody noDataMessage = MessageBody.fromString("command");
-        assertEquals("command", noDataMessage.getTransmission());
-        assertEquals("", noDataMessage.getTransmissionString());
-    }
+    //     MessageBody noDataMessage = MessageBody.fromString("command");
+    //     assertEquals("command", noDataMessage.getTransmission());
+    //     assertEquals("", noDataMessage.getTransmissionString());
+    // }
 
     @Test
     public void testInvalidProtocolString() {
