@@ -71,7 +71,7 @@
 - [x] ADRIAN Implement Success and Failuer responses.
 
 - [x] SEBASTIAN Handle display if image better. Fix image displaying in greenhouse nodes. For example a small version of the image, which when clicked opens a new window with the full image.
-- [ ] SEBASTIAN Fix test file structure.
+- [x] SEBASTIAN Fix test file structure.
 - [ ] TOBIAS AND OTHERS? Look over and fix bad javadoc
 - [ ] When using copilot to write javadoc, check that the javadoc is correct
 
@@ -234,7 +234,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [x] For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)
 - [x] ADRIAN receive sensor data periodically only for current tab in control panel.
 - [x] SEBASTIAN. Send image data from greenhouse to control panel. 
-- [ ] SEBASTIAN Parse image reading in control panel.
+- [x] SEBASTIAN Parse image reading in control panel.
 
 ## GUI
 
@@ -260,7 +260,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 either using public-key cryptography or other methods.
 - [x] TOBIAS Convert symmetric encryption to RSA.
 
-- [ ] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line argument). But you can design automated-address assignments as part of your protocol. For example, look at DHCP as an inspiration.
+- [x] SEBASTIAN 3. Automated generation of unique identifiers (addresses) for sensor nodes. By default, the programmer can assign static addresses to sensor nodes when running them (as a command-line argument). But you can design automated-address assignments as part of your protocol. For example, look at DHCP as an inspiration.
 
 - [x] 4. SEBASTIAN/ADRIAN Images/files as sensor data. 
 
