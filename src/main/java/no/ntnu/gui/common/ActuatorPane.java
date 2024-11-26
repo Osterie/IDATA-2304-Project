@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
@@ -18,12 +19,15 @@ import no.ntnu.greenhouse.ActuatorCollection;
 /**
  * Represents a GUI component displaying a list of actuators and their states.
  * The `ActuatorPane` allows users to view and interact with actuators, enabling
- * them to turn actuators on or off and observe their current state.
+ * them to turn actuators on or off and observe their current state. Additionally,
+ * a "Turn Off All Actuators" button allows users to turn off all actuators within
+ * the same node.
  */
 public class ActuatorPane extends TitledPane {
   // Maps to hold the GUI state for each actuator.
   private final Map<Actuator, SimpleStringProperty> actuatorValue = new HashMap<>();
   private final Map<Actuator, SimpleBooleanProperty> actuatorActive = new HashMap<>();
+  private final ActuatorCollection actuators;
 
   /**
    * Creates an `ActuatorPane` to display the given collection of actuators.
@@ -32,11 +36,13 @@ public class ActuatorPane extends TitledPane {
    */
   public ActuatorPane(ActuatorCollection actuators) {
     super();
+    this.actuators = actuators;
     setText("Actuators"); // Sets the title of the pane.
     VBox vbox = new VBox();
     vbox.setSpacing(10); // Adds spacing between the child elements.
     setContent(vbox); // Adds the VBox to the pane's content.
     addActuatorControls(actuators, vbox);
+    addTurnOffAllButton(vbox); // Add the "Turn Off All Actuators" button.
     GuiTools.stretchVertically(this); // Ensures the pane stretches vertically.
   }
 
@@ -108,6 +114,27 @@ public class ActuatorPane extends TitledPane {
   private String generateActuatorText(Actuator actuator) {
     String onOff = actuator.isOn() ? "ON" : "off";
     return actuator.getType() + ": " + onOff;
+  }
+
+  /**
+   * Adds a "Turn Off All Actuators" button to the pane.
+   *
+   * @param parent The parent container where the button will be added.
+   */
+  private void addTurnOffAllButton(Pane parent) {
+    Button turnOffAllButton = new Button("Turn Off All Actuators");
+    turnOffAllButton.setOnAction(event -> turnOffAllActuators());
+    parent.getChildren().add(turnOffAllButton);
+  }
+
+  /**
+   * Turns off all actuators in the collection.
+   */
+  private void turnOffAllActuators() {
+    actuators.forEach(actuator -> {
+      actuator.turnOff();
+      update(actuator); // Update the actuator display
+    });
   }
 
   /**
