@@ -1,6 +1,7 @@
 # **Sprint Report**
 
-Sprint master: TOBIAS
+Sprint master: Adrian
+Sprint stenographer: Tobias
 
 ## **Sprint Overview**
 - **Sprint Number:** Sprint 2
