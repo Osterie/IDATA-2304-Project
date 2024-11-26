@@ -23,13 +23,14 @@ import no.ntnu.greenhouse.sensors.Sensor;
 import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.tools.Logger;
 
+// TODO refactor, create classes for alot of the logic in this class. This class does too much.
 /**
  * A section of GUI displaying sensor data.
  */
 public class SensorPane extends TitledPane {
   private final List<SimpleStringProperty> sensorProps = new ArrayList<>();
   private final VBox contentBox = new VBox();
-  private final List<Node> thumbnailList = new LinkedList<>();
+  private final List<Node> thumbnailList = new LinkedList<>(); // TODO why?
 
   /**
    * Create a sensor pane.
@@ -44,9 +45,9 @@ public class SensorPane extends TitledPane {
   private void initialize(Iterable<SensorReading> sensors) {
     setText("Sensors");
     sensors.forEach(sensor ->
-        contentBox.getChildren().add(createAndRememberSensorLabel(sensor))
+        this.contentBox.getChildren().add(createAndRememberSensorLabel(sensor))
     );
-    setContent(contentBox);
+    setContent(this.contentBox);
   }
 
   /**
@@ -112,7 +113,9 @@ public class SensorPane extends TitledPane {
     return label;
   }
 
-  private Node createImageSensorNode(SensorReading sensor){
+  // TODO wtf
+  // TODO refactor
+  private Node createImageSensorNode(SensorReading sensor) {
     Logger.info("Creating image view for thumbnail");
     ImageSensorReading imageSensor = (ImageSensorReading) sensor;
 
@@ -131,16 +134,22 @@ public class SensorPane extends TitledPane {
     ImageView thumbnail = new ImageView(image);
     thumbnail.setFitWidth(100); // Set desired thumbnail width
     thumbnail.setPreserveRatio(true); // Maintain aspect ratio
+    thumbnail.cursorProperty().setValue(javafx.scene.Cursor.HAND);
 
     // Add click listener to open a new window
     thumbnail.setOnMouseClicked(event -> showFullImage(image));
 
-    // Add thumbnail to the list and update the UI
-    addThumbnailToUI(thumbnail);
+    Label imageLabel = new Label("Image: ");
+    VBox imageNode = new VBox(5); // Add spacing between items
+    imageNode.getChildren().addAll(imageLabel, thumbnail);
 
-    return thumbnail;
+    // Add thumbnail to the UI
+    addThumbnailToUI(imageNode);
+
+    return imageNode;
   }
 
+  // TODO wtf?
   private void addThumbnailToUI(Node thumbnail) {
     // Add the new thumbnail to the list
     thumbnailList.add(thumbnail);
