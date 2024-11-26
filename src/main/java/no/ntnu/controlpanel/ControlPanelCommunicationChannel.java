@@ -44,7 +44,7 @@ import no.ntnu.messages.Message;
  */
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   private final ControlPanelLogic logic;
-  private String targetId = "1"; // Used to target a greenhouse node for sensor data requests
+  private String targetId = Endpoints.BROADCAST.getValue(); // Used to target a greenhouse node for sensor data requests
   
 
   /**
@@ -514,19 +514,22 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     if (reading == null || reading.isEmpty()) {
       throw new IllegalArgumentException("Sensor reading can't be empty");
     }
-    String[] assignmentParts = reading.split(" = ");
+    String[] formatParts = reading.split(":");
+    if (formatParts.length != 2) {
+      throw new IllegalArgumentException("Invalid sensor format/data: " + reading);
+    }
+    String[] assignmentParts = formatParts[1].split("=");
     if (assignmentParts.length != 2) {
       throw new IllegalArgumentException("Invalid sensor reading specified: " + reading);
     }
     String[] valueParts = assignmentParts[1].split(" ");
-    if (valueParts.length != 2) {
+    if (valueParts.length != 3) {
       throw new IllegalArgumentException("Invalid sensor value/unit: " + reading);
     }
-    
-    if (assignmentParts[0].equals("image")) {
+    if (assignmentParts[0].equals("image ") && formatParts[0].equals("IMG")) {
       String type = assignmentParts[0];
-      String base64String = valueParts[0];
-      String fileExtension = valueParts[1];
+      String base64String = valueParts[1];
+      String fileExtension = valueParts[2];
 
       BufferedImage image;
       try {
@@ -539,11 +542,14 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       
       return imageReading;
     }
-    else{
+    else if (formatParts[0].equals("NUM")) {
       String type = assignmentParts[0];
-      double value = parseDoubleOrError(valueParts[0], "Invalid sensor value: " + valueParts[0]);
-      String unit = valueParts[1];
+      double value = parseDoubleOrError(valueParts[1], "Invalid sensor value: " + valueParts[1]);
+      String unit = valueParts[2];
       return new NumericSensorReading(type, value, unit);
+    }
+    else {
+      throw new IllegalArgumentException("Unknown sensor format: " + formatParts[0]);
     }
   }
 
