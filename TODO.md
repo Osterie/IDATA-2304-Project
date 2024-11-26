@@ -63,7 +63,6 @@
 - [x] ADRIAN Implement Success and Failuer responses.
 
 - [ ] SEBASTIAN Handle display if image better. Fix image displaying in greenhouse nodes. For example a small version of the image, which when clicked opens a new window with the full image.
-- [ ] TOBIAS when closing the node tab in control panel, close in greenhouse too? Or not.
 - [ ] SEBASTIAN Fix test file structure.
 - [ ] TOBIAS AND OTHERS? Look over and fix bad javadoc
 - [ ] When using copilot to write javadoc, check that the javadoc is correct
