@@ -12,6 +12,7 @@
 - [ ] UNASSIGNED Actuator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such.
 - [ ] UNASSIGNED Currently Message and MessageHeader i think have fromString methods. Perhaps another class should be used for this?
 - [ ] UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution.
+- [ ] UNASSIGNED When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
 
 # GENERAL
 
