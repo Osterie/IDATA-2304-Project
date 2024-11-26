@@ -33,7 +33,7 @@ public class TurnOffAllActuatorInNodeCommandTest {
         // Verifies that the setAllActuators method is called once by the node
         verify(node, times(1)).setAllActuators(false);
         assertEquals("TURN_ON_ALL_ACTUATORS_SUCCESS", result.getBody().getTransmission().getTransmissionString());
-        assertEquals("TURN_OFF_ALL_ACTUATORS", result.getHeader().getDataType());
+        assertEquals("TURN_OFF_ALL_ACTUATORS", result.getHeader().toString());
     }
 
     @Test

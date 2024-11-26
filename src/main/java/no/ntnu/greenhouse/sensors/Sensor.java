@@ -39,6 +39,13 @@ public abstract class Sensor {
     public String getType() {
         return reading.getType();
     }
+
+    /**
+     * Abstract method to get the format of the data.
+     *
+     * @return The form of the sensor.
+     */
+    public abstract String getDataFormat();
     
     /**
      * Returns the sensor reading of the sensor.

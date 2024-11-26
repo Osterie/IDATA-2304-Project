@@ -2,7 +2,6 @@ package no.ntnu.messages;
 
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.commands.greenhouse.GetSensorDataCommand;
-import no.ntnu.messages.MessageHeader;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
