@@ -16,6 +16,7 @@ public class MessageHeader {
     private static final String FIELD_DELIMITER = Delimiters.HEADER_FIELD.getValue();
     private Endpoints receiver;  // The receiver of the message
     private String id;           // The ID of the receiver
+    private String hashedContent; // This string stores the hashed version of the body content
 
     /**
      * Constructs a MessageHeader
@@ -55,7 +56,7 @@ public class MessageHeader {
      * @return The receiver's ID.
      */
     public String getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -70,6 +71,25 @@ public class MessageHeader {
         }
         this.id = id;
     }
+
+    /**
+     * Gets the hashed message body content.
+     *
+     * @return The hashed body content.
+     */
+    public String getHashedContent() {
+        return this.hashedContent;
+    }
+
+    /**
+     * Stores the hashed version of the message body content.
+     *
+     * @param hashedContent Hashed content.
+     */
+    public void setHashedContent(String hashedContent) {
+        this.hashedContent = hashedContent;
+    }
+
 
     /**
      * Parses a MessageHeader from its protocol string representation.

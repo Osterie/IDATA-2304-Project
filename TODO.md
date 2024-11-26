@@ -110,7 +110,7 @@
 For each of the design choices provide a short justification: why did you choose to design it the way you did?
 
 - [ ] 1. DANIEL A short introduction: "This document describes _ _"
-- [ ] 2. TOBIAS. Terminology: a list of special terms you use
+- [x?] 2. TOBIAS. Terminology: a list of special terms you use
 - [x] 3. The underlying transport you use (TCP or UDP).
 - [x] 4. The used port number.
 - [ ] 5. SEBASTIAN. The overall architecture:
