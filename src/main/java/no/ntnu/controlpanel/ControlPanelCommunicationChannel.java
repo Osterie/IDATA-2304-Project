@@ -526,7 +526,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     if (valueParts.length != 3) {
       throw new IllegalArgumentException("Invalid sensor value/unit: " + reading);
     }
-    if (assignmentParts[0].equals("image ") && formatParts[0].equals("IMG")) {
+    if (formatParts[0].equals("IMG")) {
       String type = assignmentParts[0];
       String base64String = valueParts[1];
       String fileExtension = valueParts[2];
