@@ -7,7 +7,7 @@
 
 - [ ] TOBIAS for generateHeader method usage, what if header is null? handle this.
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
-- [ ] TOBIAS add hash in header of Message.
+- [x] TOBIAS add hash in header of Message.
 - [ ] KNUT clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
 - [ ] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
 - [ ] SEBASTIAN Actuator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such.
@@ -16,6 +16,7 @@
 - [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
 - [ ] ADRIAN fix issue with images not being replaced, but instead being added when displaying images 
 - [ ] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
+- [x] TOBIAS ScrollPane for controlPanel.
 - [ ] SEBASTIAN Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
 - [ ] DANIEL Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
 - [ ] DANIEL Actuator for sensors should be more flexible, for example window actuator should not be ON/OFF, but instead close/open, and so on.

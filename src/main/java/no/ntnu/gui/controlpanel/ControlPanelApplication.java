@@ -14,6 +14,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.ScrollPane;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
@@ -73,10 +74,14 @@ public class ControlPanelApplication extends Application
     VBox rootLayout = new VBox();
     Node ribbon = createRibbon();
     rootLayout.getChildren().add(ribbon);
-
     rootLayout.getChildren().add(createEmptyContent());
 
-    mainScene = new Scene(rootLayout, WIDTH, HEIGHT);
+    // Wrap the root layout in a ScrollPane
+    ScrollPane scrollPane = new ScrollPane();
+    scrollPane.setContent(rootLayout);
+    scrollPane.setFitToWidth(true); // Make the scroll pane fit the window width
+
+    mainScene = new Scene(scrollPane, WIDTH, HEIGHT);
     stage.setScene(mainScene);
     stage.show();
 
@@ -166,7 +171,7 @@ public class ControlPanelApplication extends Application
   }
 
   private void removeNodeTabPane() {
-    VBox rootLayout = (VBox) mainScene.getRoot();
+    VBox rootLayout = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
     rootLayout.getChildren().set(1, createEmptyContent());
     nodeTabPane = null;
   }
@@ -222,7 +227,7 @@ public class ControlPanelApplication extends Application
     if (nodeTabPane == null) {
       nodeTabPane = new TabPane();
       nodeTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-      VBox rootLayout = (VBox) mainScene.getRoot();
+      VBox rootLayout = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
       rootLayout.getChildren().set(1, nodeTabPane);
     }
 
@@ -268,4 +273,3 @@ public class ControlPanelApplication extends Application
     Platform.runLater(Platform::exit);
   }
 }
-
