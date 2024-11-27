@@ -26,10 +26,6 @@ public class GetSensorDataCommand extends GreenhouseCommand {
         String sensorData = nodeLogic.getSensorData();
         SuccessResponse response = new SuccessResponse(this, sensorData);
         MessageBody body = new MessageBody(response);
-        System.out.println("|||||||||||||||||||");
-        System.out.println("|||||||||||||||||||");
-        System.out.println("|||||||||||||||||||");
-        System.out.println("|||||||||||||||||||");
         return new Message(fromHeader, body);
     }
 

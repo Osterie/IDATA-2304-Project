@@ -148,7 +148,9 @@ public class ImageSensorReading extends SensorReading{
      */
     @Override
     public String getFormatted() {
-        return this.getType() + " = " + this.getImageFormatted() + " " + this.fileExtension;
+        // TODO we should have type here since that is done for numeric sensor reading, consistency.
+        // Does not make sense that there is a " = " randomly.
+        return " = " + this.getImageFormatted() + " " + this.fileExtension;
     }
 
     /**

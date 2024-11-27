@@ -16,6 +16,7 @@ import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.tools.Logger;
+import no.ntnu.tools.encryption.HashEncryptor;
 
 public abstract class SocketCommunicationChannel {
   protected ClientIdentification clientIdentification;
@@ -80,9 +81,48 @@ public abstract class SocketCommunicationChannel {
     messageListener.start();
   }
 
+  protected String decryptStringMessage (String message) {
+    return message;
+  };
+
+  // TODO this class should have a method which decrypts the received message, and tursn it from string into message, and then calls handleMessage. Perhaps handleMessage should be renamed and such.
+  // TODO: Decrypt message before handling using decryptStringMessage?
   protected abstract void handleMessage(String message);
 
+  /**
+   * Takes message in and returns the encrypted version back.
+   *
+   * @param message the message to be encrypted.
+   * @return message that is encrypted.
+   */
+  protected Message encryptMessage(Message message) {
+    // TODO: This class should encrypt a message before sending it in sendMessage method.
+    return message;
+  }
+
+  /**
+   * Takes a message in and returns the same message, but with the hashed
+   * transmission stored in the header.
+   *
+   * @param message message that will be added hash to.
+   * @return hashedMessage the new message with hashed element.
+   */
+  protected Message addHashedContentToMessage(Message message) {
+    Message hashedMessage = message;
+
+    String transmissionString = message.getBody().getTransmission().toString();
+    String hashedTransmissionString = HashEncryptor.encryptString(transmissionString);
+    hashedMessage.getHeader().setHashedContent(hashedTransmissionString);
+
+    return hashedMessage;
+  }
+
+  // TODO: Should this class encrypt a message if handleMessage decrypts? If so, should it have its own method before sending?
   protected synchronized void sendMessage(Message message) {
+
+    // Adds hashed body content to header and encrypts the message.
+    Message encryptedMessage = encryptMessage(addHashedContentToMessage(message));
+
     if (isOn && socketWriter != null) {
       socketWriter.println(message);
       Logger.info("Sent message to server: " + message);

@@ -228,6 +228,7 @@ public class ClientHandler extends Thread {
             return;
         }
 
+        // TODO: Check hashed body content here?
         // TODO rename to incommingMessage
         Message message = Message.fromString(identification);
         Response response = this.processIdentification(message);

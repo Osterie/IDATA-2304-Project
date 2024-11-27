@@ -74,6 +74,10 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
      */
     @Override
     public void setParameters(String parameters[]) throws IllegalArgumentException {
+
+        // TODO currently the parameters are in a specific order, would it be better to instead send som information about what the parameters are?
+        // So that the order of the parameters does not matter. For example: "actuatorId=1, isOn=1"
+
         if (parameters.length != 2) {
             throw new IllegalArgumentException("Invalid parameters for ActuatorChangeCommand");
         }

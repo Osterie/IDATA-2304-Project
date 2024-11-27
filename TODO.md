@@ -9,7 +9,6 @@
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
 - [ ] KNUT clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
 - [ ] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
-- [x] SEBASTIAN Actuator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such.
 - [ ] ADRIAN Currently Message and MessageHeader i think have fromString methods. Perhaps another class should be used for this?
 <!-- - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
 - [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
@@ -18,7 +17,7 @@
 - [x] TOBIAS ScrollPane for controlPanel.
 - [ ] SEBASTIAN Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
 - [ ] DANIEL Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
-- [ ] DANIEL Actuator for sensors should be more flexible, for example window actuator should not be ON/OFF, but instead close/open, and so on.
+- [ ] SEBASTIAN Actuator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such.
 - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
 - [ ] ADRIAN Sensors for light, fertilizer (Nitrogen), PH, wind speed etc.
 - [ ] TOBIAS Implement encryption. Måtte flytte det til neste sprint.
@@ -46,7 +45,7 @@
 - [x] ADRIAN notifyChanges method of Actuator Class, refactor this method.
 - [x] ADRIAN image sensor should have image: [Actual image]
 
-- [x] TOBIAS add a refresh button to control panel
+- [ ] TOBIAS add a working refresh button to control panel
 
 - [x] ADRIAN fix nodes sometimes not being created in gui.
 
