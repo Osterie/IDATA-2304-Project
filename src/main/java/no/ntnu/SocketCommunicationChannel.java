@@ -80,11 +80,18 @@ public abstract class SocketCommunicationChannel {
     messageListener.start();
   }
 
-  // TODO this class should have a method which decrypts the received message, and tursn it from string into message, and then calls handleMessage. Perhaps handleMessage should be renamed and such.
+  protected String decryptStringMessage (String message) {
+    return message;
+  };
 
+  // TODO this class should have a method which decrypts the received message, and tursn it from string into message, and then calls handleMessage. Perhaps handleMessage should be renamed and such.
+  // TODO: Decrypt message before handling using decryptStringMessage?
   protected abstract void handleMessage(String message);
 
   protected synchronized void sendMessage(Message message) {
+
+    // TODO: Hashing message.getBody().getTransmission().toString();
+
     if (isOn && socketWriter != null) {
       socketWriter.println(message);
       Logger.info("Sent message to server: " + message);

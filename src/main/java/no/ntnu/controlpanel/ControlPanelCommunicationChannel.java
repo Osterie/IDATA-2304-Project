@@ -300,6 +300,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   public void askForSensorDataPeriodically(int period) {
     ControlPanelCommunicationChannel self = this;
 
+    // TODO: Hashing here?
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override
