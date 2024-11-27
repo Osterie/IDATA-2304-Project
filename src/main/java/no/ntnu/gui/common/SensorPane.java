@@ -1,22 +1,35 @@
 package no.ntnu.gui.common;
 
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import no.ntnu.greenhouse.sensors.AudioSensorReading;
 import no.ntnu.greenhouse.sensors.ImageSensorReading;
 import no.ntnu.greenhouse.sensors.NumericSensorReading;
 import no.ntnu.greenhouse.sensors.Sensor;
@@ -98,6 +111,8 @@ public class SensorPane extends TitledPane {
       nodeToReturn = createNumericSensorLabel(sensor);
     } else if (sensor instanceof ImageSensorReading) {
       nodeToReturn = createImageSensorNode(sensor);
+    } else if (sensor instanceof AudioSensorReading) {
+      nodeToReturn = createAudioSensorNode(sensor);
     } else {
       return new Label("Unknown sensor type: " + sensor.getClass());
       // throw new IllegalArgumentException("Unknown sensor type: " + sensor.getClass());
@@ -105,20 +120,73 @@ public class SensorPane extends TitledPane {
     return nodeToReturn;
   }
 
-  private Node createNumericSensorLabel(SensorReading sensor){
-    SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
-      sensorProps.add(props);
-      Label label = new Label();
-      label.textProperty().bind(props);
-    return label;
-  }
 
-  // TODO wtf
-  // TODO refactor
+  private Node createAudioSensorNode(SensorReading sensor) {
+    AudioSensorReading audioSensor = (AudioSensorReading) sensor;
+    File audioFile = audioSensor.getAudioFile();
+    
+    if (audioFile == null || !audioFile.exists()) {
+        return new Label("Audio file not found");
+    }
+
+    // Create a play button
+    Button playButton = new Button("Play");
+    Label lengthLabel = new Label();
+
+    playButton.setOnAction(e -> {
+        try {
+            playAudio(audioFile);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    });
+
+    // Get the length of the audio file
+    try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile)) {
+        AudioFormat format = audioInputStream.getFormat();
+        long frames = audioInputStream.getFrameLength();
+        double durationInSeconds = (frames + 0.0) / format.getFrameRate();
+        lengthLabel.setText(String.format("Length: %.2f seconds", durationInSeconds));
+    } catch (UnsupportedAudioFileException | IOException ex) {
+        lengthLabel.setText("Error reading audio length");
+    }
+
+    // Create an HBox to hold the play button and length label
+    HBox hbox = new HBox(10, playButton, lengthLabel);
+    return hbox;
+}
+
+private void playAudio(File audioFile) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+    try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile)) {
+        AudioFormat format = audioInputStream.getFormat();
+        DataLine.Info info = new DataLine.Info(Clip.class, format);
+        Clip audioClip = (Clip) AudioSystem.getLine(info);
+        audioClip.open(audioInputStream);
+        audioClip.start();
+    }
+}
+
+private Node createNumericSensorLabel(SensorReading sensor){
+  SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
+    sensorProps.add(props);
+    Label label = new Label();
+    label.textProperty().bind(props);
+  return label;
+}
+
+  
+  /**
+   * Creates a JavaFX Node that displays a thumbnail image for the given sensor reading.
+   * The thumbnail is clickable and opens a new window displaying the full image.
+   *
+   * @param sensor the sensor reading containing the image data
+   * @return a VBox containing the image label and thumbnail
+   */
   private Node createImageSensorNode(SensorReading sensor) {
     Logger.info("Creating image view for thumbnail");
     ImageSensorReading imageSensor = (ImageSensorReading) sensor;
 
+    //TODO REFACTOR TO GET IMAGE FROM SENSOR
     // Generate image
     imageSensor.generateRandomImage("images/");
     BufferedImage bufferedImage = imageSensor.getImage();
@@ -149,13 +217,18 @@ public class SensorPane extends TitledPane {
     return imageNode;
   }
 
-  // TODO wtf?
+  /**
+   * Add a thumbnail to the UI.
+   * This method will add the thumbnail to the list of thumbnails and update the VBox to show only the last thumbnail.
+   * 
+   * @param thumbnail The thumbnail to add.
+   */
   private void addThumbnailToUI(Node thumbnail) {
     // Add the new thumbnail to the list
     thumbnailList.add(thumbnail);
 
-    // If there are more than 3 thumbnails, remove the oldest
-    if (thumbnailList.size() > 3) {
+    //Makes it so that only the last thumbnail is shown
+    if (thumbnailList.size() > 1) {
         thumbnailList.remove(0);
     }
 
@@ -166,6 +239,12 @@ public class SensorPane extends TitledPane {
     });
   }
 
+  
+  /**
+   * Displays the given image in a new window with a specified size.
+   *
+   * @param image the Image object to be displayed in full size
+   */
   private void showFullImage(Image image) {
     // Create a new Stage (window)
     Stage fullImageStage = new Stage();
@@ -183,7 +262,7 @@ public class SensorPane extends TitledPane {
 
     // Show the stage
     fullImageStage.show();
-}
+  }
 
   private String generateSensorText(SensorReading sensor) {
     return sensor.getFormatted();
