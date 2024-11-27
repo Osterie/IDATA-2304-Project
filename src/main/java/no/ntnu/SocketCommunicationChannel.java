@@ -58,22 +58,12 @@ public abstract class SocketCommunicationChannel {
     this.startListenerThread();
   }
 
+  
   protected void startListenerThread() {
     Thread messageListener = new Thread(() -> {
       try {
         while (this.isOn) {
-          String serverMessage = this.socketReader.readLine();
-          if (serverMessage != null) {
-            Logger.info("Received from server: " + serverMessage);
-            // TODO: It needs decryption.
-            // TODO: HandleMessage should take Message not String.
-            this.handleMessage(serverMessage);
-          } else {
-            Logger.warn("Server message is null, closing connection");
-            // TODO do differently?
-            this.close();
-          }
-          // TODO handle if null and such
+          this.readMessage();
         }
         Logger.info("Server message listener stopped.");
       } catch (IOException e) {
@@ -86,6 +76,40 @@ public abstract class SocketCommunicationChannel {
     messageListener.setDaemon(true); // Ensure the thread doesn't block app shutdown
 
     messageListener.start();
+  }
+
+  protected void readMessage() throws IOException{
+    String serverMessage = this.socketReader.readLine();
+    if (serverMessage != null) {
+      Logger.info("Received from server: " + serverMessage);
+      // TODO: It needs decryption.
+        // TODO: HandleMessage should take Message not String.
+        Message message = this.parseMessage(serverMessage);
+        this.handleMessage(message);
+    } else {
+      Logger.warn("Server message is null, closing connection");
+      // TODO do differently?
+      this.close();
+    }
+    // TODO handle if null and such
+  }
+
+  private Message parseMessage(String messageToParse) {
+    Message message = null;
+
+    // Attempt to parse the server message
+    try {
+      message = Message.fromString(messageToParse);
+    } catch (IllegalArgumentException | NullPointerException e) {
+      Logger.error("Invalid server message format: " + messageToParse + ". Error: " + e.getMessage());
+    }
+
+    // Check for null message, header, or body
+    if (message == null || message.getHeader() == null || message.getBody() == null) {
+      Logger.error("Message, header, or body is missing in server message: " + message);
+    }
+
+    return message;
   }
 
   // TODO: handleMessage is abstract, so where should decryption happen?
@@ -104,7 +128,7 @@ public abstract class SocketCommunicationChannel {
   // TODO this class should have a method which decrypts the received message, and tursn it from string into message, and then calls handleMessage. Perhaps handleMessage should be renamed and such.
   // TODO: Decrypt message before handling using decryptStringMessage?
   // TODO: Message to ADRIAN - You said it should be Message not String, are you gonna fix it?
-  protected abstract void handleMessage(String message);
+  protected abstract void handleMessage(Message message);
 
   /**
    * Takes message in and returns the encrypted version back.
