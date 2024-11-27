@@ -7,6 +7,7 @@ package no.ntnu.greenhouse.sensors;
 public class ImageSensor extends Sensor {
   private final ImageSensorReading reading;
   private final String imagesFilePath;
+  private final String dataFormat = "IMG";
 
   // TODO do not give image, just have a constant image
 
@@ -28,6 +29,25 @@ public class ImageSensor extends Sensor {
    */
   public String getType() {
     return reading.getType();
+  }
+
+  /**
+   * Get the file path to the images.
+   *
+   * @return The file path to the images.
+   */
+  public String getImagesFilePath() {
+    return imagesFilePath;
+  }
+
+  /**
+   * Get the data format of the sensor.
+   *
+   * @return The data format of the sensor as a string
+   */
+  @Override
+  public String getDataFormat() {
+    return dataFormat;
   }
 
   /**

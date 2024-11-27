@@ -7,34 +7,28 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.util.Base64;
 
+/**
+ * Utility class for encoding and decoding images to and from Base64 strings.
+ *
+ * <p>This class provides methods to:
+ * <ul>
+ *   <li>Convert a {@link BufferedImage} into a Base64 encoded string.</li>
+ *   <li>Convert a Base64 encoded string back into a {@link BufferedImage}.</li>
+ *   <li>Determine the format (e.g., PNG or JPG) of an image based on its file extension.</li>
+ * </ul>
+ *
+ * <p>Use this class to easily store or transmit images in text-based formats.
+ * Only PNG and JPG formats are supported.
+ */
 public class Base64ImageEncoder {
-
-    // TODO: OLD METHOD, REMOVE WHEN WE FEEL LIKE IT
-    // /**
-    //  * Converts an image (JPG or PNG) into a Base64 encoded string.
-    //  *
-    //  * @param imageFile The image file to be converted (PNG or JPG).
-    //  * @return A Base64 encoded string representing the image.
-    //  * @throws IOException if the image cannot be read.
-    //  */
-    // public static String imageToString(File imageFile) throws IOException {
-    //     BufferedImage bufferedImage = ImageIO.read(imageFile);
-    //     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    //     // Determine if it's PNG or JPG
-    //     String imageFormat = getImageFormat(imageFile);
-
-    //     // Write the image to the output stream in the specified format (JPG/PNG)
-    //     ImageIO.write(bufferedImage, imageFormat, byteArrayOutputStream);
-
-    //     // Encode the byte array to Base64 and return as a string
-    //     return Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
-    // }
 
     /**
      * Converts an image (BufferedImage) into a Base64 encoded string.
-     * @param base64String The Base64 string representing the image.
+     *
+     * @param bufferedImage The image to be converted.
+     * @param fileExtension The file format/extension of the image (e.g., "png", "jpg", "jpeg").
      * @return A Base64 encoded string representing the image.
-     * @throws IOException if the image cannot be read.
+     * @throws IOException if the image cannot be read or written in the specified format.
      */
     public static String imageToString(BufferedImage bufferedImage, String fileExtension) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

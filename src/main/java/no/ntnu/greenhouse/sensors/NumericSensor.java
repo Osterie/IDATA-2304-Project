@@ -7,6 +7,7 @@ public class NumericSensor extends Sensor {
   private final NumericSensorReading reading;
   private final double min;
   private final double max;
+  private final String dataFormat = "NUM";
 
   /**
    * Create a numeric sensor.
@@ -41,6 +42,16 @@ public class NumericSensor extends Sensor {
    */
   public SensorReading getReading() {
     return reading;
+  }
+
+  /**
+   * Get the data format of the sensor.
+   *
+   * @return The data format of the sensor as a string
+   */
+  @Override
+  public String getDataFormat() {
+    return dataFormat;
   }
 
   /**

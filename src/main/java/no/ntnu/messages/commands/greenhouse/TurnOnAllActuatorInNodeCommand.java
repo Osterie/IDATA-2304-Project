@@ -12,24 +12,35 @@ import no.ntnu.messages.responses.SuccessResponse;
  */
 public class TurnOnAllActuatorInNodeCommand extends GreenhouseCommand {
 
+    /**
+     * Creates a new instance of this command.
+     */
     public TurnOnAllActuatorInNodeCommand() {
         super("TURN_ON_ALL_ACTUATORS");
     }
 
-    //TODO Change id to what is should be.
+    /**
+     * Executes the command to turn on all actuators in a node.
+     * 
+     * @param nodeLogic The node logic to execute the command on.
+     * @param fromHeader The header of the message that triggered this command.
+     * @return A message containing the success response.
+     */
     @Override
     public Message execute(NodeLogic nodeLogic, MessageHeader fromHeader) {
         nodeLogic.getNode().setAllActuators(true);
-        // MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, "0", this);
-
         SuccessResponse response = new SuccessResponse(this, "TURN_ON_ALL_ACTUATORS_SUCCESS");
         MessageBody body = new MessageBody(response);
         return new Message(fromHeader, body);
     }
 
+    /**
+     * Converts the command to a string which follows transmission protocol.
+     * 
+     * @return The command as a string following the transmission protocol.
+     */
     @Override
     public String toString() {
         return this.getTransmissionString();
     }
-    
 }

@@ -39,7 +39,9 @@ public class NodeLogic {
         String sensorData = this.node.getId() + ";";
         for (Sensor sensor : sensors) {
             SensorReading reading = sensor.getReading();
-            sensorData += reading.getFormatted() + ",";
+            String sensorType = sensor.getDataFormat();
+            System.out.println("Sensor type: " + sensorType);
+            sensorData += sensorType + ":" + reading.getFormatted() + ",";
         }
         sensorData = sensorData.substring(0, sensorData.length() - 1);
 

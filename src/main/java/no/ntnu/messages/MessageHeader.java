@@ -9,14 +9,14 @@ import no.ntnu.tools.Logger;
  * <ul>
  *     <li>The receiver of the message (an {@link Endpoints} object).</li>
  *     <li>The ID of the receiver (e.g., a specific target identifier or "BRODACAST").</li>
- *     <li>The data type of the message, if applicable.</li>
  * </ul>
- * This class provides methods to convert between protocol string representations and objects.
  */
 public class MessageHeader {
+
     private static final String FIELD_DELIMITER = Delimiters.HEADER_FIELD.getValue();
     private Endpoints receiver;  // The receiver of the message
     private String id;           // The ID of the receiver
+    private String hashedContent; // This string stores the hashed version of the body content
 
     /**
      * Constructs a MessageHeader
@@ -56,7 +56,7 @@ public class MessageHeader {
      * @return The receiver's ID.
      */
     public String getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -73,13 +73,33 @@ public class MessageHeader {
     }
 
     /**
+     * Gets the hashed message body content.
+     *
+     * @return The hashed body content.
+     */
+    public String getHashedContent() {
+        return this.hashedContent;
+    }
+
+    /**
+     * Stores the hashed version of the message body content.
+     *
+     * @param hashedContent Hashed content.
+     */
+    public void setHashedContent(String hashedContent) {
+        this.hashedContent = hashedContent;
+    }
+
+
+    /**
      * Parses a MessageHeader from its protocol string representation.
      *
      * @param protocolString The protocol string representing a header.
      * @return The parsed {@link MessageHeader} object.
      * @throws IllegalArgumentException If the protocol string is invalid or malformed.
      */
-    public static MessageHeader fromString(String protocolString) {
+    public static MessageHeader fromString(String protocolString) throws IllegalArgumentException{
+        // TODO refactor
         if (protocolString == null || protocolString.trim().isEmpty()) {
             throw new IllegalArgumentException("Protocol string cannot be null or empty");
         }
@@ -103,29 +123,21 @@ public class MessageHeader {
             Logger.error("Invalid header format. Expected 2 or 3 parts separated by '" + FIELD_DELIMITER + "'");
             return null;
         }
-        // else {
-        //     String optionalField = parts[2];
-        //     return new MessageHeader(clientType, targetId, optionalField);
-        // }
     }
 
-        /**
+    /**
      * Converts this header to its protocol string representation.
-     * The format is: `receiver_id[FIELD_DELIMITER]target_id[FIELD_DELIMITER]data_type`
-     * or `receiver_id[FIELD_DELIMITER]target_id` if the data type is empty.
+     * The format is: `receiver_id[FIELD_DELIMITER]target_id`
+     * For example 'GREENHOUSE;1'
      *
      * @return The protocol string representation of the header.
      * @throws IllegalArgumentException If any required field is null.
      */
     @Override
-public String toString() {
+    public String toString() throws IllegalArgumentException {
         if (receiver == null || id == null) {
             throw new IllegalArgumentException("Receiver and ID cannot be null");
         }
-        // if (dataType.isEmpty()) {
         return String.join(FIELD_DELIMITER, receiver.getValue(), id);
-        // } else {
-        //     return String.join(FIELD_DELIMITER, receiver.getValue(), id, dataType);
-        // }
     }
 }

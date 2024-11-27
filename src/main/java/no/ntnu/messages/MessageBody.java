@@ -6,6 +6,7 @@ package no.ntnu.messages;
  * It serves as the content of the message, providing specific instructions or information.
  */
 public class MessageBody {
+
     // The transmission associated with this message body
     private Transmission transmission;
 
@@ -14,12 +15,15 @@ public class MessageBody {
      *
      * @param transmission The transmission to include in the message body. Must not be null.
      */
-    public MessageBody(Transmission transmission) {
+    public MessageBody(Transmission transmission) throws IllegalArgumentException {
+        if (transmission == null) {
+            throw new IllegalArgumentException("Transmission cannot be null");
+        }
         this.transmission = transmission;
     }
 
     /**
-     * Gets the transmission of the message body.
+     * Returns the transmission of the message body.
      *
      * @return The transmission.
      */
@@ -44,14 +48,12 @@ public class MessageBody {
      *
      * @param protocolString The protocol string to parse. Expected format: `transmission[FIELD_DELIMITER]data`.
      * @return The parsed {@link MessageBody} object.
-     * @throws IllegalArgumentException If the protocol string is invalid or malformed.
      */
     public static MessageBody fromString(String protocolString) {
         TransmissionTranslator transmissionTranslator = new TransmissionTranslator();
         Transmission transmission = transmissionTranslator.toTransmission(protocolString);
         return new MessageBody(transmission);
     }
-
     
     /**
      * Converts this message body to its protocol string representation.

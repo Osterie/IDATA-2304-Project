@@ -5,14 +5,28 @@
 
 # Next sprint
 
-- [ ] UNASSIGNED  for generateHeader method usage, what if header is null? handle this.
-- [ ] UNASSIGNED  FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
-- [ ] UNASSIGNED clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
-- [ ] UNASSIGNED Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
-- [ ] UNASSIGNED Actuoator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such.
+- [ ] TOBIAS for generateHeader method usage, what if header is null? handle this.
+- [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
+- [ ] KNUT clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
+- [ ] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
+- [ ] ADRIAN Currently Message and MessageHeader i think have fromString methods. Perhaps another class should be used for this?
+<!-- - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
+- [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
+- [ ] ADRIAN fix issue with images not being replaced, but instead being added when displaying images 
+- [x] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
+- [x] TOBIAS ScrollPane for controlPanel.
+- [ ] SEBASTIAN Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
+- [ ] DANIEL Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
+- [ ] SEBASTIAN Actuator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such.
+- [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
+- [ ] ADRIAN Sensors for light, fertilizer (Nitrogen), PH, wind speed etc.
+- [ ] TOBIAS Implement encryption. Måtte flytte det til neste sprint.
+- [ ] TOBIAS Hashing the data and storing it in header(?) for checking integrity. 
+- [x] TOBIAS add hash in header of Message.
 
 # GENERAL
 
+- [x] ADRIAN when hovering image in sensors, change cursor to a hand to indicate it can be clicked.
 - [x] ADRIAN instead of a toProtocolString method, just override the toString method for transmissions?
 - [x] ADRIAN rename fromProtocolString to fromString.
 - [ ] ADRIAN use factory to create transmissions (or only commands?)?
@@ -25,12 +39,13 @@
 - [x] ADRIAN Create enum for non-predefined client id.
 - [x] ADRIAN remove option to remove tabs in control panel
 - [x] ADRIAN should actuator change send 0/1 instead of on/off? In that case we can show the text closed/open for window instead of on/off, for example.
-- [x] ADRIAN WHen client handler for some reason disconnects, try to connect again (send identification message and such)
+- [x] ADRIAN When client handler for some reason disconnects, try to connect again (send identification message and such)
 - [x] ADRIAN add enums for failure responses.
 - [x] ADRIAN add colors to Logger methods. 
 - [x] ADRIAN notifyChanges method of Actuator Class, refactor this method.
+- [x] ADRIAN image sensor should have image: [Actual image]
 
-- [ ] TOBIAS (SEBASTIAN: Håpe du ikkje he laga det allereie) add a refresh button to control panel
+- [ ] TOBIAS add a working refresh button to control panel
 
 - [x] ADRIAN fix nodes sometimes not being created in gui.
 
@@ -39,8 +54,6 @@
 - [ ] DANIEL When sending sensor data (GetSensorDataCommand), the message should contain the data type, for the numberSensorReading, can be For example NUM, for imagesensorreading, can be IMG.
 
 - [x] ADRIAN When the control panel asks for sensor data, perhaps it does this a bit infrequently? Currenlty i believe it does it every 5 seconds. But do not change this to be too often. Is there another solution?
-
-- [ ] TOBIAS Implement encryption
 
 - [x] DANIEL a constant for the broadcast id? (ALL)
 
@@ -59,9 +72,8 @@
 - [x] ADRIAN Implement Response class
 - [x] ADRIAN Implement Success and Failuer responses.
 
-- [ ] SEBASTIAN Handle display if image better. Fix image displaying in greenhouse nodes. For example a small version of the image, which when clicked opens a new window with the full image.
-- [ ] TOBIAS when closing the node tab in control panel, close in greenhouse too? Or not.
-- [ ] SEBASTIAN Fix test file structure.
+- [x] SEBASTIAN Handle display if image better. Fix image displaying in greenhouse nodes. For example a small version of the image, which when clicked opens a new window with the full image.
+- [x] SEBASTIAN Fix test file structure.
 - [ ] TOBIAS AND OTHERS? Look over and fix bad javadoc
 - [ ] When using copilot to write javadoc, check that the javadoc is correct
 
@@ -73,7 +85,7 @@
 
 - [ ] ADRIAN/DANIEL/KNUT/SEBASTIAN/TOBIAS. JAVADOC FOLKENS, JAVADOC.
 - [x] TOBIAS Skriv javadoc for messages-klasser.
-- [ ] TOBIAS Skriv javadoc for command-klasser.
+- [ ] ADRIAN Skriv javadoc for command-klasser.
 - [x] TOBIAS Skriv javadoc for listeners-klasser.
 - [x] TOBIAS Skriv javadoc for intermidiary-klasser.
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
@@ -86,12 +98,19 @@
 
 - [ ] UNASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
 
+# Fill in reports from meeting notes
+
+- [x] TOBIAS report1
+- [x] TOBIAS report2
+- [ ] KNUT? report3
+- [ ] TOBIAS report4
+
 # PROTOCOL DESCRIPTION REQUIREMENTS
 
 For each of the design choices provide a short justification: why did you choose to design it the way you did?
 
 - [ ] 1. DANIEL A short introduction: "This document describes _ _"
-- [ ] 2. TOBIAS. Terminology: a list of special terms you use
+- [x?] 2. TOBIAS. Terminology: a list of special terms you use
 - [x] 3. The underlying transport you use (TCP or UDP).
 - [x] 4. The used port number.
 - [ ] 5. SEBASTIAN. The overall architecture:
@@ -223,7 +242,8 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [x] ADRIAN. Receive actuator status data from any sensor node. For example, is a window open or closed, is the fan on or off? 
 - [x] For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)
 - [x] ADRIAN receive sensor data periodically only for current tab in control panel.
-- [x] SEBASTIAN. Send image data from greenhouse to control panel. Parse reading in control panel.
+- [x] SEBASTIAN. Send image data from greenhouse to control panel. 
+- [ ] SEBASTIAN Parse image reading in control panel.
 
 ## GUI
 

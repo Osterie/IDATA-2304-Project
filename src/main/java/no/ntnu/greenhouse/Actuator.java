@@ -152,6 +152,7 @@ public class Actuator {
 
   }
 
+  // TODO we don't do it like this.
   /**
    * Get a string representation of the actuator.
    * 

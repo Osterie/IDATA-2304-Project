@@ -2,6 +2,7 @@ package no.ntnu.gui.greenhouse;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.greenhouse.Actuator;
@@ -93,9 +94,9 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
   }
 
   /**
-   * Creates the main content of the window, including panels for sensors and actuators.
+   * Creates the main content of the window, including panels for sensors and actuators, wrapped in a ScrollPane.
    *
-   * @return The root container (VBox) that contains the sensor and actuator panels.
+   * @return The root container (ScrollPane) that contains the sensor and actuator panels.
    */
   private Parent createContent() {
     // Create panels for displaying sensors and actuators
@@ -104,11 +105,22 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
 
     // Combine sensor and actuator panels in a vertical layout
     VBox root = new VBox(sensorPane, actuatorPane);
+
     // Apply style class for CSS styling
     root.getStyleClass().add("root");
 
-    // Return the root container
-    return root;
+    // Wrap the content in a ScrollPane
+    ScrollPane scrollPane = new ScrollPane();
+    scrollPane.setContent(root);
+    scrollPane.setFitToWidth(true);
+
+    // Adjust ScrollPane dynamically as content grows or shrinks
+    root.heightProperty().addListener((observable, oldHeight, newHeight) -> {
+      double maxHeight = getHeight() - 50; // Reserve space for the title bar and padding
+      scrollPane.setPrefViewportHeight(Math.min(newHeight.doubleValue(), maxHeight));
+    });
+
+    return scrollPane;
   }
 
   /**

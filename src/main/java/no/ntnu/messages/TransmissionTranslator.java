@@ -16,12 +16,15 @@ import no.ntnu.messages.responses.Response;
 import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.tools.Logger;
 
+/**
+ * A class for translating transmissions to and from strings.
+ */
 public class TransmissionTranslator {
 
     private HashMap<String, Transmission> transmissionMap;
 
     /**
-     * Initializes a command translator
+     * Initializes a transmission translator
      */
     public TransmissionTranslator() {
 
@@ -37,23 +40,23 @@ public class TransmissionTranslator {
         this.transmissionMap.put(new GetSensorDataCommand().getTransmissionString(), new GetSensorDataCommand());
         this.transmissionMap.put(new TurnOnAllActuatorInNodeCommand().getTransmissionString(), new TurnOnAllActuatorInNodeCommand());
         this.transmissionMap.put(new TurnOffAllActuatorInNodeCommand().getTransmissionString(), new TurnOffAllActuatorInNodeCommand());
-
         
         // Responses
         this.transmissionMap.put(new FailureResponse().getTransmissionString(), new FailureResponse());
         this.transmissionMap.put(new SuccessResponse().getTransmissionString(), new SuccessResponse());
 
-        // TODO: Add commands
+        // TODO: Add commands if missing
     }
 
     /**
-     * Converts a string to a message object
+     * Converts a string to a transmission object
      * 
      * @param string the string to convert
-     * @return the message object
+     * @return the transmission object
      */
     public Transmission toTransmission(String string) {
 
+        // TODO refactor 
         Logger.info("Converting string to transmission: " + string);
         String[] parts = string.split(Delimiters.BODY_FIELD_PARAMETERS.getValue(), 2);
         String transmissionType = parts[0];
@@ -85,6 +88,12 @@ public class TransmissionTranslator {
         return transmission;
     }
 
+    /**
+     * Gets a transmission object from the transmission map.
+     * 
+     * @param transmissionType the type of transmission
+     * @return the transmission object
+     */
     private Transmission getTransmission(String transmissionType) {
         return this.transmissionMap.get(transmissionType);
     }

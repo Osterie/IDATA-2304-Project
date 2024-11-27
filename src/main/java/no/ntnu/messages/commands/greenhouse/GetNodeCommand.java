@@ -1,6 +1,5 @@
 package no.ntnu.messages.commands.greenhouse;
 
-import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.greenhouse.NodeLogic;
@@ -40,6 +39,7 @@ public class GetNodeCommand extends GreenhouseCommand {
         // Build a string representing the actuators (type and ID)
         StringBuilder actuatorString = new StringBuilder();
         for (Actuator actuator : actuators) {
+            // TODO don't use ; and _, use the delimiter from the protocol, from the enums.
             actuatorString.append(";").append(actuator.getType()).append("_").append(actuator.getId());
         }
 
