@@ -31,22 +31,43 @@ import no.ntnu.tools.Logger;
 /**
  * JavaFX application for the control panel of a greenhouse system.
  * Provides a graphical interface to interact with sensor/actuator nodes, view data, and manage their states.
+ *
+ * Key features include:
+ * - Adding and removing tabs dynamically based on connected nodes.
+ * - Viewing sensor data and controlling actuators.
+ * - Refreshing the application and handling communication channel states.
  */
 public class ControlPanelApplication extends Application
         implements GreenhouseEventListener, CommunicationChannelListener {
 
+  // Static references for shared logic and communication channel
   private static ControlPanelLogic logic;
   private static final int WIDTH = 500;
   private static final int HEIGHT = 420;
   private static ControlPanelCommunicationChannel channel;
 
+  // TabPane to manage node tabs
   private TabPane nodeTabPane;
+
+  // Main application scene
   private Scene mainScene;
+
+  // Maps to store GUI components and node-related information
   private final Map<Integer, SensorPane> sensorPanes = new HashMap<>();
   private final Map<Integer, ActuatorPane> actuatorPanes = new HashMap<>();
   private final Map<Integer, SensorActuatorNodeInfo> nodeInfos = new HashMap<>();
   private final Map<Integer, Tab> nodeTabs = new HashMap<>();
 
+  // Global ScrollPane for dynamic resizing of the application layout
+  private ScrollPane scrollPane;
+
+  /**
+   * Starts the control panel application with the specified logic and communication channel.
+   *
+   * @param logic   The control panel logic to handle core operations.
+   * @param channel The communication channel to interact with nodes.
+   * @throws IllegalArgumentException if logic or channel is null.
+   */
   public void startApp(ControlPanelLogic logic, ControlPanelCommunicationChannel channel) {
     if (logic == null) {
       throw new IllegalArgumentException("Control panel logic can't be null");
@@ -60,6 +81,11 @@ public class ControlPanelApplication extends Application
     launch();
   }
 
+  /**
+   * Initializes the main JavaFX application stage.
+   *
+   * @param stage The primary stage for this JavaFX application.
+   */
   @Override
   public void start(Stage stage) {
     if (channel == null) {
@@ -77,9 +103,15 @@ public class ControlPanelApplication extends Application
     rootLayout.getChildren().add(createEmptyContent());
 
     // Wrap the root layout in a ScrollPane
-    ScrollPane scrollPane = new ScrollPane();
+    scrollPane = new ScrollPane();
     scrollPane.setContent(rootLayout);
-    scrollPane.setFitToWidth(true); // Make the scroll pane fit the window width
+    scrollPane.setFitToWidth(true);
+
+    // Dynamically adjust ScrollPane height based on content and window size
+    rootLayout.heightProperty().addListener((obs, oldHeight, newHeight) -> {
+      double newHeightValue = Math.min(newHeight.doubleValue(), stage.getHeight() - 50);
+      scrollPane.setPrefHeight(newHeightValue);
+    });
 
     mainScene = new Scene(scrollPane, WIDTH, HEIGHT);
     stage.setScene(mainScene);
@@ -101,8 +133,10 @@ public class ControlPanelApplication extends Application
     // Create a menu bar for the ribbon
     MenuBar ribbonMenuBar = new MenuBar();
 
-    // File menu
+    // Options
     Menu fileMenu = new Menu("Options");
+
+    // Option items
     MenuItem exitItem = new MenuItem("Exit");
     MenuItem refreshItem = new MenuItem("Refresh");
     refreshItem.setOnAction(event -> refreshControlPanel());
@@ -122,7 +156,7 @@ public class ControlPanelApplication extends Application
   }
 
   /**
-   * Refresh the control panel application by restarting it.
+   * Refreshes the control panel by restarting the application.
    */
   private void refreshControlPanel() {
     Logger.info("Refreshing Control Panel...");
@@ -142,17 +176,34 @@ public class ControlPanelApplication extends Application
     });
   }
 
+  /**
+   * Creates a placeholder label indicating that the application is waiting for node data.
+   *
+   * @return A Label with the placeholder text.
+   */
   private static Label createEmptyContent() {
     Label l = new Label("Waiting for node data...");
     l.setAlignment(Pos.CENTER);
     return l;
   }
 
+  /**
+   * Callback for when a new node is added.
+   * Dynamically adds a new tab for the node.
+   *
+   * @param nodeInfo Information about the added node.
+   */
   @Override
   public void onNodeAdded(SensorActuatorNodeInfo nodeInfo) {
     Platform.runLater(() -> addNodeTab(nodeInfo));
   }
 
+  /**
+   * Callback for when a node is removed.
+   * Removes the corresponding tab and clears associated data.
+   *
+   * @param nodeId The ID of the removed node.
+   */
   @Override
   public void onNodeRemoved(int nodeId) {
     Tab nodeTab = nodeTabs.get(nodeId);
@@ -170,12 +221,21 @@ public class ControlPanelApplication extends Application
     }
   }
 
+  /**
+   * Removes the TabPane if there are no more nodes.
+   */
   private void removeNodeTabPane() {
-    VBox rootLayout = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+    VBox rootLayout = (VBox) scrollPane.getContent();
     rootLayout.getChildren().set(1, createEmptyContent());
     nodeTabPane = null;
   }
 
+  /**
+   * Updates sensor data for the specified node.
+   *
+   * @param nodeId  The ID of the node.
+   * @param sensors A list of sensor readings for the node.
+   */
   @Override
   public void onSensorData(int nodeId, List<SensorReading> sensors) {
     SensorPane sensorPane = sensorPanes.get(nodeId);
@@ -187,6 +247,13 @@ public class ControlPanelApplication extends Application
     }
   }
 
+  /**
+   * Updates the state of an actuator for the specified node.
+   *
+   * @param nodeId     The ID of the node.
+   * @param actuatorId The ID of the actuator.
+   * @param isOn       The new state of the actuator.
+   */
   @Override
   public void onActuatorStateChanged(int nodeId, int actuatorId, boolean isOn) {
     ActuatorPane actuatorPane = actuatorPanes.get(nodeId);
@@ -207,27 +274,50 @@ public class ControlPanelApplication extends Application
     }
   }
 
+  /**
+   * Retrieves a stored actuator for the specified node and actuator ID.
+   *
+   * @param nodeId     The ID of the node.
+   * @param actuatorId The ID of the actuator.
+   * @return The actuator, or null if not found.
+   */
   private Actuator getStoredActuator(int nodeId, int actuatorId) {
     SensorActuatorNodeInfo nodeInfo = nodeInfos.get(nodeId);
     return nodeInfo != null ? nodeInfo.getActuator(actuatorId) : null;
   }
 
+  /**
+   * Clears stored data for a removed node.
+   *
+   * @param nodeId The ID of the removed node.
+   */
   private void forgetNodeInfo(int nodeId) {
     sensorPanes.remove(nodeId);
     actuatorPanes.remove(nodeId);
     nodeInfos.remove(nodeId);
   }
 
+  /**
+   * Removes a tab for a specified node.
+   *
+   * @param nodeId  The ID of the node.
+   * @param nodeTab The tab associated with the node.
+   */
   private void removeNodeTab(int nodeId, Tab nodeTab) {
     nodeTab.getTabPane().getTabs().remove(nodeTab);
     nodeTabs.remove(nodeId);
   }
 
+  /**
+   * Adds a new tab for a specified node.
+   *
+   * @param nodeInfo Information about the node to add.
+   */
   private void addNodeTab(SensorActuatorNodeInfo nodeInfo) {
     if (nodeTabPane == null) {
       nodeTabPane = new TabPane();
       nodeTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-      VBox rootLayout = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+      VBox rootLayout = (VBox) scrollPane.getContent();
       rootLayout.getChildren().set(1, nodeTabPane);
     }
 
@@ -240,6 +330,12 @@ public class ControlPanelApplication extends Application
     }
   }
 
+  /**
+   * Creates a tab for a specified node.
+   *
+   * @param nodeInfo Information about the node.
+   * @return A Tab representing the node.
+   */
   private Tab createNodeTab(SensorActuatorNodeInfo nodeInfo) {
     Tab tab = new Tab("Node " + nodeInfo.getId());
     SensorPane sensorPane = createEmptySensorPane();
@@ -263,10 +359,19 @@ public class ControlPanelApplication extends Application
     return tab;
   }
 
+  /**
+   * Creates an empty SensorPane placeholder.
+   *
+   * @return An empty SensorPane instance.
+   */
   private static SensorPane createEmptySensorPane() {
     return new SensorPane();
   }
 
+  /**
+   * Callback for when the communication channel is closed.
+   * Exits the application.
+   */
   @Override
   public void onCommunicationChannelClosed() {
     Logger.info("Communication closed, closing the GUI");
