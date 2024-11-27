@@ -1,6 +1,7 @@
 package no.ntnu.controlpanel;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,12 +14,14 @@ import static no.ntnu.tools.Parser.parseIntegerOrError;
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.sensors.AudioSensorReading;
 import no.ntnu.greenhouse.sensors.ImageSensorReading;
 import no.ntnu.greenhouse.sensors.NumericSensor;
 import no.ntnu.greenhouse.sensors.NumericSensorReading;
 import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.tools.Logger;
+import no.ntnu.tools.stringification.Base64AudioEncoder;
 import no.ntnu.tools.stringification.Base64ImageEncoder;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
@@ -548,6 +551,19 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       double value = parseDoubleOrError(valueParts[1], "Invalid sensor value: " + valueParts[1]);
       String unit = valueParts[2];
       return new NumericSensorReading(type, value, unit);
+    }
+    else if (formatParts[0].equals("AUD")) {
+      String type = assignmentParts[0];
+      String base64String = valueParts[1];
+      String fileExtension = valueParts[2];
+
+      File audioFile;
+      try {
+        audioFile = Base64AudioEncoder.stringToAudio(base64String);
+      } catch (IOException e) {
+        throw new IllegalArgumentException("Failed to decode audio: " + e.getMessage(), e);
+      }
+      return new AudioSensorReading(type, audioFile);
     }
     else {
       throw new IllegalArgumentException("Unknown sensor format: " + formatParts[0]);

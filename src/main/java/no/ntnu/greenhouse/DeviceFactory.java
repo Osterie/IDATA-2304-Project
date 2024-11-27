@@ -3,6 +3,7 @@ package no.ntnu.greenhouse;
 import no.ntnu.greenhouse.sensors.ImageSensor;
 import no.ntnu.greenhouse.sensors.NumericSensor;
 import no.ntnu.greenhouse.sensors.Sensor;
+import no.ntnu.greenhouse.sensors.AudioSensor;
 
 /**
  * A factory for producing sensors and actuators of specific types.
@@ -23,6 +24,8 @@ public class DeviceFactory {
   private static final String ACTUATOR_TYPE_HEATER = "heater";
   private static final String ACTUATOR_TYPE_WINDOW = "window";
   private static final String PATH_TO_IMAGES = "images/";
+  private static final String PATH_TO_AUDIO = "audiofiles/";
+  private static final String SENSOR_TYPE_AUDIO = "audio";
 
 
   private static int nextNodeId = 1;
@@ -41,10 +44,12 @@ public class DeviceFactory {
    * @param windowCount            Number of windows the device is connected to
    * @param fanCount               Number of fans the device is connected to
    * @param heaterCount            Number of heaters the device is connected to
+   * @param cameraCount            Number of cameras the device is connected to
+   * @param audioCount             Number of audio sensors the device is connected to
    * @return The created sensor/actuator device, with a unique ID
    */
   public static SensorActuatorNode createNode(int temperatureSensorCount, int humiditySensorCount,
-                                              int windowCount, int fanCount, int heaterCount, int cameraCount) {
+                                              int windowCount, int fanCount, int heaterCount, int cameraCount, int audioCount) {
     SensorActuatorNode node = new SensorActuatorNode(generateUniqueNodeId());
     if (temperatureSensorCount > 0) {
       node.addSensors(DeviceFactory.createTemperatureSensor(), temperatureSensorCount);
@@ -63,6 +68,9 @@ public class DeviceFactory {
     }
     if (cameraCount > 0) {
       node.addSensors(DeviceFactory.createImageSensor(), cameraCount);
+    }
+    if (audioCount > 0) {
+      node.addSensors(DeviceFactory.createAudioSensor(), audioCount);
     }
     return node;
   }
@@ -152,6 +160,10 @@ public class DeviceFactory {
    */
   public static Sensor createImageSensor() {
     return new ImageSensor(SENSOR_TYPE_IMAGE, PATH_TO_IMAGES);
+  }
+
+  public static Sensor createAudioSensor() {
+    return new AudioSensor(SENSOR_TYPE_AUDIO, PATH_TO_AUDIO);
   }
 
 
