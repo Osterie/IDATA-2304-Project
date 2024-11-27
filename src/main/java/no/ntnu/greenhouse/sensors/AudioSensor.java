@@ -59,6 +59,15 @@ public class AudioSensor extends Sensor {
     return dataFormat;
   }
 
+  /**
+   * Get the current reading of the sensor.
+   *
+   * @return The current reading of the sensor
+   */
+  public AudioSensorReading getReading() {
+    return this.reading;
+  }
+
 /**
  * Creates and returns a clone of this AudioSensor object.
  * 
@@ -66,7 +75,7 @@ public class AudioSensor extends Sensor {
  */
 @Override
 public Sensor createClone() {
-    return new AudioSensor(this.dataFormat, this.audioFilePath, this.reading);
+    return new AudioSensor(this.getType(), this.audioFilePath, this.reading);
 }
 
 /**
@@ -91,4 +100,15 @@ public void addRandomNoise() {
 public void applyImpact(double impact) {
     this.reading.generateRandomAudio(this.audioFilePath);
 }
+
+  /**
+   * Get a string representation of the sensor reading.
+   *
+   * @return A string representation of the sensor reading
+   */
+  @Override
+  public String toString() {
+    return reading.toString();
+  }
+
 }

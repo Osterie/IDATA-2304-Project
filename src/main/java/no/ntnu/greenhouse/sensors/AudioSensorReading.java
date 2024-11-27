@@ -135,4 +135,14 @@ public boolean equals(Object o) {
 public int hashCode() {
     return audioFile.hashCode();
 }
+
+/**
+   * Get a string representation of the sensor reading.
+   *
+   * @return A string representation of the sensor reading
+   */
+  @Override
+  public String toString() {
+    return "{ type=" + this.type + ", image=" + this.audioFile.toString() + ", fileExtension=" + this.fileExtension + " }";
+  }
 }
