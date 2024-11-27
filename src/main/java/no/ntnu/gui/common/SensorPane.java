@@ -43,7 +43,6 @@ import no.ntnu.tools.Logger;
 public class SensorPane extends TitledPane {
   private final List<SimpleStringProperty> sensorProps = new ArrayList<>();
   private final VBox contentBox = new VBox();
-  private final List<Node> thumbnailList = new LinkedList<>(); // TODO why?
 
   /**
    * Create a sensor pane.
@@ -240,18 +239,11 @@ private Node createNumericSensorLabel(SensorReading sensor){
    * @param thumbnail The thumbnail to add.
    */
   private void addThumbnailToUI(Node thumbnail) {
-    // Add the new thumbnail to the list
-    thumbnailList.add(thumbnail);
-
-    //Makes it so that only the last thumbnail is shown
-    if (thumbnailList.size() > 1) {
-        thumbnailList.remove(0);
-    }
 
     // Update the VBox to show only the thumbnails in the list
     Platform.runLater(() -> {
         contentBox.getChildren().clear();
-        contentBox.getChildren().addAll(thumbnailList);
+        contentBox.getChildren().addAll(thumbnail);
     });
   }
 

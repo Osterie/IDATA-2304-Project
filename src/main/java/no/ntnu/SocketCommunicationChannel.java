@@ -65,6 +65,8 @@ public abstract class SocketCommunicationChannel {
           String serverMessage = this.socketReader.readLine();
           if (serverMessage != null) {
             Logger.info("Received from server: " + serverMessage);
+            // TODO: It needs decryption.
+            // TODO: HandleMessage should take Message not String.
             this.handleMessage(serverMessage);
           } else {
             Logger.warn("Server message is null, closing connection");
@@ -101,6 +103,7 @@ public abstract class SocketCommunicationChannel {
 
   // TODO this class should have a method which decrypts the received message, and tursn it from string into message, and then calls handleMessage. Perhaps handleMessage should be renamed and such.
   // TODO: Decrypt message before handling using decryptStringMessage?
+  // TODO: Message to ADRIAN - You said it should be Message not String, are you gonna fix it?
   protected abstract void handleMessage(String message);
 
   /**
