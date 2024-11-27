@@ -1,6 +1,8 @@
 package no.ntnu.greenhouse.sensors;
 
 
+import java.sql.SQLOutput;
+
 /**
  * An image sensor which can sense the environment in a specific way.
  */
@@ -8,6 +10,7 @@ public class ImageSensor extends Sensor {
   private final ImageSensorReading reading;
   private final String imagesFilePath;
   private final String dataFormat = "IMG";
+  private boolean isOn;
 
   // TODO do not give image, just have a constant image
 
@@ -20,6 +23,7 @@ public class ImageSensor extends Sensor {
   public ImageSensor(String type, String imagesFilePath) {
     this.reading = new ImageSensorReading(type);
     this.imagesFilePath = imagesFilePath;
+    this.turnOn();
   }
 
   /**
@@ -56,7 +60,11 @@ public class ImageSensor extends Sensor {
    * @return The current sensor reading (value)
    */
   public ImageSensorReading getReading() {
-    return reading;
+    if (isOn) {
+      return reading;
+    } else {
+      throw new IllegalStateException("The sensor is off.");
+    }
   }
 
   /**
@@ -84,7 +92,13 @@ public class ImageSensor extends Sensor {
    * @param impact The impact to apply - the delta for the value
    */
   public void applyImpact(double impact) {
-    this.reading.generateRandomImage(imagesFilePath);
+    if (impact > 0) {
+      this.turnOn();
+      System.out.println("The sensor has been turned on.");
+    } else {
+      this.turnOff();
+      System.out.println("The sensor has been turned off.");
+    }
   }
 
   /**
@@ -95,5 +109,28 @@ public class ImageSensor extends Sensor {
   @Override
   public String toString() {
     return reading.toString();
+  }
+
+  /**
+   * Gets if the sensor if on or not.
+   *
+   * @return True if the sensor is on, false otherwise
+   */
+  public boolean isOn() {
+    return isOn;
+  }
+
+    /**
+     * Turn on the sensor.
+     */
+  private void turnOn() {
+    isOn = true;
+  }
+
+  /**
+   * Turn off the sensor.
+   */
+  private void turnOff() {
+    isOn = false;
   }
 }

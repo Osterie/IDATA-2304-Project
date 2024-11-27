@@ -64,7 +64,15 @@ public class SensorPane extends TitledPane {
    * @param sensors The sensor data to be displayed on the pane.
    */
   public SensorPane(List<Sensor> sensors) {
-    initialize(sensors.stream().map(Sensor::getReading).toList());
+    try {
+      initialize(sensors.stream().map(Sensor::getReading).toList());
+    } catch (IllegalStateException e) {
+      if (e.getMessage().equals("The sensor is off.")) {
+        System.out.println("Cannot add sensor to sensor pane becuase sensor is off");
+      } else {
+        throw e;
+      }
+    }
   }
 
   /**
@@ -86,7 +94,15 @@ public class SensorPane extends TitledPane {
    * @param sensors The sensor data that has been updated
    */
   public void update(List<Sensor> sensors) {
-    update(sensors.stream().map(Sensor::getReading).toList());
+    try {
+      update(sensors.stream().map(Sensor::getReading).toList());
+    } catch (IllegalStateException e) {
+      if (e.getMessage().equals("The sensor is off.")) {
+        System.out.println("Cannot update sensor becuase sensor is off");
+      } else {
+        throw e;
+      }
+    }
   }
 
   // TODO refactor this logic. Create a method above this method and such. This method should create a label and then another for images.

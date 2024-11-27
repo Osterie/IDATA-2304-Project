@@ -35,12 +35,21 @@ public class NodeLogic {
     }
 
     public String getSensorData(){
+
         List<Sensor> sensors = this.node.getSensors();
         String sensorData = this.node.getId() + ";";
         for (Sensor sensor : sensors) {
-            SensorReading reading = sensor.getReading();
-            String sensorType = sensor.getDataFormat();
-            sensorData += sensorType + ":" + reading.getFormatted() + ",";
+            try {
+                SensorReading reading = sensor.getReading();
+                String sensorType = sensor.getDataFormat();
+                sensorData += sensorType + ":" + reading.getFormatted() + ",";
+            } catch (IllegalStateException e) {
+                if (e.getMessage().equals("The sensor is off.")) {
+                    sensorData += "IMG:No image,";
+                } else {
+                    sensorData += "NUM:No data,";
+                }
+            }
         }
         sensorData = sensorData.substring(0, sensorData.length() - 1);
 
