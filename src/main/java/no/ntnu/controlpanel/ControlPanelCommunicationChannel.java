@@ -78,23 +78,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    * @param serverMessage The message received from the server
    */
   @Override
-  protected void handleMessage(String serverMessage) {
-    // Attempt to parse the server message
-    Message message;
-    try {
-      message = Message.fromString(serverMessage);
-    } catch (IllegalArgumentException | NullPointerException e) {
-      Logger.error("Invalid server message format: " + serverMessage + ". Error: " + e.getMessage());
-      return;
-    }
-
-    // Check for null message, header, or body
-    if (message == null || message.getHeader() == null || message.getBody() == null) {
-      Logger.error("Message, header, or body is missing in server message: " + serverMessage);
-      return;
-    }
-
-    Logger.info("Received message from server: " + serverMessage);
+  protected void handleMessage(Message message) {
+    
+    Logger.info("Received message from server: " + message);
 
     // Extract header and body
     MessageHeader header = message.getHeader();

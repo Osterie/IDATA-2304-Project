@@ -41,13 +41,12 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
 
     // TODO fix, improve, refactor.
     @Override
-    protected void handleMessage(String message) {
+    protected void handleMessage(Message message) {
 
         Logger.info("Received message for node! " + this.nodeLogic.getId() + ": " + message);
 
-        Message messageObject = Message.fromString(message);
-        MessageHeader header = messageObject.getHeader();
-        MessageBody body = messageObject.getBody();
+        MessageHeader header = message.getHeader();
+        MessageBody body = message.getBody();
         
         String sender = header.getReceiver().toString();
         String senderID = header.getId();
