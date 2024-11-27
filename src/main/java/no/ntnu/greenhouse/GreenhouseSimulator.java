@@ -39,7 +39,7 @@ public class GreenhouseSimulator {
     createNode(1, 0, 0, 2, 1,0,0);
     createNode(2, 0, 0, 0, 0,0,0);
     createNode(0, 0, 0, 0, 0, 1,0);
-    createNode(0, 0, 0, 0, 0, 0,1);
+    //createNode(0, 0, 0, 0, 0, 0,1);
     Logger.info("Greenhouse initialized");
   }
 
