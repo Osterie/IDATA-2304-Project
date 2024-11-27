@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.security.KeyPair;
+import java.security.PrivateKey;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -16,6 +18,10 @@ import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.tools.Logger;
+import no.ntnu.tools.encryption.HashEncryptor;
+import no.ntnu.tools.encryption.asymmetric.HybridRSAEncryptor;
+
+import javax.crypto.SecretKey;
 
 public abstract class SocketCommunicationChannel {
   protected ClientIdentification clientIdentification;
@@ -80,9 +86,81 @@ public abstract class SocketCommunicationChannel {
     messageListener.start();
   }
 
+  // TODO: handleMessage is abstract, so where should decryption happen?
+  protected String decryptStringMessage(String encryptedMessage, String encryptedAESKey, PrivateKey privateKey) throws Exception {
+    // Decrypt the AES key using the private key
+    SecretKey decryptedAESKey = HybridRSAEncryptor.decryptAESKeyWithRSA(encryptedAESKey, privateKey);
+    System.out.println("Decrypted AES Key.");
+
+    // Decrypt the message using the AES key
+    String decryptedMessage = HybridRSAEncryptor.decryptWithAES(encryptedMessage, decryptedAESKey);
+    System.out.println("Decrypted Message: " + decryptedMessage);
+
+    return decryptedMessage;
+  };
+
+  // TODO this class should have a method which decrypts the received message, and tursn it from string into message, and then calls handleMessage. Perhaps handleMessage should be renamed and such.
+  // TODO: Decrypt message before handling using decryptStringMessage?
   protected abstract void handleMessage(String message);
 
+  /**
+   * Takes message in and returns the encrypted version back.
+   *
+   * @param message the message to be encrypted.
+   * @return message that is encrypted.
+   */
+  protected Message encryptMessage(Message message) {
+    // TODO: This class should encrypt a message before sending it in sendMessage method.
+    // TODO: Encrypting this was meaning we also need to send the key. But where? You can see how the class works under.
+    try {
+      // Generate RSA key pair for recipient
+      KeyPair recipientKeyPair = HybridRSAEncryptor.generateRSAKeyPair();
+      System.out.println("Generated recipient's RSA key pair.");
+
+      // Generate AES key
+      SecretKey aesKey = HybridRSAEncryptor.generateAESKey();
+      System.out.println("Generated AES key.");
+
+      // Encrypt the message
+      String originalMessage = "Hello, this is a confidential message!";
+      String encryptedMessage = HybridRSAEncryptor.encryptWithAES(originalMessage, aesKey);
+      System.out.println("Encrypted Message: " + encryptedMessage);
+
+      // Encrypt the AES key with the recipient's public key
+      String encryptedAESKey = HybridRSAEncryptor.encryptAESKeyWithRSA(aesKey, recipientKeyPair.getPublic());
+      System.out.println("Encrypted AES Key: " + encryptedAESKey);
+
+    } catch (Exception e) {
+      System.err.println("Error occurred during encryption or decryption: " + e.getMessage());
+      e.printStackTrace();
+    }
+
+    return message;
+  }
+
+  /**
+   * Takes a message in and returns the same message, but with the hashed
+   * transmission stored in the header.
+   *
+   * @param message message that will be added hash to.
+   * @return hashedMessage the new message with hashed element.
+   */
+  protected Message addHashedContentToMessage(Message message) {
+    Message hashedMessage = message;
+
+    String transmissionString = message.getBody().getTransmission().toString();
+    String hashedTransmissionString = HashEncryptor.encryptString(transmissionString);
+    hashedMessage.getHeader().setHashedContent(hashedTransmissionString);
+
+    return hashedMessage;
+  }
+
+  // TODO: Should this class encrypt a message if handleMessage decrypts? If so, should it have its own method before sending?
   protected synchronized void sendMessage(Message message) {
+
+    // Adds hashed body content to header and encrypts the message.
+    Message encryptedMessage = encryptMessage(addHashedContentToMessage(message));
+
     if (isOn && socketWriter != null) {
       socketWriter.println(message);
       Logger.info("Sent message to server: " + message);

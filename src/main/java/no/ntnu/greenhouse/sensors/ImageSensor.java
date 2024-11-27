@@ -18,12 +18,24 @@ public class ImageSensor extends Sensor {
    * Create an image sensor.
    *
    * @param type    The type of the sensor.
-   * @param currentImage The current (starting) image of the sensor
+   * @param imagesFilePath The file path to the images
    */
   public ImageSensor(String type, String imagesFilePath) {
     this.reading = new ImageSensorReading(type);
     this.imagesFilePath = imagesFilePath;
     this.turnOn();
+  }
+
+  /**
+   * Create an image sensor.
+   *
+   * @param type    The type of the sensor.
+   * @param imagesFilePath The file path to the images
+   * @param image The initial image
+   */
+  private ImageSensor(String type, String imagesFilePath, ImageSensorReading image) {
+    this.reading = image;
+    this.imagesFilePath = imagesFilePath;
   }
 
   /**
@@ -73,7 +85,7 @@ public class ImageSensor extends Sensor {
    * @return A clone of this sensor, where all the fields are the same
    */
   public ImageSensor createClone() {
-    return new ImageSensor(this.getType(), this.imagesFilePath);
+    return new ImageSensor(this.getType(), this.imagesFilePath, this.reading);
   }
 
   /**
@@ -102,10 +114,10 @@ public class ImageSensor extends Sensor {
   }
 
   /**
-     * Get a string representation of the sensor reading.
-     *
-     * @return A string representation of the sensor reading
-     */
+   * Get a string representation of the sensor reading.
+   *
+   * @return A string representation of the sensor reading
+   */
   @Override
   public String toString() {
     return reading.toString();
