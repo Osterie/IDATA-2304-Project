@@ -61,21 +61,25 @@ public abstract class SocketCommunicationChannel {
   
   protected void startListenerThread() {
     Thread messageListener = new Thread(() -> {
-      try {
-        while (this.isOn) {
-          this.readMessage();
-        }
-        Logger.info("Server message listener stopped.");
-      } catch (IOException e) {
-        this.close();
-        Logger.error("Connection lost: " + e.getMessage());
-        this.isOn = false;
-        this.reconnect(this.socket.getInetAddress().getHostAddress(), this.socket.getPort());
-      }
+      listenForMessages();
     });
     messageListener.setDaemon(true); // Ensure the thread doesn't block app shutdown
 
     messageListener.start();
+  }
+
+  protected void listenForMessages() {
+    try {
+      while (this.isOn) {
+        this.readMessage();
+      }
+      Logger.info("Server message listener stopped.");
+    } catch (IOException e) {
+      this.close();
+      Logger.error("Connection lost: " + e.getMessage());
+      this.isOn = false;
+      this.reconnect(this.socket.getInetAddress().getHostAddress(), this.socket.getPort());
+    }
   }
 
   protected void readMessage() throws IOException{

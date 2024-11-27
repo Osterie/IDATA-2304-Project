@@ -12,7 +12,7 @@
 - [ ] ADRIAN Currently Message and MessageHeader i think have fromString methods. Perhaps another class should be used for this?
 <!-- - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
 - [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
-- [ ] ADRIAN fix issue with images not being replaced, but instead being added when displaying images 
+- [x] ADRIAN fix issue with images not being replaced, but instead being added when displaying images 
 - [x] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
 - [x] TOBIAS ScrollPane for controlPanel.
 - [ ] SEBASTIAN Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
@@ -35,6 +35,9 @@
 
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
 - [ ] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
+  - [x] ADRIAN ClientHandler
+  - [ ] ADRIAN NodeConnectionHandler
+  - [ ] ADRIAN ControlPanelCommunicationChannel
 - [x] ADRIAN Fix application using all available resources.
 - [x] ADRIAN Create enum for non-predefined client id.
 - [x] ADRIAN remove option to remove tabs in control panel

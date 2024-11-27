@@ -8,14 +8,16 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import no.ntnu.messages.Message;
 import no.ntnu.tools.Logger;
 
-public class TcpClient {
-    private Socket socket;
-    private BufferedReader socketReader;
+public abstract class TcpClient {
+    // TODO make stuff private
+    protected Socket socket;
+    protected BufferedReader socketReader;
     private PrintWriter socketWriter;
-    private boolean isOn;
-    private Queue<String> messageQueue;
+    protected boolean isOn;
+    private Queue<Message> messageQueue;
 
     private static final int MAX_RETRIES = 5;
     private static final int RETRY_DELAY_MS = 1000; // Time between retries
@@ -28,6 +30,21 @@ public class TcpClient {
         return isOn;
     }
 
+    public void connect(Socket socket){
+        try {
+            this.socket = socket;
+            this.socket.setKeepAlive(true);
+            this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
+            this.isOn = true;
+            Logger.info("Socket connection established with " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
+            // listenForMessages();
+        } catch (IOException e) {
+            Logger.error("Could not establish connection to the server: " + e.getMessage());
+            reconnect(socket.getInetAddress().getHostAddress(), socket.getPort());
+        }
+    }
+
     public void connect(String host, int port) {
         try {
             Logger.info("Trying to establish connection to " + host + ":" + port);
@@ -37,14 +54,15 @@ public class TcpClient {
             this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
             this.isOn = true;
             Logger.info("Socket connection established with " + host + ":" + port);
-            listenForMessages();
+            // listenForMessages();
         } catch (IOException e) {
             Logger.error("Could not establish connection to the server: " + e.getMessage());
             reconnect(host, port);
         }
     }
 
-    private void reconnect(String host, int port) {
+    // TODO make private
+    public void reconnect(String host, int port) {
         int attempts = 0;
         while (!isOn && attempts < MAX_RETRIES) {
             try {
@@ -65,28 +83,78 @@ public class TcpClient {
         }
     }
 
-    protected void listenForMessages() {
+    protected void startListenerThread() {
         Thread messageListener = new Thread(() -> {
-            try {
-                while (this.isOn) {
-                    String serverMessage = this.socketReader.readLine();
-                    if (serverMessage != null) {
-                        Logger.info("Received from server: " + serverMessage);
-                        handleMessage(serverMessage);
-                    }
-                }
-            } catch (IOException e) {
-                Logger.error("Connection lost: " + e.getMessage());
-                this.isOn = false;
-                reconnect(socket.getInetAddress().getHostAddress(), socket.getPort());
-            } finally {
-                close();
-            }
+          listenForMessages();
         });
+        messageListener.setDaemon(true); // Ensure the thread doesn't block app shutdown
+    
         messageListener.start();
+      }
+    
+      protected void listenForMessages() {
+        try {
+          while (this.isOn) {
+            this.readMessage();
+          }
+          Logger.info("Server message listener stopped.");
+        } catch (IOException e) {
+          this.close();
+          Logger.error("Connection lost: " + e.getMessage());
+          this.isOn = false;
+          this.reconnect(this.socket.getInetAddress().getHostAddress(), this.socket.getPort());
+        }
+      }
+
+    protected String readLine() {
+        String clientRequest = null;
+        try {
+            if (this.socketReader != null) {
+                clientRequest = this.socketReader.readLine();
+            } else {
+                Logger.error("Socket reader is null");
+            }
+        } catch (IOException e) {
+            Logger.error("Could not receive client request: " + e.getMessage());
+        }
+        return clientRequest;
+    }
+    
+  protected void readMessage() throws IOException{
+    String serverMessage = this.readLine();
+    if (serverMessage != null) {
+      Logger.info("Received from server: " + serverMessage);
+      // TODO: It needs decryption.
+        // TODO: HandleMessage should take Message not String.
+        Message message = this.parseMessage(serverMessage);
+        this.handleMessage(message);
+    } else {
+      Logger.warn("Server message is null, closing connection");
+      // TODO do differently?
+      this.close();
+    }
+    // TODO handle if null and such
+  }
+
+  private Message parseMessage(String messageToParse) {
+    Message message = null;
+
+    // Attempt to parse the server message
+    try {
+      message = Message.fromString(messageToParse);
+    } catch (IllegalArgumentException | NullPointerException e) {
+      Logger.error("Invalid server message format: " + messageToParse + ". Error: " + e.getMessage());
     }
 
-    public void sendMessage(String message) {
+    // Check for null message, header, or body
+    if (message == null || message.getHeader() == null || message.getBody() == null) {
+      Logger.error("Message, header, or body is missing in server message: " + message);
+    }
+
+    return message;
+    }
+
+    public void sendMessage(Message message) {
         if (isOn && socketWriter != null) {
             socketWriter.println(message);
             Logger.info("Sent message to server: " + message);
@@ -99,7 +167,7 @@ public class TcpClient {
 
     private void flushBufferedMessages() {
         while (!messageQueue.isEmpty()) {
-            String message = messageQueue.poll();
+            Message message = messageQueue.poll();
             try {
                 // Check if the socket is still open
                 if (socket != null && !socket.isClosed() && socket.isConnected() && socketWriter != null) {
@@ -130,7 +198,10 @@ public class TcpClient {
         }
     }
 
-    protected void handleMessage(String message) {
-        // This will be overridden by subclasses
+    // TODO make private?
+    public Socket getSocket() {
+        return socket;
     }
+
+    protected abstract void handleMessage(Message message);
 }
