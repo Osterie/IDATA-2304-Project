@@ -45,7 +45,7 @@
 - [x] ADRIAN notifyChanges method of Actuator Class, refactor this method.
 - [x] ADRIAN image sensor should have image: [Actual image]
 
-- [x] TOBIAS add a refresh button to control panel
+- [ ] TOBIAS add a working refresh button to control panel
 
 - [x] ADRIAN fix nodes sometimes not being created in gui.
 
