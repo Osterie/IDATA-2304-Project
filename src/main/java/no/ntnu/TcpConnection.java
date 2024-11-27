@@ -11,7 +11,7 @@ import java.util.Queue;
 import no.ntnu.messages.Message;
 import no.ntnu.tools.Logger;
 
-public abstract class TcpClient {
+public abstract class TcpConnection {
     // TODO make stuff private
     protected Socket socket;
     protected BufferedReader socketReader;
@@ -22,7 +22,7 @@ public abstract class TcpClient {
     private static final int MAX_RETRIES = 5;
     private static final int RETRY_DELAY_MS = 1000; // Time between retries
 
-    public TcpClient() {
+    public TcpConnection() {
         this.messageQueue = new LinkedList<>();
     }
 

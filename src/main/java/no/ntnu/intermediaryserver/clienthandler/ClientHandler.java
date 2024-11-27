@@ -10,7 +10,7 @@ import no.ntnu.messages.responses.FailureReason;
 import no.ntnu.messages.responses.FailureResponse;
 import no.ntnu.messages.responses.Response;
 import no.ntnu.messages.responses.SuccessResponse;
-import no.ntnu.TcpClient;
+import no.ntnu.TcpConnection;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.intermediaryserver.server.IntermediaryServer;
 import no.ntnu.messages.Message;
@@ -21,7 +21,7 @@ import no.ntnu.tools.Logger;
  * Handles communication with a client connected to the IntermediaryServer.
  * This class runs in its own thread to manage the client's requests and responses.
  */
-public class ClientHandler extends TcpClient implements Runnable {
+public class ClientHandler extends TcpConnection implements Runnable {
     
     private final ClientHandlerLogic logic;
     
