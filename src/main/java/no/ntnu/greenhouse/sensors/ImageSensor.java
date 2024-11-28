@@ -10,7 +10,7 @@ public class ImageSensor extends Sensor {
   private final ImageSensorReading reading;
   private final String imagesFilePath;
   private final String dataFormat = "IMG";
-  private boolean isOn;
+  //private boolean isOn;
 
   // TODO do not give image, just have a constant image
 
@@ -23,7 +23,7 @@ public class ImageSensor extends Sensor {
   public ImageSensor(String type, String imagesFilePath) {
     this.reading = new ImageSensorReading(type);
     this.imagesFilePath = imagesFilePath;
-    this.turnOn();
+    //this.turnOn();
   }
 
   /**
@@ -72,11 +72,11 @@ public class ImageSensor extends Sensor {
    * @return The current sensor reading (value)
    */
   public ImageSensorReading getReading() {
-    if (isOn) {
+    //if (isOn) {
       return reading;
-    } else {
-      throw new IllegalStateException("The sensor is off.");
-    }
+    //} else {
+    //  throw new IllegalStateException("The sensor is off.");
+    //}
   }
 
   /**
@@ -98,20 +98,20 @@ public class ImageSensor extends Sensor {
     }
   }
 
-  /**
-   * Apply an external impact (from an actuator) to the current value of the sensor.
-   *
-   * @param impact The impact to apply - the delta for the value
-   */
-  public void applyImpact(double impact) {
-    if (impact > 0) {
-      this.turnOn();
-      System.out.println("The sensor has been turned on.");
-    } else {
-      this.turnOff();
-      System.out.println("The sensor has been turned off.");
-    }
-  }
+  // /**
+  //  * Apply an external impact (from an actuator) to the current value of the sensor.
+  //  *
+  //  * @param impact The impact to apply - the delta for the value
+  //  */
+  // public void applyImpact(double impact) {
+  //   if (impact > 0) {
+  //     this.turnOn();
+  //     System.out.println("The sensor has been turned on.");
+  //   } else {
+  //     this.turnOff();
+  //     System.out.println("The sensor has been turned off.");
+  //   }
+  // }
 
   /**
    * Get a string representation of the sensor reading.
@@ -123,26 +123,32 @@ public class ImageSensor extends Sensor {
     return reading.toString();
   }
 
-  /**
-   * Gets if the sensor if on or not.
-   *
-   * @return True if the sensor is on, false otherwise
-   */
-  public boolean isOn() {
-    return isOn;
+  @Override
+  public void applyImpact(double impact) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'applyImpact'");
   }
 
-    /**
-     * Turn on the sensor.
-     */
-  private void turnOn() {
-    isOn = true;
-  }
+  // /**
+  //  * Gets if the sensor if on or not.
+  //  *
+  //  * @return True if the sensor is on, false otherwise
+  //  */
+  // public boolean isOn() {
+  //   return isOn;
+  // }
 
-  /**
-   * Turn off the sensor.
-   */
-  private void turnOff() {
-    isOn = false;
-  }
+  //   /**
+  //    * Turn on the sensor.
+  //    */
+  // private void turnOn() {
+  //   isOn = true;
+  // }
+
+  // /**
+  //  * Turn off the sensor.
+  //  */
+  // private void turnOff() {
+  //   isOn = false;
+  // }
 }
