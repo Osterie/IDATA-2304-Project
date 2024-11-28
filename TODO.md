@@ -3,7 +3,9 @@
 - Clean code.
 - Good code.
 
-# Next sprint
+- [ ] UNASSIGNED builder pattern for devices instead of DeviceFactory.
+
+# CURRENT
 
 - [ ] TOBIAS for generateHeader method usage, what if header is null? handle this.
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
@@ -34,10 +36,10 @@
 - [x] ADRIAN When control panel disconencts, pause sending of periodic sensor data until reconnected again.
 
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
-- [ ] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
+- [x] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
   - [x] ADRIAN ClientHandler
   - [x] ADRIAN NodeConnectionHandler
-  - [ ] ADRIAN ControlPanelCommunicationChannel
+  - [x] ADRIAN ControlPanelCommunicationChannel
 - [x] ADRIAN Fix application using all available resources.
 - [x] ADRIAN Create enum for non-predefined client id.
 - [x] ADRIAN remove option to remove tabs in control panel

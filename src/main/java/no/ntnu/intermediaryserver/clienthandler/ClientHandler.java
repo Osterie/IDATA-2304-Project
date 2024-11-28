@@ -190,6 +190,7 @@ public class ClientHandler extends TcpConnection implements Runnable {
 
         if (command instanceof ClientIdentificationTransmission) {
             ClientIdentificationTransmission clientIdentificationCommand = (ClientIdentificationTransmission) command;
+            // TODO what if null?
             Endpoints clientType = clientIdentificationCommand.getClient();
             String clientId = clientIdentificationCommand.getId();
 
