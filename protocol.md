@@ -27,9 +27,22 @@ TODO - what transport-layer protocol do you use? TCP? UDP? What port number(s)? 
 
 
 ## The architecture
+TODO - READ THROUGH THIS (MABYE I SHOULD BE MORE SPECIFIC?, ADD PICTURES OF THE ARCHITECTURE? UML DIAGRAMS?)
 
-TODO - show the general architecture of your network. Which part is a server? Who are clients? 
+Note: show the general architecture of your network. Which part is a server? Who are clients? 
 Do you have one or several servers? Perhaps include a picture here. 
+
+**Clients**
+Clients are the nodes that initiate communication with the server to send requests and receive responses.
+
+**Types of clients in the system:**
+
+1. **Greenhouse nodes:** These are sensor and actuator nodes that send sensor data to the server and receive commands from the server to control the actuators.
+
+2. **Control panels:** These are GUIs that visualize the sensor data and send commands to the server to control the actuators.
+
+**Server**
+The central entity managing client connections and routing messages. It is responsible for receiving sensor data from greenhouse nodes, sending commands to greenhouse nodes, and relaying sensor data to control panels. It is represented by the `IntermediaryServer` class, which uses `ClientHandler` to manage individual client connections.
 
 
 ## The flow of information and events

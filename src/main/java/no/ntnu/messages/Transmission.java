@@ -5,7 +5,7 @@ package no.ntnu.messages;
  */
 public abstract class Transmission {
 
-    protected final String protocolString;
+    protected String protocolString;
 
     
     /**
