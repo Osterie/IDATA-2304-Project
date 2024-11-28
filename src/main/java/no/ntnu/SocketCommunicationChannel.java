@@ -1,8 +1,6 @@
 package no.ntnu;
 
 import java.io.IOException;
-import java.security.KeyPair;
-import java.security.PrivateKey;
 
 import no.ntnu.constants.Endpoints;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
@@ -12,10 +10,6 @@ import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.tools.Logger;
-import no.ntnu.tools.encryption.HashEncryptor;
-import no.ntnu.tools.encryption.asymmetric.HybridRSAEncryptor;
-
-import javax.crypto.SecretKey;
 
 public abstract class SocketCommunicationChannel extends TcpConnection {
   protected ClientIdentification clientIdentification;

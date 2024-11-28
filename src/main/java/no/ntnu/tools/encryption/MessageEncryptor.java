@@ -1,6 +1,7 @@
 package no.ntnu.tools.encryption;
 
 import no.ntnu.messages.Message;
+import no.ntnu.messages.Transmission;
 import no.ntnu.tools.encryption.asymmetric.HybridRSAEncryptor;
 
 import javax.crypto.SecretKey;
@@ -18,30 +19,38 @@ public class MessageEncryptor {
      */
     public static Message encryptMessage(Message message) {
 
+        Message encryptedMessage = message;
+
         try {
             // Generate RSA key pair for recipient
             KeyPair recipientKeyPair = HybridRSAEncryptor.generateRSAKeyPair();
-            System.out.println("Generated recipient's RSA key pair.");
 
             // Generate AES key
             SecretKey aesKey = HybridRSAEncryptor.generateAESKey();
-            System.out.println("Generated AES key.");
 
             // Encrypt the message
-            String originalMessage = "Hello, this is a confidential message!";
-            String encryptedMessage = HybridRSAEncryptor.encryptWithAES(originalMessage, aesKey);
-            System.out.println("Encrypted Message: " + encryptedMessage);
+            String originalContent = encryptedMessage.getBody().toString();
+            String encryptedContent = HybridRSAEncryptor.encryptWithAES(originalContent, aesKey);
 
             // Encrypt the AES key with the recipient's public key
             String encryptedAESKey = HybridRSAEncryptor.encryptAESKeyWithRSA(aesKey, recipientKeyPair.getPublic());
-            System.out.println("Encrypted AES Key: " + encryptedAESKey);
+
+            // Stores encrypted AES key in header.
+            encryptedMessage.getHeader().setEncryptedAES(encryptedAESKey);
+
+            // Transmission with encrypted content.
+            Transmission encryptedTransmission = encryptedMessage.getBody().getTransmission();
+            encryptedTransmission.setTransmission(encryptedContent);
+
+            // Add encrypted content to body.
+            encryptedMessage.getBody().setTransmission(encryptedTransmission);
 
         } catch (Exception e) {
-            System.err.println("Error occurred during encryption or decryption: " + e.getMessage());
+            System.err.println("Error occurred during encryption: " + e.getMessage());
             e.printStackTrace();
         }
 
-        return message;
+        return encryptedMessage;
     }
 
     /**

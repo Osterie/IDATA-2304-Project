@@ -10,7 +10,6 @@ import java.util.Queue;
 
 import no.ntnu.messages.Message;
 import no.ntnu.tools.Logger;
-import no.ntnu.tools.encryption.HashEncryptor;
 
 public abstract class TcpConnection {
   // TODO make stuff private
@@ -288,7 +287,10 @@ public abstract class TcpConnection {
    * Flushes the buffered messages to the connected socket.
    */
   protected synchronized void flushBufferedMessages() {
-    while (!messageQueue.isEmpty()) {
+    
+    boolean tryingToSend = true;
+
+    while (!messageQueue.isEmpty() && tryingToSend) {
       Message message = messageQueue.poll();
       try {
         // Check if the socket is still open
@@ -302,7 +304,7 @@ public abstract class TcpConnection {
       } catch (IOException e) {
         Logger.error("Failed to resend buffered message: " + e.getMessage());
         messageQueue.offer(message); // Put it back in the queue for retry later
-        break; // TODO is break needed?
+        tryingToSend = false; // Stop trying to send
       }
     }
   }

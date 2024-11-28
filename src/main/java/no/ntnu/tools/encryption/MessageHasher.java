@@ -15,7 +15,7 @@ public class MessageHasher {
         Message hashedMessage = message;
 
         String transmissionString = message.getBody().getTransmission().toString();
-        String hashedTransmissionString = HashEncryptor.encryptString(transmissionString);
+        String hashedTransmissionString = Hasher.encryptString(transmissionString);
         hashedMessage.getHeader().setHashedContent(hashedTransmissionString);
 
         return hashedMessage;
