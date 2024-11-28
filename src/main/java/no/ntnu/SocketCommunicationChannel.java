@@ -35,75 +35,9 @@ public abstract class SocketCommunicationChannel extends TcpConnection {
     }
   }
 
-  // TODO: handleMessage is abstract, so where should decryption happen?
-  protected String decryptStringMessage(String encryptedMessage, String encryptedAESKey, PrivateKey privateKey) throws Exception {
-    // Decrypt the AES key using the private key
-    SecretKey decryptedAESKey = HybridRSAEncryptor.decryptAESKeyWithRSA(encryptedAESKey, privateKey);
-    System.out.println("Decrypted AES Key.");
-
-    // Decrypt the message using the AES key
-    String decryptedMessage = HybridRSAEncryptor.decryptWithAES(encryptedMessage, decryptedAESKey);
-    System.out.println("Decrypted Message: " + decryptedMessage);
-
-    return decryptedMessage;
-  };
-
   // TODO this class should have a method which decrypts the received message, and tursn it from string into message, and then calls handleMessage. Perhaps handleMessage should be renamed and such.
   // TODO: Decrypt message before handling using decryptStringMessage?
-  // TODO: Message to ADRIAN - You said it should be Message not String, are you gonna fix it?
   protected abstract void handleMessage(Message message);
-
-  /**
-   * Takes message in and returns the encrypted version back.
-   *
-   * @param message the message to be encrypted.
-   * @return message that is encrypted.
-   */
-  protected Message encryptMessage(Message message) {
-    // TODO: This class should encrypt a message before sending it in sendMessage method.
-    // TODO: Encrypting this was meaning we also need to send the key. But where? You can see how the class works under.
-    try {
-      // Generate RSA key pair for recipient
-      KeyPair recipientKeyPair = HybridRSAEncryptor.generateRSAKeyPair();
-      System.out.println("Generated recipient's RSA key pair.");
-
-      // Generate AES key
-      SecretKey aesKey = HybridRSAEncryptor.generateAESKey();
-      System.out.println("Generated AES key.");
-
-      // Encrypt the message
-      String originalMessage = "Hello, this is a confidential message!";
-      String encryptedMessage = HybridRSAEncryptor.encryptWithAES(originalMessage, aesKey);
-      System.out.println("Encrypted Message: " + encryptedMessage);
-
-      // Encrypt the AES key with the recipient's public key
-      String encryptedAESKey = HybridRSAEncryptor.encryptAESKeyWithRSA(aesKey, recipientKeyPair.getPublic());
-      System.out.println("Encrypted AES Key: " + encryptedAESKey);
-
-    } catch (Exception e) {
-      System.err.println("Error occurred during encryption or decryption: " + e.getMessage());
-      e.printStackTrace();
-    }
-
-    return message;
-  }
-
-  /**
-   * Takes a message in and returns the same message, but with the hashed
-   * transmission stored in the header.
-   *
-   * @param message message that will be added hash to.
-   * @return hashedMessage the new message with hashed element.
-   */
-  protected Message addHashedContentToMessage(Message message) {
-    Message hashedMessage = message;
-
-    String transmissionString = message.getBody().getTransmission().toString();
-    String hashedTransmissionString = HashEncryptor.encryptString(transmissionString);
-    hashedMessage.getHeader().setHashedContent(hashedTransmissionString);
-
-    return hashedMessage;
-  }
 
   protected void establishConnectionWithServer(ClientIdentification clientIdentification) {
     if (clientIdentification == null) {

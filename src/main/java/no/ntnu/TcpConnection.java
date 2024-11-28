@@ -10,6 +10,7 @@ import java.util.Queue;
 
 import no.ntnu.messages.Message;
 import no.ntnu.tools.Logger;
+import no.ntnu.tools.encryption.HashEncryptor;
 
 public abstract class TcpConnection {
   // TODO make stuff private
