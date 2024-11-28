@@ -35,6 +35,11 @@ public class Base64AudioEncoder {
      * @throws IOException if the audio file cannot be read.
      */
     public static String audioToString(File audioFile) throws IOException {
+
+        if (audioFile == null) {
+            throw new IllegalArgumentException("Audio file cannot be null");
+        }
+
         try (FileInputStream fileInputStream = new FileInputStream(audioFile)) {
             byte[] audioBytes = new byte[(int) audioFile.length()];
             fileInputStream.read(audioBytes);
@@ -42,6 +47,7 @@ public class Base64AudioEncoder {
             // Encode the byte array to Base64 and return as a string
             return Base64.getEncoder().encodeToString(audioBytes);
         }
+
     }
 
     /**

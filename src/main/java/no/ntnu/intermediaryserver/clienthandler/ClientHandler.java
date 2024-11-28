@@ -33,6 +33,7 @@ public class ClientHandler extends TcpConnection implements Runnable {
      */
     public ClientHandler(Socket socket, IntermediaryServer server) {
         super();
+        this.setAutoReconnect(false);
         this.connect(socket);
         this.logic = new ClientHandlerLogic(this, server);
     }

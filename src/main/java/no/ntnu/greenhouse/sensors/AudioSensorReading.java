@@ -104,6 +104,9 @@ public class AudioSensorReading extends SensorReading {
   } catch (IOException e) {
     return "Error encoding audio";
   }
+  catch (IllegalArgumentException e){
+    return "No audio file";
+  }
 }
 
 /**

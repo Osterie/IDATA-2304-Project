@@ -19,6 +19,9 @@ public abstract class TcpConnection {
     protected boolean isOn;
     private Queue<Message> messageQueue;
 
+
+    private boolean autoReconnect = true;
+
     private static final int MAX_RETRIES = 5;
     private static final int RETRY_DELAY_MS = 1000; // Time between retries
 
@@ -28,6 +31,10 @@ public abstract class TcpConnection {
 
     public boolean isConnected() {
         return isOn;
+    }
+
+    public void setAutoReconnect(boolean autoReconnect) {
+        this.autoReconnect = autoReconnect;
     }
 
     public void connect(Socket socket){
@@ -63,6 +70,10 @@ public abstract class TcpConnection {
 
     // TODO make private
     public void reconnect(String host, int port) {
+        if (!autoReconnect) {
+            Logger.error("Auto-reconnect is disabled, not attempting to reconnect.");
+            return;
+        }
         int attempts = 0;
         while (!isOn && attempts < MAX_RETRIES) {
             try {
