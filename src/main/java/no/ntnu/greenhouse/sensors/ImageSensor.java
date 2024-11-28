@@ -36,6 +36,7 @@ public class ImageSensor extends Sensor {
   private ImageSensor(String type, String imagesFilePath, ImageSensorReading image) {
     this.reading = image;
     this.imagesFilePath = imagesFilePath;
+    this.turnOn();
   }
 
   /**
@@ -75,7 +76,7 @@ public class ImageSensor extends Sensor {
     if (isOn) {
       return reading;
     } else {
-      throw new IllegalStateException("The sensor is off.");
+      throw new IllegalStateException("The image-sensor is off.");
     }
   }
 
@@ -103,10 +104,11 @@ public class ImageSensor extends Sensor {
    *
    * @param impact The impact to apply - the delta for the value
    */
-  /**
-   * public void applyImpact(double impact) {
-   * toggle();
-  }*/
+
+    public void applyImpact(double impact) {
+      toggle();
+    }
+
 
   /**
    * Get a string representation of the sensor reading.
@@ -117,12 +119,13 @@ public class ImageSensor extends Sensor {
   public String toString() {
     return reading.toString();
   }
-
+/**
   @Override
   public void applyImpact(double impact) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'applyImpact'");
   }
+  */
 
     /**
      * Turn on the sensor.

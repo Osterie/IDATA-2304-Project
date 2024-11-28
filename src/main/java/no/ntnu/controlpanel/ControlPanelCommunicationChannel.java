@@ -438,7 +438,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
     int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
     List<SensorReading> sensors = parseSensors(parts[1]);
-    sensors.removeIf(sensor -> sensor instanceof NoImageSensorReading);
+    sensors.removeIf(sensor -> sensor instanceof NoImageSensorReading
+            || sensor instanceof NoAudioSensorReading);
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override
@@ -540,6 +541,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       return new NumericSensorReading(type, value, unit);
     }
     else if (formatParts[0].equals("AUD")) {
+      if ("NoAudio".equals(valueParts[2])) {
+        return new NoAudioSensorReading();
+      }
       String type = assignmentParts[0];
       String base64String = valueParts[1];
       String fileExtension = valueParts[2];
