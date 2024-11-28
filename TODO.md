@@ -36,7 +36,7 @@
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
 - [ ] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
   - [x] ADRIAN ClientHandler
-  - [ ] ADRIAN NodeConnectionHandler
+  - [x] ADRIAN NodeConnectionHandler
   - [ ] ADRIAN ControlPanelCommunicationChannel
 - [x] ADRIAN Fix application using all available resources.
 - [x] ADRIAN Create enum for non-predefined client id.
