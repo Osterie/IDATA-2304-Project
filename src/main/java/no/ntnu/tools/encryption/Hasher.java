@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * This class is used to hash strings.
  */
-public class HashEncryptor {
+public class Hasher {
 
     // TODO: Fill methods with hashing method
 

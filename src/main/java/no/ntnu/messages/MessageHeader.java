@@ -17,6 +17,7 @@ public class MessageHeader {
     private Endpoints receiver;  // The receiver of the message
     private String id;           // The ID of the receiver
     private String hashedContent; // This string stores the hashed version of the body content
+    private String encryptedAES; // This key is decrypted and used by receiver.
 
     /**
      * Constructs a MessageHeader
@@ -88,6 +89,24 @@ public class MessageHeader {
      */
     public void setHashedContent(String hashedContent) {
         this.hashedContent = hashedContent;
+    }
+
+    /**
+     * Gets the encrypted AES key.
+     *
+     * @return The key.
+     */
+    public String getEncryptedAES() {
+        return this.encryptedAES;
+    }
+
+    /**
+     * Stores the encrypted AES key.
+     *
+     * @param key The key.
+     */
+    public void setEncryptedAES(String key) {
+        this.encryptedAES = key;
     }
 
 
