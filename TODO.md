@@ -117,7 +117,7 @@
 For each of the design choices provide a short justification: why did you choose to design it the way you did?
 
 - [ ] 1. DANIEL A short introduction: "This document describes _ _"
-- [x?] 2. TOBIAS. Terminology: a list of special terms you use
+- [x] 2. ? TOBIAS. Terminology: a list of special terms you use
 - [x] 3. The underlying transport you use (TCP or UDP).
 - [x] 4. The used port number.
 - [ ] 5. SEBASTIAN. The overall architecture:
@@ -129,7 +129,7 @@ For each of the design choices provide a short justification: why did you choose
 - [ ]   KNUT. • Is the protocol state-full or state-less?
 - [ ] 8. DANIEL The different types and special values (constants) used
 - [ ] 9. TOBIAS The message format:
-- [ ]   TOBIAS • The allowed message types (sensor messages, command messages)
+- [x] ? TOBIAS • The allowed message types (sensor messages, command messages)
 - [ ]   TOBIAS • The type of marshalling used (fixed size, separators, TLV?)
 - [ ]   TOBIAS • Which messages are sent by which node? For example, are some messages only sent by the control-panel node?
 - [ ] 10. DANIEL The different errors that can occur and how each node should react on the errors. For example,

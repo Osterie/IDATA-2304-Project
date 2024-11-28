@@ -81,6 +81,23 @@ Result:
 - DST;DST_ID;DATA_TYPE COMMAND
 - GREENHOUSE;AllId;STRING GET_NODE_ID
 
+### Command types
+
+COMMON COMMANDS
+
+- ClientIdentificationTransmission: Represents a transmission for client identification.
+
+GREENHOUSE COMMANDS
+
+- GreenhouseCommand: Abstract class representing a command from GREENHOUSE.
+
+- ActuatorChangeCommand: 
+- GetNodeCommand: Get info on specific NODE.
+- GetNodeIdCommand: Get id for specific NODE.
+- GetSensorDataCommand: Retrieve data from specific SENSOR.
+- TurnOffAllActuatorInNodeCommand: Command to turn off all ACTUATORS.
+- TurnOnAllActuatorInNodeCommand: Command to turn on all ACTUATORS.
+
 ### Error messages
 
 TODO - describe the possible error messages that nodes can send in your system.
