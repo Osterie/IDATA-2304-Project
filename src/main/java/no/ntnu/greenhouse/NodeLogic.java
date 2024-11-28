@@ -45,10 +45,10 @@ public class NodeLogic {
                 sensorData += sensorType + ":" + reading.getFormatted() + ",";
             } catch (IllegalStateException e) {
                 if (e.getMessage().equals("The sensor is off.")) {
-                    sensorData += "IMG:No image,";
+                    sensorData += "IMG: =  NoImage,";
                 } else {
-                    sensorData += "NUM:No data,";
-                }
+                    sensorData += "NUM: =  NoData,";
+            }
             }
         }
         sensorData = sensorData.substring(0, sensorData.length() - 1);

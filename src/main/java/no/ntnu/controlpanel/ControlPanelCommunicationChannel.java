@@ -14,11 +14,8 @@ import static no.ntnu.tools.Parser.parseIntegerOrError;
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.sensors.AudioSensorReading;
-import no.ntnu.greenhouse.sensors.ImageSensorReading;
-import no.ntnu.greenhouse.sensors.NumericSensor;
-import no.ntnu.greenhouse.sensors.NumericSensorReading;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.sensors.*;
+import no.ntnu.greenhouse.sensors.NoImageSensorReading;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.stringification.Base64AudioEncoder;
@@ -441,6 +438,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
     int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
     List<SensorReading> sensors = parseSensors(parts[1]);
+    sensors.removeIf(sensor -> sensor instanceof NoImageSensorReading);
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override
@@ -517,6 +515,9 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       throw new IllegalArgumentException("Invalid sensor value/unit: " + reading);
     }
     if (formatParts[0].equals("IMG")) {
+      if ("NoImage".equals(valueParts[2])) {
+        return new NoImageSensorReading();
+      }
       String type = assignmentParts[0];
       String base64String = valueParts[1];
       String fileExtension = valueParts[2];
