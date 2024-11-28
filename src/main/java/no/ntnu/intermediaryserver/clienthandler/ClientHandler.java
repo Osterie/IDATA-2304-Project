@@ -66,7 +66,7 @@ public class ClientHandler extends TcpConnection implements Runnable {
      * @param message The message from the client
      */
     private void sendToClient(Message message) {
-        Logger.info("message: " + message);
+        // Logger.info("message: " + message);
         String targetId = message.getHeader().getId();
 
         if (targetId.equalsIgnoreCase(Endpoints.BROADCAST.getValue())) {
@@ -104,7 +104,7 @@ public class ClientHandler extends TcpConnection implements Runnable {
                 Logger.error("Not found: " + receiverClientType + " " + receiverId);
             }
             
-            Logger.info("Sending message to " + receiverClientType + " " + receiverId + ": " + message);
+            // Logger.info("Sending message to " + receiverClientType + " " + receiverId + ": " + message);
             message.setHeader(this.logic.generateSenderHeader());
             receiver.sendMessage(message);
         } catch (Exception e) {
