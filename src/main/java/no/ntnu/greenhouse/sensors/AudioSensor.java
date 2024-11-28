@@ -7,6 +7,7 @@ public class AudioSensor extends Sensor {
   private final AudioSensorReading reading;
   private final String audioFilePath;
   private final String dataFormat = "AUD";
+  private boolean isOn;
 
   /**
    * Create an audio sensor.
@@ -17,6 +18,7 @@ public class AudioSensor extends Sensor {
   public AudioSensor(String type, String audioFilePath) {
     this.reading = new AudioSensorReading(type);
     this.audioFilePath = audioFilePath;
+    this.turnOn();
   }
 
     /**
@@ -29,6 +31,7 @@ public class AudioSensor extends Sensor {
     private AudioSensor(String type, String audioFilePath, AudioSensorReading audio) {
         this.reading = audio;
         this.audioFilePath = audioFilePath;
+        this.turnOn();
     }
 
   /**
@@ -65,7 +68,11 @@ public class AudioSensor extends Sensor {
    * @return The current reading of the sensor
    */
   public AudioSensorReading getReading() {
-    return this.reading;
+    if (isOn) {
+      return reading;
+    } else {
+      throw new IllegalStateException("The audio-sensor is off.");
+    }
   }
 
 /**
@@ -85,9 +92,11 @@ public Sensor createClone() {
  */
 @Override
 public void addRandomNoise() {
+  if (isOn) {
     if (Math.random() < 0.5) {
-        this.reading.generateRandomAudio(this.audioFilePath);
+      this.reading.generateRandomAudio(this.audioFilePath);
     }
+  }
 }
 
 /**
@@ -99,6 +108,7 @@ public void addRandomNoise() {
 @Override
 public void applyImpact(double impact) {
     this.reading.generateRandomAudio(this.audioFilePath);
+    toggle();
 }
 
   /**
@@ -110,5 +120,19 @@ public void applyImpact(double impact) {
   public String toString() {
     return reading.toString();
   }
+
+    /**
+     * Turn the sensor on.
+     */
+    public void turnOn() {
+      this.isOn = true;
+    }
+
+    /**
+     * Turn the sensor off.
+     */
+    private void toggle() {
+      isOn = !isOn;
+    }
 
 }

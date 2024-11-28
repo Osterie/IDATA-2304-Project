@@ -44,11 +44,13 @@ public class NodeLogic {
                 String sensorType = sensor.getDataFormat();
                 sensorData += sensorType + ":" + reading.getFormatted() + ",";
             } catch (IllegalStateException e) {
-                if (e.getMessage().equals("The sensor is off.")) {
-                    sensorData += "IMG:No image,";
-                } else {
-                    sensorData += "NUM:No data,";
-                }
+                if (e.getMessage().equals("The image-sensor is off.")) {
+                    sensorData += "IMG: =  NoImage,";
+                } else if (e.getMessage().equals("The audio-sensor is off.")) {
+                    sensorData += "AUD: =  NoAudio,";
+                }else {
+                    sensorData += "NUM: =  NoData,";
+            }
             }
         }
         sensorData = sensorData.substring(0, sensorData.length() - 1);
