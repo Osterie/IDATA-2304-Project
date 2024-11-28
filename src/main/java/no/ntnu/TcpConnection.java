@@ -10,6 +10,7 @@ import java.util.Queue;
 
 import no.ntnu.messages.Message;
 import no.ntnu.tools.Logger;
+import no.ntnu.tools.encryption.MessageHasher;
 
 public abstract class TcpConnection {
   // TODO make stuff private
@@ -225,6 +226,23 @@ public abstract class TcpConnection {
       // TODO: It needs decryption.
       // TODO: HandleMessage should take Message not String.
       Message message = this.parseMessage(serverMessage);
+
+      // TODO: Delete when done using sout.
+      System.out.println("HASHING TEST, HASH AFTER BEING SENT OVER:" + message.getHeader().getHashedContent());
+      MessageHasher.addHashedContentToMessage(message);
+      System.out.println("HASHING TEST, CHECKING IF EQUAL:" + message.getHeader().getHashedContent());
+
+      // Extract hash from header
+      String hashedContentFromHeader = message.getHeader().getHashedContent();
+      // Hash received message
+      MessageHasher.addHashedContentToMessage(message);
+      String receivedMessageHash = message.getHeader().getHashedContent();
+
+      // Match the two hashes
+      if (hashedContentFromHeader.equals(receivedMessageHash)) {
+        // TODO: Something should be done based on if It's true or not.
+      }
+
       this.handleMessage(message);
     } else {
       Logger.warn("Server message is null, closing connection");
@@ -268,15 +286,17 @@ public abstract class TcpConnection {
   public synchronized void sendMessage(Message message) {
 
     // Adds hashed body content to header and encrypts the message.
-    // Message encryptedMessage =
-    // encryptMessage(addHashedContentToMessage(message));
+    // TODO: Needs encyption
+    Message encryptedMessage = MessageHasher.addHashedContentToMessage(message);;
+    // TODO: Delete when done using sout.
+    System.out.println("HASHING TEST, HASH BEFORE SENDING:" + encryptedMessage.getHeader().getHashedContent());
 
     if (isOn && socketWriter != null) {
-      socketWriter.println(message);
-      Logger.info("Sent message to server: " + message);
+      socketWriter.println(encryptedMessage);
+      Logger.info("Sent message to server: " + encryptedMessage);
     } else {
       Logger.error("Unable to send message, socket is not connected.");
-      messageQueue.offer(message); // Buffer the message
+      messageQueue.offer(encryptedMessage); // Buffer the message
       reconnect(this.host, this.port);
     }
   }
