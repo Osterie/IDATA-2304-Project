@@ -509,11 +509,13 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       throw new IllegalArgumentException("Invalid sensor format/data: " + reading);
     }
     String[] assignmentParts = formatParts[1].split("=");
-    if (assignmentParts.length != 2) {
+    //TODO ADDED ANOTHER ACCEPTED VALUE BECAUSE THE WAY BASE64 CLASS MAKES AUDIO FILE TO STRING. SHOUL PROBABLY BE CHANGED
+    if (assignmentParts.length != 2 && assignmentParts.length != 4 ) {
       throw new IllegalArgumentException("Invalid sensor reading specified: " + reading);
     }
     String[] valueParts = assignmentParts[1].split(" ");
-    if (valueParts.length != 3) {
+    //TODO ADDED ANOTHER ACCEPTED VALUE BECAUSE THE WAY BASE64 CLASS MAKES AUDIO FILE TO STRING. SHOUL PROBABLY BE CHANGED
+    if (valueParts.length != 3 && valueParts.length != 2) {
       throw new IllegalArgumentException("Invalid sensor value/unit: " + reading);
     }
     if (formatParts[0].equals("IMG")) {
@@ -541,7 +543,6 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     else if (formatParts[0].equals("AUD")) {
       String type = assignmentParts[0];
       String base64String = valueParts[1];
-      String fileExtension = valueParts[2];
 
       File audioFile;
       try {
