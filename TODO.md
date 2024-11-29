@@ -6,6 +6,7 @@
 # important
 
 - [ ] TODO change nodeId to only be int, or that it can be string. (go for can be string.)
+- [ ] TOBIAS Refactor tools.
 
 # Probably wont do
 
@@ -44,7 +45,8 @@
 - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
 - [x] ADRIAN Sensors for light, PH.
 - [ ] TOBIAS Implement encryption. Måtte flytte det til neste sprint.
-- [ ] TOBIAS Hashing the data and storing it in header(?) for checking integrity. 
+- [ ] ADRIAN Handling is the integrity of the data is altered. 
+- [x] TOBIAS Hashing the data and storing it in header(?) for checking integrity. 
 - [x] TOBIAS add hash in header of Message.
 - [x] ADRIAN handle message should take a message
 
