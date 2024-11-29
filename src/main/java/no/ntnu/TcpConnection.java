@@ -240,18 +240,18 @@ public abstract class TcpConnection {
       // Decryption
       try {
         // TODO: Encryption in send message hinders control panel to run.
-        System.out.println("BEFORE DECRYPTION:" + message.getBody().getTransmission().toString());
+        Logger.info("BEFORE DECRYPTION:" + message.getBody().getTransmission().toString());
         // Decrypts protocol
         //message = MessageEncryptor.decryptStringMessage(message, recipientPrivateKey);
-        System.out.println("AFTER DECRYPTION:" + message.getBody().getTransmission().toString());
+        Logger.info("AFTER DECRYPTION:" + message.getBody().getTransmission().toString());
       } catch (Exception e) {
         System.err.println("Could not decrypt message: " + e.getMessage());
       }
 
       // TODO: Delete when done using sout.
-      System.out.println("HASHING TEST, HASH AFTER BEING SENT OVER:" + message.getHeader().getHashedContent());
+      Logger.info("HASHING TEST, HASH AFTER BEING SENT OVER:" + message.getHeader().getHashedContent());
       MessageHasher.addHashedContentToMessage(message);
-      System.out.println("HASHING TEST, CHECKING IF EQUAL:" + message.getHeader().getHashedContent());
+      Logger.info("HASHING TEST, CHECKING IF EQUAL:" + message.getHeader().getHashedContent());
 
       // Extract hash from header
       String hashedContentFromHeader = message.getHeader().getHashedContent();
@@ -303,11 +303,11 @@ public abstract class TcpConnection {
 
     // TODO: This test shows it works.
     try {
-      System.out.println("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
+      Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
       message = MessageEncryptor.encryptMessage(message, recipientPublicKey);
-      System.out.println("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
+      Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
       message = MessageEncryptor.decryptStringMessage(message, recipientPrivateKey);
-      System.out.println("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
+      Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
     } catch (Exception e) {
       System.err.println("Could not decrypt message: " + e.getMessage());
     }
@@ -331,7 +331,7 @@ public abstract class TcpConnection {
     testIfEncryptionWorks();
 
     // TODO: Delete when done using sout.
-    System.out.println("HASHING TEST, HASH BEFORE SENDING:" + encryptedMessage.getHeader().getHashedContent());
+    Logger.info("HASHING TEST, HASH BEFORE SENDING:" + encryptedMessage.getHeader().getHashedContent());
 
     if (isOn && socketWriter != null) {
       socketWriter.println(encryptedMessage);

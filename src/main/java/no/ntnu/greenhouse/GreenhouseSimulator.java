@@ -18,7 +18,6 @@ public class GreenhouseSimulator {
   // The nodes in the greenhouse, keyed by their unique ID
   private final Map<Integer, SensorActuatorNode> nodes = new HashMap<>();
 
-  private final List<PeriodicSwitch> periodicSwitches = new LinkedList<>(); //TODO remove me. Testing only?
   private final Map<Integer, NodeConnectionHandler> nodeConnections = new HashMap<>();  // Store connections for each node
 
   private final ExecutorService threadPool = Executors.newCachedThreadPool();
@@ -36,11 +35,6 @@ public class GreenhouseSimulator {
    */
   public void initialize() {
     this.createNodes();
-    // createNode(1, 2, 1, 0, 0,0,0);
-    // createNode(1, 0, 0, 2, 1,0,0);
-    // createNode(2, 0, 0, 0, 0,0,0);
-    // createNode(0, 0, 0, 0, 0, 1,0);
-    // createNode(0, 0, 0, 0, 0, 0,1);
     Logger.info("Greenhouse initialized");
   }
 
@@ -82,9 +76,6 @@ public class GreenhouseSimulator {
     this.initiateCommunication();
     for (SensorActuatorNode node : nodes.values()) {
       node.start();
-    }
-    for (PeriodicSwitch periodicSwitch : periodicSwitches) {
-      periodicSwitch.start();
     }
 
     Logger.info("Simulator started");
