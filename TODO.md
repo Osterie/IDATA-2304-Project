@@ -7,6 +7,12 @@
 
 - [ ] TODO change nodeId to only be int, or that it can be string. (go for can be string.)
 
+- [ ] ADRIAN Pass på god kode for controlpanel
+- [ ] ADRIAN Pass på god kode for intermediary server
+- [ ] ADRIAN Pass på god kode for greenhouse
+- [ ] ADRIAN Pass på god kode for messages
+- [ ] TOBIAS Forsikre god kode kvalitet i tools
+
 # Probably wont do
 
 - [ ] TODO dont print out audio in console...
