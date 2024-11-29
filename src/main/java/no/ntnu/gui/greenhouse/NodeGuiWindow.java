@@ -108,17 +108,14 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
 
     // Apply style class for CSS styling
     root.getStyleClass().add("root");
+    root.setMaxHeight(WINDOW_HEIGHT - 50); // Constrain VBox height to avoid excessive growth
 
     // Wrap the content in a ScrollPane
     ScrollPane scrollPane = new ScrollPane();
     scrollPane.setContent(root);
+    // Ensure ScrollPane adapts to the window size
     scrollPane.setFitToWidth(true);
-
-    // Adjust ScrollPane dynamically as content grows or shrinks
-    root.heightProperty().addListener((observable, oldHeight, newHeight) -> {
-      double maxHeight = getHeight() - 50; // Reserve space for the title bar and padding
-      scrollPane.setPrefViewportHeight(Math.min(newHeight.doubleValue(), maxHeight));
-    });
+    scrollPane.setFitToHeight(true);
 
     return scrollPane;
   }
