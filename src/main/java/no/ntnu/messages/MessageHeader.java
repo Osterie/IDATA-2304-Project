@@ -24,10 +24,24 @@ public class MessageHeader {
      *
      * @param receiver The receiver endpoint. Must not be null.
      * @param id       The receiver's ID. Must not be null or empty.
+     * @param hashedContent The hashed version of the body content.
+     */
+    public MessageHeader(Endpoints receiver, String id, String hashedContent) {
+        this.setReceiver(receiver);
+        this.setId(id);
+        this.setHashedContent(hashedContent);
+    }
+
+    /**
+     * Constructs a MessageHeader
+     *
+     * @param receiver The receiver endpoint. Must not be null.
+     * @param id       The receiver's ID. Must not be null or empty.
      */
     public MessageHeader(Endpoints receiver, String id) {
         this.setReceiver(receiver);
         this.setId(id);
+        this.setHashedContent(" ");
     }
 
     /**
@@ -124,19 +138,18 @@ public class MessageHeader {
         }
 
         String[] parts = protocolString.split(FIELD_DELIMITER);
-        if (parts.length < 2 || parts.length > 3) {
-            throw new IllegalArgumentException("Invalid header format. Expected 2 or 3 parts separated by '" + FIELD_DELIMITER + "'");
-        }
 
         Endpoints clientType = Endpoints.fromString(parts[0]);
+
         if (clientType == null) {
             throw new IllegalArgumentException("Unknown client type: " + parts[0]);
         }
 
         String targetId = parts[1];
+        String hashedContent = parts[2];
 
-        if (parts.length == 2) {
-            return new MessageHeader(clientType, targetId);
+        if (parts.length == 3) {
+            return new MessageHeader(clientType, targetId, hashedContent);
         } 
         else{
             Logger.error("Invalid header format. Expected 2 or 3 parts separated by '" + FIELD_DELIMITER + "'");
@@ -157,6 +170,6 @@ public class MessageHeader {
         if (receiver == null || id == null) {
             throw new IllegalArgumentException("Receiver and ID cannot be null");
         }
-        return String.join(FIELD_DELIMITER, receiver.getValue(), id);
+        return String.join(FIELD_DELIMITER, receiver.getValue(), id, hashedContent);
     }
 }
