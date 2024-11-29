@@ -3,19 +3,28 @@
 - Clean code.
 - Good code.
 
+# important
+
+- [ ] TODO change nodeId to only be int, or that it can be string. (go for only int.)
+
+# Probably wont do
+
+- [ ] TODO dont print out audio in console...
+- [ ] TODO can add a location variable to the sensors to show where they are located? if user wants. Would be especially good for image sensor and motion sensor and whatver
 
 # CURRENT
+
 
 - [ ] TODO create a starter for only IntermediaryServer.
 - [ ] TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
 
 - [x] ADRIAN builder pattern for devices instead of DeviceFactory.
+- [ ] ADRIAN ControlPanelCommunicationChannel, instead of checking if .equals("Get_node") should check if classes are equal or something, idk. some better solution!
 - [x] ADRIAN Separate factory for actuators.
 - [ ] TOBIAS for generateHeader method usage, what if header is null? handle this.
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
 - [ ] KNUT clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
 - [ ] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
-- [ ] ADRIAN Currently Message and MessageHeader i think have fromString methods. Perhaps another class should be used for this?
 <!-- - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
 - [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
 - [x] ADRIAN fix issue with images not being replaced, but instead being added when displaying images 
@@ -29,21 +38,22 @@
 - [ ] TOBIAS Implement encryption. Måtte flytte det til neste sprint.
 - [ ] TOBIAS Hashing the data and storing it in header(?) for checking integrity. 
 - [x] TOBIAS add hash in header of Message.
+- [ ] ADRIAN handle message should take a message
+
 
 # GENERAL
 
 - [x] ADRIAN when hovering image in sensors, change cursor to a hand to indicate it can be clicked.
 - [x] ADRIAN instead of a toProtocolString method, just override the toString method for transmissions?
 - [x] ADRIAN rename fromProtocolString to fromString.
-- [ ] ADRIAN use factory to create transmissions (or only commands?)?
 - [x] ADRIAN when a client is disconnected, it should send a client identification message again when it reconnects first.
 - [x] ADRIAN When control panel disconencts, pause sending of periodic sensor data until reconnected again.
 
-- [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
+- [x] ADRIAN Refactor ControlPanelCommunicationChannel.
   - [x] ADRIAN Create parser for SensorActuatorNodeInfo.
   - [x] ADRIAN Create Sensor readings parser.
-  - [ ] ADRIAN create ControlPanelResponseHandler
-  - [ ] ADRIAN give ControlPanelLogic more responsibility.
+  - [x] ADRIAN create ControlPanelResponseHandler
+  - [x] ADRIAN give ControlPanelLogic more responsibility.
 - [x] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
   - [x] ADRIAN ClientHandler
   - [x] ADRIAN NodeConnectionHandler
@@ -100,7 +110,7 @@
 
 - [ ] ADRIAN/DANIEL/KNUT/SEBASTIAN/TOBIAS. JAVADOC FOLKENS, JAVADOC.
 - [x] TOBIAS Skriv javadoc for messages-klasser.
-- [ ] ADRIAN Skriv javadoc for command-klasser.
+- [x] ADRIAN Skriv javadoc for command-klasser.
 - [x] TOBIAS Skriv javadoc for listeners-klasser.
 - [x] TOBIAS Skriv javadoc for intermidiary-klasser.
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
@@ -124,29 +134,29 @@
 
 For each of the design choices provide a short justification: why did you choose to design it the way you did?
 
-- [ ] 1. DANIEL A short introduction: "This document describes _ _"
-- [x] 2. ? TOBIAS. Terminology: a list of special terms you use
+- [ ] DANIEL 1. A short introduction: "This document describes _ _"
+- [x] TOBIAS 2. ?. Terminology: a list of special terms you use
 - [x] 3. The underlying transport you use (TCP or UDP).
 - [x] 4. The used port number.
-- [ ] 5. SEBASTIAN. The overall architecture:
-- [ ]   SEBASTIAN. • Who are the actors (nodes) in your solution?
-- [ ]   SEBASTIAN. • Who are the clients, who is/are the server(s)?
-- [ ] ADRIAN 6. The flow of information: when and how the messages are sent?
-- [ ] 7. KNUT. The type of your protocol:
-- [ ]   KNUT. • Is your protocol connection-oriented or connection-less?
-- [ ]   KNUT. • Is the protocol state-full or state-less?
-- [ ] 8. DANIEL The different types and special values (constants) used
-- [ ] 9. TOBIAS The message format:
-- [x] ? TOBIAS • The allowed message types (sensor messages, command messages)
-- [ ]   TOBIAS • The type of marshalling used (fixed size, separators, TLV?)
-- [ ]   TOBIAS • Which messages are sent by which node? For example, are some messages only sent by the control-panel node?
-- [ ] 10. DANIEL The different errors that can occur and how each node should react on the errors. For example,
+- [ ] SEBASTIAN 5. . The overall architecture:
+- [ ] SEBASTIAN. • Who are the actors (nodes) in your solution?
+- [ ] SEBASTIAN. • Who are the clients, who is/are the server(s)?
+- [x] ADRIAN 6. The flow of information: when and how the messages are sent?
+- [ ] KNUT. 7.  The type of your protocol:
+- [ ] KNUT. • Is your protocol connection-oriented or connection-less?
+- [ ] KNUT. • Is the protocol state-full or state-less?
+- [ ] DANIEL 8.  The different types and special values (constants) used
+- [ ] TOBIAS 9.  The message format:
+- [x] TOBIAS ? • The allowed message types (sensor messages, command messages)
+- [ ] TOBIAS • The type of marshalling used (fixed size, separators, TLV?)
+- [ ] TOBIAS • Which messages are sent by which node? For example, are some messages only sent by the control-panel node?
+- [ ] DANIEL 10.  The different errors that can occur and how each node should react on the errors. For example,
 what if a message in an unexpected format is received? Is it ignored, or does the recipient send
 a reply with an error code?
-- [ ] 11. DANIEL Describe a realistic scenario: what would happen from user perspective and what messages would be sent over the network?
-- [x] 12. TOBIAS. The reliability mechanisms in your protocol (handling of network errors), if you have any
-- [x] 13. TOBIAS (Tidligere daniel, men var lett å skrive om begge). The security mechanisms in your protocol, if you have any
-- [x] 14. TOBIAS Må skrive meir om security fordi eg he endra på klassene.
+- [ ] DANIEL 11.  Describe a realistic scenario: what would happen from user perspective and what messages would be sent over the network?
+- [x] TOBIAS 12. . The reliability mechanisms in your protocol (handling of network errors), if you have any
+- [x] TOBIAS 13.  (Tidligere daniel, men var lett å skrive om begge). The security mechanisms in your protocol, if you have any
+- [x] TOBIAS 14.  Må skrive meir om security fordi eg he endra på klassene.
 
 # General - [ ]
 
@@ -160,7 +170,7 @@ a reply with an error code?
 - [x] Adrian Implement Header/Body messages for control panel 
 - [x] Adrian Implement Header/Body messages for intermediary server
 - [x] Adrian Implement Header/Body messages for greenhouse
-- [ ] ADRIAN Handling connection errors and messaging errors properly.
+- [x] ADRIAN Handling connection errors and messaging errors properly.
 - [x] ADRIAN. gitignore fil.
 - [x] ADRIAN. Implementere Message og Command interfacer/klasser
 - [x] ADRIAN. Command classes for client identification. 
@@ -204,7 +214,7 @@ _
 
 - [x] ADRIAN One Thread for writing and one for reading.
 
-- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
+- [x] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN lage kommunikasjons klasse for greenhouse nodes.
 - [x] ADRIAN. Koble til multiple greenhouse nodes til intermediary server.
 
@@ -220,7 +230,7 @@ Each sensor-node can do the following:
 
 - [x] ADRIAN One Thread for writing and one for reading.
 - [x] ADRIAN Refactor intermediary server
-- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
+- [x] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. Lage en intermediary server som kan brukes for å tilrettelegge kommunikasjon mellom greenhouse nodes og control panel.
 - [x] ADRIAN. Ta i mot klienter som vil koble seg til.
 - [x] ADRIAN. Motta meldinger fra klienter.
@@ -241,7 +251,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 
 - [x] ADRIAN One Thread for writing and one for reading.
 
-- [x] what to do when creating a new control panel?
+- [x] ADRIAN what to do when creating a new control panel?
     - [X] ADRIAN Connect to server
     - [X] ADRIAN send unique identifier to server so server knows id of control panel (and that it is a control panel)
     - [X] ADRIAN Ask server for nodes
@@ -249,7 +259,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
     - [x] ADRIAN How does control panel know what info to ask for?
     - [x] ADRIAN How does control panel know what to do with the info it receives?
 
-- [ ] ADRIAN. Håndtere situasjoner hvor feil oppstår.
+- [x] ADRIAN. Håndtere situasjoner hvor feil oppstår.
 - [x] ADRIAN. koble til multiple control panels til intermediary server.
 - [x] ADRIAN. lage kommunikasjons klasse for control panel
 - [x] ADRIAN. Spør hele tiden om informasjon for noden som vises i control panel GUI.
@@ -322,6 +332,10 @@ of each? Preferably, include model’s diagrams here. (1-2min)
 - [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project.
 (1-3min)
 - [ ] ADRIAN 8. Reflect on potential improvements and future work. (1 min)
+- Instead of separating different parts of a message using different delimiters, like "-", ";" and so on, we could have used a well established protocol like JSON or XML. This would make it easier to read the messages, and also easier to parse them. 
+
+- Additionally, we are somewhat lacking with catching and managing errors. We have an enum for different Failure reasons, but we don't use many of them and don't have many of them either. To help with implement better error handling, we would need more and better tests and utilize them further than what we already have.
+
 
 Note: it is not a big problem if your video is 17 or 18 minutes, but don’t make it to 35 minutes!
 Ability to present your ideas and results concisely is a general skill you must master. While the

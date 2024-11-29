@@ -151,7 +151,7 @@ public class ControlPanelResponseHandler {
    * @param nodeId the node id response data.
    */
   private void handleGetNodeIdResponse(String nodeId) {
-    this.communicationChannel.askForNodeInfo(nodeId, 5);
+    this.communicationChannel.askForNodeInfo(nodeId);
   }
 
   /**

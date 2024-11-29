@@ -155,7 +155,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    * @param nodeId The ID of the node to spawn
    * @param START_DELAY The delay in seconds before spawning the node
    */
-  public void askForNodeInfo(String nodeId, int START_DELAY) {
+  public void askForNodeInfo(String nodeId) {
     try {
       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, nodeId);
       MessageBody body = new MessageBody(new GetNodeCommand());
