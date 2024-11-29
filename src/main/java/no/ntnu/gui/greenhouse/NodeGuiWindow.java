@@ -108,14 +108,15 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
 
     // Apply style class for CSS styling
     root.getStyleClass().add("root");
-    root.setMaxHeight(WINDOW_HEIGHT - 50);
 
     // Wrap the content in a ScrollPane
     ScrollPane scrollPane = new ScrollPane();
     scrollPane.setContent(root);
     // Ensure ScrollPane adapts to the window size
-    scrollPane.setFitToWidth(true);
-    scrollPane.setFitToHeight(true);
+    scrollPane.setFitToWidth(true);  // Allow content to fit width
+    scrollPane.setFitToHeight(true); // Allow ScrollPane to manage height automatically
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);  // Only show vertical scrollbar when needed
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // No horizontal scrollbar unless you need it
 
     return scrollPane;
   }

@@ -34,8 +34,9 @@
 - [ ] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
 <!-- - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
 - [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
-- [x] ADRIAN fix issue with images not being replaced, but instead being added when displaying images 
-- [ ] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
+- [x] ADRIAN fix issue with images not being replaced, but instead being added when displaying images
+- [x] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
+- [ ] Judge if sensor pane should be scrollable. I tried it out, and it didn't look good, and it didn't feel good to use.
 - [x] TOBIAS ScrollPane for controlPanel.
 - [ ] SEBASTIAN Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
 - [ ] DANIEL Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
