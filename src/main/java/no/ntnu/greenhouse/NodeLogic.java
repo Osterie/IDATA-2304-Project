@@ -4,6 +4,7 @@ import java.util.List;
 
 import no.ntnu.greenhouse.sensors.Sensor;
 import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Message;
 
 /**
@@ -37,12 +38,12 @@ public class NodeLogic {
     public String getSensorData(){
 
         List<Sensor> sensors = this.node.getSensors();
-        String sensorData = this.node.getId() + ";";
+        String sensorData = this.node.getId() + Delimiters.BODY_FIELD.getValue();
         for (Sensor sensor : sensors) {
             try {
                 SensorReading reading = sensor.getReading();
                 String sensorType = sensor.getDataFormat();
-                sensorData += sensorType + ":" + reading.getFormatted() + ",";
+                sensorData += sensorType + ":" + reading.getFormatted() + Delimiters.BODY_FIELD_PARAMETERS.getValue();
             } catch (IllegalStateException e) {
                 if (e.getMessage().equals("The image-sensor is off.")) {
                     sensorData += "IMG: =  NoImage,";

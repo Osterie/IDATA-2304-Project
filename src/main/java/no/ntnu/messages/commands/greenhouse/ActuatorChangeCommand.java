@@ -56,8 +56,8 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
         String nodeId = Integer.toString(nodeLogic.getId());
         
         String responseData = nodeId;
-        responseData += Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.actuatorId;
-        responseData += Delimiters.BODY_FIELD_PARAMETERS.getValue() + (this.isOn ? "1" : "0");
+        responseData += Delimiters.BODY_FIELD.getValue() + this.actuatorId;
+        responseData += Delimiters.BODY_FIELD.getValue() + (this.isOn ? "1" : "0");
         
         SuccessResponse successResponse = new SuccessResponse(this, responseData);
         MessageBody response = new MessageBody(successResponse);

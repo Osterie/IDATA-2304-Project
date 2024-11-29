@@ -1,10 +1,17 @@
 package no.ntnu.controlpanel;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static no.ntnu.tools.Parser.parseIntegerOrError;
+
+
+import no.ntnu.SensorReadingsParser;
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.constants.Endpoints;
+import no.ntnu.greenhouse.sensors.NoSensorReading;
+import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.tools.Logger;
 import no.ntnu.messages.MessageBody;
@@ -54,11 +61,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    */
   @Override
   protected void handleMessage(Message message) {
-
-    
     Logger.info("Received message from server: " + message);
     
-    // Extract header and body
     MessageHeader header = message.getHeader();
     MessageBody body = message.getBody();
     Endpoints client = header.getReceiver();
@@ -120,7 +124,6 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   public void askForSensorDataPeriodically(int period) {
     ControlPanelCommunicationChannel self = this;
 
-    // TODO: Hashing here?
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override
@@ -166,19 +169,21 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   }
 
   /**
-   * Advertise that a node is removed.
-   * Notifies the control panel logic that a node has been removed after a specified delay.
+   * Spawn a new sensor/actuator node information after a given delay.
+   * Sends a command to the server to spawn a new node after a specified delay.
    *
-   * @param nodeId ID of the removed node
-   * @param delay  Delay in seconds
+   * @param nodeId The ID of the node to spawn
+   * @param START_DELAY The delay in seconds before spawning the node
    */
-  public void advertiseRemovedNode(int nodeId, int delay) {
-    Timer timer = new Timer();
-    timer.schedule(new TimerTask() {
-      @Override
-      public void run() {
-        logic.onNodeRemoved(nodeId);
-      }
-    }, delay * 1000L);
+  public void spawnNode(String nodeId, int START_DELAY) {
+    try {
+      MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, nodeId);
+      MessageBody body = new MessageBody(new GetNodeCommand());
+      Message message = new Message(header, body);
+    //   TODO do differently
+      this.sendMessage(message);
+    } catch (Exception e) {
+      Logger.error("Failed to spawn node: " + e.getMessage());
+    }
   }
 }

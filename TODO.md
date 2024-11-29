@@ -39,6 +39,8 @@
 - [x] ADRIAN When control panel disconencts, pause sending of periodic sensor data until reconnected again.
 
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
+  - [x] ADRIAN Create parser for SensorActuatorNodeInfo.
+  - [x] ADRIAN Create Sensor readings parser.
 - [x] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
   - [x] ADRIAN ClientHandler
   - [x] ADRIAN NodeConnectionHandler

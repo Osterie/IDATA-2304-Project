@@ -5,7 +5,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static no.ntnu.tools.Parser.parseIntegerOrError;
+
+import no.ntnu.SensorReadingsParser;
 import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.sensors.NoSensorReading;
 import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;
@@ -70,6 +74,74 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     communicationChannel = null;
     // Clear the communication channel listener
     communicationChannelListener = null;
+  }
+
+      /**
+   * Advertise new sensor readings.
+   * Notifies the control panel logic of new sensor readings after a specified delay.
+   * 
+   * @param specification Specification of the readings in the following format:
+   *                      [nodeID]
+   *                      semicolon
+   *                      [sensor_type_1] equals [sensor_value_1] space [unit_1]
+   *                      comma
+   *                      ...
+   *                      comma
+   *                      [sensor_type_N] equals [sensor_value_N] space [unit_N]
+   * @param delay         Delay in seconds
+   */
+  public void advertiseSensorData(List<SensorReading> sensors, int nodeId, int delay) {
+    ControlPanelLogic self = this;
+
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        self.onSensorData(nodeId, sensors);
+      }
+    }, delay * 1000L);
+  }
+
+  /**
+   * Advertise that a node is removed.
+   * Notifies the control panel logic that a node has been removed after a specified delay.
+   *
+   * @param nodeId ID of the removed node
+   * @param delay  Delay in seconds
+   */
+  public void advertiseRemovedNode(int nodeId, int delay) {
+
+    ControlPanelLogic self = this;
+
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        self.onNodeRemoved(nodeId);
+      }
+    }, delay * 1000L);
+  }
+
+    /**
+   * Advertise that an actuator has changed its state.
+   * Notifies the control panel logic of an actuator state change after a specified delay.
+   *
+   * @param nodeId     ID of the node to which the actuator is attached
+   * @param actuatorId ID of the actuator
+   * @param on         When true, actuator is on; off when false
+   * @param delay      The delay in seconds after which the advertisement will be generated
+   */
+  public void advertiseActuatorState(int nodeId, int actuatorId, boolean on, int delay) {
+
+    ControlPanelLogic self = this;
+
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        self.onActuatorStateChanged(nodeId, actuatorId, on);
+      }
+    }, delay * 1000L);
   }
 
   /**
