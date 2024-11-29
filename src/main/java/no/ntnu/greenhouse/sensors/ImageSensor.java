@@ -3,11 +3,13 @@ package no.ntnu.greenhouse.sensors;
 
 import java.sql.SQLOutput;
 
+import no.ntnu.greenhouse.SensorType;
+
 /**
  * An image sensor which can sense the environment in a specific way.
  */
-public class ImageSensor extends Sensor {
-  private final ImageSensorReading reading;
+public class ImageSensor extends Sensor<ImageSensorReading> {
+  // private final ImageSensorReading reading;
   private final String imagesFilePath;
   private final String dataFormat = "IMG";
   private boolean isOn;
@@ -20,7 +22,7 @@ public class ImageSensor extends Sensor {
    * @param type    The type of the sensor.
    * @param imagesFilePath The file path to the images
    */
-  public ImageSensor(String type, String imagesFilePath) {
+  public ImageSensor(SensorType type, String imagesFilePath) {
     this.reading = new ImageSensorReading(type);
     this.imagesFilePath = imagesFilePath;
     this.turnOn();
@@ -33,19 +35,10 @@ public class ImageSensor extends Sensor {
    * @param imagesFilePath The file path to the images
    * @param image The initial image
    */
-  private ImageSensor(String type, String imagesFilePath, ImageSensorReading image) {
+  private ImageSensor(SensorType type, String imagesFilePath, ImageSensorReading image) {
     this.reading = image;
     this.imagesFilePath = imagesFilePath;
     this.turnOn();
-  }
-
-  /**
-   * Returns the type of the sensor.
-   * 
-   * @return The type of the sensor.
-   */
-  public String getType() {
-    return reading.getType();
   }
 
   /**
@@ -65,19 +58,6 @@ public class ImageSensor extends Sensor {
   @Override
   public String getDataFormat() {
     return dataFormat;
-  }
-
-  /**
-   * Get the current sensor reading.
-   *
-   * @return The current sensor reading (value)
-   */
-  public ImageSensorReading getReading() {
-    if (isOn) {
-      return reading;
-    } else {
-      throw new IllegalStateException("The image-sensor is off.");
-    }
   }
 
   /**

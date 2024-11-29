@@ -1,17 +1,19 @@
 package no.ntnu.greenhouse.sensors;
 
+import no.ntnu.greenhouse.SensorType;
+
 /**
  * Represents a generic sensor reading.
  */
 public abstract class SensorReading {
-  protected final String type;
+  protected final SensorType type;
 
   /**
    * Create a new sensor reading.
    *
    * @param type  The type of sensor being red
    */
-  public SensorReading(String type) {
+  public SensorReading(SensorType type) {
     this.type = type;
   }
 
@@ -20,7 +22,7 @@ public abstract class SensorReading {
    *
    * @return The type of the sensor
    */
-  public String getType() {
+  public SensorType getType() {
     return type;
   }
 
@@ -39,12 +41,4 @@ public abstract class SensorReading {
    */
   @Override
   public abstract boolean equals(Object o);
-
-  /**
-   * Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by {@link java.util.HashMap}.
-   *
-   * @return a hash code value for this object.
-   */
-  @Override
-  public abstract int hashCode();
 }

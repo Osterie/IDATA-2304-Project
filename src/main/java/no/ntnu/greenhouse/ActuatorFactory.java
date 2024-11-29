@@ -1,11 +1,14 @@
 package no.ntnu.greenhouse;
 
 public class ActuatorFactory {
-    private static final String SENSOR_TYPE_TEMPERATURE = "temperature";
-    private static final String SENSOR_TYPE_HUMIDITY = "humidity";
+    private static final SensorType SENSOR_TYPE_TEMPERATURE = SensorType.TEMPERATURE;
+    private static final SensorType SENSOR_TYPE_HUMIDITY = SensorType.HUMIDITY;
+    private static final SensorType SENSOR_TYPE_LIGHT = SensorType.LIGHT;
+    
     private static final String ACTUATOR_TYPE_FAN = "fan";
     private static final String ACTUATOR_TYPE_HEATER = "heater";
     private static final String ACTUATOR_TYPE_WINDOW = "window";
+    private static final String ACTUATOR_TYPE_LIGHT = "Illuminance";
 
 
     /**
@@ -50,6 +53,18 @@ public class ActuatorFactory {
     public static Actuator createHeater(int nodeId) {
         Actuator actuator = new Actuator(ACTUATOR_TYPE_HEATER, nodeId);
         actuator.setImpact(SENSOR_TYPE_TEMPERATURE, 4.0);
+        return actuator;
+    }
+
+    /**
+     * Create a typical light-actuator.
+     *
+     * @param nodeId ID of the node to which this actuator will be connected
+     * @return The light actuator
+     */
+    public static Actuator createLight(int nodeId) {
+        Actuator actuator = new Actuator(ACTUATOR_TYPE_LIGHT, nodeId);
+        actuator.setImpact(SENSOR_TYPE_LIGHT, 50000.0);
         return actuator;
     }
 }

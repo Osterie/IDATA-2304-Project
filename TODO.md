@@ -8,7 +8,7 @@
 
 - [ ] TODO create a starter for only IntermediaryServer.
 
-- [ ] ADRIAN builder pattern for devices instead of DeviceFactory.
+- [x] ADRIAN builder pattern for devices instead of DeviceFactory.
 - [x] ADRIAN Separate factory for actuators.
 - [ ] TOBIAS for generateHeader method usage, what if header is null? handle this.
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"

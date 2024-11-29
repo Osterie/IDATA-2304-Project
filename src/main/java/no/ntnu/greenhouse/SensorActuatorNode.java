@@ -71,8 +71,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     if (template == null) {
       throw new IllegalArgumentException("Sensor template is missing");
     }
-    String type = template.getType();
-    if (type == null || type.isEmpty()) {
+    SensorType type = template.getType();
+    if (type == null) {
       throw new IllegalArgumentException("Sensor type missing");
     }
     if (n <= 0) {
@@ -285,8 +285,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @param sensorType The type of sensors affected
    * @param impact     The impact to apply
    */
-  public void applyActuatorImpact(String sensorType, double impact) {
-    if (sensorType == null || sensorType.isEmpty()) {
+  public void applyActuatorImpact(SensorType sensorType, double impact) {
+    if (sensorType == null) {
       throw new IllegalArgumentException("Sensor type cannot be null or empty");
     }
     for (Sensor sensor : sensors) {

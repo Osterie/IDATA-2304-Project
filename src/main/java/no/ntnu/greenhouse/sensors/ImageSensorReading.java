@@ -8,6 +8,7 @@ import no.ntnu.tools.stringification.Base64ImageEncoder;
 
 import javax.imageio.ImageIO;
 
+import no.ntnu.greenhouse.SensorType;
 import no.ntnu.tools.Logger;
 
 /**
@@ -23,7 +24,7 @@ public class ImageSensorReading extends SensorReading{
      *
      * @param type The type of sensor being read
      */
-    public ImageSensorReading(String type) {
+    public ImageSensorReading(SensorType type) {
         super(type);
         this.currentImage = null;
         this.fileExtension = null;
@@ -35,7 +36,7 @@ public class ImageSensorReading extends SensorReading{
      * @param type  The type of sensor being read
      * @param image The initial image
      */
-    public ImageSensorReading(String type, BufferedImage image) {
+    public ImageSensorReading(SensorType type, BufferedImage image) {
         super(type);
         this.currentImage = image;
         this.fileExtension = null;
@@ -119,16 +120,6 @@ public class ImageSensorReading extends SensorReading{
         }
         ImageSensorReading that = (ImageSensorReading) o;
         return currentImage.equals(that.currentImage);
-    }
-
-    /**
-     * Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by {@link java.util.HashMap}.
-     *
-     * @return a hash code value for this object.
-     */
-    @Override
-    public int hashCode() {
-        return currentImage.hashCode();
     }
 
     /**

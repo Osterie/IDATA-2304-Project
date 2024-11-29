@@ -1,10 +1,12 @@
 package no.ntnu.greenhouse.sensors;
 
+import no.ntnu.greenhouse.SensorType;
+
 /**
  * An audio sensor which can sense the environment in a specific way.
  */
-public class AudioSensor extends Sensor {
-  private final AudioSensorReading reading;
+public class AudioSensor extends Sensor<AudioSensorReading> {
+  // private final AudioSensorReading reading;
   private final String audioFilePath;
   private final String dataFormat = "AUD";
   private boolean isOn;
@@ -15,7 +17,7 @@ public class AudioSensor extends Sensor {
    * @param type    The type of the sensor.
    * @param audioFilePath The file path to the audio data
    */
-  public AudioSensor(String type, String audioFilePath) {
+  public AudioSensor(SensorType type, String audioFilePath) {
     this.reading = new AudioSensorReading(type);
     this.audioFilePath = audioFilePath;
     this.turnOn();
@@ -28,20 +30,11 @@ public class AudioSensor extends Sensor {
      * @param audioFilePath The file path to the audio data
      * @param audio The initial audio
      */
-    private AudioSensor(String type, String audioFilePath, AudioSensorReading audio) {
+    private AudioSensor(SensorType type, String audioFilePath, AudioSensorReading audio) {
         this.reading = audio;
         this.audioFilePath = audioFilePath;
         this.turnOn();
     }
-
-  /**
-   * Returns the type of the sensor.
-   * 
-   * @return The type of the sensor.
-   */
-  public String getType() {
-    return reading.getType();
-  }
 
   /**
    * Get the file path to the audio data.
@@ -62,18 +55,18 @@ public class AudioSensor extends Sensor {
     return dataFormat;
   }
 
-  /**
-   * Get the current reading of the sensor.
-   *
-   * @return The current reading of the sensor
-   */
-  public AudioSensorReading getReading() {
-    if (isOn) {
-      return reading;
-    } else {
-      throw new IllegalStateException("The audio-sensor is off.");
-    }
-  }
+  // /**
+  //  * Get the current reading of the sensor.
+  //  *
+  //  * @return The current reading of the sensor
+  //  */
+  // public AudioSensorReading getReading() {
+  //   if (isOn) {
+  //     return reading;
+  //   } else {
+  //     throw new IllegalStateException("The audio-sensor is off.");
+  //   }
+  // }
 
 /**
  * Creates and returns a clone of this AudioSensor object.

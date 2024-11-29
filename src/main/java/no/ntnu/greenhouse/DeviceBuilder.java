@@ -81,6 +81,19 @@ public class DeviceBuilder {
     }
 
     /**
+     * Adds a specified number of light sensors to the node.
+     * 
+     * @param count The number of light sensors to add
+     * @return The builder object
+     */
+    public DeviceBuilder addLightSensor(int count){
+        if (count > 0) {
+            this.node.addSensors(SensorFactory.createLightSensor(), count);
+        }
+        return this;
+    }
+
+    /**
      * Adds a specified number of image sensors to the node.
      * 
      * @param count The number of image sensors to add
@@ -141,6 +154,19 @@ public class DeviceBuilder {
     public DeviceBuilder addHeaterActuator(int count){
         if (count > 0) {
             this.addActuators(node, ActuatorFactory.createHeater(node.getId()), count);
+        }
+        return this;
+    }
+
+    /**
+     * Adds a specified number of light actuators to the node.
+     * 
+     * @param count The number of light actuators to add
+     * @return The builder object
+     */
+    public DeviceBuilder addLightActuator(int count){
+        if (count > 0) {
+            this.addActuators(node, ActuatorFactory.createLight(node.getId()), count);
         }
         return this;
     }

@@ -59,6 +59,8 @@ public class GreenhouseSimulator {
     nodes.put(node2.getId(), node2);
 
     SensorActuatorNode node3 = new DeviceBuilder().addTemperatureSensor(2)
+        .addLightSensor(2)
+        .addLightActuator(1)
         .build();
     nodes.put(node3.getId(), node3);
 

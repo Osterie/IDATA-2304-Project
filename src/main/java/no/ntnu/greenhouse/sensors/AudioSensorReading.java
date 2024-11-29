@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
+import no.ntnu.greenhouse.SensorType;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.stringification.Base64AudioEncoder;
 
@@ -20,7 +21,7 @@ public class AudioSensorReading extends SensorReading {
      *
      * @param type The type of the sensor.
      */
-    public AudioSensorReading(String type) {
+    public AudioSensorReading(SensorType type) {
       super(type);
       this.audioFile = null;
     }
@@ -31,20 +32,10 @@ public class AudioSensorReading extends SensorReading {
      * @param type The type of the sensor.
      * @param audioFilePath The file path to the audio data.
      */
-    public AudioSensorReading(String type, File startingFile) {
+    public AudioSensorReading(SensorType type, File startingFile) {
       super(type);
       this.audioFile = startingFile;
     }
-  
-    /**
-     * Get the type of the sensor.
-     *
-     * @return The type of the sensor.
-     */
-    public String getType() {
-      return type;
-    }
-  
 
     /**
      * Get the audio file.
@@ -126,17 +117,6 @@ public boolean equals(Object o) {
     }
     AudioSensorReading that = (AudioSensorReading) o;
     return audioFile.equals(that.audioFile);
-}
-
-/**
- * Returns the hash code value for this AudioSensorReading.
- * The hash code is computed based on the hash code of the audio file.
- *
- * @return the hash code value for this AudioSensorReading
- */
-@Override
-public int hashCode() {
-    return audioFile.hashCode();
 }
 
 /**

@@ -1,12 +1,16 @@
 package no.ntnu.greenhouse.sensors;
 
+import no.ntnu.greenhouse.SensorType;
+
 /**
  * A numeric sensor which can sense the environment in a specific way.
  */
-public class NumericSensor extends Sensor {
-  private final NumericSensorReading reading;
+public class NumericSensor extends Sensor<NumericSensorReading> {
+  // protected final NumericSensorReading reading;
+
   private final double min;
   private final double max;
+  // TODO make static?
   private final String dataFormat = "NUM";
 
   /**
@@ -18,30 +22,12 @@ public class NumericSensor extends Sensor {
    * @param current The current (starting) value of the sensor
    * @param unit    The measurement unit. Examples: "%", "C", "lux"
    */
-  public NumericSensor(String type, double min, double max, double current, String unit) {
+  public NumericSensor(SensorType type, double min, double max, double current, String unit) {
     super();
     this.reading = new NumericSensorReading(type, current, unit);
     this.min = min;
     this.max = max;
     ensureValueBoundsAndPrecision(current);
-  }
-
-  /**
-   * Get the type of the sensor.
-   *
-   * @return The type of the sensor
-   */
-  public String getType() {
-    return reading.getType();
-  }
-
-  /**
-   * Get the current sensor reading.
-   *
-   * @return The current sensor reading (value)
-   */
-  public SensorReading getReading() {
-    return reading;
   }
 
   /**
@@ -64,6 +50,7 @@ public class NumericSensor extends Sensor {
     if (this.reading == null) {
       throw new IllegalStateException("The sensor reading is null");
     }
+
     return new NumericSensor(this.reading.getType(), this.min, this.max,
         this.reading.getValue(), this.reading.getUnit());
   }

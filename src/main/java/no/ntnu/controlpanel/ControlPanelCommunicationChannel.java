@@ -14,8 +14,8 @@ import static no.ntnu.tools.Parser.parseIntegerOrError;
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.SensorType;
 import no.ntnu.greenhouse.sensors.*;
-import no.ntnu.greenhouse.sensors.NoImageSensorReading;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.stringification.Base64AudioEncoder;
@@ -438,8 +438,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     }
     int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
     List<SensorReading> sensors = parseSensors(parts[1]);
-    sensors.removeIf(sensor -> sensor instanceof NoImageSensorReading
-            || sensor instanceof NoAudioSensorReading);
+    sensors.removeIf(sensor -> sensor instanceof NoSensorReading);
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override
@@ -518,8 +517,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       throw new IllegalArgumentException("Invalid sensor value/unit: " + reading);
     }
     if (formatParts[0].equals("IMG")) {
-      if ("NoImage".equals(valueParts[2])) {
-        return new NoImageSensorReading();
+      if ((SensorType.NONE.equals(valueParts[2]))) {
+        return new NoSensorReading();
       }
       String type = assignmentParts[0];
       String base64String = valueParts[1];
@@ -531,7 +530,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       } catch (IOException e) {
         throw new IllegalArgumentException("Failed to decode image: " + e.getMessage(), e);
       }
-      ImageSensorReading imageReading = new ImageSensorReading(type, image);
+      ImageSensorReading imageReading = new ImageSensorReading(SensorType.fromString(type), image);
       imageReading.setFileExtension(fileExtension);
       
       return imageReading;
@@ -540,11 +539,11 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       String type = assignmentParts[0];
       double value = parseDoubleOrError(valueParts[1], "Invalid sensor value: " + valueParts[1]);
       String unit = valueParts[2];
-      return new NumericSensorReading(type, value, unit);
+      return new NumericSensorReading(SensorType.fromString(type), value, unit);
     }
     else if (formatParts[0].equals("AUD")) {
-      if ("NoAudio".equals(valueParts[2])) {
-        return new NoAudioSensorReading();
+      if ((SensorType.NONE.equals(valueParts[2]))) {
+        return new NoSensorReading();
       }
       String type = assignmentParts[0];
       String base64String = valueParts[1];
@@ -555,7 +554,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
       } catch (IOException e) {
         throw new IllegalArgumentException("Failed to decode audio: " + e.getMessage(), e);
       }
-      return new AudioSensorReading(type, audioFile);
+      return new AudioSensorReading(SensorType.fromString(type), audioFile);
     }
     else {
       throw new IllegalArgumentException("Unknown sensor format: " + formatParts[0]);

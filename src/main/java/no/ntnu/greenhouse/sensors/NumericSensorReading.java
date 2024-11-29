@@ -2,6 +2,8 @@ package no.ntnu.greenhouse.sensors;
 
 import java.util.Objects;
 
+import no.ntnu.greenhouse.SensorType;
+
 /**
  * Represents one sensor reading (value).
  */
@@ -17,7 +19,7 @@ public class NumericSensorReading extends SensorReading {
    * @param value The current value of the sensor
    * @param unit  The unit, for example: %, lux
    */
-  public NumericSensorReading(String type, double value, String unit) {
+  public NumericSensorReading(SensorType type, double value, String unit) {
     super(type);
     this.value = value;
     this.unit = unit;
@@ -88,15 +90,5 @@ public class NumericSensorReading extends SensorReading {
     return Double.compare(value, that.value) == 0
         && Objects.equals(type, that.type)
         && Objects.equals(unit, that.unit);
-  }
-
-  /**
-   * Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by {@link java.util.HashMap}.
-   * 
-   * @return a hash code value for this object.
-   */
-  @Override
-  public int hashCode() {
-    return Objects.hash(type, value, unit);
   }
 }
