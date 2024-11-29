@@ -3,10 +3,11 @@
 - Clean code.
 - Good code.
 
-- [ ] UNASSIGNED builder pattern for devices instead of DeviceFactory.
 
 # CURRENT
 
+- [ ] ADRIAN builder pattern for devices instead of DeviceFactory.
+- [x] ADRIAN Separate factory for actuators.
 - [ ] TOBIAS for generateHeader method usage, what if header is null? handle this.
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
 - [ ] KNUT clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.

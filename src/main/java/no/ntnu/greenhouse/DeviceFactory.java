@@ -20,9 +20,6 @@ public class DeviceFactory {
   private static final String SENSOR_TYPE_TEMPERATURE = "temperature";
   private static final String SENSOR_TYPE_HUMIDITY = "humidity";
   private static final String SENSOR_TYPE_IMAGE = "image";
-  private static final String ACTUATOR_TYPE_FAN = "fan";
-  private static final String ACTUATOR_TYPE_HEATER = "heater";
-  private static final String ACTUATOR_TYPE_WINDOW = "window";
   private static final String PATH_TO_IMAGES = "images/";
   private static final String PATH_TO_AUDIO = "audiofiles/";
   private static final String SENSOR_TYPE_AUDIO = "audio";
@@ -58,13 +55,13 @@ public class DeviceFactory {
       node.addSensors(DeviceFactory.createHumiditySensor(), humiditySensorCount);
     }
     if (windowCount > 0) {
-      addActuators(node, DeviceFactory.createWindow(node.getId()), windowCount);
+      addActuators(node, ActuatorFactory.createWindow(node.getId()), windowCount);
     }
     if (fanCount > 0) {
-      addActuators(node, DeviceFactory.createFan(node.getId()), fanCount);
+      addActuators(node, ActuatorFactory.createFan(node.getId()), fanCount);
     }
     if (heaterCount > 0) {
-      addActuators(node, DeviceFactory.createHeater(node.getId()), heaterCount);
+      addActuators(node, ActuatorFactory.createHeater(node.getId()), heaterCount);
     }
     if (cameraCount > 0) {
       node.addSensors(DeviceFactory.createImageSensor(), cameraCount);
@@ -114,43 +111,6 @@ public class DeviceFactory {
   public static Sensor createHumiditySensor() {
     return new NumericSensor(SENSOR_TYPE_HUMIDITY, MIN_HUMIDITY, MAX_HUMIDITY,
         randomize(NORMAL_GREENHOUSE_HUMIDITY, 5.0), HUMIDITY_UNIT);
-  }
-
-  /**
-   * Create a typical window-actuator.
-   *
-   * @param nodeId ID of the node to which this actuator will be connected
-   * @return The window actuator
-   */
-  public static Actuator createWindow(int nodeId) {
-    Actuator actuator = new Actuator(ACTUATOR_TYPE_WINDOW, nodeId);
-    actuator.setImpact(SENSOR_TYPE_TEMPERATURE, -5.0);
-    actuator.setImpact(SENSOR_TYPE_HUMIDITY, -10.0);
-    return actuator;
-  }
-
-  /**
-   * Create a typical fan-actuator.
-   *
-   * @param nodeId ID of the node to which this actuator will be connected
-   * @return The fan actuator
-   */
-  public static Actuator createFan(int nodeId) {
-    Actuator actuator = new Actuator(ACTUATOR_TYPE_FAN, nodeId);
-    actuator.setImpact(SENSOR_TYPE_TEMPERATURE, -1.0);
-    return actuator;
-  }
-
-  /**
-   * Create a typical heater-actuator.
-   *
-   * @param nodeId ID of the node to which this actuator will be connected
-   * @return The heater actuator
-   */
-  public static Actuator createHeater(int nodeId) {
-    Actuator actuator = new Actuator(ACTUATOR_TYPE_HEATER, nodeId);
-    actuator.setImpact(SENSOR_TYPE_TEMPERATURE, 4.0);
-    return actuator;
   }
 
   /**
