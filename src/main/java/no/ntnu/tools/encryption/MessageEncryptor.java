@@ -7,6 +7,7 @@ import no.ntnu.tools.encryption.asymmetric.HybridRSAEncryptor;
 import javax.crypto.SecretKey;
 import java.security.KeyPair;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 
 public class MessageEncryptor {
 
@@ -17,14 +18,11 @@ public class MessageEncryptor {
      *
      * @return message that is encrypted.
      */
-    public static Message encryptMessage(Message message) {
+    public static Message encryptMessage(Message message, PublicKey recipientPublicKey) {
 
         Message encryptedMessage = message;
 
         try {
-            // Generate RSA key pair for recipient
-            KeyPair recipientKeyPair = HybridRSAEncryptor.generateRSAKeyPair();
-
             // Generate AES key
             SecretKey aesKey = HybridRSAEncryptor.generateAESKey();
 
@@ -33,16 +31,16 @@ public class MessageEncryptor {
             String encryptedContent = HybridRSAEncryptor.encryptWithAES(originalContent, aesKey);
 
             // Encrypt the AES key with the recipient's public key
-            String encryptedAESKey = HybridRSAEncryptor.encryptAESKeyWithRSA(aesKey, recipientKeyPair.getPublic());
+            String encryptedAESKey = HybridRSAEncryptor.encryptAESKeyWithRSA(aesKey, recipientPublicKey);
 
-            // Stores encrypted AES key in header.
+            // Stores encrypted AES key in header
             encryptedMessage.getHeader().setEncryptedAES(encryptedAESKey);
 
-            // Transmission with encrypted content.
+            // Transmission with encrypted content
             Transmission encryptedTransmission = encryptedMessage.getBody().getTransmission();
             encryptedTransmission.setTransmission(encryptedContent);
 
-            // Add encrypted content to body.
+            // Add encrypted content to body
             encryptedMessage.getBody().setTransmission(encryptedTransmission);
 
         } catch (Exception e) {

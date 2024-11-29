@@ -5,16 +5,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import no.ntnu.messages.Message;
+import no.ntnu.messages.MessageHeader;
+import no.ntnu.messages.Transmission;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.encryption.KeyGenerator;
+import no.ntnu.tools.encryption.MessageEncryptor;
 import no.ntnu.tools.encryption.MessageHasher;
 
 public abstract class TcpConnection {
@@ -237,6 +237,20 @@ public abstract class TcpConnection {
       // TODO: HandleMessage should take Message not String.
       Message message = this.parseMessage(serverMessage);
 
+      // Decryption
+      try {
+        // Decrypts protocol
+        String decryptedProtocol = MessageEncryptor.decryptStringMessage(message.getBody().getTransmission().toString(), message.getHeader().getEncryptedAES(), recipientPrivateKey);
+
+        // TODO: Encryption in send message hinders control panel to run.
+        System.out.println("BEFORE DECRYPTION:" + message.getBody().getTransmission().toString());
+        // Add decrypted protocol back to message
+        //message.getBody().getTransmission().setTransmission(decryptedProtocol);
+        System.out.println("AFTER DECRYPTION:" + message.getBody().getTransmission().toString());
+      } catch (Exception e) {
+        System.err.println("Could not decrypt message: " + e.getMessage());
+      }
+
       // TODO: Delete when done using sout.
       System.out.println("HASHING TEST, HASH AFTER BEING SENT OVER:" + message.getHeader().getHashedContent());
       MessageHasher.addHashedContentToMessage(message);
@@ -286,8 +300,6 @@ public abstract class TcpConnection {
     return message;
   }
 
-  // TODO: Should this class encrypt a message if handleMessage decrypts? If so,
-  // should it have its own method before sending?
   /**
    * Sends a message to the connected socket.
    * 
@@ -295,9 +307,14 @@ public abstract class TcpConnection {
    */
   public synchronized void sendMessage(Message message) {
 
-    // Adds hashed body content to header and encrypts the message.
-    // TODO: Needs encyption
-    Message encryptedMessage = MessageHasher.addHashedContentToMessage(message);;
+    // Adds hashed version of body content to header,
+    Message originalMessage = MessageHasher.addHashedContentToMessage(message);
+
+    // TODO: This hinders the control panel to run.
+    // Encrypt original body content
+    //Message encryptedMessage = MessageEncryptor.encryptMessage(originalMessage, recipientPublicKey);
+    Message encryptedMessage = message;
+
     // TODO: Delete when done using sout.
     System.out.println("HASHING TEST, HASH BEFORE SENDING:" + encryptedMessage.getHeader().getHashedContent());
 
