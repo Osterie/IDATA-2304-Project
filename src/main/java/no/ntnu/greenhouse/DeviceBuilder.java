@@ -94,6 +94,19 @@ public class DeviceBuilder {
     }
 
     /**
+     * Adds a specified number of pH sensors to the node.
+     * 
+     * @param count The number of pH sensors to add
+     * @return The builder object
+     */
+    public DeviceBuilder addPhSensor(int count){
+        if (count > 0) {
+            this.node.addSensors(SensorFactory.createPhSensor(), count);
+        }
+        return this;
+    }
+
+    /**
      * Adds a specified number of image sensors to the node.
      * 
      * @param count The number of image sensors to add

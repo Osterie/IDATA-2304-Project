@@ -28,6 +28,7 @@ public class ActuatorFactory {
         Actuator actuator = new Actuator(ACTUATOR_TYPE_WINDOW, nodeId);
         actuator.setImpact(SENSOR_TYPE_TEMPERATURE, -5.0);
         actuator.setImpact(SENSOR_TYPE_HUMIDITY, -10.0);
+        actuator.setImpact(SENSOR_TYPE_LIGHT, 1000.0);
         return actuator;
     }
 

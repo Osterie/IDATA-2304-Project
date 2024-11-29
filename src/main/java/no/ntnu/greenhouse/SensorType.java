@@ -4,6 +4,7 @@ public enum SensorType {
     TEMPERATURE("temperature"),
     HUMIDITY("humidity"),
     LIGHT("Illuminance"),
+    PH("pH"),
     IMAGE("image"),
     AUDIO("audio"),
 

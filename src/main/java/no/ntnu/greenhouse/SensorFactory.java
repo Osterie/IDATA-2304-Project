@@ -26,7 +26,12 @@ public class SensorFactory {
   private static final int MAX_LIGHT = 100000;
   private static final int NORMAL_GREENHOUSE_LIGHT = 30000;
   private static final String LIGHT_UNIT = "Lux";
-  
+
+  private static final SensorType SENSOR_TYPE_PH = SensorType.PH;
+  private static final double MIN_PH = 4;
+  private static final double MAX_PH = 10;
+  private static final double NORMAL_GREENHOUSE_PH = 7;
+    
   private static final SensorType SENSOR_TYPE_IMAGE = SensorType.IMAGE;
   private static final String PATH_TO_IMAGES = "images/";
 
@@ -67,6 +72,16 @@ public class SensorFactory {
   public static Sensor createLightSensor() {
     return new NumericSensor(SENSOR_TYPE_LIGHT, MIN_LIGHT, MAX_LIGHT,
         randomize(NORMAL_GREENHOUSE_LIGHT, 1000.0), LIGHT_UNIT);
+  }
+
+  /**
+   * Create a typical pH sensor.
+   *
+   * @return A typical pH sensor which can be used as a template
+   */
+  public static Sensor createPhSensor() {
+    return new NumericSensor(SENSOR_TYPE_PH, MIN_PH, MAX_PH,
+        randomize(NORMAL_GREENHOUSE_PH, 0.5), "");
   }
 
   /**
