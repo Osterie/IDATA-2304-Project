@@ -9,9 +9,9 @@ import java.security.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import no.ntnu.messages.Message;
-import no.ntnu.messages.MessageHeader;
-import no.ntnu.messages.Transmission;
+import no.ntnu.constants.Endpoints;
+import no.ntnu.messages.*;
+import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.encryption.KeyGenerator;
 import no.ntnu.tools.encryption.MessageEncryptor;
@@ -239,13 +239,10 @@ public abstract class TcpConnection {
 
       // Decryption
       try {
-        // Decrypts protocol
-        String decryptedProtocol = MessageEncryptor.decryptStringMessage(message.getBody().getTransmission().toString(), message.getHeader().getEncryptedAES(), recipientPrivateKey);
-
         // TODO: Encryption in send message hinders control panel to run.
         System.out.println("BEFORE DECRYPTION:" + message.getBody().getTransmission().toString());
-        // Add decrypted protocol back to message
-        //message.getBody().getTransmission().setTransmission(decryptedProtocol);
+        // Decrypts protocol
+        //message = MessageEncryptor.decryptStringMessage(message, recipientPrivateKey);
         System.out.println("AFTER DECRYPTION:" + message.getBody().getTransmission().toString());
       } catch (Exception e) {
         System.err.println("Could not decrypt message: " + e.getMessage());
@@ -300,6 +297,22 @@ public abstract class TcpConnection {
     return message;
   }
 
+  //TODO: Delete when done using.
+  private void testIfEncryptionWorks() {
+    Message message = new Message(new MessageHeader(Endpoints.GREENHOUSE,"7"), new MessageBody(new GetNodeCommand()));
+
+    // TODO: This test shows it works.
+    try {
+      System.out.println("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
+      message = MessageEncryptor.encryptMessage(message, recipientPublicKey);
+      System.out.println("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
+      message = MessageEncryptor.decryptStringMessage(message, recipientPrivateKey);
+      System.out.println("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
+    } catch (Exception e) {
+      System.err.println("Could not decrypt message: " + e.getMessage());
+    }
+  }
+
   /**
    * Sends a message to the connected socket.
    * 
@@ -314,6 +327,8 @@ public abstract class TcpConnection {
     // Encrypt original body content
     //Message encryptedMessage = MessageEncryptor.encryptMessage(originalMessage, recipientPublicKey);
     Message encryptedMessage = message;
+    // TODO: Delete when done using
+    testIfEncryptionWorks();
 
     // TODO: Delete when done using sout.
     System.out.println("HASHING TEST, HASH BEFORE SENDING:" + encryptedMessage.getHeader().getHashedContent());

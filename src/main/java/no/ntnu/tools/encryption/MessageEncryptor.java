@@ -55,19 +55,20 @@ public class MessageEncryptor {
      * Takes in encrypted message string with keys and returns the decrypted version back.
      *
      * @param encryptedMessage messsage to be decrypted.
-     * @param encryptedAESKey
      * @param privateKey
      *
      * @return message that is decrypted.
      */
-    public static String decryptStringMessage(String encryptedMessage, String encryptedAESKey, PrivateKey privateKey) throws Exception {
+    public static Message decryptStringMessage(Message encryptedMessage, PrivateKey privateKey) throws Exception {
         // Decrypt the AES key using the private key
-        SecretKey decryptedAESKey = HybridRSAEncryptor.decryptAESKeyWithRSA(encryptedAESKey, privateKey);
+        SecretKey decryptedAESKey = HybridRSAEncryptor.decryptAESKeyWithRSA(encryptedMessage.getHeader().getEncryptedAES(), privateKey);
         System.out.println("Decrypted AES Key.");
 
         // Decrypt the message using the AES key
-        String decryptedMessage = HybridRSAEncryptor.decryptWithAES(encryptedMessage, decryptedAESKey);
-        System.out.println("Decrypted Message: " + decryptedMessage);
+        String decryptedTransmission = HybridRSAEncryptor.decryptWithAES(encryptedMessage.getBody().getTransmission().getTransmissionString(), decryptedAESKey);
+
+        Message decryptedMessage = encryptedMessage;
+        decryptedMessage.getBody().getTransmission().setTransmission(decryptedTransmission);
 
         return decryptedMessage;
     };
