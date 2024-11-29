@@ -5,11 +5,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import no.ntnu.messages.Message;
 import no.ntnu.tools.Logger;
+import no.ntnu.tools.encryption.KeyGenerator;
 import no.ntnu.tools.encryption.MessageHasher;
 
 public abstract class TcpConnection {
@@ -29,6 +34,11 @@ public abstract class TcpConnection {
 
   private static final int MAX_RETRIES = 5;
   private static final int RETRY_DELAY_MS = 1000; // Time between retries
+
+  // Generate key pair
+  KeyPair recipientKeyPair = KeyGenerator.generateRSAKeyPair();
+  PublicKey recipientPublicKey = recipientKeyPair.getPublic();
+  PrivateKey recipientPrivateKey = recipientKeyPair.getPrivate();
 
   public TcpConnection() {
     this.messageQueue = new LinkedList<>();
