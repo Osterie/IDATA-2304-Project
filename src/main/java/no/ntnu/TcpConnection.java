@@ -261,7 +261,7 @@ public abstract class TcpConnection {
 
       // Match the two hashes
       if (hashedContentFromHeader.equals(receivedMessageHash)) {
-        // TODO: Something should be done based on if It's true or not.
+        System.out.println("Yeah baby, light ...");
       }
 
       this.handleMessage(message);
@@ -299,7 +299,7 @@ public abstract class TcpConnection {
 
   //TODO: Delete when done using.
   private void testIfEncryptionWorks() {
-    Message message = new Message(new MessageHeader(Endpoints.GREENHOUSE,"7"), new MessageBody(new GetNodeCommand()));
+    Message message = new Message(new MessageHeader(Endpoints.GREENHOUSE,"7", ""), new MessageBody(new GetNodeCommand()));
 
     // TODO: This test shows it works.
     try {

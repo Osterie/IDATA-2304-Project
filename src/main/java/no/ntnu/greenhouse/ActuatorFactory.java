@@ -8,7 +8,7 @@ public class ActuatorFactory {
     private static final String ACTUATOR_TYPE_FAN = "fan";
     private static final String ACTUATOR_TYPE_HEATER = "heater";
     private static final String ACTUATOR_TYPE_WINDOW = "window";
-    private static final String ACTUATOR_TYPE_LIGHT = "Illuminance";
+    private static final String ACTUATOR_TYPE_LIGHT = "light";
 
 
     /**

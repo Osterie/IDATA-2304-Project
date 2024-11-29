@@ -1,8 +1,6 @@
 package no.ntnu.greenhouse;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -107,65 +105,6 @@ public class GreenhouseSimulator {
     threadPool.shutdown();
 }
 
-  // TODO remove me after learning what is to learn. Method from teacher
-  private String handleServerRequest(String request) {
-
-    Logger.info("Hanlding request: " + request);
-    return "OK";
-
-    // Example request: "GET_SENSOR_DATA nodeId=1"
-    // if (request.startsWith("GET_SENSOR_DATA")) {
-    //     int nodeId = extractNodeIdFromRequest(request); // A method to extract the node ID
-    //     SensorActuatorNode node = nodes.get(nodeId);
-    //     if (node != null) {
-    //         String sensorData = node.getReading();
-    //         socketWriter.println(sensorData);  // Send the sensor data back to the server
-    //     } else {
-    //         socketWriter.println("ERROR: Node not found");
-    //     }
-    // } else if (request.startsWith("CONTROL_COMMAND")) {
-    //     // Example: "CONTROL_COMMAND fan=on nodeId=1"
-    //     processControlCommand(request);
-    // }
-    // You can add more command types here, such as turning on/off heaters, fans, etc.
-}
-
-// TODO remove me after learning what is to learn. Method from teacher
-private int extractNodeIdFromRequest(String request) {
-  return -1;
-  // TODO figure out which node the request is for
-    // Logic to parse the node ID from the request string
-    // Example: "GET_SENSOR_DATA nodeId=1"
-    // String[] parts = request.split(" ");
-    // for (String part : parts) {
-    //     if (part.startsWith("nodeId=")) {
-    //         return Integer.parseInt(part.split("=")[1]);
-    //     }
-    // }
-    // return -1;  // Or throw an exception if not found
-}
-
-// TODO remove me after learning what is to learn. Method from teacher
-private void processControlCommand(String command) {
-    // Example: "CONTROL_COMMAND fan=on nodeId=1"
-    int nodeId = extractNodeIdFromRequest(command);
-    SensorActuatorNode node = nodes.get(nodeId);
-    if (node != null) {
-      return;
-      // TODO handle the command!
-    //     // Logic to control actuators like fans or heaters
-    //     if (command.contains("fan=on")) {
-    //         node.turnFanOn();  // Assuming this method exists in SensorActuatorNode
-    //         socketWriter.println("SUCCESS: Fan turned on for node " + nodeId);
-    //     } else if (command.contains("fan=off")) {
-    //         node.turnFanOff();  // Assuming this method exists
-    //         socketWriter.println("SUCCESS: Fan turned off for node " + nodeId);
-    //     }
-    // } else {
-    //     socketWriter.println("ERROR: Node not found");
-    }
-  }
-
   private void stopCommunication() {
   
     for (NodeConnectionHandler handler : nodeConnections.values()) {
@@ -175,7 +114,6 @@ private void processControlCommand(String command) {
         node.stop();
     }
     Logger.info("Greenhouse simulator stopped.");
-    // TODO - here you stop the TCP/UDP communication
   }
 
   /**
