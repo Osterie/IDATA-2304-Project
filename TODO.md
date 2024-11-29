@@ -14,32 +14,31 @@
 
 # CURRENT
 
-
-- [ ] TODO create a starter for only IntermediaryServer.
-- [ ] TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
+- [ ] UNASSIGNED The hash stored in the header seems to not arrive, it becomes 1 somewhere in the travel.
+- [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
+- [ ] UNASSIGNED TODO create a starter for only IntermediaryServer.
+- [ ] UNASSIGNED TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
+- [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
 
 - [x] ADRIAN Use enums for SensorActuatorNodeInfoParser and GetNodeCommand.
 - [x] ADRIAN builder pattern for devices instead of DeviceFactory.
 - [x] ADRIAN ControlPanelCommunicationChannel, instead of checking if .equals("Get_node") should check if classes are equal or something, idk. some better solution!
 - [x] ADRIAN Separate factory for actuators.
-- [ ] TOBIAS for generateHeader method usage, what if header is null? handle this.
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
-- [ ] KNUT clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
-- [ ] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
-<!-- - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
-- [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
-- [x] ADRIAN fix issue with images not being replaced, but instead being added when displaying images 
-- [ ] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
+- [x] ADRIAN fix issue with images not being replaced, but instead being added when displaying images
 - [x] TOBIAS ScrollPane for controlPanel.
+- [x] ADRIAN Sensors for light, PH.
+- [x] TOBIAS add hash in header of Message.
+- [x] ADRIAN handle message should take a message
+- [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
+- [ ] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
+- [ ] TOBIAS for generateHeader method usage, what if header is null? handle this.
+- [ ] TOBIAS Implement encryption.
 - [ ] SEBASTIAN Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
 - [ ] DANIEL Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
 - [ ] SEBASTIAN Actuator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such.
-- [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
-- [x] ADRIAN Sensors for light, PH.
-- [ ] TOBIAS Implement encryption. Måtte flytte det til neste sprint.
-- [ ] TOBIAS Hashing the data and storing it in header(?) for checking integrity. 
-- [x] TOBIAS add hash in header of Message.
-- [x] ADRIAN handle message should take a message
+- [ ] KNUT clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
+- [ ] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
 
 
 # GENERAL
@@ -71,13 +70,13 @@
 
 - [ ] TOBIAS add a working refresh button to control panel
 
-- [x] ADRIAN fix nodes sometimes not being created in gui.
-
 - [ ] DANIEL when changing actuator state in Sensor Node GUI, should notify all the control panels.
 
 - [ ] DANIEL Actuator class can be abstract, other classes can inherit. ONe for deactivating/activating sensor, onher for applying impact
 
 - [ ] DANIEL When sending sensor data (GetSensorDataCommand), the message should contain the data type, for the numberSensorReading, can be For example NUM, for imagesensorreading, can be IMG.
+
+- [x] ADRIAN fix nodes sometimes not being created in gui.
 
 - [x] ADRIAN When the control panel asks for sensor data, perhaps it does this a bit infrequently? Currenlty i believe it does it every 5 seconds. But do not change this to be too often. Is there another solution?
 
@@ -86,6 +85,7 @@
 - [x] ADRIAN handle if port address already in use.
 
 - [x] ADRIAN automatic generation of unique identifier for control panel.
+- 
 - [x] ADRIAN support multiple control panesl, unique id
 
 - [x] ADRIAN create host localhost constant or something
