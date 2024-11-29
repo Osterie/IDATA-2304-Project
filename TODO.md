@@ -7,6 +7,7 @@
 
 - [ ] TODO change nodeId to only be int, or that it can be string. (go for can be string.)
 - [ ] TOBIAS Refactor tools.
+- [ ] KNUT Refactor ControlPanel
 
 - [ ] ADRIAN Pass på god kode for controlpanel
 - [ ] ADRIAN Pass på god kode for intermediary server
