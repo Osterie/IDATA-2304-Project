@@ -7,6 +7,7 @@
 # CURRENT
 
 - [ ] TODO create a starter for only IntermediaryServer.
+- [ ] TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
 
 - [x] ADRIAN builder pattern for devices instead of DeviceFactory.
 - [x] ADRIAN Separate factory for actuators.
@@ -18,7 +19,7 @@
 <!-- - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
 - [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
 - [x] ADRIAN fix issue with images not being replaced, but instead being added when displaying images 
-- [x] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
+- [ ] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
 - [x] TOBIAS ScrollPane for controlPanel.
 - [ ] SEBASTIAN Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
 - [ ] DANIEL Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
@@ -41,6 +42,8 @@
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
   - [x] ADRIAN Create parser for SensorActuatorNodeInfo.
   - [x] ADRIAN Create Sensor readings parser.
+  - [ ] ADRIAN create ControlPanelResponseHandler
+  - [ ] ADRIAN give ControlPanelLogic more responsibility.
 - [x] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
   - [x] ADRIAN ClientHandler
   - [x] ADRIAN NodeConnectionHandler
@@ -162,7 +165,7 @@ a reply with an error code?
 - [x] ADRIAN. Implementere Message og Command interfacer/klasser
 - [x] ADRIAN. Command classes for client identification. 
 - [x] ADRIAN. Lage ulike Message/Command underklasser
-- [ ] SEBASTIAN PROTOKOLL (IKKE GUI) Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
+- [ ] SEBASTIAN Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
 - [x] SEBASTIAN Commands to turn on/off all actuators for a node. 
 - [x] ADRIAN. Lage klasse som applikasjonen kan kjøres fra.
 - [x] ADRIAN Refaktorer client handler felt, kanskje bruke egen klasse for å lagre klient type og klient id.
@@ -208,7 +211,7 @@ _
 Each sensor-node can do the following:
 - [x] SEBASTIAN/ADRIAN. Support different sensors. For example, one node may report humidity and light, while the other node reports only temperature
 - [x] SEBASTIAN. Act as an actuator node as well. That is, each sensor node is a "sensor and actuator node", which can have several actuators attached
-- [x] SEBASTIAN. Support different actuators. For example, fan, heater, window opener, door lock, shower opener.
+- [x] ADRIAN. Support different actuators. For example, fan, heater, window opener, door lock, shower opener.
 
 - [x] SEBASTIAN. Hint: if your protocol will support only one instance of each sensor type on a node (only one temperature sensor per node, one humidity sensor, etc.), it is probably enough to address the sensors by their type. If you want to support multiple instances of the same sensor type per node, you need to introduce the addressing of the sensors (and actuators). For example, temperature sensors 1 and 2 on the sensor node 7, humidity sensors 1, 2 and 3 on sensor node 12, etc.
 
@@ -260,21 +263,22 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 ## GUI
 
 - [ ] KNUT. Implement ComponentBuilder class
-- [X] KNUT. Visualize charts.
-- [X] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
-- [ ] KNUT. Utbedre UI for ControlPanelApplication, Sett TurnOffAllActuators button til actuatorPane og fjern nodeSelect
+- [ ] KNUT. Visualize charts.
+- [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
+- [x] KNUT. Utbedre UI for ControlPanelApplication, Sett TurnOffAllActuators button til actuatorPane og fjern nodeSelect
 - [X] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
+- [ ] KNUT Imlement Component Builder.
 - [x] ADRIAN. Make actuator buttons send data.
 - [ ] DANIEL. Do the task which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
 
 # EXTRA WORK
 
 - [ ] ADRIAN. 1. Resilience in case of network outages. The solution functions when the network connection is temporarily lost. This means buffering data, retransmissions, reconnecting, etc
-    - [x] When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
-    - [x] If the connection is lost, try to reconnect. 
-    - [ ] If reconnection fails, show an error message to the user. (then they can choose to reload the control panel perhaps when the server is back up. Display a "Server down" message in the control panel)
-    - [ ] If a message is not received, try to receive it again. If it fails, show an error message to the user.
-    - [x] Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
+    - [x] ADRIAN When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
+    - [x] ADRIAN If the connection is lost, try to reconnect. 
+    - [ ] ADRIAN If reconnection fails, show an error message to the user. (then they can choose to reload the control panel perhaps when the server is back up. Display a "Server down" message in the control panel)
+    - [ ] ADRIAN If a message is not received, try to receive it again. If it fails, show an error message to the user.
+    - [x] ADRIAN Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
 
 
 - [x] TOBIAS. 2. Data encryption. You can think of different methods of integrating security into your solution,

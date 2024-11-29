@@ -1,12 +1,12 @@
-package no.ntnu;
+package no.ntnu.tools.parsing;
+
+import static no.ntnu.tools.parsing.Parser.parseDoubleOrError;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
-import static no.ntnu.tools.Parser.parseDoubleOrError;
 
 import no.ntnu.greenhouse.SensorType;
 import no.ntnu.greenhouse.sensors.AudioSensorReading;

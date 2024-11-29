@@ -1,12 +1,10 @@
 package no.ntnu.controlpanel;
 
+import static no.ntnu.tools.parsing.Parser.parseBooleanOrError;
+import static no.ntnu.tools.parsing.Parser.parseIntegerOrError;
+
 import java.util.List;
 
-import static no.ntnu.tools.Parser.parseIntegerOrError;
-import static no.ntnu.tools.Parser.parseBooleanOrError;
-
-import no.ntnu.SensorActuatorNodeInfoParser;
-import no.ntnu.SensorReadingsParser;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
@@ -23,6 +21,8 @@ import no.ntnu.messages.responses.FailureResponse;
 import no.ntnu.messages.responses.Response;
 import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.tools.Logger;
+import no.ntnu.tools.parsing.SensorActuatorNodeInfoParser;
+import no.ntnu.tools.parsing.SensorReadingsParser;
 
 public class ControlPanelResponseHandler {
 
@@ -151,7 +151,7 @@ public class ControlPanelResponseHandler {
    * @param nodeId the node id response data.
    */
   private void handleGetNodeIdResponse(String nodeId) {
-    this.communicationChannel.spawnNode(nodeId, 5);
+    this.communicationChannel.askForNodeInfo(nodeId, 5);
   }
 
   /**

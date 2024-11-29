@@ -1,6 +1,5 @@
 package no.ntnu.messages.commands.greenhouse;
 
-import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;

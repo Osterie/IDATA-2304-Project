@@ -1,17 +1,11 @@
 package no.ntnu.controlpanel;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static no.ntnu.tools.Parser.parseIntegerOrError;
 
-
-import no.ntnu.SensorReadingsParser;
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.constants.Endpoints;
-import no.ntnu.greenhouse.sensors.NoSensorReading;
-import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.tools.Logger;
 import no.ntnu.messages.MessageBody;
@@ -20,8 +14,6 @@ import no.ntnu.messages.commands.greenhouse.ActuatorChangeCommand;
 import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
 import no.ntnu.messages.commands.greenhouse.GetSensorDataCommand;
 import no.ntnu.messages.Message;
-
-// TODO refactor this class. it does sooooo much
 
 /**
  * A communication channel for the control panel. This class is responsible for
@@ -80,12 +72,6 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    */
   @Override
   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-    // TODO do not just catch exception. No clue what exception is caught.
-    // Does creating the message cause an exception?
-    // Does sending the message cause an exception?
-    // By having both in try catch, seems like both can fail, but in reality probably only sending can fail.
-    // Have custom exceptions.
-    // don't use chatgpt or copilot preferably...
     try {
       String nodeIdStr = Integer.toString(nodeId);
       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, nodeIdStr);
@@ -152,12 +138,6 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    *                      [actuator_count_M] underscore [actuator_type_M]
    */
   public void askForNodes() {
-    // TODO do not just catch exception. No clue what exception is caught.
-    // Does creating the message cause an exception?
-    // Does sending the message cause an exception?
-    // By having both in try catch, seems like both can fail, but in reality probably only sending can fail.
-    // Have custom exceptions.
-    // don't use chatgpt or copilot preferably...
     try {
       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, Endpoints.BROADCAST.getValue());
       MessageBody body = new MessageBody(new GetNodeCommand());
@@ -175,12 +155,11 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    * @param nodeId The ID of the node to spawn
    * @param START_DELAY The delay in seconds before spawning the node
    */
-  public void spawnNode(String nodeId, int START_DELAY) {
+  public void askForNodeInfo(String nodeId, int START_DELAY) {
     try {
       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, nodeId);
       MessageBody body = new MessageBody(new GetNodeCommand());
       Message message = new Message(header, body);
-    //   TODO do differently
       this.sendMessage(message);
     } catch (Exception e) {
       Logger.error("Failed to spawn node: " + e.getMessage());

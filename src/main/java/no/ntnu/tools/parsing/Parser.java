@@ -1,4 +1,4 @@
-package no.ntnu.tools;
+package no.ntnu.tools.parsing;
 
 /**
  * A helper class for parsing strings.

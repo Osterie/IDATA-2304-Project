@@ -5,11 +5,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static no.ntnu.tools.Parser.parseIntegerOrError;
-
-import no.ntnu.SensorReadingsParser;
 import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.sensors.NoSensorReading;
 import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;

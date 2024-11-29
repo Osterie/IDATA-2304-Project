@@ -1,6 +1,6 @@
-package no.ntnu;
+package no.ntnu.tools.parsing;
 
-import static no.ntnu.tools.Parser.parseIntegerOrError;
+import static no.ntnu.tools.parsing.Parser.parseIntegerOrError;
 
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.Actuator;
