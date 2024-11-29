@@ -33,7 +33,7 @@ public abstract class SocketCommunicationChannel extends TcpConnection {
   // TODO: Decrypt message before handling using decryptStringMessage?
   protected abstract void handleMessage(Message message);
 
-  protected void establishConnectionWithServer(ClientIdentification clientIdentification) {
+  public void establishConnectionWithServer(ClientIdentification clientIdentification) {
     if (clientIdentification == null) {
       Logger.error("Client type or ID is null, cannot establish connection.");
       return;

@@ -8,7 +8,7 @@ public enum SensorType {
     IMAGE("image"),
     AUDIO("audio"),
 
-    NONE("NO_SENSORY_TYPE");
+    NONE("No sensor type");
 
     private final String type;
 
@@ -26,6 +26,7 @@ public enum SensorType {
     }
 
     public static SensorType fromString(String text) {
+        text = text.trim().toLowerCase();
         for (SensorType b : SensorType.values()) {
             if (b.type.equalsIgnoreCase(text)) {
                 return b;

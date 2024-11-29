@@ -2,6 +2,8 @@ package no.ntnu.controlpanel;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.sensors.SensorReading;
@@ -68,6 +70,25 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     communicationChannel = null;
     // Clear the communication channel listener
     communicationChannelListener = null;
+  }
+
+  /**
+   * Add a node based on the response.
+   * Creates a new node and schedules its addition to the control panel logic.
+   *
+   * @param response The response containing node information
+   */
+  public void addNode(SensorActuatorNodeInfo nodeInfo) {
+
+    ControlPanelLogic self = this;
+
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        self.onNodeAdded(nodeInfo);
+      }
+    }, 5 * 1000L);
   }
 
   @Override

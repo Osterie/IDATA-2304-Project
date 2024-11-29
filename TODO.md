@@ -24,7 +24,7 @@
 - [ ] DANIEL Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
 - [ ] SEBASTIAN Actuator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such.
 - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
-- [ ] ADRIAN Sensors for light, fertilizer (Nitrogen), PH, wind speed etc.
+- [x] ADRIAN Sensors for light, PH.
 - [ ] TOBIAS Implement encryption. Måtte flytte det til neste sprint.
 - [ ] TOBIAS Hashing the data and storing it in header(?) for checking integrity. 
 - [x] TOBIAS add hash in header of Message.

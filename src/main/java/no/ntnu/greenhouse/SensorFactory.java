@@ -31,6 +31,7 @@ public class SensorFactory {
   private static final double MIN_PH = 4;
   private static final double MAX_PH = 10;
   private static final double NORMAL_GREENHOUSE_PH = 7;
+  private static final String PH_UNIT = "";
     
   private static final SensorType SENSOR_TYPE_IMAGE = SensorType.IMAGE;
   private static final String PATH_TO_IMAGES = "images/";
@@ -81,7 +82,7 @@ public class SensorFactory {
    */
   public static Sensor createPhSensor() {
     return new NumericSensor(SENSOR_TYPE_PH, MIN_PH, MAX_PH,
-        randomize(NORMAL_GREENHOUSE_PH, 0.5), "");
+        randomize(NORMAL_GREENHOUSE_PH, 0.5), PH_UNIT);
   }
 
   /**
