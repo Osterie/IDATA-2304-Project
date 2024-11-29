@@ -108,7 +108,7 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
 
     // Apply style class for CSS styling
     root.getStyleClass().add("root");
-    root.setMaxHeight(WINDOW_HEIGHT - 50); // Constrain VBox height to avoid excessive growth
+    root.setMaxHeight(WINDOW_HEIGHT - 50);
 
     // Wrap the content in a ScrollPane
     ScrollPane scrollPane = new ScrollPane();
