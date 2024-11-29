@@ -28,7 +28,7 @@
 - [x] ADRIAN builder pattern for devices instead of DeviceFactory.
 - [x] ADRIAN ControlPanelCommunicationChannel, instead of checking if .equals("Get_node") should check if classes are equal or something, idk. some better solution!
 - [x] ADRIAN Separate factory for actuators.
-- [ ] TOBIAS for generateHeader method usage, what if header is null? handle this.
+<!-- - [ ] TOBIAS for generateHeader method usage, what if header is null? handle this. -->
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
 - [ ] KNUT clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
 - [ ] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
@@ -166,7 +166,7 @@ a reply with an error code?
 - [x] TOBIAS 13.  (Tidligere daniel, men var lett å skrive om begge). The security mechanisms in your protocol, if you have any
 - [x] TOBIAS 14.  Må skrive meir om security fordi eg he endra på klassene.
 
-# General - [ ]
+# General
 
 - [x] Adrian use Clients enum constants instead of strings.
     - [x] Intermediary server
