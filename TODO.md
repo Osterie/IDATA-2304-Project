@@ -5,7 +5,7 @@
 
 # important
 
-- [ ] TODO change nodeId to only be int, or that it can be string. (go for only int.)
+- [ ] TODO change nodeId to only be int, or that it can be string. (go for can be string.)
 
 # Probably wont do
 
