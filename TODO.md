@@ -6,6 +6,8 @@
 
 # CURRENT
 
+- [ ] TODO create a starter for only IntermediaryServer.
+
 - [ ] ADRIAN builder pattern for devices instead of DeviceFactory.
 - [x] ADRIAN Separate factory for actuators.
 - [ ] TOBIAS for generateHeader method usage, what if header is null? handle this.

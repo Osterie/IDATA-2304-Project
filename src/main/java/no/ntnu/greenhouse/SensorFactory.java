@@ -1,0 +1,79 @@
+package no.ntnu.greenhouse;
+
+import no.ntnu.greenhouse.sensors.ImageSensor;
+import no.ntnu.greenhouse.sensors.NumericSensor;
+import no.ntnu.greenhouse.sensors.Sensor;
+import no.ntnu.greenhouse.sensors.AudioSensor;
+
+/**
+ * A factory for producing sensors and actuators of specific types.
+ */
+public class SensorFactory {
+  private static final double NORMAL_GREENHOUSE_TEMPERATURE = 27;
+  private static final double MIN_TEMPERATURE = 15;
+  private static final double MAX_TEMPERATURE = 40;
+  private static final String TEMPERATURE_UNIT = "°C";
+  private static final double MIN_HUMIDITY = 50;
+  private static final double MAX_HUMIDITY = 100;
+  private static final double NORMAL_GREENHOUSE_HUMIDITY = 80;
+  private static final String HUMIDITY_UNIT = "%";
+  private static final String SENSOR_TYPE_TEMPERATURE = "temperature";
+  private static final String SENSOR_TYPE_HUMIDITY = "humidity";
+  private static final String SENSOR_TYPE_IMAGE = "image";
+  private static final String PATH_TO_IMAGES = "images/";
+  private static final String PATH_TO_AUDIO = "audiofiles/";
+  private static final String SENSOR_TYPE_AUDIO = "audio";
+
+  /**
+   * Constructing the factory is not allowed.
+   */
+  private SensorFactory() {
+  }
+
+  /**
+   * Create a typical temperature sensor.
+   *
+   * @return A typical temperature sensor, which can be used as a template
+   */
+  public static Sensor createTemperatureSensor() {
+    return new NumericSensor(SENSOR_TYPE_TEMPERATURE, MIN_TEMPERATURE, MAX_TEMPERATURE,
+        randomize(NORMAL_GREENHOUSE_TEMPERATURE, 1.0), TEMPERATURE_UNIT);
+  }
+
+  /**
+   * Create a typical humidity sensor.
+   *
+   * @return A typical humidity sensor which can be used as a template
+   */
+  public static Sensor createHumiditySensor() {
+    return new NumericSensor(SENSOR_TYPE_HUMIDITY, MIN_HUMIDITY, MAX_HUMIDITY,
+        randomize(NORMAL_GREENHOUSE_HUMIDITY, 5.0), HUMIDITY_UNIT);
+  }
+
+  /**
+   * Create a image sensor.
+   *
+   * @return The image sensor
+   */
+  public static Sensor createImageSensor() {
+    return new ImageSensor(SENSOR_TYPE_IMAGE, PATH_TO_IMAGES);
+  }
+
+  public static Sensor createAudioSensor() {
+    return new AudioSensor(SENSOR_TYPE_AUDIO, PATH_TO_AUDIO);
+  }
+
+
+  /**
+   * Generate a random value within the range [x-d; x+d].
+   *
+   * @param x The central value
+   * @param d The allowed difference range
+   * @return a randomized value within the desired range
+   */
+  private static double randomize(double x, double d) {
+    final double zeroToDoubleD = Math.random() * 2 * d;
+    final double plusMinusD = zeroToDoubleD - d;
+    return x + plusMinusD;
+  }
+}

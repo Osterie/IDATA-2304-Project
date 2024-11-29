@@ -1,69 +1,175 @@
 package no.ntnu.greenhouse;
 
-import no.ntnu.greenhouse.sensors.NumericSensor;
 
+/**
+ * The DeviceBuilder class is used to construct a SensorActuatorNode with various sensors and actuators.
+ * It provides methods to add different types of sensors and actuators to the node.
+ * 
+ * Usage example:
+ * <pre>
+ * DeviceBuilder builder = new DeviceBuilder();
+ * builder.addTemperatureSensor(2)
+ *        .addHumiditySensor(1)
+ *        .addFanActuator(1);
+ * SensorActuatorNode node = builder.build();
+ * </pre>
+ * 
+ * Methods:
+ * - {@link #addTemperatureSensor(int)}: Adds temperature sensors to the node.
+ * - {@link #addHumiditySensor(int)}: Adds humidity sensors to the node.
+ * - {@link #addImageSensor(int)}: Adds image sensors to the node.
+ * - {@link #addAudioSensor(int)}: Adds audio sensors to the node.
+ * - {@link #addWindowActuator(int)}: Adds window actuators to the node.
+ * - {@link #addFanActuator(int)}: Adds fan actuators to the node.
+ * - {@link #addHeaterActuator(int)}: Adds heater actuators to the node.
+ * - {@link #build()}: Builds and returns the configured SensorActuatorNode.
+ * 
+ * Note:
+ * - The builder ensures that a unique node ID is generated for each instance.
+ * - The number of sensors or actuators to add must be greater than zero.
+ */
+/**
+ * Builder class for creating and configuring SensorActuatorNode objects.
+ */
 public class DeviceBuilder {
-    private static final double NORMAL_GREENHOUSE_TEMPERATURE = 27;
-    private static final double MIN_TEMPERATURE = 15;
-    private static final double MAX_TEMPERATURE = 40;
-    private static final String TEMPERATURE_UNIT = "°C";
-    private static final double MIN_HUMIDITY = 50;
-    private static final double MAX_HUMIDITY = 100;
-    private static final double NORMAL_GREENHOUSE_HUMIDITY = 80;
-    private static final String HUMIDITY_UNIT = "%";
-    private static final String SENSOR_TYPE_TEMPERATURE = "temperature";
-    private static final String SENSOR_TYPE_HUMIDITY = "humidity";
-    private static final String SENSOR_TYPE_IMAGE = "image";
-    private static final String ACTUATOR_TYPE_FAN = "fan";
-    private static final String ACTUATOR_TYPE_HEATER = "heater";
-    private static final String ACTUATOR_TYPE_WINDOW = "window";
-    private static final String PATH_TO_IMAGES = "images/";
-    private static final String PATH_TO_AUDIO = "audiofiles/";
-    private static final String SENSOR_TYPE_AUDIO = "audio";
-  
-  
+
+    private final SensorActuatorNode node;
+    
     private static int nextNodeId = 1;
 
-    private SensorActuatorNode node;
-
-      /**
-     * Constructing the bulder is not allowed.
+  
+    /**
+     * Constructs a DeviceBuilder instance and initializes a new SensorActuatorNode with a unique ID.
      */
     public DeviceBuilder() {
         this.node = new SensorActuatorNode(generateUniqueNodeId());
-
     }
 
-    public DeviceBuilder addTemperatureSensor(int count){
-        if (count > 0) {
-            node.addSensors(DeviceFactory.createTemperatureSensor(), count);
-        }
-        return this;
-    }
-
+    /**
+     * Builds and returns the configured SensorActuatorNode.
+     *
+     * @return The configured SensorActuatorNode
+     */
     public SensorActuatorNode build(){
         return node;
     }
 
-
     /**
-   * Generate a random value within the range [x-d; x+d].
-   *
-   * @param x The central value
-   * @param d The allowed difference range
-   * @return a randomized value within the desired range
-   */
-    private static double randomize(double x, double d) {
-        final double zeroToDoubleD = Math.random() * 2 * d;
-        final double plusMinusD = zeroToDoubleD - d;
-        return x + plusMinusD;
+     * Adds a specified number of temperature sensors to the node.
+     * 
+     * @param count The number of temperature sensors to add
+     * @return The builder object
+     */
+    public DeviceBuilder addTemperatureSensor(int count){
+        if (count > 0) {
+            this.node.addSensors(SensorFactory.createTemperatureSensor(), count);
+        }
+        return this;
     }
 
+    /**
+     * Adds a specified number of humidity sensors to the node.
+     * 
+     * @param count The number of humidity sensors to add
+     * @return The builder object
+     */
+    public DeviceBuilder addHumiditySensor(int count){
+        if (count > 0) {
+            this.node.addSensors(SensorFactory.createHumiditySensor(), count);
+        }
+        return this;
+    }
 
     /**
-     * Generate an integer that can be used as a unique ID of sensor/actuator nodes.
+     * Adds a specified number of image sensors to the node.
+     * 
+     * @param count The number of image sensors to add
+     * @return The builder object
+     */
+    public DeviceBuilder addImageSensor(int count){
+        if (count > 0) {
+            this. node.addSensors(SensorFactory.createImageSensor(), count);
+        }
+        return this;
+    }
+
+    /**
+     * Adds a specified number of audio sensors to the node.
+     * 
+     * @param count The number of audio sensors to add
+     * @return The builder object
+     */
+    public DeviceBuilder addAudioSensor(int count){
+        if (count > 0) {
+            this.node.addSensors(SensorFactory.createAudioSensor(), count);
+        }
+        return this;
+    }
+
+    /**
+     * Adds a specified number of window actuators to the node.
+     * 
+     * @param count The number of window actuators to add
+     * @return The builder object
+     */
+    public DeviceBuilder addWindowActuator(int count){
+        if (count > 0) {
+            this.addActuators(node, ActuatorFactory.createWindow(node.getId()), count);
+        }
+        return this;
+    }
+
+    /**
+     * Adds a specified number of fan actuators to the node.
+     * 
+     * @param count The number of fan actuators to add
+     * @return The builder object
+     */
+    public DeviceBuilder addFanActuator(int count){
+        if (count > 0) {
+            this.addActuators(node, ActuatorFactory.createFan(node.getId()), count);
+        }
+        return this;
+    }
+
+    /**
+     * Adds a specified number of heater actuators to the node.
+     * 
+     * @param count The number of heater actuators to add
+     * @return The builder object
+     */
+    public DeviceBuilder addHeaterActuator(int count){
+        if (count > 0) {
+            this.addActuators(node, ActuatorFactory.createHeater(node.getId()), count);
+        }
+        return this;
+    }
+
+    /**
+     * Adds a specified number of actuators to a node using a template actuator.
      *
-     * @return a Unique ID for sensor/actuator nodes
+     * @param node     The node to which the actuators will be added
+     * @param template The template actuator to use for creating new actuators
+     * @param n        The number of actuators to add
+     */
+    private void addActuators(SensorActuatorNode node, Actuator template, int n) {
+        if (template == null) {
+            throw new IllegalArgumentException("Actuator template is missing");
+        }
+        if (n <= 0) {
+            throw new IllegalArgumentException("Can't add a negative number of actuators");
+        }
+
+        for (int i = 0; i < n; ++i) {
+            Actuator actuator = template.createClone();
+            node.addActuator(actuator);
+        }
+    }
+
+    /**
+     * Generates a unique integer ID for sensor/actuator nodes.
+     *
+     * @return A unique ID for sensor/actuator nodes
      */
     private static int generateUniqueNodeId() {
         return nextNodeId++;
