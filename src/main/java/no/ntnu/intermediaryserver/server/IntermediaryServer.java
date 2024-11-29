@@ -24,7 +24,8 @@ public class IntermediaryServer implements Runnable {
     private ServerSocket listeningSocket;
 
     /**
-     * Starts the server and listens for incoming client connections on the specified port.
+     * Starts the server and listens for incoming client connections on the
+     * specified port.
      * Creates a new thread to handle each client connection.
      */
     public void startServer() {
@@ -43,16 +44,11 @@ public class IntermediaryServer implements Runnable {
                     if (clientHandler != null) {
                         new Thread(clientHandler).start();
                     }
-
-                    // ClientHandler clientHandler = acceptNextClientConnection();
-                    // if (clientHandler != null) {
-                    //     clientHandler.start();
-                    // }
                 } catch (Exception e) {
                     Logger.error("Error in server loop: " + e.getMessage());
                 }
-                delay(10);
-            }            
+                this.delay(10);
+            }
         }
     }
 
@@ -62,6 +58,7 @@ public class IntermediaryServer implements Runnable {
             Thread.sleep(delay);
         } catch (InterruptedException e) {
             Logger.error("Error sleeping server thread: " + e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -85,9 +82,9 @@ public class IntermediaryServer implements Runnable {
     /**
      * Adds a client to the appropriate collection, based on client type.
      *
-     * @param clientType the type of client (CONTROL_PANEL or GREENHOUSE)
-     * @param clientId   the unique identifier for the client
-     * @param clientHandler     the client handler for the client
+     * @param clientType    the type of client (CONTROL_PANEL or GREENHOUSE)
+     * @param clientId      the unique identifier for the client
+     * @param clientHandler the client handler for the client
      * @throws UnknownClientException if the client type is not recognized
      */
     public synchronized void addClientHandler(Endpoints clientType, String clientId, ClientHandler clientHandler) {
@@ -98,17 +95,16 @@ public class IntermediaryServer implements Runnable {
     /**
      * Removes a client from the collection based on client ID and type.
      *
-     * @param clientId    the unique identifier for the client
+     * @param clientId the unique identifier for the client
      */
     public synchronized void removeClientHandler(Endpoints clientType, String clientId) {
         if (this.clientHandlers.remove(clientType + clientId) == null) {
             Logger.error("Could not remove client, does not exist: " + clientType + clientId);
-        }
-        else{
+        } else {
             Logger.info("Disconnected " + clientType + " with ID: " + clientId);
         }
     }
-    
+
     /**
      * Retrieves a specific client socket based on client type and ID.
      *
@@ -120,31 +116,32 @@ public class IntermediaryServer implements Runnable {
         return this.clientHandlers.get(clientType + clientId);
     }
 
-    public List<ClientHandler> getClientHandlers(Endpoints clientType){
+    public List<ClientHandler> getClientHandlers(Endpoints clientType) {
         ArrayList<ClientHandler> sockets = new ArrayList<>();
-        
-        for (String key : this.clientHandlers.keySet()){
-            if (key.startsWith(clientType.getValue())){
-                sockets.add(this.clientHandlers.get(key));
+
+        this.clientHandlers.forEach((key, value) -> {
+            if (key.startsWith(clientType.getValue())) {
+                sockets.add(value);
             }
-        }
+        });
 
         return sockets;
-    }   
+    }
 
     /**
      * Accepts the next client connection.
      *
-     * @return the socket representing the client connection, or null if an error occurs
+     * @return the socket representing the client connection, or null if an error
+     *         occurs
      */
     private ClientHandler acceptNextClientConnection() {
         ClientHandler clientHandler = null;
         try {
-          Socket clientSocket = listeningSocket.accept();
-          Logger.info("New client connected from " + clientSocket.getRemoteSocketAddress());
-          clientHandler = new ClientHandler(clientSocket, this);
+            Socket clientSocket = listeningSocket.accept();
+            Logger.info("New client connected from " + clientSocket.getRemoteSocketAddress());
+            clientHandler = new ClientHandler(clientSocket, this);
         } catch (IOException e) {
-          Logger.error("Could not accept client connection: " + e.getMessage());
+            Logger.error("Could not accept client connection: " + e.getMessage());
         }
         return clientHandler;
     }
@@ -157,10 +154,10 @@ public class IntermediaryServer implements Runnable {
     private ServerSocket openListeningSocket() {
         return ServerSocketCreator.getAvailableServerSocket();
     }
-    
 
     /**
-     * The entry point for the server thread, calls startServer to initialize the server.
+     * The entry point for the server thread, calls startServer to initialize the
+     * server.
      */
     @Override
     public void run() {
