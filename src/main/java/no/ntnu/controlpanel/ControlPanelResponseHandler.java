@@ -1,23 +1,15 @@
 package no.ntnu.controlpanel;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static no.ntnu.tools.Parser.parseDoubleOrError;
 import static no.ntnu.tools.Parser.parseIntegerOrError;
 
+import no.ntnu.SensorActuatorNodeInfoParser;
+import no.ntnu.SensorReadingsParser;
 import no.ntnu.constants.Endpoints;
-import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.SensorType;
-import no.ntnu.greenhouse.sensors.AudioSensorReading;
-import no.ntnu.greenhouse.sensors.ImageSensorReading;
 import no.ntnu.greenhouse.sensors.NoSensorReading;
-import no.ntnu.greenhouse.sensors.NumericSensorReading;
 import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.messages.Delimiters;
@@ -25,17 +17,13 @@ import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
-import no.ntnu.messages.commands.greenhouse.ActuatorChangeCommand;
 import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
-import no.ntnu.messages.commands.greenhouse.GetSensorDataCommand;
 import no.ntnu.messages.commands.greenhouse.GreenhouseCommand;
 import no.ntnu.messages.responses.FailureReason;
 import no.ntnu.messages.responses.FailureResponse;
 import no.ntnu.messages.responses.Response;
 import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.tools.Logger;
-import no.ntnu.tools.stringification.Base64AudioEncoder;
-import no.ntnu.tools.stringification.Base64ImageEncoder;
 
 public class ControlPanelResponseHandler {
 
@@ -72,7 +60,7 @@ public class ControlPanelResponseHandler {
     // TODO CHANGE!
 
     Transmission transmission = body.getTransmission();
-    if (!(transmission instanceof SuccessResponse || transmission instanceof FailureResponse)) {
+    if (!(transmission instanceof Response)) {
       Logger.error("Invalid command type: " + transmission.getClass().getName());
       return;
     }
@@ -112,7 +100,7 @@ public class ControlPanelResponseHandler {
         break;
       case "GET_NODE":
 
-      SensorActuatorNodeInfo nodeInfo = this.createSensorNodeInfoFrom(responseData);
+      SensorActuatorNodeInfo nodeInfo = SensorActuatorNodeInfoParser.createSensorNodeInfoFrom(responseData, this.logic);
         this.logic.addNode(nodeInfo);
       
         break;
@@ -182,105 +170,6 @@ public class ControlPanelResponseHandler {
     }
   }
 
-//   /**
-//    * Send an actuator change command to the server.
-//    * Constructs and sends a message to change the state of an actuator.
-//    *
-//    * @param nodeId     The ID of the node
-//    * @param actuatorId The ID of the actuator
-//    * @param isOn       The desired state of the actuator
-//    */
-//   @Override
-//   public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
-//     // TODO do not just catch exception. No clue what exception is caught.
-//     // Does creating the message cause an exception?
-//     // Does sending the message cause an exception?
-//     // By having both in try catch, seems like both can fail, but in reality probably only sending can fail.
-//     // Have custom exceptions.
-//     // don't use chatgpt or copilot preferably...
-//     try {
-//       String nodeIdStr = Integer.toString(nodeId);
-//       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, nodeIdStr);
-//       MessageBody body = new MessageBody(new ActuatorChangeCommand(actuatorId, isOn));
-//       Message message = new Message(header, body);
-//       this.sendMessage(message);
-//     } catch (Exception e) {
-//       Logger.error("Failed to send actuator change: " + e.getMessage());
-//     }
-//   }
-
-//   /**
-//    * Set the target sensor node ID.
-//    *
-//    * @param targetId The target sensor node ID
-//    */
-//   public void setSensorNodeTarget(String targetId){
-//     this.targetId = targetId;
-//   }
-
-//   /**
-//    * Get the target sensor node ID.
-//    *
-//    * @return The target sensor node ID
-//    */
-//   public String getSensorNoderTarget(){
-//     return this.targetId;
-//   }
-
-//   /**
-//    * Request sensor data periodically.
-//    * Schedules periodic requests for sensor data from the server.
-//    *
-//    * @param period The period in seconds between requests
-//    */
-//   public void askForSensorDataPeriodically(int period) {
-//     ControlPanelCommunicationChannel self = this;
-
-//     // TODO: Hashing here?
-//     Timer timer = new Timer();
-//     timer.schedule(new TimerTask() {
-//       @Override
-//       public void run() {
-//         MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, self.getSensorNoderTarget());
-//         MessageBody body = new MessageBody(new GetSensorDataCommand());
-//         Message message = new Message(header, body);
-//         if (self.isOn && !self.isReconnecting()) {
-//           self.sendMessage(message);
-//         }
-//         else{
-//           Logger.info("Unable to send message...");
-//         }
-//       }
-//     }, 5000, period * 1000L);
-//   }
-
-  /**
-   * Spawn a new sensor/actuator node information after a given delay.
-   *
-   * @param specification A (temporary) manual configuration of the node in the
-   *                      following format
-   *                      [nodeId] semicolon
-   *                      [actuator_count_1] underscore [actuator_type_1] space
-   *                      ... space
-   *                      [actuator_count_M] underscore [actuator_type_M]
-   */
-//   public void askForNodes() {
-//     // TODO do not just catch exception. No clue what exception is caught.
-//     // Does creating the message cause an exception?
-//     // Does sending the message cause an exception?
-//     // By having both in try catch, seems like both can fail, but in reality probably only sending can fail.
-//     // Have custom exceptions.
-//     // don't use chatgpt or copilot preferably...
-//     try {
-//       MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, Endpoints.BROADCAST.getValue());
-//       MessageBody body = new MessageBody(new GetNodeCommand());
-//       Message message = new Message(header, body);
-//       this.sendMessage(message);
-//     } catch (Exception e) {
-//       Logger.error("Failed to ask for nodes: " + e.getMessage());
-//     }
-//   }
-
   /**
    * Spawn a new sensor/actuator node information after a given delay.
    * Sends a command to the server to spawn a new node after a specified delay.
@@ -298,71 +187,6 @@ public class ControlPanelResponseHandler {
     } catch (Exception e) {
       Logger.error("Failed to spawn node: " + e.getMessage());
     }
-  }
-
-  /**
-   * Create a SensorActuatorNodeInfo object from a specification string.
-   * Parses the specification string to create a SensorActuatorNodeInfo object.
-   *
-   * @param specification The specification string
-   * @return The created SensorActuatorNodeInfo object
-   */
-  // TODO someone else should do this.
-  private SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification) {
-    Logger.info("specification: " + specification);
-    if (specification == null || specification.isEmpty()) {
-      throw new IllegalArgumentException("Node specification can't be empty");
-    }
-    String[] parts = specification.split(";", 2);
-    int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
-    SensorActuatorNodeInfo info = new SensorActuatorNodeInfo(nodeId);
-
-    if (parts.length == 2) {
-      this.parseActuators(parts[1], info);
-    }
-    return info;
-  }
-
-  /**
-   * Parse actuators from a specification string and add them to the node info.
-   * Extracts actuator information from the specification string and adds it to the node info.
-   *
-   * @param actuatorSpecification The actuator specification string
-   * @param info The SensorActuatorNodeInfo object to add actuators to
-   */
-  private void parseActuators(String actuatorSpecification, SensorActuatorNodeInfo info) {
-    if (actuatorSpecification == null || actuatorSpecification.isEmpty()) {
-      throw new IllegalArgumentException("Actuator specification can't be empty");
-    }
-    String[] parts = actuatorSpecification.split(";");
-    for (String part : parts) {
-      this.parseActuatorInfo(part, info);
-    }
-  }
-
-  /**
-   * Parse actuator information from a string and add it to the node info.
-   * Extracts individual actuator details from the string and adds them to the node info.
-   *
-   * @param s The actuator information string
-   * @param info The SensorActuatorNodeInfo object to add the actuator to
-   */
-  private void parseActuatorInfo(String s, SensorActuatorNodeInfo info) {
-    if (s == null || s.isEmpty()) {
-      throw new IllegalArgumentException("Actuator info can't be empty");
-    }
-    String[] actuatorInfo = s.split("_");
-    if (actuatorInfo.length != 2) {
-      throw new IllegalArgumentException("Invalid actuator info format: " + s);
-    }
-
-    String actuatorType = actuatorInfo[0];
-    int  actuatorId = parseIntegerOrError(actuatorInfo[1],
-        "Invalid actuator count: " + actuatorInfo[0]);
-
-    Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
-    actuator.setListener(logic);
-    info.addActuator(actuator);
   }
 
   /**
@@ -388,7 +212,7 @@ public class ControlPanelResponseHandler {
       throw new IllegalArgumentException("Incorrect specification format: " + specification);
     }
     int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
-    List<SensorReading> sensors = parseSensors(parts[1]);
+    List<SensorReading> sensors = SensorReadingsParser.parseSensors(parts[1]);
     sensors.removeIf(sensor -> sensor instanceof NoSensorReading);
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
@@ -416,104 +240,6 @@ public class ControlPanelResponseHandler {
     }, delay * 1000L);
   }
 
-  /**
-   * Parse sensor readings from a string.
-   * Extracts sensor readings from the provided string and returns them as a list.
-   *
-   * @param sensorInfo The sensor information string
-   * @return A list of parsed sensor readings
-   */
-  private List<SensorReading> parseSensors(String sensorInfo) {
-    if (sensorInfo == null || sensorInfo.isEmpty()) {
-      throw new IllegalArgumentException("Sensor info can't be empty");
-    }
-    List<SensorReading> readings = new LinkedList<>();
-    String[] readingInfo = sensorInfo.split(",");
-    for (String reading : readingInfo) {
-      try{
-        readings.add(parseReading(reading));
-      }
-      catch (IllegalArgumentException e){
-        Logger.error("Failed to parse sensor reading: " + e.getMessage());
-      }
-    }
-    return readings;
-  }
-
-  
-  /**
-   * Parses a sensor reading from a string and returns a SensorReading object.
-   *
-   * @param reading the sensor reading string in the format "type=value unit" or "image=base64String fileExtension"
-   * @return a SensorReading object representing the parsed sensor reading
-   * @throws IllegalArgumentException if the reading is null, empty, or not in the expected format
-   */
-  private SensorReading parseReading(String reading) {
-    Logger.info("Reading: " + reading);
-    if (reading == null || reading.isEmpty()) {
-      throw new IllegalArgumentException("Sensor reading can't be empty");
-    }
-    String[] formatParts = reading.split(":");
-    if (formatParts.length != 2) {
-      throw new IllegalArgumentException("Invalid sensor format/data: " + reading);
-    }
-    String[] assignmentParts = formatParts[1].split("=");
-    //TODO ADDED ANOTHER ACCEPTED VALUE BECAUSE THE WAY BASE64 CLASS MAKES AUDIO FILE TO STRING. SHOUL PROBABLY BE CHANGED
-    if (assignmentParts.length != 2 && assignmentParts.length != 4 ) {
-      throw new IllegalArgumentException("Invalid sensor reading specified: " + reading);
-    }
-    String[] valueParts = assignmentParts[1].split(" ");
-    //TODO ADDED ANOTHER ACCEPTED VALUE BECAUSE THE WAY BASE64 CLASS MAKES AUDIO FILE TO STRING. SHOUL PROBABLY BE CHANGED
-    if (valueParts.length != 3 && valueParts.length != 2) {
-      throw new IllegalArgumentException("Invalid sensor value/unit: " + reading);
-    }
-    if (formatParts[0].equals("IMG")) {
-      if ((SensorType.NONE.equals(valueParts[2]))) {
-        return new NoSensorReading();
-      }
-      String type = assignmentParts[0];
-      String base64String = valueParts[1];
-      String fileExtension = valueParts[2];
-
-      BufferedImage image;
-      try {
-        image = Base64ImageEncoder.stringToImage(base64String);
-      } catch (IOException e) {
-        throw new IllegalArgumentException("Failed to decode image: " + e.getMessage(), e);
-      }
-      ImageSensorReading imageReading = new ImageSensorReading(SensorType.fromString(type), image);
-      imageReading.setFileExtension(fileExtension);
-      
-      return imageReading;
-    }
-    else if (formatParts[0].equals("NUM")) {
-      String type = assignmentParts[0];
-      double value = parseDoubleOrError(valueParts[1], "Invalid sensor value: " + valueParts[1]);
-      String unit = "";
-      if (valueParts.length == 3){
-          unit = valueParts[2];
-      }
-      return new NumericSensorReading(SensorType.fromString(type), value, unit);
-    }
-    else if (formatParts[0].equals("AUD")) {
-      if ((SensorType.NONE.equals(valueParts[2]))) {
-        return new NoSensorReading();
-      }
-      String type = assignmentParts[0];
-      String base64String = valueParts[1];
-
-      File audioFile;
-      try {
-        audioFile = Base64AudioEncoder.stringToAudio(base64String);
-      } catch (IOException e) {
-        throw new IllegalArgumentException("Failed to decode audio: " + e.getMessage(), e);
-      }
-      return new AudioSensorReading(SensorType.fromString(type), audioFile);
-    }
-    else {
-      throw new IllegalArgumentException("Unknown sensor format: " + formatParts[0]);
-    }
-  }
 
   /**
    * Advertise that an actuator has changed its state.
