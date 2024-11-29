@@ -119,7 +119,7 @@ public class ControlPanelApplication extends Application
 
     logic.addListener(this);
     logic.setCommunicationChannelListener(this);
-    if (!channel.isOpen()) {
+    if (!channel.isConnected()) {
       logic.onCommunicationChannelClosed();
     }
   }

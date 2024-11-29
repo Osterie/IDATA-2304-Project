@@ -7,6 +7,8 @@ package no.ntnu.tools;
  */
 public class Logger {
 
+  private static final int MAX_MESSAGE_LENGTH = 1000;
+
   /**
    * Not allowed to create an instance of this class.
    */
@@ -19,6 +21,7 @@ public class Logger {
    * @param message The message to log. A newline is appended automatically.
    */
   public static void info(String message) {
+    message = limitMessageLength(message);
     System.out.println(message);
   }
 
@@ -28,10 +31,12 @@ public class Logger {
    * @param message The message to log
    */
   public static void infoNoNewline(String message) {
+    message = limitMessageLength(message);
     System.out.print(message);
   }
 
   public static void success(String message) {
+    message = limitMessageLength(message);
     System.out.println(AnsiColors.GREEN + message + AnsiColors.RESET);
   }
 
@@ -41,6 +46,7 @@ public class Logger {
    * @param message The warning message to log
    */
   public static void warn(String message) {
+    message = limitMessageLength(message);
     System.out.println(AnsiColors.YELLOW + "WARNING: " + message + AnsiColors.RESET);
   }
 
@@ -50,6 +56,15 @@ public class Logger {
    * @param message The error message to log
    */
   public static void error(String message) {
+    message = limitMessageLength(message);
     System.err.println(AnsiColors.RED + "Error: " + message + AnsiColors.RESET);
+  }
+
+
+  private static String limitMessageLength(String message) {
+    if (message.length() > MAX_MESSAGE_LENGTH) {
+      message = message.substring(0, 1000) + "...";
+    }
+    return message;
   }
 }

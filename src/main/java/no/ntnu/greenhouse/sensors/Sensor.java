@@ -1,11 +1,16 @@
 package no.ntnu.greenhouse.sensors;
 
+import no.ntnu.greenhouse.SensorType;
+
 /**
  * A sensor that can read the environment in a way.
  * The sensor has a unique ID and a reading.
  */
-public abstract class Sensor {
-    protected SensorReading reading;
+public abstract class Sensor<T extends SensorReading> {
+
+    protected T reading;
+
+    // protected SensorReading reading;
 
     private final int id;
 
@@ -36,7 +41,7 @@ public abstract class Sensor {
      * 
      * @return The type of the sensor.
      */
-    public String getType() {
+    public SensorType getType() {
         return reading.getType();
     }
 
@@ -52,7 +57,7 @@ public abstract class Sensor {
      * 
      * @return The sensor reading of the sensor.
      */
-    public SensorReading getReading() {
+    public T getReading() {
         return reading;
     }
     

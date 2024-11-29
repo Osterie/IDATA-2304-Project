@@ -1,22 +1,16 @@
 package no.ntnu.gui.common;
 
-import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import no.ntnu.greenhouse.sensors.AudioSensorReading;
 import no.ntnu.greenhouse.sensors.ImageSensorReading;
 import no.ntnu.greenhouse.sensors.NumericSensorReading;
 import no.ntnu.greenhouse.sensors.Sensor;
@@ -30,7 +24,6 @@ import no.ntnu.tools.Logger;
 public class SensorPane extends TitledPane {
   private final List<SimpleStringProperty> sensorProps = new ArrayList<>();
   private final VBox contentBox = new VBox();
-  private final List<Node> thumbnailList = new LinkedList<>(); // TODO why?
 
   /**
    * Create a sensor pane.
@@ -64,7 +57,15 @@ public class SensorPane extends TitledPane {
    * @param sensors The sensor data to be displayed on the pane.
    */
   public SensorPane(List<Sensor> sensors) {
-    initialize(sensors.stream().map(Sensor::getReading).toList());
+    try {
+      initialize(sensors.stream().map(Sensor::getReading).toList());
+    } catch (IllegalStateException e) {
+      if (e.getMessage().equals("The sensor is off.")) {
+        System.out.println("Cannot add sensor to sensor pane becuase sensor is off");
+      } else {
+        throw e;
+      }
+    }
   }
 
   /**
@@ -86,7 +87,15 @@ public class SensorPane extends TitledPane {
    * @param sensors The sensor data that has been updated
    */
   public void update(List<Sensor> sensors) {
-    update(sensors.stream().map(Sensor::getReading).toList());
+    try {
+      update(sensors.stream().map(Sensor::getReading).toList());
+    } catch (IllegalStateException e) {
+      if (e.getMessage().equals("The sensor is off.")) {
+        System.out.println("Cannot update sensor becuase sensor is off");
+      } else {
+        throw e;
+      }
+    }
   }
 
   // TODO refactor this logic. Create a method above this method and such. This method should create a label and then another for images.
@@ -97,7 +106,12 @@ public class SensorPane extends TitledPane {
     if (sensor instanceof NumericSensorReading) {
       nodeToReturn = createNumericSensorLabel(sensor);
     } else if (sensor instanceof ImageSensorReading) {
-      nodeToReturn = createImageSensorNode(sensor);
+      ImageSensorPane imageSensorNodePane = new ImageSensorPane((ImageSensorReading) sensor);
+      nodeToReturn = imageSensorNodePane.createContent();
+      this.addThumbnailToUI(imageSensorNodePane.getThumbnail());
+    } else if (sensor instanceof AudioSensorReading) {
+      AudioSensorPane audioSensorNodePane = new AudioSensorPane((AudioSensorReading) sensor);
+      nodeToReturn = audioSensorNodePane.createContent();
     } else {
       return new Label("Unknown sensor type: " + sensor.getClass());
       // throw new IllegalArgumentException("Unknown sensor type: " + sensor.getClass());
@@ -105,84 +119,29 @@ public class SensorPane extends TitledPane {
     return nodeToReturn;
   }
 
-  private Node createNumericSensorLabel(SensorReading sensor){
-    SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
-      sensorProps.add(props);
-      Label label = new Label();
-      label.textProperty().bind(props);
-    return label;
-  }
 
-  // TODO wtf
-  // TODO refactor
-  private Node createImageSensorNode(SensorReading sensor) {
-    Logger.info("Creating image view for thumbnail");
-    ImageSensorReading imageSensor = (ImageSensorReading) sensor;
-
-    // Generate image
-    imageSensor.generateRandomImage("images/");
-    BufferedImage bufferedImage = imageSensor.getImage();
-    if (bufferedImage == null) {
-        Logger.error("Buffered image is null");
-        return new Label("No image found");
-    }
-
-    // Convert to JavaFX Image
-    Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-
-    // Create a small thumbnail
-    ImageView thumbnail = new ImageView(image);
-    thumbnail.setFitWidth(100); // Set desired thumbnail width
-    thumbnail.setPreserveRatio(true); // Maintain aspect ratio
-    thumbnail.cursorProperty().setValue(javafx.scene.Cursor.HAND);
-
-    // Add click listener to open a new window
-    thumbnail.setOnMouseClicked(event -> showFullImage(image));
-
-    Label imageLabel = new Label("Image: ");
-    VBox imageNode = new VBox(5); // Add spacing between items
-    imageNode.getChildren().addAll(imageLabel, thumbnail);
-
-    // Add thumbnail to the UI
-    addThumbnailToUI(imageNode);
-
-    return imageNode;
-  }
-
-  // TODO wtf?
+  /**
+   * Clear previous thumbnail and add a thumbnail to the UI.
+   * 
+   * @param thumbnail The thumbnail to add.
+   */
   private void addThumbnailToUI(Node thumbnail) {
-    // Add the new thumbnail to the list
-    thumbnailList.add(thumbnail);
-
-    // If there are more than 3 thumbnails, remove the oldest
-    if (thumbnailList.size() > 3) {
-        thumbnailList.remove(0);
+    if (thumbnail == null) {
+      throw new IllegalArgumentException("Thumbnail is null");
     }
-
-    // Update the VBox to show only the thumbnails in the list
     Platform.runLater(() -> {
         contentBox.getChildren().clear();
-        contentBox.getChildren().addAll(thumbnailList);
+        contentBox.getChildren().addAll(thumbnail);
     });
   }
 
-  private void showFullImage(Image image) {
-    // Create a new Stage (window)
-    Stage fullImageStage = new Stage();
-    fullImageStage.setTitle("Full Image");
 
-    // Create an ImageView for the full image
-    ImageView fullImageView = new ImageView(image);
-    fullImageView.setPreserveRatio(true);
-    fullImageView.setFitWidth(800); // Optional: Set window size
-    fullImageView.setFitHeight(600);
-
-    // Add the full image to the scene
-    Scene scene = new Scene(new StackPane(fullImageView), 800, 600); // Optional: Set initial size
-    fullImageStage.setScene(scene);
-
-    // Show the stage
-    fullImageStage.show();
+private Node createNumericSensorLabel(SensorReading sensor){
+  SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
+    sensorProps.add(props);
+    Label label = new Label();
+    label.textProperty().bind(props);
+  return label;
 }
 
   private String generateSensorText(SensorReading sensor) {

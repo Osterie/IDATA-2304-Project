@@ -1,13 +1,18 @@
 package no.ntnu.greenhouse.sensors;
 
 
+import java.sql.SQLOutput;
+
+import no.ntnu.greenhouse.SensorType;
+
 /**
  * An image sensor which can sense the environment in a specific way.
  */
-public class ImageSensor extends Sensor {
-  private final ImageSensorReading reading;
+public class ImageSensor extends Sensor<ImageSensorReading> {
+  // private final ImageSensorReading reading;
   private final String imagesFilePath;
   private final String dataFormat = "IMG";
+  private boolean isOn;
 
   // TODO do not give image, just have a constant image
 
@@ -15,20 +20,25 @@ public class ImageSensor extends Sensor {
    * Create an image sensor.
    *
    * @param type    The type of the sensor.
-   * @param currentImage The current (starting) image of the sensor
+   * @param imagesFilePath The file path to the images
    */
-  public ImageSensor(String type, String imagesFilePath) {
+  public ImageSensor(SensorType type, String imagesFilePath) {
     this.reading = new ImageSensorReading(type);
     this.imagesFilePath = imagesFilePath;
+    this.turnOn();
   }
 
   /**
-   * Returns the type of the sensor.
-   * 
-   * @return The type of the sensor.
+   * Create an image sensor.
+   *
+   * @param type    The type of the sensor.
+   * @param imagesFilePath The file path to the images
+   * @param image The initial image
    */
-  public String getType() {
-    return reading.getType();
+  private ImageSensor(SensorType type, String imagesFilePath, ImageSensorReading image) {
+    this.reading = image;
+    this.imagesFilePath = imagesFilePath;
+    this.turnOn();
   }
 
   /**
@@ -51,21 +61,12 @@ public class ImageSensor extends Sensor {
   }
 
   /**
-   * Get the current sensor reading.
-   *
-   * @return The current sensor reading (value)
-   */
-  public ImageSensorReading getReading() {
-    return reading;
-  }
-
-  /**
    * Create a clone of this sensor.
    *
    * @return A clone of this sensor, where all the fields are the same
    */
   public ImageSensor createClone() {
-    return new ImageSensor(this.getType(), this.imagesFilePath);
+    return new ImageSensor(this.getType(), this.imagesFilePath, this.reading);
   }
 
   /**
@@ -83,17 +84,37 @@ public class ImageSensor extends Sensor {
    *
    * @param impact The impact to apply - the delta for the value
    */
-  public void applyImpact(double impact) {
-    this.reading.generateRandomImage(imagesFilePath);
-  }
+
+    public void applyImpact(double impact) {
+      toggle();
+    }
+
 
   /**
-     * Get a string representation of the sensor reading.
-     *
-     * @return A string representation of the sensor reading
-     */
+   * Get a string representation of the sensor reading.
+   *
+   * @return A string representation of the sensor reading
+   */
   @Override
   public String toString() {
     return reading.toString();
+  }
+/**
+  @Override
+  public void applyImpact(double impact) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'applyImpact'");
+  }
+  */
+
+    /**
+     * Turn on the sensor.
+     */
+  private void turnOn() {
+    isOn = true;
+  }
+
+  private void toggle() {
+    isOn = !isOn;
   }
 }

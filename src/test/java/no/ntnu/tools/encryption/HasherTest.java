@@ -1,7 +1,7 @@
 package no.ntnu.tools.encryption;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-public class HashEncryptorTest {
+public class HasherTest {
 
     @Test
     public void testEncryptString() {
@@ -11,9 +11,9 @@ public class HashEncryptorTest {
         String differentMessage = "differentMessage";
 
         // Encrypt the message
-        String hash1 = HashEncryptor.encryptString(message);
-        String hash2 = HashEncryptor.encryptString(sameMessage);
-        String hash3 = HashEncryptor.encryptString(differentMessage);
+        String hash1 = Hasher.encryptString(message);
+        String hash2 = Hasher.encryptString(sameMessage);
+        String hash3 = Hasher.encryptString(differentMessage);
 
         // Check that the hash is not null and not empty
         assertNotNull(hash1, "Hash should not be null");
@@ -31,8 +31,8 @@ public class HashEncryptorTest {
         // Test to ensure that the same input always produces the same hash
         String message = "consistentMessage";
 
-        String hash1 = HashEncryptor.encryptString(message);
-        String hash2 = HashEncryptor.encryptString(message);
+        String hash1 = Hasher.encryptString(message);
+        String hash2 = Hasher.encryptString(message);
 
         // Hashes should be identical for the same input
         assertEquals(hash1, hash2, "Hash should be consistent for the same input");
@@ -42,7 +42,7 @@ public class HashEncryptorTest {
     public void testHashIrreversibility() {
         // Test to ensure that hashes cannot be reversed to the original message
         String message = "irreversibleMessage";
-        String hash = HashEncryptor.encryptString(message);
+        String hash = Hasher.encryptString(message);
 
         // Since hashing is one-way, it is impossible to reverse it,
         // so we assert that the hash is not equal to the original message
@@ -53,7 +53,7 @@ public class HashEncryptorTest {
     public void testEmptyStringHash() {
         // Test hashing of an empty string
         String emptyMessage = "";
-        String emptyHash = HashEncryptor.encryptString(emptyMessage);
+        String emptyHash = Hasher.encryptString(emptyMessage);
 
         // Hash of an empty string should not be null or empty
         assertNotNull(emptyHash, "Hash of an empty string should not be null");
@@ -65,7 +65,7 @@ public class HashEncryptorTest {
         // Test handling of null input
         // This should send an exception
         assertThrows(NullPointerException.class, () -> {
-            HashEncryptor.encryptString(null);
+            Hasher.encryptString(null);
         }, "Hashing null input should throw a NullPointerException");
     }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import no.ntnu.constants.Endpoints;
@@ -19,7 +20,7 @@ public class IntermediaryServer implements Runnable {
     private boolean isTcpServerRunning;
 
     // Thread-safe collections for managing client sockets
-    private final ConcurrentHashMap<String, ClientHandler> clients = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, ClientHandler> clientHandlers = new ConcurrentHashMap<>();
     private ServerSocket listeningSocket;
 
     /**
@@ -36,10 +37,17 @@ public class IntermediaryServer implements Runnable {
             // Runs the whole time while application is up
             while (isTcpServerRunning) {
                 try {
+
+                    // Accepts the next client connection
                     ClientHandler clientHandler = acceptNextClientConnection();
                     if (clientHandler != null) {
-                        clientHandler.start();
+                        new Thread(clientHandler).start();
                     }
+
+                    // ClientHandler clientHandler = acceptNextClientConnection();
+                    // if (clientHandler != null) {
+                    //     clientHandler.start();
+                    // }
                 } catch (Exception e) {
                     Logger.error("Error in server loop: " + e.getMessage());
                 }
@@ -82,8 +90,8 @@ public class IntermediaryServer implements Runnable {
      * @param clientHandler     the client handler for the client
      * @throws UnknownClientException if the client type is not recognized
      */
-    public synchronized void addClient(Endpoints clientType, String clientId, ClientHandler clientHandler) {
-        this.clients.put(clientType + clientId, clientHandler);
+    public synchronized void addClientHandler(Endpoints clientType, String clientId, ClientHandler clientHandler) {
+        this.clientHandlers.put(clientType + clientId, clientHandler);
         Logger.info("Connected " + clientType + " with ID: " + clientId);
     }
 
@@ -92,8 +100,8 @@ public class IntermediaryServer implements Runnable {
      *
      * @param clientId    the unique identifier for the client
      */
-    public synchronized void removeClient(Endpoints clientType, String clientId) {
-        if (this.clients.remove(clientType + clientId) == null) {
+    public synchronized void removeClientHandler(Endpoints clientType, String clientId) {
+        if (this.clientHandlers.remove(clientType + clientId) == null) {
             Logger.error("Could not remove client, does not exist: " + clientType + clientId);
         }
         else{
@@ -108,16 +116,16 @@ public class IntermediaryServer implements Runnable {
      * @param clientId   the unique identifier for the client
      * @return the client handler for the client, or null if not found
      */
-    public ClientHandler getClient(Endpoints clientType, String clientId) {
-        return this.clients.get(clientType + clientId);
+    public ClientHandler getClientHandler(Endpoints clientType, String clientId) {
+        return this.clientHandlers.get(clientType + clientId);
     }
 
-    public ArrayList<ClientHandler> getClients(Endpoints clientType){
+    public List<ClientHandler> getClientHandlers(Endpoints clientType){
         ArrayList<ClientHandler> sockets = new ArrayList<>();
         
-        for (String key : this.clients.keySet()){
+        for (String key : this.clientHandlers.keySet()){
             if (key.startsWith(clientType.getValue())){
-                sockets.add(this.clients.get(key));
+                sockets.add(this.clientHandlers.get(key));
             }
         }
 

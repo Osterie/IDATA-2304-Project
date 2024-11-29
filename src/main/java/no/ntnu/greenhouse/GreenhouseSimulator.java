@@ -35,27 +35,44 @@ public class GreenhouseSimulator {
    * Initialise the greenhouse but don't start the simulation just yet.
    */
   public void initialize() {
-    createNode(1, 2, 1, 0, 0,0);
-    createNode(1, 0, 0, 2, 1,0);
-    createNode(2, 0, 0, 0, 0,0);
-    createNode(0, 0, 0, 0, 0, 1);
+    this.createNodes();
+    // createNode(1, 2, 1, 0, 0,0,0);
+    // createNode(1, 0, 0, 2, 1,0,0);
+    // createNode(2, 0, 0, 0, 0,0,0);
+    // createNode(0, 0, 0, 0, 0, 1,0);
+    // createNode(0, 0, 0, 0, 0, 0,1);
     Logger.info("Greenhouse initialized");
   }
 
-  /**
-   * Create a new node in the greenhouse.
-   * 
-   * @param temperature number of temperature sensors
-   * @param humidity number of humidity sensors
-   * @param windows number of window actuators
-   * @param fans number of fan actuators
-   * @param heaters number of heater actuators
-   * @param cameras number of camera sensors
-   */
-  private void createNode(int temperature, int humidity, int windows, int fans, int heaters, int cameras) {
-    SensorActuatorNode node = DeviceFactory.createNode(
-        temperature, humidity, windows, fans, heaters, cameras);
-    nodes.put(node.getId(), node);
+  private void createNodes(){
+    SensorActuatorNode node1 = new DeviceBuilder().addTemperatureSensor(1)
+        .addHumiditySensor(2)
+        .addWindowActuator(1)
+        .build();
+    nodes.put(node1.getId(), node1);
+
+    SensorActuatorNode node2 = new DeviceBuilder().addTemperatureSensor(1)
+        .addFanActuator(2)
+        .addHeaterActuator(1)
+        .addPhSensor(1)
+        .build();
+
+    nodes.put(node2.getId(), node2);
+
+    SensorActuatorNode node3 = new DeviceBuilder().addTemperatureSensor(2)
+        .addLightSensor(2)
+        .addLightActuator(1)
+        .build();
+    nodes.put(node3.getId(), node3);
+
+    SensorActuatorNode node4 = new DeviceBuilder().addAudioSensor(1)
+        .build();
+    nodes.put(node4.getId(), node4);
+
+    SensorActuatorNode node5 = new DeviceBuilder().addImageSensor(1)
+        .build();
+    nodes.put(node5.getId(), node5);
+        
   }
 
   /**

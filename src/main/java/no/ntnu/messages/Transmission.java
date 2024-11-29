@@ -5,7 +5,7 @@ package no.ntnu.messages;
  */
 public abstract class Transmission {
 
-    protected final String protocolString;
+    protected String protocolString;
 
     
     /**
@@ -18,6 +18,14 @@ public abstract class Transmission {
         
     }
 
+    /**
+     * Set protocol string.
+     *
+     * @param protocolString the new protocol.
+     */
+    public void setTransmission(String protocolString) {
+        this.protocolString = protocolString;
+    }
     /**
      * Get the transmission string.
      * 

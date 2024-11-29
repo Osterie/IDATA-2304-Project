@@ -14,7 +14,7 @@ public class Actuator {
   private final String type;
   private final int nodeId;
   private final int id;
-  private Map<String, Double> impacts = new HashMap<>();
+  private Map<SensorType, Double> impacts = new HashMap<>();
 
   private ActuatorListener listener;
 
@@ -27,7 +27,7 @@ public class Actuator {
    * @param nodeId ID of the node to which this actuator is connected.
    */
   public Actuator(String type, int nodeId) {
-    if (type == null || type.isEmpty()) {
+    if (type == null) {
       throw new IllegalArgumentException("Type cannot be null or empty");
     }
     this.type = type;
@@ -44,7 +44,7 @@ public class Actuator {
    * @param nodeId ID of the node to which this actuator is connected.
    */
   public Actuator(int id, String type, int nodeId) {
-    if (type == null || type.isEmpty()) {
+    if (type == null) {
       throw new IllegalArgumentException("Type cannot be null or empty");
     }
     this.type = type;
@@ -81,7 +81,7 @@ public class Actuator {
    *                       will increase the readings of temperature sensors attached to the
    *                       same node by +2 degrees".
    */
-  public void setImpact(String sensorType, double diffWhenActive) {
+  public void setImpact(SensorType sensorType, double diffWhenActive) {
     impacts.put(sensorType, diffWhenActive);
   }
 
@@ -141,8 +141,8 @@ public class Actuator {
     if (node == null) {
       throw new IllegalArgumentException("Actuator node cannot be null");
     }
-    for (Map.Entry<String, Double> impactEntry : impacts.entrySet()) {
-      String sensorType = impactEntry.getKey();
+    for (Map.Entry<SensorType, Double> impactEntry : impacts.entrySet()) {
+      SensorType sensorType = impactEntry.getKey();
       double impact = impactEntry.getValue();
       if (!on) {
         impact = -impact;

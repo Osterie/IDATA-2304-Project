@@ -31,7 +31,7 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
     }
 
     /**
-     * Start listening for messages from the server.
+     * Establish a connection with the server.
      */
     @Override
     public void run() {
@@ -39,37 +39,74 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
         this.establishConnectionWithServer(clientIdentification);
     }
 
-    // TODO fix, improve, refactor.
+    /**
+     * Handle a message received from the server.
+     *
+     * @param message The message received.
+     */
     @Override
-    protected void handleMessage(String message) {
-
+    protected void handleMessage(Message message) {
         Logger.info("Received message for node! " + this.nodeLogic.getId() + ": " + message);
 
-        Message messageObject = Message.fromString(message);
-        MessageHeader header = messageObject.getHeader();
-        MessageBody body = messageObject.getBody();
-        
-        String sender = header.getReceiver().toString();
-        String senderID = header.getId();
+        MessageHeader header = message.getHeader();
+        MessageBody body = message.getBody();
         Transmission command = body.getTransmission();
 
-        if (command instanceof GreenhouseCommand) {
-            GreenhouseCommand greenhouseCommand = (GreenhouseCommand) command;
-            
-            Message response = greenhouseCommand.execute(this.nodeLogic, header);
-            
-            Logger.info("Received command for node, sending response: " + response);
-            socketWriter.println(response);
+        this.handleTransmission(command, header);
+    }
+
+    /**
+     * Handles a transmission.
+     * 
+     * @param transmission the received transmission.
+     * @param header the message header.
+     */
+    private void handleTransmission(Transmission transmission, MessageHeader header) {
+        if (transmission instanceof GreenhouseCommand) {
+            GreenhouseCommand greenhouseCommand = (GreenhouseCommand) transmission;
+            this.handleGreenhouseCommand(greenhouseCommand, header);
         }
-        else if (command instanceof SuccessResponse) {
-            Logger.info("Received success response for node: " + command);
+        else if (transmission instanceof SuccessResponse) {
+            SuccessResponse successResponse = (SuccessResponse) transmission;
+            this.handleSuccessResponse(successResponse);
         }
-        else if (command instanceof FailureResponse) {
-            // TODO what are some failues which can be handled?
-            Logger.error("Received failure response for node: " + command);
+        else if (transmission instanceof FailureResponse) {
+            FailureResponse failureResponse = (FailureResponse) transmission;
+            this.handleFailureResponse(failureResponse);
         }
         else{
-            Logger.error("Received invalid command for node: " + command);
-        }        
+            Logger.error("Received invalid command for node: " + transmission);
+        }
+    }
+
+    /**
+     * Handles a greenhouse command.
+     * 
+     * @param command the received greenhouse command.
+     * @param header the message header.
+     */
+    private void handleGreenhouseCommand(GreenhouseCommand command, MessageHeader header) {
+        Message response = command.execute(this.nodeLogic, header);
+        Logger.info("Received command for node, sending response: " + response);
+        this.sendMessage(response);
+    }
+
+    /**
+     * Handles a success response.
+     * 
+     * @param response the received success response.
+     */
+    private void handleSuccessResponse(SuccessResponse response) {
+        Logger.info("Received success response for node: " + response);
+    }
+
+    /**
+     * Handles a failure response.
+     * 
+     * @param response the received failure response.
+     */
+    private void handleFailureResponse(FailureResponse response) {
+        // TODO what are some failues which can be handled?
+        Logger.error("Received failure response for node: " + response);
     }
 }

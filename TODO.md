@@ -3,8 +3,13 @@
 - Clean code.
 - Good code.
 
-# Next sprint
 
+# CURRENT
+
+- [ ] TODO create a starter for only IntermediaryServer.
+
+- [x] ADRIAN builder pattern for devices instead of DeviceFactory.
+- [x] ADRIAN Separate factory for actuators.
 - [ ] TOBIAS for generateHeader method usage, what if header is null? handle this.
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
 - [ ] KNUT clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
@@ -12,7 +17,7 @@
 - [ ] ADRIAN Currently Message and MessageHeader i think have fromString methods. Perhaps another class should be used for this?
 <!-- - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
 - [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
-- [ ] ADRIAN fix issue with images not being replaced, but instead being added when displaying images 
+- [x] ADRIAN fix issue with images not being replaced, but instead being added when displaying images 
 - [x] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
 - [x] TOBIAS ScrollPane for controlPanel.
 - [ ] SEBASTIAN Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
@@ -34,7 +39,10 @@
 - [x] ADRIAN When control panel disconencts, pause sending of periodic sensor data until reconnected again.
 
 - [ ] ADRIAN Refactor ControlPanelCommunicationChannel.
-- [ ] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
+- [x] ADRIAN Refactor clientHandler, NodeConnectionHandler and ControlPanelCommunicationChannel to inherit from a common class.
+  - [x] ADRIAN ClientHandler
+  - [x] ADRIAN NodeConnectionHandler
+  - [x] ADRIAN ControlPanelCommunicationChannel
 - [x] ADRIAN Fix application using all available resources.
 - [x] ADRIAN Create enum for non-predefined client id.
 - [x] ADRIAN remove option to remove tabs in control panel
@@ -50,6 +58,8 @@
 - [x] ADRIAN fix nodes sometimes not being created in gui.
 
 - [ ] DANIEL when changing actuator state in Sensor Node GUI, should notify all the control panels.
+
+- [ ] DANIEL Actuator class can be abstract, other classes can inherit. ONe for deactivating/activating sensor, onher for applying impact
 
 - [ ] DANIEL When sending sensor data (GetSensorDataCommand), the message should contain the data type, for the numberSensorReading, can be For example NUM, for imagesensorreading, can be IMG.
 
@@ -110,7 +120,7 @@
 For each of the design choices provide a short justification: why did you choose to design it the way you did?
 
 - [ ] 1. DANIEL A short introduction: "This document describes _ _"
-- [x?] 2. TOBIAS. Terminology: a list of special terms you use
+- [x] 2. ? TOBIAS. Terminology: a list of special terms you use
 - [x] 3. The underlying transport you use (TCP or UDP).
 - [x] 4. The used port number.
 - [ ] 5. SEBASTIAN. The overall architecture:
@@ -122,7 +132,7 @@ For each of the design choices provide a short justification: why did you choose
 - [ ]   KNUT. • Is the protocol state-full or state-less?
 - [ ] 8. DANIEL The different types and special values (constants) used
 - [ ] 9. TOBIAS The message format:
-- [ ]   TOBIAS • The allowed message types (sensor messages, command messages)
+- [x] ? TOBIAS • The allowed message types (sensor messages, command messages)
 - [ ]   TOBIAS • The type of marshalling used (fixed size, separators, TLV?)
 - [ ]   TOBIAS • Which messages are sent by which node? For example, are some messages only sent by the control-panel node?
 - [ ] 10. DANIEL The different errors that can occur and how each node should react on the errors. For example,
