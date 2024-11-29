@@ -19,7 +19,7 @@
 - [ ] TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
 
 - [x] ADRIAN builder pattern for devices instead of DeviceFactory.
-- [ ] ADRIAN ControlPanelCommunicationChannel, instead of checking if .equals("Get_node") should check if classes are equal or something, idk. some better solution!
+- [x] ADRIAN ControlPanelCommunicationChannel, instead of checking if .equals("Get_node") should check if classes are equal or something, idk. some better solution!
 - [x] ADRIAN Separate factory for actuators.
 - [ ] TOBIAS for generateHeader method usage, what if header is null? handle this.
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
@@ -38,7 +38,7 @@
 - [ ] TOBIAS Implement encryption. Måtte flytte det til neste sprint.
 - [ ] TOBIAS Hashing the data and storing it in header(?) for checking integrity. 
 - [x] TOBIAS add hash in header of Message.
-- [ ] ADRIAN handle message should take a message
+- [x] ADRIAN handle message should take a message
 
 
 # GENERAL
@@ -283,11 +283,10 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 
 # EXTRA WORK
 
-- [ ] ADRIAN. 1. Resilience in case of network outages. The solution functions when the network connection is temporarily lost. This means buffering data, retransmissions, reconnecting, etc
+- [x] ADRIAN. 1. Resilience in case of network outages. The solution functions when the network connection is temporarily lost. This means buffering data, retransmissions, reconnecting, etc
     - [x] ADRIAN When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
     - [x] ADRIAN If the connection is lost, try to reconnect. 
-    - [ ] ADRIAN If reconnection fails, show an error message to the user. (then they can choose to reload the control panel perhaps when the server is back up. Display a "Server down" message in the control panel)
-    - [ ] ADRIAN If a message is not received, try to receive it again. If it fails, show an error message to the user.
+    <!-- - [ ] ADRIAN If a message is not received, try to receive it again. If it fails, show an error message to the user. -->
     - [x] ADRIAN Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
 
 
@@ -305,7 +304,15 @@ either using public-key cryptography or other methods.
 # WORK PROCESS DOCUMENTATION REQUIREMENTS
 provide some form of documentation of the following:
 - [ ] KNUT 1. How the work was planned in terms of iterations (sprints)
-- [ ] ADRIAN 2. How the tasks were distributed - who was responsible for what. Note - it is NOT OK to have someone in the group responsible only for creating videos. This course is primarily about network protocols and network programming. Every group member must demonstrate expertise within these fields. Perhaps one student works more on the protocol, another on the server programming, and the third on client programming, that is fine. But it is not fine if one student does all the programming, one just writes documentation (sprint reports) and the third creates a video. How are the second and third students showing their computer network expertise?
+- [x] ADRIAN 2. How the tasks were distributed - who was responsible for what. Note - it is NOT OK to have someone in the group responsible only for creating videos. This course is primarily about network protocols and network programming. Every group member must demonstrate expertise within these fields. Perhaps one student works more on the protocol, another on the server programming, and the third on client programming, that is fine. But it is not fine if one student does all the programming, one just writes documentation (sprint reports) and the third creates a video. How are the second and third students showing their computer network expertise?
+
+## How the tasks were distributed
+Tasks were distributed in a TODO.md file under our version control. To create tasks we started by analyzing which tasks the project described, and then we wrote them down and tried to evenly distribute them. While working on the project more TODOs were thought about, written down, and distributed. After we had completed our TODOs we assigned ourselves to other undone TODOs.
+
+## who was responsible for what.
+When programming we did not assign people areas to work on. TODOs were not distributed necessarily based on what other TODOs a member worked on, which was to try to ensure that everyone leared about all parts of the project. Also for writing protocol, everyone were given the responsibility of writing some part of the protocol.
+For completing the work process documentation, everyone was assigned different tasks, which ensured that everyone contributed to all aspects of the project. For the final video everyone had some part to create for the video. 
+
 - [ ] KNUT 3. How was the work broken down into issues? Remember the principles you learned about issue
 definition in the System development course. Issues should be small, have descriptive names,
 clear "definition of done", etc. For example, an issue like "improve GUI" is a bad issue. What
@@ -331,7 +338,7 @@ of each? Preferably, include model’s diagrams here. (1-2min)
 - [ ] ALLE 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
 - [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project.
 (1-3min)
-- [ ] ADRIAN 8. Reflect on potential improvements and future work. (1 min)
+- [x] ADRIAN 8. Reflect on potential improvements and future work. (1 min)
 - Instead of separating different parts of a message using different delimiters, like "-", ";" and so on, we could have used a well established protocol like JSON or XML. This would make it easier to read the messages, and also easier to parse them. 
 
 - Additionally, we are somewhat lacking with catching and managing errors. We have an enum for different Failure reasons, but we don't use many of them and don't have many of them either. To help with implement better error handling, we would need more and better tests and utilize them further than what we already have.
