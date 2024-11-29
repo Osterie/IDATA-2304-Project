@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
 import no.ntnu.greenhouse.sensors.AudioSensorReading;
@@ -38,7 +39,7 @@ public class SensorPane extends TitledPane {
   private void initialize(Iterable<SensorReading> sensors) {
     setText("Sensors");
     sensors.forEach(sensor ->
-        this.contentBox.getChildren().add(createAndRememberSensorLabel(sensor))
+            this.contentBox.getChildren().add(createAndRememberSensorLabel(sensor))
     );
     setContent(this.contentBox);
   }
@@ -102,9 +103,10 @@ public class SensorPane extends TitledPane {
 
   // TODO refactor this logic. Create a method above this method and such. This method should create a label and then another for images.
   // Alternatively, would not be necessary when we have implemented the component builder class.
+
   private Node createAndRememberSensorLabel(SensorReading sensor) {
     Node nodeToReturn;
-    
+
     if (sensor instanceof NumericSensorReading) {
       nodeToReturn = createNumericSensorLabel(sensor);
     } else if (sensor instanceof ImageSensorReading) {
@@ -121,10 +123,9 @@ public class SensorPane extends TitledPane {
     return nodeToReturn;
   }
 
-
   /**
    * Clear previous thumbnail and add a thumbnail to the UI.
-   * 
+   *
    * @param thumbnail The thumbnail to add.
    */
   private void addThumbnailToUI(Node thumbnail) {
@@ -132,19 +133,18 @@ public class SensorPane extends TitledPane {
       throw new IllegalArgumentException("Thumbnail is null");
     }
     Platform.runLater(() -> {
-        contentBox.getChildren().clear();
-        contentBox.getChildren().addAll(thumbnail);
+      contentBox.getChildren().clear();
+      contentBox.getChildren().addAll(thumbnail);
     });
   }
 
-
-private Node createNumericSensorLabel(SensorReading sensor){
-  SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
+  private Node createNumericSensorLabel(SensorReading sensor) {
+    SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
     sensorProps.add(props);
     Label label = new Label();
     label.textProperty().bind(props);
-  return label;
-}
+    return label;
+  }
 
   private String generateSensorText(SensorReading sensor) {
     return sensor.getFormatted();

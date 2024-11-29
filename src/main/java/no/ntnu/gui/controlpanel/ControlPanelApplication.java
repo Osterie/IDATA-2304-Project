@@ -42,8 +42,8 @@ public class ControlPanelApplication extends Application
 
   // Static references for shared logic and communication channel
   private static ControlPanelLogic logic;
-  private static final int WIDTH = 500;
-  private static final int HEIGHT = 420;
+  private static final int WINDOW_WIDTH = 500;
+  private static final int WINDOW_HEIGHT = 420;
   private static ControlPanelCommunicationChannel channel;
 
   // TabPane to manage node tabs
@@ -93,8 +93,8 @@ public class ControlPanelApplication extends Application
               "No communication channel. See the README on how to use fake event spawner!");
     }
 
-    stage.setMinWidth(WIDTH);
-    stage.setMinHeight(HEIGHT);
+    stage.setMinWidth(WINDOW_WIDTH);
+    stage.setMinHeight(WINDOW_HEIGHT);
     stage.setTitle("Control panel");
 
     VBox rootLayout = new VBox();
@@ -112,8 +112,8 @@ public class ControlPanelApplication extends Application
       double newHeightValue = Math.min(newHeight.doubleValue(), stage.getHeight() - 50);
       scrollPane.setPrefHeight(newHeightValue);
     });
-
-    mainScene = new Scene(scrollPane, WIDTH, HEIGHT);
+    
+    mainScene = new Scene(scrollPane, WINDOW_WIDTH, WINDOW_HEIGHT);
     stage.setScene(mainScene);
     stage.show();
 
