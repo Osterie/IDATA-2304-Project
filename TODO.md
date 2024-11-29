@@ -15,6 +15,7 @@
 - [ ] ADRIAN TcpCOnnection.java
 - [ ] ADRIAN SocketCommunicationChannel.java
 - [ ] TOBIAS Forsikre god kode kvalitet i tools
+- [ ] SEBASTIAN Pass på god kode for GUI common folder
 
 # Probably wont do
 
