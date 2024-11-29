@@ -329,7 +329,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   public void setActuator(int actuatorId, boolean on) {
     Actuator actuator = getActuator(actuatorId);
     if (actuator == null) {
-      throw new IllegalArgumentException("Actuator not found on node " + actuatorId);
+      Logger.error("Actuator not found on node " + actuatorId);
+      // throw new IllegalArgumentException("Actuator not found on node " + actuatorId);
     }
     actuator.set(on);
   }

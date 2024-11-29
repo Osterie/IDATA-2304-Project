@@ -56,10 +56,12 @@ public class TransmissionTranslator {
      */
     public Transmission toTransmission(String string) {
 
+        this.identifyTransmissionType(string);
         // TODO refactor 
         Logger.info("Converting string to transmission: " + string);
+        // String[] parts = string.split(Delimiters.BODY_FIELD.getValue(), 2);
         String[] parts = string.split(Delimiters.BODY_FIELD_PARAMETERS.getValue(), 2);
-        String transmissionType = parts[0];
+        String transmissionType = this.identifyTransmissionType(string);
         
         Transmission transmission = this.getTransmission(transmissionType);
         if (transmission == null){
@@ -86,6 +88,22 @@ public class TransmissionTranslator {
         }
 
         return transmission;
+    }
+
+    /**
+     * Identifies the type of transmission from a string
+     * 
+     * @param string the string to identify
+     */
+    private String identifyTransmissionType(String string) {
+        String[] fields = string.split(Delimiters.BODY_FIELD.getValue());
+        String[] fieldWithParameters = fields[0].split(Delimiters.BODY_FIELD_PARAMETERS.getValue(), 2);
+        String transmissionType = fieldWithParameters[0];
+        if (!this.transmissionMap.containsKey(transmissionType)) {
+            Logger.error("Transmission not found: " + transmissionType);
+        }
+
+        return transmissionType;
     }
 
     /**

@@ -35,15 +35,15 @@ public class GetNodeCommand extends GreenhouseCommand {
         // Retrieve the collection of actuators from the node
         ActuatorCollection actuators = nodeLogic.getNode().getActuators();
 
-        // TODO: send state of actuator, on/off?
-
         // Build a string representing the actuators (type and ID)
         StringBuilder actuatorStringBuild = new StringBuilder();
         for (Actuator actuator : actuators) {
             actuatorStringBuild.append(Delimiters.BODY_FIELD_PARAMETERS.getValue())
             .append(actuator.getType())
-            .append("_") // TODO enum or something?
-            .append(actuator.getId());
+            .append("_")
+            .append(actuator.getId())
+            .append("_")
+            .append(actuator.isOn() ? "1" : "0");
         }
 
         // Include the node's ID as part of the response

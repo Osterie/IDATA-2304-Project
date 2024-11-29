@@ -1,5 +1,7 @@
 package no.ntnu.messages.commands.greenhouse;
 
+import static no.ntnu.tools.parsing.Parser.parseBooleanOrError;
+
 import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.NodeLogic;
 import no.ntnu.messages.Delimiters;
@@ -9,7 +11,6 @@ import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.commands.Parameters;
 import no.ntnu.messages.responses.SuccessResponse;
 
-// TODO refactor class.
 /**
  * Command to change the state of an actuator.
  */
@@ -50,18 +51,30 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
 
         nodeLogic.getNode().setActuator(this.actuatorId, this.isOn);
 
-        // TODO improve.
-        MessageHeader header = new MessageHeader(fromHeader.getReceiver(), Endpoints.BROADCAST.getValue());
 
-        String nodeId = Integer.toString(nodeLogic.getId());
-        
-        String responseData = nodeId;
-        responseData += Delimiters.BODY_FIELD.getValue() + this.actuatorId;
-        responseData += Delimiters.BODY_FIELD.getValue() + (this.isOn ? "1" : "0");
-        
-        SuccessResponse successResponse = new SuccessResponse(this, responseData);
+        SuccessResponse successResponse = new SuccessResponse(this, this.createResponseData(nodeLogic));
         MessageBody response = new MessageBody(successResponse);
+        
+        MessageHeader header = new MessageHeader(fromHeader.getReceiver(), Endpoints.BROADCAST.getValue());
         return new Message(header, response);
+    }
+
+    /**
+     * Creates the response data for the command execution.
+     *
+     * @param nodeLogic the logic of the node where the actuator is located
+     * @return the response data
+     */
+    private String createResponseData(NodeLogic nodeLogic) {
+        String nodeId = Integer.toString(nodeLogic.getId());
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(nodeId);
+        sb.append(Delimiters.BODY_FIELD.getValue());
+        sb.append(this.actuatorId);
+        sb.append(Delimiters.BODY_FIELD.getValue());
+        sb.append(this.isOn ? "1" : "0");
+        return sb.toString();
     }
 
     /**
@@ -73,24 +86,14 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
      * @throws IllegalArgumentException if the parameters are invalid
      */
     @Override
-    public void setParameters(String parameters[]) throws IllegalArgumentException {
-
-        // TODO currently the parameters are in a specific order, would it be better to instead send som information about what the parameters are?
-        // So that the order of the parameters does not matter. For example: "actuatorId=1, isOn=1"
+    public void setParameters(String[] parameters) throws IllegalArgumentException {
 
         if (parameters.length != 2) {
             throw new IllegalArgumentException("Invalid parameters for ActuatorChangeCommand");
         }
 
         this.actuatorId = Integer.parseInt(parameters[0]);
-        if (parameters[1].equals("1")) {
-            this.isOn = true;
-        } else if (parameters[1].equals("0")) {
-            this.isOn = false;
-        }
-        else{
-            throw new IllegalArgumentException("Invalid parameters for ActuatorChangeCommand");
-        }
+        this.isOn = parseBooleanOrError(parameters[1], "Invalid actuator state: " + parameters[1]);
     }
 
     /**
@@ -118,7 +121,12 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
      */
     @Override
     public String toString() {
-        // TODO refactor
-        return this.getTransmissionString() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.actuatorId + Delimiters.BODY_FIELD_PARAMETERS.getValue() + (this.isOn ? "1" : "0");
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getTransmissionString());
+        sb.append(Delimiters.BODY_FIELD_PARAMETERS.getValue());
+        sb.append(this.actuatorId);
+        sb.append(Delimiters.BODY_FIELD_PARAMETERS.getValue());
+        sb.append(this.isOn ? "1" : "0");
+        return sb.toString();
     }
 }

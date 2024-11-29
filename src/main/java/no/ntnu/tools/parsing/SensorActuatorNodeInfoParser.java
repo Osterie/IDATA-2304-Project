@@ -1,5 +1,6 @@
 package no.ntnu.tools.parsing;
 
+import static no.ntnu.tools.parsing.Parser.parseBooleanOrError;
 import static no.ntnu.tools.parsing.Parser.parseIntegerOrError;
 
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
@@ -71,15 +72,24 @@ public class SensorActuatorNodeInfoParser {
       throw new IllegalArgumentException("Actuator info can't be empty");
     }
     String[] actuatorInfo = s.split("_"); //TODO enum for delimiter or what?
-    if (actuatorInfo.length != 2) {
+    if (actuatorInfo.length != 3) {
       throw new IllegalArgumentException("Invalid actuator info format: " + s);
     }
 
     String actuatorType = actuatorInfo[0];
     int  actuatorId = parseIntegerOrError(actuatorInfo[1],
-        "Invalid actuator count: " + actuatorInfo[0]);
+        "Invalid actuator count: " + actuatorInfo[1]);
+    boolean isOn = parseBooleanOrError(actuatorInfo[2],
+        "Invalid actuator state: " + actuatorInfo[2]);
 
     Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
+
+    if (isOn) {
+      actuator.turnOn();
+    } else {
+      actuator.turnOff();
+    }
+
     actuator.setListener(listener);
     info.addActuator(actuator);
   }
