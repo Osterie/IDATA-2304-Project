@@ -29,8 +29,6 @@ public abstract class SocketCommunicationChannel extends TcpConnection {
     }
   }
 
-  // TODO this class should have a method which decrypts the received message, and tursn it from string into message, and then calls handleMessage. Perhaps handleMessage should be renamed and such.
-  // TODO: Decrypt message before handling using decryptStringMessage?
   protected abstract void handleMessage(Message message);
 
   public void establishConnectionWithServer(ClientIdentification clientIdentification) {
@@ -41,9 +39,6 @@ public abstract class SocketCommunicationChannel extends TcpConnection {
 
     this.clientIdentification = clientIdentification;
 
-    // TODO server should send a response back with something to indicate the
-    // connection was successful.
-    // Send initial identifier to server
     Message identificationMessage = this.createIdentificationMessage(clientIdentification);
     this.sendMessage(identificationMessage);
   }

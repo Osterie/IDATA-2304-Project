@@ -1,6 +1,5 @@
 package no.ntnu.controlpanel;
 
-// TODO do this in another way, perhaps this should not be an interface, have the methods in the socket communication abstract class and such. 
 /**
  * A communication channel for disseminating control commands to the sensor nodes
  * (sending commands to the server) and receiving notifications about events.
