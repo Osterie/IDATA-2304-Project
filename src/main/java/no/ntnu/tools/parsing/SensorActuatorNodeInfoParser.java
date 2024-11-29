@@ -5,10 +5,14 @@ import static no.ntnu.tools.parsing.Parser.parseIntegerOrError;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.listeners.common.ActuatorListener;
+import no.ntnu.messages.Delimiters;
 import no.ntnu.tools.Logger;
 
 public class SensorActuatorNodeInfoParser {
 
+  private SensorActuatorNodeInfoParser() {
+    // Private constructor
+  }
 
     
   /**
@@ -18,13 +22,16 @@ public class SensorActuatorNodeInfoParser {
    * @param specification The specification string
    * @return The created SensorActuatorNodeInfo object
    */
-  // TODO someone else should do this.
   public static SensorActuatorNodeInfo createSensorNodeInfoFrom(String specification, ActuatorListener listener) {
     Logger.info("specification: " + specification);
     if (specification == null || specification.isEmpty()) {
       throw new IllegalArgumentException("Node specification can't be empty");
     }
-    String[] parts = specification.split(";", 2);
+    
+    String[] parts = specification.split(Delimiters.BODY_FIELD.getValue());
+    if (parts.length < 1 || parts.length > 2) {
+      throw new IllegalArgumentException("Invalid node specification: " + specification);
+    }
     int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
     SensorActuatorNodeInfo info = new SensorActuatorNodeInfo(nodeId);
 
@@ -45,7 +52,8 @@ public class SensorActuatorNodeInfoParser {
     if (actuatorSpecification == null || actuatorSpecification.isEmpty()) {
       throw new IllegalArgumentException("Actuator specification can't be empty");
     }
-    String[] parts = actuatorSpecification.split(";");
+
+    String[] parts = actuatorSpecification.split(Delimiters.BODY_FIELD_PARAMETERS.getValue());
     for (String part : parts) {
       parseActuatorInfo(part, info, listener);
     }
@@ -62,7 +70,7 @@ public class SensorActuatorNodeInfoParser {
     if (s == null || s.isEmpty()) {
       throw new IllegalArgumentException("Actuator info can't be empty");
     }
-    String[] actuatorInfo = s.split("_");
+    String[] actuatorInfo = s.split("_"); //TODO enum for delimiter or what?
     if (actuatorInfo.length != 2) {
       throw new IllegalArgumentException("Invalid actuator info format: " + s);
     }

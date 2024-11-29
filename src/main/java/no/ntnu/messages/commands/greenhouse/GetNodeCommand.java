@@ -3,6 +3,7 @@ package no.ntnu.messages.commands.greenhouse;
 import no.ntnu.greenhouse.Actuator;
 import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.greenhouse.NodeLogic;
+import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
@@ -37,15 +38,21 @@ public class GetNodeCommand extends GreenhouseCommand {
         // TODO: send state of actuator, on/off?
 
         // Build a string representing the actuators (type and ID)
-        StringBuilder actuatorString = new StringBuilder();
+        StringBuilder actuatorStringBuild = new StringBuilder();
         for (Actuator actuator : actuators) {
-            // TODO don't use ; and _, use the delimiter from the protocol, from the enums.
-            actuatorString.append(";").append(actuator.getType()).append("_").append(actuator.getId());
+            actuatorStringBuild.append(Delimiters.BODY_FIELD_PARAMETERS.getValue())
+            .append(actuator.getType())
+            .append("_") // TODO enum or something?
+            .append(actuator.getId());
         }
 
         // Include the node's ID as part of the response
-        String resultString = actuatorString.toString();
-        resultString = nodeLogic.getId() + resultString;
+        String actuatorString = actuatorStringBuild.toString();
+        if (actuatorString.length() > 0) {
+            actuatorString = actuatorString.substring(1); // Remove the first delimiter
+        }
+        
+        String resultString = nodeLogic.getId() + Delimiters.BODY_FIELD.getValue() + actuatorString;
 
         // Create a success response with the gathered data
         SuccessResponse response = new SuccessResponse(this, resultString);

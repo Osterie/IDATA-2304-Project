@@ -18,6 +18,7 @@
 - [ ] TODO create a starter for only IntermediaryServer.
 - [ ] TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
 
+- [x] ADRIAN Use enums for SensorActuatorNodeInfoParser and GetNodeCommand.
 - [x] ADRIAN builder pattern for devices instead of DeviceFactory.
 - [x] ADRIAN ControlPanelCommunicationChannel, instead of checking if .equals("Get_node") should check if classes are equal or something, idk. some better solution!
 - [x] ADRIAN Separate factory for actuators.
