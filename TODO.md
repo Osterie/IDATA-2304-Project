@@ -244,6 +244,7 @@ Each sensor-node can do the following:
 
 ## GENERAL
 
+- [x] ADRIAN refactor control panel starter
 - [x] TOBIAS: Add css.
 - [ ] TOBIAS: Håndtere å motta ulike datatyper hoss control panel. Foreløbig mottas kun desimal tall, og vi displayer det som tekst. Men hva om det er et bilde som mottas? En video? Lydopptak? Video med lyd? En kommentar? (for eksempel en advarsel om lavt batteri på noe, ada varsel om farlig temperatur, brann, natta melding, whatever.)
 Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å utvide løsningen.
