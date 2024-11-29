@@ -3,9 +3,7 @@ package no.ntnu.tools.encryption;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.Transmission;
 import no.ntnu.tools.encryption.asymmetric.HybridRSAEncryptor;
-
 import javax.crypto.SecretKey;
-import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
