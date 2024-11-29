@@ -34,4 +34,8 @@ public enum FailureReason {
         }
         return null;
     }
+
+    public boolean equals(FailureReason reason) {
+        return this.reason.equals(reason.getReason());
+    }
 }

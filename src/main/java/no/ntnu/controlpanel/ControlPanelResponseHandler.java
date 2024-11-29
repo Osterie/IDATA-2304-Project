@@ -1,8 +1,6 @@
 package no.ntnu.controlpanel;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static no.ntnu.tools.Parser.parseIntegerOrError;
 import static no.ntnu.tools.Parser.parseBooleanOrError;
@@ -10,15 +8,15 @@ import static no.ntnu.tools.Parser.parseBooleanOrError;
 import no.ntnu.SensorActuatorNodeInfoParser;
 import no.ntnu.SensorReadingsParser;
 import no.ntnu.constants.Endpoints;
-import no.ntnu.greenhouse.sensors.NoSensorReading;
 import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.messages.Delimiters;
-import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
-import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
+import no.ntnu.messages.commands.greenhouse.ActuatorChangeCommand;
 import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
+import no.ntnu.messages.commands.greenhouse.GetNodeIdCommand;
+import no.ntnu.messages.commands.greenhouse.GetSensorDataCommand;
 import no.ntnu.messages.commands.greenhouse.GreenhouseCommand;
 import no.ntnu.messages.responses.FailureReason;
 import no.ntnu.messages.responses.FailureResponse;
@@ -28,157 +26,214 @@ import no.ntnu.tools.Logger;
 
 public class ControlPanelResponseHandler {
 
-    private ControlPanelCommunicationChannel communicationChannel;
-    private ControlPanelLogic logic;
-    
-    public ControlPanelResponseHandler(ControlPanelCommunicationChannel communicationChannel, ControlPanelLogic logic){
-        this.communicationChannel = communicationChannel;
-        this.logic = logic;
-    }
+  private ControlPanelCommunicationChannel communicationChannel;
+  private ControlPanelLogic logic;
 
-    public void handleResponse(Endpoints client, MessageBody response){
+  public ControlPanelResponseHandler(ControlPanelCommunicationChannel communicationChannel, ControlPanelLogic logic) {
+    this.communicationChannel = communicationChannel;
+    this.logic = logic;
+  }
 
-        // Handle based on client type
-        if (client == Endpoints.GREENHOUSE) {
-            this.handleGreenhouseResponse(response);
-        } else if (client == Endpoints.SERVER){
-            this.handleServerResponse(response);
-        }
-        else{
-            Logger.error("Unknown client: " + client);
-        }
-    }
-
-    
   /**
-   * Handle a response to a greenhouse command.
-   * Processes the command response and performs actions based on the command type.
+   * Handle a response from a client.
+   * Processes the response and performs actions based on the client type.
    *
-   * @param body The message body containing the command response
+   * @param client   The client that sent the response
+   * @param body The response message body
    */
-    // TODO refactor.
-  private void handleGreenhouseResponse(MessageBody body) {
-    // TODO CHANGE!
+  public void handleResponse(Endpoints client, MessageBody body) {
 
-    Transmission transmission = body.getTransmission();
-    if (!(transmission instanceof Response)) {
-      Logger.error("Invalid command type: " + transmission.getClass().getName());
+    Response response = this.extractResponse(body);
+    if (response == null) {
       return;
     }
 
-    Response response = (Response) transmission;
-    SuccessResponse successResponse;
-    if (response instanceof FailureResponse){
-      Logger.error("Failed to execute command: " + response);
-      return;
-      // TODO try to execute command again? If this is done, in the future perhaps an attempts field should be added, 
-      // which shows how many times the transmission has been tried sent.
-    }
-    else if (response instanceof SuccessResponse) {
-      successResponse = (SuccessResponse) response;
-    }
-    else {
-      Logger.error("Invalid response type: " + response.getClass().getName());
-      return;
-    }
-
-    Logger.info("Handling greenhouse command response: " + response);
-
-    Transmission command = successResponse.getTransmission();
-    
-    if (!(command instanceof GreenhouseCommand)) {
-      Logger.error("Invalid command type: " + command.getClass().getName());
-      return;
-    }
-
-    // TODO should someone else do this? another class?
-
-    String responseData = successResponse.getResponseData();
-
-    if (responseData == null || responseData.isEmpty()) {
-      throw new IllegalArgumentException("Sensor specification can't be empty");
-    }
-
-    String[] parts = responseData.split(";");
-
-    switch (command.getTransmissionString()) {
-      case "GET_NODE_ID":
-        // Response data is the node id.
-        this.communicationChannel.spawnNode(responseData, 5);
-        break;
-      case "GET_NODE":
-
-        SensorActuatorNodeInfo nodeInfo = SensorActuatorNodeInfoParser.createSensorNodeInfoFrom(responseData, this.logic);
-        this.logic.addNode(nodeInfo);
-      
-        break;
-      case "GET_SENSOR_DATA":
-
-
-        if (parts.length != 2) {
-          throw new IllegalArgumentException("Incorrect specification format: " + responseData);
-        }
-        int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
-        List<SensorReading> sensors = SensorReadingsParser.parseSensors(parts[1]);
-        // sensors.removeIf(sensor -> sensor instanceof NoSensorReading);
-
-        this.logic.advertiseSensorData(sensors, nodeId, 1);
-
-        break;
-      case "ACTUATOR_CHANGE":
-        Logger.info("Received actuator change response: " + responseData);
-
-        if (parts.length != 3) {
-          Logger.error("Invalid actuator change response: " + responseData);
-          return;
-        }
-
-        int nodeId2 = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
-        int actuatorId = parseIntegerOrError(parts[1], "Invalid actuator ID:" + parts[1]);
-        boolean actuatorState = parseBooleanOrError(parts[2], "Invalid actuator state:" + parts[2]);
-        this.logic.advertiseActuatorState(nodeId2, actuatorId, actuatorState, 1);
-        
-        break;
-      default:
-        Logger.error("Unknown command: " + command);
+    // Handle based on client type
+    if (client == Endpoints.GREENHOUSE) {
+      this.handleGreenhouseResponse(response);
+    } else if (client == Endpoints.SERVER) {
+      this.handleServerResponse(response);
+    } else {
+      Logger.error("Unknown client: " + client);
     }
   }
 
-  // TODO refactor
-  private void handleServerResponse(MessageBody body){
-    // TODO CHANGE!
+  /**
+   * Handle a response to a greenhouse command.
+   * Processes the command response and performs actions based on the command
+   * type.
+   *
+   * @param body The message body containing the command response
+   */
+  private void handleGreenhouseResponse(Response response) {
 
-    Transmission transmission = body.getTransmission();
-    if (!(transmission instanceof SuccessResponse || transmission instanceof FailureResponse)) {
-      Logger.error("Invalid response type: " + transmission.getClass().getName());
+    if (!(response instanceof SuccessResponse)) {
+      Logger.info("Received non-success response, no action taken: " + response);
       return;
     }
 
-    Response response = (Response) transmission;
-    SuccessResponse successResponse;
-    if (response instanceof FailureResponse){
+    GreenhouseCommand command = this.extractCommand(response);
+    if (command == null) {
+      return;
+    }
 
+    String responseData = response.getResponseData();
+    if (responseData == null) {
+      Logger.error("Response data is null: " + response);
+      return;
+    }
+
+    if (command instanceof GetNodeIdCommand) {
+      this.handleGetNodeIdResponse(responseData);
+    } else if (command instanceof GetNodeCommand) {
+      this.handleGetNodeCommand(responseData);
+    } else if (command instanceof GetSensorDataCommand) {
+      this.handleGetSensorDataResponse(responseData);
+    } else if (command instanceof ActuatorChangeCommand) {
+      this.handleActuatorChangeResponse(responseData);
+    } else {
+      Logger.error("Unknown command: " + command);
+    }
+  }
+
+  /**
+   * Handles the response to an actuator change command.
+   * 
+   * @param responseData the response data.
+   */
+  private void handleActuatorChangeResponse(String responseData) {
+
+    String[] parts = responseData.split(Delimiters.BODY_FIELD.getValue());
+    if (parts.length != 3) {
+      Logger.error("Invalid actuator change response: " + responseData);
+      return;
+    }
+
+    int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
+    int actuatorId = parseIntegerOrError(parts[1], "Invalid actuator ID:" + parts[1]);
+    boolean actuatorState = parseBooleanOrError(parts[2], "Invalid actuator state:" + parts[2]);
+
+    this.logic.advertiseActuatorState(nodeId, actuatorId, actuatorState, 1);
+  }
+
+  /**
+   * Handles the response to a get sensor data command.
+   * 
+   * @param responseData the response data.
+   */
+  private void handleGetSensorDataResponse(String responseData) {
+
+    String[] parts = responseData.split(Delimiters.BODY_FIELD.getValue());
+    if (parts.length != 2) {
+      throw new IllegalArgumentException("Incorrect specification format: " + responseData);
+    }
+
+    int nodeId = parseIntegerOrError(parts[0], "Invalid node ID:" + parts[0]);
+    List<SensorReading> sensors = SensorReadingsParser.parseSensors(parts[1]);
+
+    this.logic.advertiseSensorData(sensors, nodeId, 1);
+  }
+
+  /**
+   * Handles the response to a get node command.
+   * 
+   * @param responseData the response data.
+   */
+  private void handleGetNodeCommand(String responseData) {
+    SensorActuatorNodeInfo nodeInfo = SensorActuatorNodeInfoParser.createSensorNodeInfoFrom(responseData, this.logic);
+    this.logic.addNode(nodeInfo);
+  }
+
+  /**
+   * Handles the response to a get node ID command.
+   * Spawns a new sensor/actuator node based on the response data.
+   * 
+   * @param nodeId the node id response data.
+   */
+  private void handleGetNodeIdResponse(String nodeId) {
+    this.communicationChannel.spawnNode(nodeId, 5);
+  }
+
+  /**
+   * Handles a response from the server.
+   * 
+   * @param response the message response.
+   */
+  private void handleServerResponse(Response response) {
+    if (response instanceof SuccessResponse) {
+      SuccessResponse successResponse = (SuccessResponse) response;
+      this.handleServerSuccessResponse(successResponse);
+    } else if (response instanceof FailureResponse) {
       FailureResponse failureResponse = (FailureResponse) response;
+      this.handleServerFailureResponse(failureResponse);
+    }
+  }
 
-      Logger.error("Failed to execute command, sending again: " + response);
+  /**
+   * Handles a success response from the server.
+   * 
+   * @param response the success response.
+   */
+  private void handleServerSuccessResponse(SuccessResponse response) {
+    Logger.info("Success response: " + response);
+  }
 
-      if (failureResponse.getFailureReason() == FailureReason.FAILED_TO_IDENTIFY_CLIENT){
-        ClientIdentification clientIdentification = new ClientIdentification(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
+  /**
+   * Handles a failure response from the server.
+   * Different failure reasons may be hanlded differently.
+   * 
+   * @param response the failure response.
+   */
+  private void handleServerFailureResponse(FailureResponse response) {
+
+    Logger.error("Failed to execute command, sending again: " + response);
+
+    FailureReason reason = response.getFailureReason();
+
+    switch(reason) {
+      case FAILED_TO_IDENTIFY_CLIENT:
+        ClientIdentification clientIdentification = new ClientIdentification(Endpoints.CONTROL_PANEL,
+            Endpoints.NOT_PREDEFINED.getValue());
         this.communicationChannel.establishConnectionWithServer(clientIdentification);
-      }
-      else{
+        break;
+      default:
         Logger.error("Unknown command: " + response);
-      }
-      // MessageBody bodyToSend = new MessageBody(response.getTransmission());
-
-      // Message message = new Message(header, bodyToSend);
-
-      // TODO try to execute command again? If this is done, in the future perhaps an attempts field should be added, 
-      // which shows how many times the transmission has been tried sent.
     }
-    else if (response instanceof SuccessResponse) {
-      successResponse = (SuccessResponse) response;
-      Logger.info("Success response: " + successResponse);
+  }
+
+  /**
+   * Extracts the response from a message body.
+   * If the body does not contain a response, logs an error and returns null.
+   * 
+   * @param body the message body.
+   * @return the success response, or null if the body does not contain a response.
+   */
+  private Response extractResponse(MessageBody body) {
+
+    Transmission transmission = body.getTransmission();
+
+    if (!(transmission instanceof Response)) {
+      Logger.error("Invalid command type: " + transmission.getClass().getName());
+      return null;
     }
+    return (Response) transmission;
+  }
+
+  /**
+   * Extracts the greenhouse command from a success response.
+   * If the command is not a greenhouse command, logs an error and returns null.
+   * 
+   * @param response the response.
+   * @return the greenhouse command, or null if the command is not a greenhouse command.
+   */
+  private GreenhouseCommand extractCommand(Response response) {
+    Transmission command = response.getTransmission();
+
+    if (!(command instanceof GreenhouseCommand)) {
+      Logger.error("Invalid command type: " + command.getClass().getName());
+      return null;
+    }
+
+    return (GreenhouseCommand) command;
   }
 }
