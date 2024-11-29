@@ -11,6 +11,8 @@
 - [ ] ADRIAN Pass på god kode for intermediary server
 - [ ] ADRIAN Pass på god kode for greenhouse
 - [ ] ADRIAN Pass på god kode for messages
+- [ ] ADRIAN TcpCOnnection.java
+- [ ] ADRIAN SocketCommunicationChannel.java
 - [ ] TOBIAS Forsikre god kode kvalitet i tools
 
 # Probably wont do
