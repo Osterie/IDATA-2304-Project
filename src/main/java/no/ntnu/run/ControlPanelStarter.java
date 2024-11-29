@@ -25,7 +25,7 @@ public class ControlPanelStarter implements Runnable {
   public void run() {
     this.start();
   }
-
+  
   /**
    * Entrypoint for the application.
    */

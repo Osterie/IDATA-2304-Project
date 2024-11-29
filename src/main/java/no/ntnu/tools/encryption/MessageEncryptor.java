@@ -2,6 +2,7 @@ package no.ntnu.tools.encryption;
 
 import no.ntnu.messages.Message;
 import no.ntnu.messages.Transmission;
+import no.ntnu.tools.Logger;
 import no.ntnu.tools.encryption.asymmetric.HybridRSAEncryptor;
 import javax.crypto.SecretKey;
 import java.security.PrivateKey;
@@ -60,7 +61,7 @@ public class MessageEncryptor {
     public static Message decryptStringMessage(Message encryptedMessage, PrivateKey privateKey) throws Exception {
         // Decrypt the AES key using the private key
         SecretKey decryptedAESKey = HybridRSAEncryptor.decryptAESKeyWithRSA(encryptedMessage.getHeader().getEncryptedAES(), privateKey);
-        System.out.println("Decrypted AES Key.");
+        Logger.info("Decrypted AES Key.");
 
         // Decrypt the message using the AES key
         String decryptedTransmission = HybridRSAEncryptor.decryptWithAES(encryptedMessage.getBody().getTransmission().getTransmissionString(), decryptedAESKey);

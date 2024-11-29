@@ -58,11 +58,12 @@ public class SensorPane extends TitledPane {
    * @param sensors The sensor data to be displayed on the pane.
    */
   public SensorPane(List<Sensor> sensors) {
+    // TODO what happens here, why check .equals(The sensor is off.")?
     try {
       initialize(sensors.stream().map(Sensor::getReading).toList());
     } catch (IllegalStateException e) {
       if (e.getMessage().equals("The sensor is off.")) {
-        System.out.println("Cannot add sensor to sensor pane because sensor is off");
+        Logger.error("Cannot add sensor to sensor pane becuase sensor is off");
       } else {
         throw e;
       }
@@ -88,11 +89,12 @@ public class SensorPane extends TitledPane {
    * @param sensors The sensor data that has been updated
    */
   public void update(List<Sensor> sensors) {
+    // TODO what happens here, why check .equals(The sensor is off.")?
     try {
       update(sensors.stream().map(Sensor::getReading).toList());
     } catch (IllegalStateException e) {
       if (e.getMessage().equals("The sensor is off.")) {
-        System.out.println("Cannot update sensor because sensor is off");
+        Logger.warn("Cannot update sensor becuase sensor is off");
       } else {
         throw e;
       }
