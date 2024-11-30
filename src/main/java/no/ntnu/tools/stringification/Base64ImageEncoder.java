@@ -23,22 +23,26 @@ import javax.imageio.ImageIO;
  */
 public class Base64ImageEncoder {
 
-  /**
-   * Converts an image (BufferedImage) into a Base64 encoded string.
-   *
-   * @param bufferedImage The image to be converted.
-   * @param fileExtension The file format/extension of the image (e.g., "png", "jpg", "jpeg").
-   * @return A Base64 encoded string representing the image.
-   * @throws IOException if the image cannot be read or written in the specified format.
-   */
-  public static String imageToString(BufferedImage bufferedImage,
-                                     String fileExtension) throws IOException {
+  public static String imageToString(BufferedImage bufferedImage, String fileExtension) throws IOException {
+    
+    if (bufferedImage.getType() != BufferedImage.TYPE_INT_RGB) {
+      BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+      newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, null);
+      bufferedImage = newBufferedImage;
+    }
+    
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     // Write the image to the output stream in the specified format (JPG/PNG)
-    ImageIO.write(bufferedImage, fileExtension, byteArrayOutputStream);
+
+
+    if (ImageIO.write(bufferedImage, "png", byteArrayOutputStream) == false) {
+      throw new IOException("ImageIO.write() failed");
+    }
 
     // Encode the byte array to Base64 and return as a string
-    return Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
+    String testString = Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
+
+    return testString;
   }
 
 

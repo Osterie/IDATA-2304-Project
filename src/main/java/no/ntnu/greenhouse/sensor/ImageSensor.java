@@ -23,6 +23,7 @@ public class ImageSensor extends Sensor<ImageSensorReading> {
   public ImageSensor(SensorType type, String imagesFilePath) {
     this.reading = new ImageSensorReading(type);
     this.imagesFilePath = imagesFilePath;
+    this.reading.generateRandomImage(imagesFilePath);
     this.turnOn();
   }
 

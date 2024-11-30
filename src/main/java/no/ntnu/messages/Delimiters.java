@@ -21,7 +21,10 @@ public enum Delimiters {
     BODY_FIELD(HEADER_FIELD.getValue()),
 
     /** Delimiter between a fields parameters in the body of a message. */
-    BODY_FIELD_PARAMETERS(",");
+    BODY_FIELD_PARAMETERS(","),
+
+    /** Delimiter between sensor data in the body of a message. */
+    BODY_SENSOR_SEPARATOR("¤");
 
     private final String value;
 

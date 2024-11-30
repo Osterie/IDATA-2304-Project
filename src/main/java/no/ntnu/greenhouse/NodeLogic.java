@@ -59,7 +59,8 @@ public class NodeLogic implements ActuatorListener {
       try {
         SensorReading reading = sensor.getReading();
         String sensorType = sensor.getDataFormat();
-        sensorData += sensorType + ":" + reading.getFormatted() + Delimiters.BODY_FIELD_PARAMETERS.getValue();
+        String formattedSensorReading = reading.getFormatted();
+        sensorData += sensorType + ":" + formattedSensorReading + Delimiters.BODY_SENSOR_SEPARATOR.getValue();
       } catch (IllegalStateException e) {
         // TODO what is this
         if (e.getMessage().equals("The image-sensor is off.")) {

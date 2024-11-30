@@ -2,6 +2,8 @@ package no.ntnu.greenhouse.sensor;
 
 import java.util.Objects;
 
+import no.ntnu.messages.Delimiters;
+
 /**
  * Represents one sensor reading (value).
  */
@@ -69,7 +71,7 @@ public class NumericSensorReading extends SensorReading {
    * @return The sensor reading and the unit
    */
   public String getFormatted() {
-    return this.getType() + " = " + this.value + " " + this.unit;
+    return this.getType().getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.value + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.unit;
   }
 
   /**

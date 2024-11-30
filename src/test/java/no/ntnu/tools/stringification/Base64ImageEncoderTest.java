@@ -11,29 +11,38 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
+
 public class Base64ImageEncoderTest {
     private static File inputImageFile;
     private static File outputImageFile;
+    private static BufferedImage bufferedImage;
 
     @BeforeAll
     public static void setup() {
         // Provide valid image paths for testing
-        inputImageFile = new File(Resources.IMAGES.getPath() + "picsart_chuck.jpeg");  // Replace with your image path
+        inputImageFile = new File("resources\\images\\picsart_chuck.jpg");  // Replace with your image path
+        try {
+            bufferedImage = ImageIO.read(inputImageFile);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
-    // @Test
-    // public void testImageToString() throws IOException {
-    //     // Test converting image to Base64 string
-    //     String base64String = Base64ImageEncoder.imageToString(inputImageFile);
-    //     assertNotNull(base64String, "Base64 string should not be null.");
-    //     assertFalse(base64String.isEmpty(), "Base64 string should not be empty.");
-    //     Logger.info("Image successfully converted to Base64 string.");
-    // }
+    @Test
+    public void testImageToString() throws IOException {
+        // Test converting image to Base64 string
+        String base64String = Base64ImageEncoder.imageToString(bufferedImage,"png");
+        assertNotNull(base64String, "Base64 string should not be null.");
+        assertFalse(base64String.isEmpty(), "Base64 string should not be empty.");
+        Logger.info("Image successfully converted to Base64 string.");
+    }
 
     // @Test
     // public void testStringToImage() throws IOException {
     //     // Convert image to Base64 string first
-    //     String base64String = Base64ImageEncoder.imageToString(inputImageFile);
+    //     String base64String = Base64ImageEncoder.imageToString(inputImageFile, "png");
 
     //     // Test converting Base64 string back to BufferedImage
     //     BufferedImage image = Base64ImageEncoder.stringToImage(base64String);

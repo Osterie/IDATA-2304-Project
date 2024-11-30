@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
+import no.ntnu.messages.Delimiters;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.stringification.Base64AudioEncoder;
 
@@ -79,7 +80,7 @@ public class AudioSensorReading extends SensorReading {
 
 
     public String getFormatted(){
-        return this.getType() + " = " + this.getAudioFormatted() + " " + this.fileExtension;
+        return this.getType().getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.getAudioFormatted() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.fileExtension;
     }
 
 

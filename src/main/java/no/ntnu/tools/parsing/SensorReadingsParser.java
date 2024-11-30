@@ -14,6 +14,7 @@ import no.ntnu.greenhouse.sensor.NoSensorReading;
 import no.ntnu.greenhouse.sensor.NumericSensorReading;
 import no.ntnu.greenhouse.sensor.SensorReading;
 import no.ntnu.greenhouse.sensor.SensorType;
+import no.ntnu.messages.Delimiters;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.stringification.Base64AudioEncoder;
 import no.ntnu.tools.stringification.Base64ImageEncoder;
@@ -32,7 +33,9 @@ public class SensorReadingsParser {
       throw new IllegalArgumentException("Sensor info can't be empty");
     }
     List<SensorReading> readings = new LinkedList<>();
-    String[] readingInfo = sensorInfo.split(",");
+    
+    
+    String[] readingInfo = sensorInfo.split(Delimiters.BODY_SENSOR_SEPARATOR.getValue());
     for (String reading : readingInfo) {
       try {
         readings.add(parseReading(reading));
@@ -46,6 +49,10 @@ public class SensorReadingsParser {
   
   /**
    * Parses a sensor reading from a string and returns a SensorReading object.
+   * 
+   * "IMG:image,base64String,fileExtension"
+   * "IMG"
+   * "image,base64String,fileExtension"
    *
    * @param reading the sensor reading string in the format
    *                "type=value unit" or "image=base64String fileExtension"
@@ -61,23 +68,21 @@ public class SensorReadingsParser {
     if (formatParts.length != 2) {
       throw new IllegalArgumentException("Invalid sensor format/data: " + reading);
     }
-    String[] assignmentParts = formatParts[1].split("=");
-    //TODO ADDED ANOTHER ACCEPTED VALUE BECAUSE THE WAY BASE64 CLASS MAKES AUDIO FILE TO STRING. SHOUL PROBABLY BE CHANGED
-    if (assignmentParts.length != 2 && assignmentParts.length != 4) {
+    String[] assignmentParts = formatParts[1].split(Delimiters.BODY_FIELD_PARAMETERS.getValue());
+    if (assignmentParts.length != 3) {
       throw new IllegalArgumentException("Invalid sensor reading specified: " + reading);
     }
-    String[] valueParts = assignmentParts[1].split(" ");
-    //TODO ADDED ANOTHER ACCEPTED VALUE BECAUSE THE WAY BASE64 CLASS MAKES AUDIO FILE TO STRING. SHOUL PROBABLY BE CHANGED
-    if (valueParts.length != 3 && valueParts.length != 2) {
-      throw new IllegalArgumentException("Invalid sensor value/unit: " + reading);
-    }
+    // String[] valueParts = assignmentParts[1].split(" ");
+    // if (valueParts.length != 3 && valueParts.length != 2) {
+    //   throw new IllegalArgumentException("Invalid sensor value/unit: " + reading);
+    // }
     if (formatParts[0].equals("IMG")) {
-      if ((SensorType.NONE.equals(valueParts[2]))) {
+      if ((SensorType.NONE.equals(assignmentParts[0]))) {
         return new NoSensorReading();
       }
       String type = assignmentParts[0];
-      String base64String = valueParts[1];
-      String fileExtension = valueParts[2];
+      String base64String = assignmentParts[1];
+      String fileExtension = assignmentParts[2];
 
       BufferedImage image;
       try {
@@ -91,18 +96,18 @@ public class SensorReadingsParser {
       return imageReading;
     } else if (formatParts[0].equals("NUM")) {
       String type = assignmentParts[0];
-      double value = parseDoubleOrError(valueParts[1], "Invalid sensor value: " + valueParts[1]);
+      double value = parseDoubleOrError(assignmentParts[1], "Invalid sensor value: " + assignmentParts[1]);
       String unit = "";
-      if (valueParts.length == 3) {
-        unit = valueParts[2];
+      if (assignmentParts.length == 3) {
+        unit = assignmentParts[2];
       }
       return new NumericSensorReading(SensorType.fromString(type), value, unit);
     } else if (formatParts[0].equals("AUD")) {
-      if ((SensorType.NONE.equals(valueParts[2]))) {
+      if ((SensorType.NONE.equals(assignmentParts[0]))) {
         return new NoSensorReading();
       }
       String type = assignmentParts[0];
-      String base64String = valueParts[1];
+      String base64String = assignmentParts[1];
 
       File audioFile;
       try {
