@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import no.ntnu.greenhouse.actuator.Actuator;
 import no.ntnu.greenhouse.actuator.ActuatorCollection;
+import javafx.scene.layout.HBox;
 
 /**
  * ActuatorPane is a custom JavaFX pane that displays and manages a collection of actuators.
@@ -52,7 +53,11 @@ public class ActuatorPane extends BasePane {
             Node actuatorGui = ActuatorComponentFactory.createActuatorComponent(actuator, actuatorActive);
             addComponent(actuatorGui);
         }
-        addTurnOffAllButton();
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+        hbox.getChildren().addAll(createTurnOnAllButton(), createTurnOffAllButton());
+        addComponent(hbox);
+        
     }
 
 
@@ -60,10 +65,10 @@ public class ActuatorPane extends BasePane {
      * Adds a button to the pane that, when clicked, turns off all actuators.
      * The button is labeled "Turn Off All Actuators".
      */
-    private void addTurnOffAllButton() {
+    private Button createTurnOffAllButton() {
         Button turnOffAllButton = new Button("Turn Off All Actuators");
         turnOffAllButton.setOnAction(e -> turnOffAllActuators());
-        addComponent(turnOffAllButton);
+        return turnOffAllButton;
     }
 
     /**
@@ -78,6 +83,27 @@ public class ActuatorPane extends BasePane {
     }
 
     /**
+     * Adds a button to the pane that, when clicked, turns on all actuators.
+     * The button is labeled "Turn On All Actuators".
+     */
+    private Button createTurnOnAllButton() {
+        Button turnOnAllButton = new Button("Turn On All Actuators");
+        turnOnAllButton.setOnAction(e -> turnOnAllActuators());
+        return turnOnAllButton;
+    }
+
+    /**
+     * Turns on all actuators in the list and refreshes the actuator display.
+     * This method iterates through all actuators and turns each one on.
+     */
+    private void turnOnAllActuators() {
+        for (Actuator actuator : actuators) {
+            actuator.turnOn(true);
+        }
+        refreshActuatorDisplay();
+    }
+
+    /**
      * Refreshes the actuator display by clearing the existing UI components
      * and re-initializing them to update the UI with the latest states.
      */
@@ -86,4 +112,5 @@ public class ActuatorPane extends BasePane {
         initialize(); // Re-initialize to update the UI with the latest states
     }
 
-  }
+}
+
