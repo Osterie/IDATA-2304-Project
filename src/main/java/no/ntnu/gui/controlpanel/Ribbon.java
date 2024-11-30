@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 /**
  * Factory class for creating the ribbon in the control panel.
  */
-public class RibbonFactory {
+public class Ribbon {
 
     /**
      * Creates the ribbon containing the menu bar with application options.
