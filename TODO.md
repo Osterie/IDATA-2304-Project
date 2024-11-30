@@ -7,8 +7,8 @@
 
 - [ ] TODO change nodeId to only be int, or that it can be string. (go for can be string.)
 - [ ] TOBIAS Refactor tools.
-- [ ] KNUT Refactor gui ControlPanel.
 
+- [ ] KNUT pass på god kode for gui controlpanel.
 - [x] ADRIAN Ensure high quality code for all classes under controlpanel folder
 - [ ] ADRIAN Ensure high quality code for all classes under intermediary server folder
   - [ ] ADRIAN clienthandler folder
@@ -296,12 +296,11 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 
 ## GUI
 
-- [ ] KNUT. Implement ComponentBuilder class
 - [ ] KNUT. Visualize charts.
 - [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
 - [x] KNUT. Utbedre UI for ControlPanelApplication, Sett TurnOffAllActuators button til actuatorPane og fjern nodeSelect
 - [X] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
-- [ ] KNUT Imlement Component Builder.
+- [X] KNUT Implement Component Builder.
 - [x] ADRIAN. Make actuator buttons send data.
 - [ ] DANIEL. Do the task which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
 
