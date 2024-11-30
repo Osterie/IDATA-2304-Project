@@ -21,7 +21,7 @@ public class TurnOffAllActuatorInNodeCommand extends GreenhouseCommand {
     /**
      * Executes the command to turn off all actuators in a node.
      * 
-     * @param nodeLogic The node logic to execute the command on.
+     * @param nodeLogic  The node logic to execute the command on.
      * @param fromHeader The header of the message that triggered this command.
      * @return A message containing the success response.
      */
@@ -32,7 +32,7 @@ public class TurnOffAllActuatorInNodeCommand extends GreenhouseCommand {
         MessageBody body = new MessageBody(response);
         return new Message(fromHeader, body);
     }
-    
+
     /**
      * Converts the command to a string which follows transmission protocol.
      * 
@@ -42,5 +42,5 @@ public class TurnOffAllActuatorInNodeCommand extends GreenhouseCommand {
     public String toString() {
         return this.getTransmissionString();
     }
-    
+
 }

@@ -17,7 +17,7 @@ public class GetSensorDataCommand extends GreenhouseCommand {
     /**
      * Executes the command to get sensor data from a specified node.
      * 
-     * @param nodeLogic The node logic to execute the command on.
+     * @param nodeLogic  The node logic to execute the command on.
      * @param fromHeader The header of the message that triggered this command.
      * @return A message containing the sensor data.
      */

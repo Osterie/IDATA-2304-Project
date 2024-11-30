@@ -20,8 +20,8 @@
   - [ ] ADRIAN sensor folder
   - [x] ADRIAN other
 - [ ] ADRIAN Ensure high quality code for all classes under messages folder
-  - [ ] ADRIAN Commands
-    - [ ] ADRIAN Greenhouse
+  - [x] ADRIAN Commands
+    - [x] ADRIAN Greenhouse
     - [x] ADRIAN Other
   - [x] ADRIAN Responses
   - [ ] ADRIAN Other
