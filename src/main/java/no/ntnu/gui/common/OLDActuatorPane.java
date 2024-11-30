@@ -37,127 +37,127 @@
 //   public OLDActuatorPane(ActuatorCollection actuators) {
 //     super();
 //     this.actuators = actuators;
-//     // setText("Actuators"); // Sets the title of the pane.
-//     // VBox vbox = new VBox();
-//     // vbox.setSpacing(10); // Adds spacing between the child elements.
-//     // setContent(vbox); // Adds the VBox to the pane's content.
-//     // addActuatorControls(actuators, vbox);
-//     // addTurnOffAllButton(vbox); // Add the "Turn Off All Actuators" button.
-//     // GuiTools.stretchVertically(this); // Ensures the pane stretches vertically.
+//      setText("Actuators"); // Sets the title of the pane.
+//      VBox vbox = new VBox();
+//      vbox.setSpacing(10); // Adds spacing between the child elements.
+//      setContent(vbox); // Adds the VBox to the pane's content.
+//      addActuatorControls(actuators, vbox);
+//      addTurnOffAllButton(vbox); // Add the "Turn Off All Actuators" button.
+//      GuiTools.stretchVertically(this); // Ensures the pane stretches vertically.
 //   }
 
-//   // /**
-//   //  * Adds controls for each actuator in the collection to the provided parent container.
-//   //  *
-//   //  * @param actuators A collection of actuators to display.
-//   //  * @param parent    The parent container where the controls will be added.
-//   //  */
-//   // private void addActuatorControls(ActuatorCollection actuators, Pane parent) {
-//   //   actuators.forEach(actuator ->
-//   //           parent.getChildren().add(createActuatorGui(actuator))
-//   //   );
-//   // }
+//    /**
+//     * Adds controls for each actuator in the collection to the provided parent container.
+//     *
+//     * @param actuators A collection of actuators to display.
+//     * @param parent    The parent container where the controls will be added.
+//     */
+//    private void addActuatorControls(ActuatorCollection actuators, Pane parent) {
+//      actuators.forEach(actuator ->
+//              parent.getChildren().add(createActuatorGui(actuator))
+//      );
+//    }
 
-//   // /**
-//   //  * Creates the GUI representation for a single actuator.
-//   //  *
-//   //  * @param actuator The actuator for which to create a GUI.
-//   //  * @return A Node representing the GUI of the actuator.
-//   //  */
-//   // private Node createActuatorGui(Actuator actuator) {
-//   //   HBox actuatorGui = new HBox(createActuatorLabel(actuator), createActuatorCheckbox(actuator));
-//   //   actuatorGui.setSpacing(5); // Adds spacing between the label and checkbox.
-//   //   return actuatorGui;
-//   // }
+//    /**
+//     * Creates the GUI representation for a single actuator.
+//     *
+//     * @param actuator The actuator for which to create a GUI.
+//     * @return A Node representing the GUI of the actuator.
+//     */
+//    private Node createActuatorGui(Actuator actuator) {
+//      HBox actuatorGui = new HBox(createActuatorLabel(actuator), createActuatorCheckbox(actuator));
+//      actuatorGui.setSpacing(5); // Adds spacing between the label and checkbox.
+//      return actuatorGui;
+//    }
 
-//   // /**
-//   //  * Creates a checkbox linked to the given actuator, allowing the user to toggle its state.
-//   //  *
-//   //  * @param actuator The actuator to control with the checkbox.
-//   //  * @return A CheckBox bound to the actuator's state.
-//   //  */
-//   // private CheckBox createActuatorCheckbox(Actuator actuator) {
-//   //   CheckBox checkbox = new CheckBox();
-//   //   SimpleBooleanProperty isSelected = new SimpleBooleanProperty(actuator.isOn());
-//   //   actuatorActive.put(actuator, isSelected); // Store the property for later updates.
-//   //   checkbox.selectedProperty().bindBidirectional(isSelected);
-//   //   checkbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-//   //     if (newValue != null && newValue) {
-//   //       actuator.turnOn(); // Turns the actuator on if the checkbox is selected.
-//   //     } else {
-//   //       actuator.turnOff(); // Turns the actuator off otherwise.
-//   //     }
-//   //   });
-//   //   return checkbox;
-//   // }
+//    /**
+//     * Creates a checkbox linked to the given actuator, allowing the user to toggle its state.
+//     *
+//     * @param actuator The actuator to control with the checkbox.
+//     * @return A CheckBox bound to the actuator's state.
+//     */
+//    private CheckBox createActuatorCheckbox(Actuator actuator) {
+//      CheckBox checkbox = new CheckBox();
+//      SimpleBooleanProperty isSelected = new SimpleBooleanProperty(actuator.isOn());
+//      actuatorActive.put(actuator, isSelected); // Store the property for later updates.
+//      checkbox.selectedProperty().bindBidirectional(isSelected);
+//      checkbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+//        if (newValue != null && newValue) {
+//          actuator.turnOn(); // Turns the actuator on if the checkbox is selected.
+//        } else {
+//          actuator.turnOff(); // Turns the actuator off otherwise.
+//        }
+//      });
+//      return checkbox;
+//    }
 
-//   // /**
-//   //  * Creates a label for the given actuator, showing its type and current state.
-//   //  *
-//   //  * @param actuator The actuator for which to create the label.
-//   //  * @return A Label bound to the actuator's state text.
-//   //  */
-//   // private Label createActuatorLabel(Actuator actuator) {
-//   //   SimpleStringProperty props = new SimpleStringProperty(generateActuatorText(actuator));
-//   //   actuatorValue.put(actuator, props);
-//   //   Label label = new Label();
-//   //   label.textProperty().bind(props);
-//   //   return label;
-//   // }
+//    /**
+//     * Creates a label for the given actuator, showing its type and current state.
+//     *
+//     * @param actuator The actuator for which to create the label.
+//     * @return A Label bound to the actuator's state text.
+//     */
+//    private Label createActuatorLabel(Actuator actuator) {
+//      SimpleStringProperty props = new SimpleStringProperty(generateActuatorText(actuator));
+//      actuatorValue.put(actuator, props);
+//      Label label = new Label();
+//      label.textProperty().bind(props);
+//      return label;
+//    }
 
-//   // /**
-//   //  * Generates the text representation of an actuator's state.
-//   //  *
-//   //  * @param actuator The actuator whose text representation is generated.
-//   //  * @return A string showing the actuator's type and its specific state.
-//   //  */
-//   // private String generateActuatorText(Actuator actuator) {
-//   //   String state;
-//   //   if (actuator.isOn()) {
-//   //     state = actuator.getTurnOnText();
-//   //   } else {
-//   //     state = actuator.getTurnOffText();
-//   //   }
-//   //   return actuator.getType() + ": " + state;
-//   // }
+//  /**
+//     * Generates the text representation of an actuator's state.
+//     *
+//     * @param actuator The actuator whose text representation is generated.
+//     * @return A string showing the actuator's type and its specific state.
+//     */
+//    private String generateActuatorText(Actuator actuator) {
+//      String state;
+//      if (actuator.isOn()) {
+//        state = actuator.getTurnOnText();
+//      } else {
+//        state = actuator.getTurnOffText();
+//      }
+//      return actuator.getType() + ": " + state;
+//    }
 
-//   // /**
-//   //  * Adds a "Turn Off All Actuators" button to the pane.
-//   //  *
-//   //  * @param parent The parent container where the button will be added.
-//   //  */
-//   // private void addTurnOffAllButton(Pane parent) {
-//   //   Button turnOffAllButton = new Button("Turn Off All Actuators");
-//   //   turnOffAllButton.setOnAction(event -> turnOffAllActuators());
-//   //   parent.getChildren().add(turnOffAllButton);
-//   // }
+//    /**
+//     * Adds a "Turn Off All Actuators" button to the pane.
+//     *
+//     * @param parent The parent container where the button will be added.
+//     */
+//    private void addTurnOffAllButton(Pane parent) {
+//      Button turnOffAllButton = new Button("Turn Off All Actuators");
+//      turnOffAllButton.setOnAction(event -> turnOffAllActuators());
+//      parent.getChildren().add(turnOffAllButton);
+//    }
 
-//   // /**
-//   //  * Turns off all actuators in the collection.
-//   //  */
-//   // private void turnOffAllActuators() {
-//   //   actuators.forEach(actuator -> {
-//   //     actuator.turnOff();
-//   //     update(actuator); // Update the actuator display
-//   //   });
-//   // }
+//    /**
+//     * Turns off all actuators in the collection.
+//     */
+//    private void turnOffAllActuators() {
+//      actuators.forEach(actuator -> {
+//        actuator.turnOff();
+//        update(actuator); // Update the actuator display
+//      });
+//   }
 
-//   // /**
-//   //  * Updates the GUI to reflect the current state of the given actuator.
-//   //  *
-//   //  * @param actuator The actuator whose state has changed.
-//   //  * @throws IllegalStateException if the actuator is not managed by this pane.
-//   //  */
-//   // public void update(Actuator actuator) {
-//   //   SimpleStringProperty actuatorText = actuatorValue.get(actuator);
-//   //   SimpleBooleanProperty actuatorSelected = actuatorActive.get(actuator);
-//   //   if (actuatorText == null || actuatorSelected == null) {
-//   //     throw new IllegalStateException("Can't update GUI for an unknown actuator: " + actuator);
-//   //   }
+//    /**
+//     * Updates the GUI to reflect the current state of the given actuator.
+//     *
+//     * @param actuator The actuator whose state has changed.
+//     * @throws IllegalStateException if the actuator is not managed by this pane.
+//     */
+//    public void update(Actuator actuator) {
+//      SimpleStringProperty actuatorText = actuatorValue.get(actuator);
+//      SimpleBooleanProperty actuatorSelected = actuatorActive.get(actuator);
+//      if (actuatorText == null || actuatorSelected == null) {
+//        throw new IllegalStateException("Can't update GUI for an unknown actuator: " + actuator);
+//      }
 
-//   //   Platform.runLater(() -> {
-//   //     actuatorText.set(generateActuatorText(actuator)); // Updates the label text.
-//   //     actuatorSelected.set(actuator.isOn()); // Updates the checkbox state.
-//   //   });
-//   // }
+//      Platform.runLater(() -> {
+//       actuatorText.set(generateActuatorText(actuator)); // Updates the label text.
+//        actuatorSelected.set(actuator.isOn()); // Updates the checkbox state.
+//      });
+//    }
 // }
