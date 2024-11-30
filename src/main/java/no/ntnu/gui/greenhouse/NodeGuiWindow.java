@@ -1,5 +1,7 @@
 package no.ntnu.gui.greenhouse;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
@@ -8,18 +10,17 @@ import javafx.stage.Stage;
 import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.greenhouse.actuator.Actuator;
 import no.ntnu.greenhouse.sensor.Sensor;
-import no.ntnu.greenhouse.sensor.SensorReading;
 import no.ntnu.gui.common.ActuatorPane;
 import no.ntnu.gui.common.SensorPane;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Represents a GUI window that provides an overview and control interface for a specific sensor/actuator node in the greenhouse system.
- * This window displays information about the sensors and actuators of the node and allows interaction with them.
+ * Represents a GUI window that provides an overview and control interface for a specific
+ * sensor/actuator node in the greenhouse system.
+ * This window displays information about the sensors and actuators of the node and allows
+ * interaction with them.
  */
 public class NodeGuiWindow extends Stage implements SensorListener, ActuatorListener {
 
@@ -61,8 +62,8 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
 
   /**
    * Positions the window based on the node's ID and sets the minimum size.
-   *
-   * The window's position will vary according to the node's ID, using horizontal and vertical offsets.
+   * The window's position will vary according to the node's ID, using horizontal and
+   * vertical offsets.
    */
   private void setPositionAndSize() {
     setX((node.getId() - 1) * HORIZONTAL_OFFSET);
@@ -96,7 +97,8 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
   }
 
   /**
-   * Creates the main content of the window, including panels for sensors and actuators, wrapped in a ScrollPane.
+   * Creates the main content of the window, including panels for sensors and actuators,
+   * wrapped in a ScrollPane.
    *
    * @return The root container (ScrollPane) that contains the sensor and actuator panels.
    */
@@ -115,10 +117,14 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
     ScrollPane scrollPane = new ScrollPane();
     scrollPane.setContent(root);
     // Ensure ScrollPane adapts to the window size
-    scrollPane.setFitToWidth(true);  // Allow content to fit width
-    scrollPane.setFitToHeight(true); // Allow ScrollPane to manage height automatically
-    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);  // Only show vertical scrollbar when needed
-    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // No horizontal scrollbar unless you need it
+    // Allow content to fit width
+    scrollPane.setFitToWidth(true);
+    // Allow ScrollPane to manage height automatically
+    scrollPane.setFitToHeight(true);
+    // Only show vertical scrollbar when needed
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    // No horizontal scrollbar unless you need it
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
     return scrollPane;
   }
@@ -132,12 +138,12 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
   @Override
   public void sensorsUpdated(List<Sensor> sensors) {
     // Update the sensor pane with the new list of sensors
-    if (sensorPane != null){
+    if (sensorPane != null) {
       List sensorReading = new ArrayList<>();
-    for (Sensor sensor : sensors) {
-      sensorReading.add(sensor.getReading());
-    }
-    sensorPane.update(sensorReading);
+      for (Sensor sensor : sensors) {
+        sensorReading.add(sensor.getReading());
+      }
+      sensorPane.update(sensorReading);
     }
   }
 
