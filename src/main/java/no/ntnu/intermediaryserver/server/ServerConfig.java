@@ -90,6 +90,7 @@ public class ServerConfig {
      */
     private static void writePortToFile(int portNumber) {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(CONFIG_FILE))) {
+            Logger.info("Writing port number to file: " + portNumber);
             writer.write(String.valueOf(portNumber));
         } catch (IOException e) {
             Logger.error("Failed to write port number to file: " + e.getMessage());
@@ -106,9 +107,7 @@ public class ServerConfig {
 
         if (isValidPort(port)) {
             ServerConfig.currentPort = port;
-        } else {
-            Logger.error("Port number in file is invalid. Using default port.");
-        }
+        } 
     }
 
     /**
