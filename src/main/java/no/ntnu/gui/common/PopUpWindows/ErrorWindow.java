@@ -1,7 +1,6 @@
 package no.ntnu.gui.common.PopUpWindows;
 
 import javafx.scene.control.Alert.AlertType;
-import no.ntnu.gui.common.AlertWindow;
 
 /**
  * A utility class for displaying error messages to the user in a modal window.

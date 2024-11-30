@@ -1,4 +1,4 @@
-package no.ntnu.gui.common;
+package no.ntnu.gui.common.PopUpWindows;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -13,16 +13,28 @@ import javafx.stage.StageStyle;
  * An abstract utility class for displaying alert messages to the user in a modal window.
  * This class contains the common logic for displaying alert windows, and subclasses should define the alert type.
  */
-public abstract class AlertWindow {
+public abstract class AlertWindow  {
+
+  // Static flag to track whether any popup is open
+  private static boolean isPopupOpen = false;
 
   /**
-   * Displays an alert window with the given message.
+   * Displays an alert window with the given message if no other popup is open.
    *
    * @param title   The title of the alert window.
    * @param message The message to display in the alert window.
    */
   public void showAlert(String title, String message) {
+    if (isPopupOpen) {
+      // If a popup is already open, do not show a new one
+      System.out.println("Popup is already open. New popup blocked.");
+      return;
+    }
+
     Platform.runLater(() -> {
+      // Set the flag to true indicating a popup is open
+      isPopupOpen = true;
+
       // Create the alert using the specific alert type defined by the subclass
       Alert alert = new Alert(getAlertType(), message, ButtonType.OK);
       alert.setTitle(title);
@@ -41,6 +53,11 @@ public abstract class AlertWindow {
       dialogPaneContent.getChildren().add(textArea);
 
       alert.getDialogPane().setContent(dialogPaneContent);
+
+      alert.setOnHidden(event -> {
+        // Reset the flag when the popup is closed
+        isPopupOpen = false;
+      });
 
       alert.showAndWait();
     });
