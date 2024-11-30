@@ -8,7 +8,9 @@ public enum FailureReason {
 
     SERVER_NOT_STOPPED("Server is not stopped"),
 
-    FAILED_TO_IDENTIFY_CLIENT("Failed to identify client");
+    FAILED_TO_IDENTIFY_CLIENT("Failed to identify client"),
+
+    INTEGRITY_ERROR("Integrity error");
 
     private final String reason;
 
