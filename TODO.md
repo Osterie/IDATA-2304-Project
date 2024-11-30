@@ -353,7 +353,6 @@ does it mean? When is it complete?
 planned, and which ones were completed?
 - [ ] SEBASTIAN 5. A short retrospective after each sprint - what went well, and how can you improve?
 
-
 It is suggested that you keep the sprint documentation in Git as well, but you are allowed to use
 Wiki pages, Jira or other tools if you want.
 

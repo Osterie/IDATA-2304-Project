@@ -62,7 +62,7 @@ public class ClientHandler extends TcpConnection implements Runnable {
      * the message.
      */
     @Override
-    protected void handleMessage(Message message) {
+    protected void handleSpecificMessage(Message message) {
         this.sendToClient(message);
     }
 
@@ -218,6 +218,6 @@ public class ClientHandler extends TcpConnection implements Runnable {
         }
 
         this.logic.setClientIdentification(new ClientIdentification(clientType, clientId));
-        return new SuccessResponse(command, "Identification successful");
+        return new SuccessResponse(command, "Identification successful"); // TODO send key here
     }
 }

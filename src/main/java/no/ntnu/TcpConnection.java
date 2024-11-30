@@ -12,7 +12,9 @@ import java.util.Queue;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
 import no.ntnu.messages.*;
+import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
 import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
+import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.encryption.KeyGenerator;
 import no.ntnu.tools.encryption.MessageEncryptor;
@@ -507,10 +509,46 @@ public abstract class TcpConnection {
     }
   }
 
-  /**
-   * Handles the received message.
-   * 
-   * @param message the message to handle.
-   */
-  protected abstract void handleMessage(Message message);
+    /**
+     * Handles a message received from the client. This method is final to
+     * ensure consistent handling logic across all subclasses.
+     * Subclasses can override `handleSpecificMessage` to provide custom logic.
+     */
+    protected final void handleMessage(Message message) {
+      // Common handling logic
+      if (message.getBody().getTransmission() instanceof SuccessResponse) {
+          SuccessResponse response = (SuccessResponse) message.getBody().getTransmission();
+
+          Transmission transmission = response.getTransmission();
+
+          if (transmission instanceof ClientIdentificationTransmission) {
+              ClientIdentificationTransmission clientIdentificationTransmission =
+                      (ClientIdentificationTransmission) transmission;
+
+              // Common logic for handling client identification
+              handleClientIdentification(clientIdentificationTransmission);
+          }
+      }
+
+      // Delegate to subclass for specific logic
+      handleSpecificMessage(message);
+  }
+
+      /**
+     * Processes the client identification transmission. This is shared logic
+     * that applies to all subclasses.
+     */
+    private void handleClientIdentification(ClientIdentificationTransmission transmission) {
+      // Perform common handling logic for client identification
+      // e.g., publicKey = transmission.getPublicKey();
+      // TODO her
+  }
+
+
+      /**
+     * Allows subclasses to implement their specific handling logic.
+     *
+     * @param message The message to handle
+     */
+    protected abstract void handleSpecificMessage(Message message);
 }

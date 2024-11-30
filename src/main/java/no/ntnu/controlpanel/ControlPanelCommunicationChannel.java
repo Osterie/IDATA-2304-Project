@@ -51,7 +51,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    * @param serverMessage The message received from the server
    */
   @Override
-  protected void handleMessage(Message message) {
+  protected void handleSpecificMessage(Message message) {
     Logger.info("Received message from server: " + message);
     
     MessageHeader header = message.getHeader();
