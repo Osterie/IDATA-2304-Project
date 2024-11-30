@@ -10,7 +10,7 @@
 
 - [ ] SEBASTIAN Refactor SensorReadingParser.java
 
-- [ ] KNUT pass på god kode for gui controlpanel.
+- [X] KNUT pass på god kode for gui controlpanel.
 - [x] ADRIAN Ensure high quality code for all classes under controlpanel folder
 - [x] ADRIAN Ensure high quality code for all classes under intermediary server folder
   - [x] ADRIAN clienthandler folder
@@ -53,7 +53,7 @@
 - [x] ADRIAN Separate factory for actuators.
 <!-- - [ ] TOBIAS for generateHeader method usage, what if header is null? handle this. -->
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
-- [ ] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
+- [X] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
 <!-- - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
 - [x] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
 - [x] ADRIAN fix issue with images not being replaced, but instead being added when displaying images
@@ -307,7 +307,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 ## GUI
 
 - [ ] KNUT. Visualize charts.
-- [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
+- [X] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
 - [x] KNUT. Utbedre UI for ControlPanelApplication, Sett TurnOffAllActuators button til actuatorPane og fjern nodeSelect
 - [X] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
 - [X] KNUT Implement Component Builder.
