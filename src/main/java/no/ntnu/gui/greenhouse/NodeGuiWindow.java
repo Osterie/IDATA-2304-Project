@@ -8,11 +8,13 @@ import javafx.stage.Stage;
 import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.greenhouse.actuator.Actuator;
 import no.ntnu.greenhouse.sensor.Sensor;
+import no.ntnu.greenhouse.sensor.SensorReading;
 import no.ntnu.gui.common.ActuatorPane;
 import no.ntnu.gui.common.SensorPane;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -130,11 +132,12 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
   @Override
   public void sensorsUpdated(List<Sensor> sensors) {
     // Update the sensor pane with the new list of sensors
-    // TODO NOTE TO SELF SEB: CHANGE. 
-    if (sensorPane != null) {
-      for (Sensor sensor : sensors) {
-        sensorPane.update(List.of(sensor.getReading()));
-      }
+    if (sensorPane != null){
+      List sensorReading = new ArrayList<>();
+    for (Sensor sensor : sensors) {
+      sensorReading.add(sensor.getReading());
+    }
+    sensorPane.update(sensorReading);
     }
   }
 

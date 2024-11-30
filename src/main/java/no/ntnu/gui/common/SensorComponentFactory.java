@@ -29,7 +29,7 @@ public class SensorComponentFactory {
 
     private static Node createImageComponent(ImageSensorReading sensor) {
         ImageSensorPane imagePane = new ImageSensorPane(sensor);
-        return imagePane.createContent();
+        return imagePane.createContent(sensor);
     }
 
     private static Node createAudioComponent(AudioSensorReading sensor) {

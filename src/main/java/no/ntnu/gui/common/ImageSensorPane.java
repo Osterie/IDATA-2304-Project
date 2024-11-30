@@ -42,14 +42,9 @@ public class ImageSensorPane extends Pane {
    * @param sensor the sensor reading containing the image data
    * @return a VBox containing the image label and thumbnail
    */
-  public Node createContent() {
-    Logger.info("Creating image view for thumbnail");
-    ImageSensorReading imageSensor = this.sensorReading;
-
-    //TODO REFACTOR TO GET IMAGE FROM SENSOR
-    // Generate image
-    imageSensor.generateRandomImage(Resources.IMAGES.getPath());
-    BufferedImage bufferedImage = imageSensor.getImage();
+  public Node createContent(ImageSensorReading sensorreading) {
+    
+    BufferedImage bufferedImage = sensorreading.getImage();
     if (bufferedImage == null) {
         Logger.error("Buffered image is null");
 
