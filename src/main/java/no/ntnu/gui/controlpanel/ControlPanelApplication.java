@@ -265,7 +265,7 @@ public class ControlPanelApplication extends Application
         } else {
           actuator.turnOff();
         }
-        actuatorPane.update(actuator);
+        actuatorPane.refreshActuatorDisplay();;
       } else {
         Logger.error("Actuator not found");
       }
@@ -338,8 +338,10 @@ public class ControlPanelApplication extends Application
    */
   private Tab createNodeTab(SensorActuatorNodeInfo nodeInfo) {
     Tab tab = new Tab("Node " + nodeInfo.getId());
+
     SensorPane sensorPane = createEmptySensorPane();
     sensorPanes.put(nodeInfo.getId(), sensorPane);
+
     ActuatorPane actuatorPane = new ActuatorPane(nodeInfo.getActuators());
     actuatorPanes.put(nodeInfo.getId(), actuatorPane);
     tab.setContent(new VBox(sensorPane, actuatorPane));

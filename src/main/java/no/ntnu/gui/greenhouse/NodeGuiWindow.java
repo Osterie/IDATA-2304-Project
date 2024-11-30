@@ -101,7 +101,7 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
   private Parent createContent() {
     // Create panels for displaying sensors and actuators
     actuatorPane = new ActuatorPane(node.getActuators());
-    sensorPane = new SensorPane(node.getSensors());
+    sensorPane = new SensorPane(node.getSensorReadings());
 
     // Combine sensor and actuator panels in a vertical layout
     VBox root = new VBox(sensorPane, actuatorPane);
@@ -130,8 +130,11 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
   @Override
   public void sensorsUpdated(List<Sensor> sensors) {
     // Update the sensor pane with the new list of sensors
+    // TODO NOTE TO SELF SEB: CHANGE. 
     if (sensorPane != null) {
-      sensorPane.update(sensors);
+      for (Sensor sensor : sensors) {
+        sensorPane.update(List.of(sensor.getReading()));
+      }
     }
   }
 
@@ -146,7 +149,7 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
   public void actuatorUpdated(int nodeId, Actuator actuator) {
     // Update the actuator pane with the new state of the actuator
     if (actuatorPane != null) {
-      actuatorPane.update(actuator);
+      actuatorPane.refreshActuatorDisplay();
     }
   }
 }

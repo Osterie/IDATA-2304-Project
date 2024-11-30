@@ -15,8 +15,8 @@ public class Actuator {
   private final int nodeId;
   private final int id;
   private Map<SensorType, Double> impacts = new HashMap<>();
-  private final String TURN_OFF_TEXT;
-  private final String TURN_ON_TEXT;
+  private final String TurnOffText;
+  private final String TurnOnText;
 
   private ActuatorListener listener;
 
@@ -28,7 +28,7 @@ public class Actuator {
    * @param type   The type of the actuator.
    * @param nodeId ID of the node to which this actuator is connected.
    */
-  public Actuator(String type, int nodeId, String TURN_ON_TEXT, String TURN_OFF_TEXT) {
+  public Actuator(String type, int nodeId, String TurnOnText, String TurnOffText) {
     if (type == null) {
       throw new IllegalArgumentException("Type cannot be null or empty");
     }
@@ -36,8 +36,8 @@ public class Actuator {
     this.nodeId = nodeId;
     this.on = false;
     this.id = generateUniqueId();
-    this.TURN_ON_TEXT = TURN_ON_TEXT;
-    this.TURN_OFF_TEXT = TURN_OFF_TEXT;
+    this.TurnOffText = TurnOffText;
+    this.TurnOnText = TurnOnText;
   }
 
   /**
@@ -47,7 +47,7 @@ public class Actuator {
    * @param type   The type of the actuator.
    * @param nodeId ID of the node to which this actuator is connected.
    */
-  public Actuator(int id, String type, int nodeId, String TURN_OFF_TEXT, String TURN_ON_TEXT) {
+  public Actuator(int id, String type, int nodeId, String TurnOnText, String TurnOffText) {
     if (type == null) {
       throw new IllegalArgumentException("Type cannot be null or empty");
     }
@@ -55,8 +55,8 @@ public class Actuator {
     this.nodeId = nodeId;
     this.on = false;
     this.id = id;
-    this.TURN_OFF_TEXT = TURN_OFF_TEXT;
-    this.TURN_ON_TEXT = TURN_ON_TEXT;
+    this.TurnOnText = TurnOnText;
+    this.TurnOffText = TurnOffText;
   }
 
   /**
@@ -106,7 +106,7 @@ public class Actuator {
    * @return The text that should be displayed when the actuator is turned off.
    */
   public String getTurnOffText() {
-    return this.TURN_OFF_TEXT;
+    return this.TurnOnText;
   }
 
   /**
@@ -115,7 +115,7 @@ public class Actuator {
    * @return The text that should be displayed when the actuator is turned on.
    */
   public String getTurnOnText() {
-    return this.TURN_ON_TEXT;
+    return this.TurnOffText;
   }
 
   /**
@@ -124,7 +124,7 @@ public class Actuator {
    * @return A clone of this actuator, where all the fields are the same
    */
   public Actuator createClone() {
-    Actuator a = new Actuator(type, nodeId, TURN_OFF_TEXT, TURN_ON_TEXT);
+    Actuator a = new Actuator(type, nodeId, TurnOnText, TurnOffText);
     // Note - we pass a reference to the same map! This should not be problem, as long as we
     // don't modify the impacts AFTER creating the template
     a.impacts = impacts;

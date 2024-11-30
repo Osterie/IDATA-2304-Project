@@ -306,6 +306,19 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   /**
+   * Get the readings from all the sensors.
+   *
+   * @return A list of sensor readings
+   */
+  public List<SensorReading> getSensorReadings() {
+    List<SensorReading> readings = new LinkedList<>();
+    for (Sensor sensor : sensors) {
+      readings.add(sensor.getReading());
+    }
+    return readings;
+  }
+
+  /**
    * Get all the actuators available on the node.
    *
    * @return A collection of the actuators
