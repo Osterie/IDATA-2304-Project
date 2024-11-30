@@ -14,6 +14,8 @@ import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.sensor.SensorReading;
+import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
+import no.ntnu.gui.common.PopUpWindows.InformationWindow;
 import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.controlpanel.GreenhouseEventListener;
 import no.ntnu.tools.Logger;
@@ -37,6 +39,12 @@ public class ControlPanelApplication extends Application
   private Scene mainScene;
   private NodeManager nodeManager;
 
+  // Error window
+  ErrorWindow errorWindow = new ErrorWindow();
+
+  // Info window
+  InformationWindow informationWindow = new InformationWindow();
+
   /**
    * Starts the control panel application with the specified logic and communication channel.
    *
@@ -46,9 +54,11 @@ public class ControlPanelApplication extends Application
    */
   public void startApp(ControlPanelLogic logic, ControlPanelCommunicationChannel channel) {
     if (logic == null) {
+      errorWindow.showAlert("Control panel error", "Control panel logic can't be null!");
       throw new IllegalArgumentException("Control panel logic can't be null");
     }
     if (channel == null) {
+      errorWindow.showAlert("Communication error", "Communication channel can't be null!");
       throw new IllegalArgumentException("Communication channel can't be null");
     }
     ControlPanelApplication.logic = logic;
@@ -122,6 +132,7 @@ public class ControlPanelApplication extends Application
       try {
         start(new Stage());
       } catch (Exception e) {
+        errorWindow.showAlert("Error", "Error reopening the control panel: " + e.getMessage());
         Logger.error("Error reopening the control panel: " + e.getMessage());
         e.printStackTrace();
       }

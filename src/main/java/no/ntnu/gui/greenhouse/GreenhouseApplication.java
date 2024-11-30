@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.greenhouse.SensorActuatorNode;
+import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.tools.Logger;
 
@@ -23,6 +24,9 @@ public class GreenhouseApplication extends Application implements NodeStateListe
   private final Map<SensorActuatorNode, NodeGuiWindow> nodeWindows = new HashMap<>();
   // The primary stage for the JavaFX application
   private Stage mainStage;
+
+  // Error window
+  ErrorWindow errorWindow = new ErrorWindow();
 
   /**
    * Initializes the GUI and sets up the simulation environment.
@@ -81,6 +85,7 @@ public class GreenhouseApplication extends Application implements NodeStateListe
       // Stop the JavaFX application
       stop();
     } catch (Exception e) {
+      errorWindow.showAlert("Error", "Could not stop the application: " + e.getMessage());
       Logger.error("Could not stop the application: " + e.getMessage());
     }
   }
