@@ -19,6 +19,7 @@ import no.ntnu.tools.Logger;
 import no.ntnu.tools.encryption.KeyGenerator;
 import no.ntnu.tools.encryption.MessageEncryptor;
 import no.ntnu.tools.encryption.MessageHasher;
+import no.ntnu.tools.encryption.PublicKeyHolder;
 
 public abstract class TcpConnection {
 
@@ -36,10 +37,9 @@ public abstract class TcpConnection {
   private static final int MAX_RETRIES = 5;
   private static final int RETRY_DELAY_MS = 1000; // Time between retries
 
-  // Generate key pair
-  private KeyPair recipientKeyPair = KeyGenerator.generateRSAKeyPair();
-  private PublicKey recipientPublicKey = recipientKeyPair.getPublic();
-  private PrivateKey recipientPrivateKey = recipientKeyPair.getPrivate();
+  // Retrieves keys from keyholder.
+  private PublicKey recipientPublicKey = PublicKeyHolder.getPublicKey();
+  private PrivateKey recipientPrivateKey = PublicKeyHolder.getPrivateKey();
 
   protected TcpConnection() {
     this.messageQueue = new LinkedList<>();
