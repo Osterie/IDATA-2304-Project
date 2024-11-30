@@ -21,10 +21,10 @@ public class ServerAndGreenhouseStarter {
     public static void main(String[] args) {
 
         // Create an instance of the IntermediaryServer.
-        IntermediaryServer proxyServer = new IntermediaryServer();
+        IntermediaryServer intermediaryServer = new IntermediaryServer();
 
         // Start the IntermediaryServer in a separate thread.
-        Thread serverThread = new Thread(proxyServer);
+        Thread serverThread = new Thread(intermediaryServer);
         serverThread.start();
 
         // Create and run the GreenhouseApplication.

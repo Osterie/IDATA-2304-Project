@@ -16,7 +16,7 @@
   - [x] ADRIAN clienthandler folder
   - [x] ADRIAN server folder
 - [ ] ADRIAN Ensure high quality code for all classes under greenhouse folder
-  - [ ] ADRIAN actuator folder
+  - [x] ADRIAN actuator folder
   - [ ] ADRIAN sensor folder
   - [x] ADRIAN other
 - [x] ADRIAN Ensure high quality code for all classes under messages folder
@@ -318,7 +318,6 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [x] ADRIAN. 1. Resilience in case of network outages. The solution functions when the network connection is temporarily lost. This means buffering data, retransmissions, reconnecting, etc
     - [x] ADRIAN When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
     - [x] ADRIAN If the connection is lost, try to reconnect. 
-    <!-- - [ ] ADRIAN If a message is not received, try to receive it again. If it fails, show an error message to the user. -->
     - [x] ADRIAN Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
 
 
