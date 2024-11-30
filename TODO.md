@@ -6,7 +6,7 @@
 # important
 
 - [ ] TODO change nodeId to only be int, or that it can be string. (go for can be string.)
-- [ ] TOBIAS Refactor tools.
+- [x] TOBIAS Refactor tools.
 
 - [ ] SEBASTIAN Refactor SensorReadingParser.java
 
@@ -16,7 +16,7 @@
   - [x] ADRIAN clienthandler folder
   - [x] ADRIAN server folder
 - [ ] ADRIAN Ensure high quality code for all classes under greenhouse folder
-  - [ ] ADRIAN actuator folder
+  - [x] ADRIAN actuator folder
   - [ ] ADRIAN sensor folder
   - [x] ADRIAN other
 - [x] ADRIAN Ensure high quality code for all classes under messages folder
@@ -27,7 +27,7 @@
   - [x] ADRIAN Other
 - [x] ADRIAN Ensure high quality code for TcpConnection.java
 - [x] ADRIAN Ensure high quality code for SocketCommunicationChannel.java
-- [ ] TOBIAS Forsikre god kode kvalitet i tools
+- [x] TOBIAS Forsikre god kode kvalitet i tools
 - [ ] SEBASTIAN Pass på god kode for GUI common folder
 
 # Probably wont do
@@ -37,7 +37,7 @@
 
 # CURRENT
 
-- [ ] UNASSIGNED The hash stored in the header seems to not arrive, it becomes 1 somewhere in the travel.
+- [x] UNASSIGNED The hash stored in the header seems to not arrive, it becomes 1 somewhere in the travel.
 - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
 - [ ] UNASSIGNED TODO create a starter for only IntermediaryServer.
 - [ ] UNASSIGNED TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
@@ -55,7 +55,7 @@
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
 - [ ] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
 <!-- - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
-- [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
+- [x] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
 - [x] ADRIAN fix issue with images not being replaced, but instead being added when displaying images
 - [x] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
 - [ ] Judge if sensor pane should be scrollable. I tried it out, and it didn't look good, and it didn't feel good to use.
@@ -66,7 +66,7 @@
 
 - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
 - [x] ADRIAN Sensors for light, PH.
-- [ ] TOBIAS Implement encryption. Måtte flytte det til neste sprint.
+- [ ] TOBIAS Implement encryption.
 - [x] ADRIAN Handling is the integrity of the data is altered.
 - [x] TOBIAS Hashing the data and storing it in header(?) for checking integrity. 
 - [x] TOBIAS add hash in header of Message.
@@ -318,7 +318,6 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [x] ADRIAN. 1. Resilience in case of network outages. The solution functions when the network connection is temporarily lost. This means buffering data, retransmissions, reconnecting, etc
     - [x] ADRIAN When failing to connect, try again after a few seconds. Do this 3 times. If it fails, show an error message to the user.
     - [x] ADRIAN If the connection is lost, try to reconnect. 
-    <!-- - [ ] ADRIAN If a message is not received, try to receive it again. If it fails, show an error message to the user. -->
     - [x] ADRIAN Buffer data if the connection is lost. When the connection is reestablished, send the buffered data.
 
 

@@ -35,6 +35,11 @@ public class Logger {
     System.out.print(message);
   }
 
+  /**
+   * Log a success.
+   *
+   * @param message success message.
+   */
   public static void success(String message) {
     message = limitMessageLength(message);
     System.out.println(AnsiColors.GREEN + message + AnsiColors.RESET);

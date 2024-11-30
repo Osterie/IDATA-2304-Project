@@ -10,9 +10,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import no.ntnu.constants.Endpoints;
+import no.ntnu.gui.common.PopUpWindows.InformationWindow;
+import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
 import no.ntnu.messages.*;
 import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
-import no.ntnu.messages.responses.FailureReason;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.encryption.KeyGenerator;
 import no.ntnu.tools.encryption.MessageEncryptor;
