@@ -65,7 +65,7 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
      * @param nodeLogic the logic of the node where the actuator is located
      * @return the response data
      */
-    private String createResponseData(NodeLogic nodeLogic) {
+    public String createResponseData(NodeLogic nodeLogic) {
         String nodeId = Integer.toString(nodeLogic.getId());
 
         StringBuilder sb = new StringBuilder();
