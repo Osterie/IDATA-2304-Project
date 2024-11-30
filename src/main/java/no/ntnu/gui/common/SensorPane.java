@@ -11,11 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
-import no.ntnu.greenhouse.sensors.AudioSensorReading;
-import no.ntnu.greenhouse.sensors.ImageSensorReading;
-import no.ntnu.greenhouse.sensors.NumericSensorReading;
 import no.ntnu.greenhouse.sensors.Sensor;
 import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.gui.common.ComponentBuilder;
 import no.ntnu.tools.Logger;
 
 // TODO refactor, create classes for alot of the logic in this class. This class does too much.
@@ -105,22 +103,8 @@ public class SensorPane extends TitledPane {
   // Alternatively, would not be necessary when we have implemented the component builder class.
 
   private Node createAndRememberSensorLabel(SensorReading sensor) {
-    Node nodeToReturn;
-
-    if (sensor instanceof NumericSensorReading) {
-      nodeToReturn = createNumericSensorLabel(sensor);
-    } else if (sensor instanceof ImageSensorReading) {
-      ImageSensorPane imageSensorNodePane = new ImageSensorPane((ImageSensorReading) sensor);
-      nodeToReturn = imageSensorNodePane.createContent();
-      this.addThumbnailToUI(imageSensorNodePane.getThumbnail());
-    } else if (sensor instanceof AudioSensorReading) {
-      AudioSensorPane audioSensorNodePane = new AudioSensorPane((AudioSensorReading) sensor);
-      nodeToReturn = audioSensorNodePane.createContent();
-    } else {
-      return new Label("Unknown sensor type: " + sensor.getClass());
-      // throw new IllegalArgumentException("Unknown sensor type: " + sensor.getClass());
-    }
-    return nodeToReturn;
+    ComponentBuilder builder = new ComponentBuilder();
+    return builder.createComponent(sensor);
   }
 
   /**
@@ -151,11 +135,20 @@ public class SensorPane extends TitledPane {
   }
 
   private void updateSensorLabel(SensorReading sensor, int index) {
-    if (sensorProps.size() > index) {
-      SimpleStringProperty props = sensorProps.get(index);
-      Platform.runLater(() -> props.set(generateSensorText(sensor)));
+    // Check if the index already exists in the contentBox
+    if (index < contentBox.getChildren().size()) {
+      // Update the existing component
+      Node existingNode = contentBox.getChildren().get(index);
+      ComponentBuilder builder = new ComponentBuilder();
+      Node updatedNode = builder.createComponent(sensor);
+
+      // Replace the existing component only if it has changed
+      if (!existingNode.equals(updatedNode)) {
+        Platform.runLater(() -> contentBox.getChildren().set(index, updatedNode));
+      }
     } else {
-      Logger.info("Adding sensor[" + index + "]");
+      // Add a new component for a new sensor
+      Logger.info("Adding new sensor component at index: " + index);
       Platform.runLater(() -> contentBox.getChildren().add(createAndRememberSensorLabel(sensor)));
     }
   }
