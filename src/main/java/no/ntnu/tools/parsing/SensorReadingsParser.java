@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
 import no.ntnu.greenhouse.SensorType;
 import no.ntnu.greenhouse.sensors.AudioSensorReading;
 import no.ntnu.greenhouse.sensors.ImageSensorReading;
@@ -34,10 +33,9 @@ public class SensorReadingsParser {
     List<SensorReading> readings = new LinkedList<>();
     String[] readingInfo = sensorInfo.split(",");
     for (String reading : readingInfo) {
-      try{
+      try {
         readings.add(parseReading(reading));
-      }
-      catch (IllegalArgumentException e){
+      } catch (IllegalArgumentException e) {
         Logger.error("Failed to parse sensor reading: " + e.getMessage());
       }
     }
@@ -48,7 +46,8 @@ public class SensorReadingsParser {
   /**
    * Parses a sensor reading from a string and returns a SensorReading object.
    *
-   * @param reading the sensor reading string in the format "type=value unit" or "image=base64String fileExtension"
+   * @param reading the sensor reading string in the format
+   *                "type=value unit" or "image=base64String fileExtension"
    * @return a SensorReading object representing the parsed sensor reading
    * @throws IllegalArgumentException if the reading is null, empty, or not in the expected format
    */
@@ -63,7 +62,7 @@ public class SensorReadingsParser {
     }
     String[] assignmentParts = formatParts[1].split("=");
     //TODO ADDED ANOTHER ACCEPTED VALUE BECAUSE THE WAY BASE64 CLASS MAKES AUDIO FILE TO STRING. SHOUL PROBABLY BE CHANGED
-    if (assignmentParts.length != 2 && assignmentParts.length != 4 ) {
+    if (assignmentParts.length != 2 && assignmentParts.length != 4) {
       throw new IllegalArgumentException("Invalid sensor reading specified: " + reading);
     }
     String[] valueParts = assignmentParts[1].split(" ");
@@ -89,17 +88,15 @@ public class SensorReadingsParser {
       imageReading.setFileExtension(fileExtension);
       
       return imageReading;
-    }
-    else if (formatParts[0].equals("NUM")) {
+    } else if (formatParts[0].equals("NUM")) {
       String type = assignmentParts[0];
       double value = parseDoubleOrError(valueParts[1], "Invalid sensor value: " + valueParts[1]);
       String unit = "";
-      if (valueParts.length == 3){
-          unit = valueParts[2];
+      if (valueParts.length == 3) {
+        unit = valueParts[2];
       }
       return new NumericSensorReading(SensorType.fromString(type), value, unit);
-    }
-    else if (formatParts[0].equals("AUD")) {
+    } else if (formatParts[0].equals("AUD")) {
       if ((SensorType.NONE.equals(valueParts[2]))) {
         return new NoSensorReading();
       }
@@ -113,8 +110,7 @@ public class SensorReadingsParser {
         throw new IllegalArgumentException("Failed to decode audio: " + e.getMessage(), e);
       }
       return new AudioSensorReading(SensorType.fromString(type), audioFile);
-    }
-    else {
+    } else {
       throw new IllegalArgumentException("Unknown sensor format: " + formatParts[0]);
     }
   }
