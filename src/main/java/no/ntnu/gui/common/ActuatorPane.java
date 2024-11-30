@@ -112,21 +112,11 @@ public class ActuatorPane extends TitledPane {
    * @return A string showing the actuator's type and its specific state.
    */
   private String generateActuatorText(Actuator actuator) {
-    // TODO this is not an accepted solution.
     String state;
-    switch (actuator.getType().toLowerCase()) {
-      case "heater":
-        state = actuator.isOn() ? "On" : "Off";
-        break;
-      case "fan":
-        state = actuator.isOn() ? "On" : "Off";
-        break;
-      case "window":
-        state = actuator.isOn() ? "Open" : "Closed";
-        break;
-      default:
-        state = actuator.isOn() ? "On" : "Off";
-        break;
+    if (actuator.isOn()) {
+      state = actuator.getTurnOnText();
+    } else {
+      state = actuator.getTurnOffText();
     }
     return actuator.getType() + ": " + state;
   }

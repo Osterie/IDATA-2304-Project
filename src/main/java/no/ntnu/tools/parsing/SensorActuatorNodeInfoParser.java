@@ -72,17 +72,19 @@ public class SensorActuatorNodeInfoParser {
       throw new IllegalArgumentException("Actuator info can't be empty");
     }
     String[] actuatorInfo = s.split("_"); //TODO enum for delimiter or what?
-    if (actuatorInfo.length != 3) {
+    if (actuatorInfo.length != 5) {
       throw new IllegalArgumentException("Invalid actuator info format: " + s);
     }
 
     String actuatorType = actuatorInfo[0];
     int  actuatorId = parseIntegerOrError(actuatorInfo[1],
         "Invalid actuator count: " + actuatorInfo[1]);
-    boolean isOn = parseBooleanOrError(actuatorInfo[2],
-        "Invalid actuator state: " + actuatorInfo[2]);
+    String turnOnText = actuatorInfo[2];
+    String turnOffText = actuatorInfo[3];
+    boolean isOn = parseBooleanOrError(actuatorInfo[4],
+        "Invalid actuator state: " + actuatorInfo[4]);
 
-    Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId());
+    Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId(), turnOnText, turnOffText);
 
     if (isOn) {
       actuator.turnOn();

@@ -30,8 +30,8 @@ public class GetNodeCommandTest {
     @Test
     public void testExecute() {
         MessageHeader header = mock(MessageHeader.class);
-        Actuator actuator1 = new Actuator("TypeA", 1);
-        Actuator actuator2 = new Actuator("TypeB", 2);
+        Actuator actuator1 = new Actuator("TypeA", 1, "TurnOffA", "TurnOnA");
+        Actuator actuator2 = new Actuator("TypeB", 2, "TurnOffB", "TurnOnB");
 
         when(actuators.iterator()).thenReturn(Arrays.asList(actuator1, actuator2).iterator());
         when(nodeLogic.getId()).thenReturn(123);

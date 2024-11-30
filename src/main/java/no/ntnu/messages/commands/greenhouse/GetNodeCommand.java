@@ -43,8 +43,10 @@ public class GetNodeCommand extends GreenhouseCommand {
             .append("_")
             .append(actuator.getId())
             .append("_")
-            // off state name
-            // on state name
+            .append(actuator.getTurnOnText())
+            .append("_")
+            .append(actuator.getTurnOffText())
+            .append("_")
             .append(actuator.isOn() ? "1" : "0");
         }
 
