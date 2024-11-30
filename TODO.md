@@ -147,10 +147,10 @@
 - [x] TOBIAS Skriv javadoc for intermidiary-klasser.
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
 
-- [ ] UNASSIGNED Skriv javadoc for greenhouse-klasser.
+- [ ] ADRIAN Skriv javadoc for greenhouse-klasser.
 - [ ] UNASSIGNED Skriv javadoc for GUI-klasser.
-- [ ] UNASSIGNED Skriv javadoc for control-panel-klasser.
-- [ ] UNASSIGNED Skriv javadoc for run-klasser.
+- [x] ADRIAN Skriv javadoc for control-panel-klasser.
+- [x] ADRIAN Skriv javadoc for run-klasser.
 - [x] TOBIAS Skriv javadoc for tools-klasser.
 
 - [ ] UNASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.

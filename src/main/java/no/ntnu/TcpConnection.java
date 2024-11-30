@@ -323,7 +323,7 @@ public abstract class TcpConnection {
     return clientRequest;
   }
 
-  // TODO @SebasoOlsen when done, refactor
+  // TODO @TobyJavascript when done, refactor
   /**
    * Reads and handles a message from the connected socket.
    * 
@@ -374,10 +374,8 @@ public abstract class TcpConnection {
       this.handleMessage(message);
     } else {
       Logger.warn("Server message is null, closing connection");
-      // TODO do differently?
       this.close();
     }
-    // TODO handle if null and such
   }
 
   /**

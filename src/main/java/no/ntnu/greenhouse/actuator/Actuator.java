@@ -3,6 +3,9 @@ package no.ntnu.greenhouse.actuator;
 import java.util.HashMap;
 import java.util.Map;
 
+import static no.ntnu.tools.parsing.Parser.parseBooleanOrError;
+import static no.ntnu.tools.parsing.Parser.parseIntegerOrError;
+
 import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.greenhouse.sensor.SensorType;
 import no.ntnu.listeners.common.ActuatorListener;
@@ -186,10 +189,37 @@ public class Actuator {
       }
       node.applyActuatorImpact(sensorType, impact);
     }
-
   }
 
-  // TODO change to fit protocol
+  /**
+   * Create an actuator from a string.
+   *
+   * @param s     The string to parse
+   * @param nodeId The ID of the node to which this actuator is connected
+   * @return The created actuator
+   */
+  public static Actuator fromString(String s, int nodeId) {
+    String[] actuatorInfo = s.split("_");
+    if (actuatorInfo.length != 5) {
+      throw new IllegalArgumentException("Invalid actuator info format: " + s);
+    }
+    String actuatorType = actuatorInfo[0];
+    int actuatorId = parseIntegerOrError(actuatorInfo[1],
+        "Invalid actuator count: " + actuatorInfo[1]);
+    String turnOnText = actuatorInfo[2];
+    String turnOffText = actuatorInfo[3];
+    boolean isOn = parseBooleanOrError(actuatorInfo[4],
+        "Invalid actuator state: " + actuatorInfo[4]);
+
+    Actuator actuator = new Actuator(actuatorId, actuatorType, nodeId, turnOnText, turnOffText);
+    if (isOn) {
+      actuator.turnOn(false);
+    } else {
+      actuator.turnOff(false);
+    }
+    return actuator;
+  }
+
   /**
    * Get a string representation of the actuator.
    * 
@@ -197,10 +227,15 @@ public class Actuator {
    */
   @Override
   public String toString() {
-    return "Actuator{"
-        + "type='" + type + '\''
-        + ", on=" + on
-        + '}';
+    return this.getType()
+        + "_"
+        + this.getId()
+        + "_"
+        + this.getTurnOnText()
+        + "_"
+        + this.getTurnOffText()
+        + "_"
+        + (this.isOn() ? "1" : "0");
   }
 
   /**

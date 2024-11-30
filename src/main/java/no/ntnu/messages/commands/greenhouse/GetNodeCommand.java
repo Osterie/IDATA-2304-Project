@@ -45,15 +45,8 @@ public class GetNodeCommand extends GreenhouseCommand {
         StringBuilder actuatorStringBuild = new StringBuilder();
         for (Actuator actuator : actuators) {
             actuatorStringBuild.append(Delimiters.BODY_FIELD_PARAMETERS.getValue())
-                    .append(actuator.getType())
-                    .append("_")
-                    .append(actuator.getId())
-                    .append("_")
-                    .append(actuator.getTurnOnText())
-                    .append("_")
-                    .append(actuator.getTurnOffText())
-                    .append("_")
-                    .append(actuator.isOn() ? "1" : "0");
+                .append(actuator.toString());
+                    
         }
 
         // Include the node's ID as part of the response
