@@ -45,6 +45,8 @@ public class ControlPanelStarter implements Runnable {
     // This code is reached only after the GUI-window is closed
     Logger.info("Exiting the control panel application");
     this.stopCommunication();
+
+    System.exit(0);
   }
 
   /**

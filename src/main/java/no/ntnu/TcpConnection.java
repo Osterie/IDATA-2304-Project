@@ -228,7 +228,6 @@ public abstract class TcpConnection {
    * @throws IOException if an I/O error occurs during reconnection.
    */
   private void doReconnectionActions(String host, int port) throws IOException {
-    this.close(); // Ensure previous resources are cleaned up
     this.initializeStreams(host, port);
   }
 
@@ -266,7 +265,6 @@ public abstract class TcpConnection {
    */
   protected void initializeStreams(String host, int port) throws IOException {
     Logger.info("Trying to establish connection to " + host + ":" + port);
-    this.close(); // Ensure any existing connection is closed
     this.socket = new Socket(host, port);
     this.socket.setKeepAlive(true);
     this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
@@ -299,7 +297,6 @@ public abstract class TcpConnection {
       }
       Logger.info("Server message listener stopped.");
     } catch (IOException e) {
-      this.close();
       Logger.error("Connection lost: " + e.getMessage());
       this.setConnected(false);
       this.reconnect(this.host, this.port);

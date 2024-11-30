@@ -48,7 +48,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
   }
 
   /**
-   * Add an event listener.
+   * Add a greenhouse event listener.
    *
    * @param listener The listener who will be notified on all events.
    */
@@ -72,7 +72,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     communicationChannelListener = null;
   }
 
-      /**
+  /**
    * Advertise new sensor readings.
    * Notifies the control panel logic of new sensor readings after a specified delay.
    * 
@@ -159,26 +159,55 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     }, 5 * 1000L);
   }
 
+  /**
+   * Notifies all listeners that a new node has been added.
+   * 
+   * @param nodeInfo The information about the new node to advertise.
+   */
   @Override
   public void onNodeAdded(SensorActuatorNodeInfo nodeInfo) {
     listeners.forEach(listener -> listener.onNodeAdded(nodeInfo));
   }
 
+  /**
+   * Notifies all listeners that a node has been removed.
+   * 
+   * @param nodeId The ID of the removed node.
+   */
   @Override
   public void onNodeRemoved(int nodeId) {
     listeners.forEach(listener -> listener.onNodeRemoved(nodeId));
   }
 
+  /**
+   * Notifies all listeners that sensor data has been received.
+   * 
+   * @param nodeId  The ID of the node that sent the data.
+   * @param sensors The list of sensor readings.
+   */
   @Override
   public void onSensorData(int nodeId, List<SensorReading> sensors) {
     listeners.forEach(listener -> listener.onSensorData(nodeId, sensors));
   }
 
+  /**
+   * Notifies all listeners that an actuator state has changed.
+   * 
+   * @param nodeId    The ID of the node to which the actuator is attached.
+   * @param actuatorId The ID of the actuator.
+   * @param isOn      True if the actuator is on; false if it is off.
+   */
   @Override
   public void onActuatorStateChanged(int nodeId, int actuatorId, boolean isOn) {
     listeners.forEach(listener -> listener.onActuatorStateChanged(nodeId, actuatorId, isOn));
   }
 
+  /**
+   * Notifies all listeners that an actuator has been updated.
+   * 
+   * @param nodeId    The ID of the node to which the actuator is attached.
+   * @param actuator  The updated actuator.
+   */
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
     if (communicationChannel != null) {
@@ -189,6 +218,9 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     );
   }
 
+  /**
+   * Notifies all listeners that the communication channel has been closed.
+   */
   @Override
   public void onCommunicationChannelClosed() {
     Logger.info("Communication closed, updating logic...");

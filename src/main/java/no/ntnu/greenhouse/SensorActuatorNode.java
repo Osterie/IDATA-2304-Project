@@ -317,7 +317,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   @Override
   public void onCommunicationChannelClosed() {
     Logger.info("Communication channel closed for node " + id);
-    stop();
+    this.stop();
   }
 
   /**
