@@ -40,18 +40,19 @@ Sprint stenographer: Tobias
 ---
 
 ## **Sprint Progress**
-| Task                                         | Assignee     | Status       |
-|----------------------------------------------|--------------|--------------|
-| Create TODOs                                 | Adrian       | Completed    |
-| Add thread for listening in control panel    | Adrian       | Completed    |
-| Add CSS to classes                           | Tobias       | Completed    |
-| Enable control panel to accept readings      | Sebastian    | Completed    |
-| Allow control panel to change actuator state | Adrian       | Completed    |
-| Retrieve actuators from greenhouse           | Adrian       | Completed    |
-| Add Base64 image encoder                     | Tobias       | Completed    |
-| Add test class for Base64 encoder            | Tobias       | Completed    |
-| Reformat ControlPanelCommunicationChannel    | Adrian       | Completed    |
-| Add tests for cipher encryption              | Tobias       | Completed    |
+| Task                                         | Assignee  | Status        |
+|----------------------------------------------|-----------|---------------|
+| Create TODOs                                 | Adrian    | Completed     |
+| Add thread for listening in control panel    | Adrian    | Completed     |
+| Add CSS to classes                           | Tobias    | Completed     |
+| Enable control panel to accept readings      | Sebastian | Completed     |
+| Allow control panel to change actuator state | Adrian    | Completed     |
+| Retrieve actuators from greenhouse           | Adrian    | Completed     |
+| Add Base64 image encoder                     | Tobias    | Completed     |
+| Add test class for Base64 encoder            | Tobias    | Completed     |
+| Reformat ControlPanelCommunicationChannel    | Adrian    | Completed     |
+| Add tests for cipher encryption              | Tobias    | Completed     |
+| Visualize charts for sensors                 | Knut      | not Completed |
 
 ---
 
