@@ -104,11 +104,11 @@
 
 - [x] ADRIAN fix nodes sometimes not being created in gui.
 
-- [ ] DANIEL when changing actuator state in Sensor Node GUI, should notify all the control panels.
+- [x] DANIEL when changing actuator state in Sensor Node GUI, should notify all the control panels.
 
 - [ ] DANIEL Actuator class can be abstract, other classes can inherit. ONe for deactivating/activating sensor, onher for applying impact
 
-- [ ] DANIEL When sending sensor data (GetSensorDataCommand), the message should contain the data type, for the numberSensorReading, can be For example NUM, for imagesensorreading, can be IMG.
+- [x] DANIEL When sending sensor data (GetSensorDataCommand), the message should contain the data type, for the numberSensorReading, can be For example NUM, for imagesensorreading, can be IMG.
 
 - [x] ADRIAN When the control panel asks for sensor data, perhaps it does this a bit infrequently? Currenlty i believe it does it every 5 seconds. But do not change this to be too often. Is there another solution?
 
@@ -147,10 +147,10 @@
 - [x] TOBIAS Skriv javadoc for intermidiary-klasser.
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
 
-- [ ] UNASSIGNED Skriv javadoc for greenhouse-klasser.
+- [ ] ADRIAN Skriv javadoc for greenhouse-klasser.
 - [ ] UNASSIGNED Skriv javadoc for GUI-klasser.
-- [ ] UNASSIGNED Skriv javadoc for control-panel-klasser.
-- [ ] UNASSIGNED Skriv javadoc for run-klasser.
+- [x] ADRIAN Skriv javadoc for control-panel-klasser.
+- [x] ADRIAN Skriv javadoc for run-klasser.
 - [x] TOBIAS Skriv javadoc for tools-klasser.
 
 - [ ] UNASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.

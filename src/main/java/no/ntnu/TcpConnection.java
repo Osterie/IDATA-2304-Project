@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import no.ntnu.constants.Endpoints;
-import no.ntnu.gui.common.PopUpWindows.InformationWindow;
 import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
 import no.ntnu.messages.*;
 import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
@@ -324,7 +323,7 @@ public abstract class TcpConnection {
     return clientRequest;
   }
 
-  // TODO @SebasoOlsen when done, refactor
+  // TODO @TobyJavascript when done, refactor
   /**
    * Reads and handles a message from the connected socket.
    * 
@@ -333,7 +332,7 @@ public abstract class TcpConnection {
   protected void readMessage() throws IOException {
     String serverMessage = this.readLine();
     if (serverMessage != null) {
-      Logger.info("Received from server: " + serverMessage);
+      // Logger.info("Received from server: " + serverMessage);
       // TODO: It needs decryption.
       // TODO: HandleMessage should take Message not String.
       Message message = this.parseMessage(serverMessage);
@@ -341,19 +340,19 @@ public abstract class TcpConnection {
       // Decryption
       try {
         // TODO: Encryption in send message hinders control panel to run.
-        Logger.info("BEFORE DECRYPTION:" + message.getBody().getTransmission().toString());
+        // Logger.info("BEFORE DECRYPTION:" + message.getBody().getTransmission().toString());
         // Decrypts protocol
         // message = MessageEncryptor.decryptStringMessage(message,
         // recipientPrivateKey);
-        Logger.info("AFTER DECRYPTION:" + message.getBody().getTransmission().toString());
+        // Logger.info("AFTER DECRYPTION:" + message.getBody().getTransmission().toString());
       } catch (Exception e) {
         System.err.println("Could not decrypt message: " + e.getMessage());
       }
 
       // TODO: Delete when done using sout.
-      Logger.info("HASHING TEST, HASH AFTER BEING SENT OVER:" + message.getHeader().getHashedContent());
+      // Logger.info("HASHING TEST, HASH AFTER BEING SENT OVER:" + message.getHeader().getHashedContent());
       MessageHasher.addHashedContentToMessage(message);
-      Logger.info("HASHING TEST, CHECKING IF EQUAL:" + message.getHeader().getHashedContent());
+      // Logger.info("HASHING TEST, CHECKING IF EQUAL:" + message.getHeader().getHashedContent());
 
       // Extract hash from header
       String hashedContentFromHeader = message.getHeader().getHashedContent();
@@ -375,10 +374,8 @@ public abstract class TcpConnection {
       this.handleMessage(message);
     } else {
       Logger.warn("Server message is null, closing connection");
-      // TODO do differently?
       this.close();
     }
-    // TODO handle if null and such
   }
 
   /**
@@ -418,21 +415,22 @@ public abstract class TcpConnection {
   }
 
   // TODO: Delete when done using.
-  private void testIfEncryptionWorks() {
-    Message message = new Message(new MessageHeader(Endpoints.GREENHOUSE, "7", ""),
-        new MessageBody(new GetNodeCommand()));
+  // private void testIfEncryptionWorks() {
+  //   Message message = new Message(new MessageHeader(Endpoints.GREENHOUSE, "7", ""),
+  //       new MessageBody(new GetNodeCommand()));
 
-    // TODO: This test shows it works.
-    try {
-      Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
-      message = MessageEncryptor.encryptMessage(message, recipientPublicKey);
-      Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
-      message = MessageEncryptor.decryptStringMessage(message, recipientPrivateKey);
-      Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
-    } catch (Exception e) {
-      System.err.println("Could not decrypt message: " + e.getMessage());
-    }
-  }
+  //   ErrorWindow.showError("tit", "It works");
+  //   // TODO: This test shows it works.
+  //   try {
+  //     Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
+  //     message = MessageEncryptor.encryptMessage(message, recipientPublicKey);
+  //     Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
+  //     message = MessageEncryptor.decryptStringMessage(message, recipientPrivateKey);
+  //     Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
+  //   } catch (Exception e) {
+  //     System.err.println("Could not decrypt message: " + e.getMessage());
+  //   }
+  // }
 
   /**
    * Sends a message to the connected socket.
@@ -450,14 +448,14 @@ public abstract class TcpConnection {
     // recipientPublicKey);
     Message encryptedMessage = message;
     // TODO: Delete when done using
-    testIfEncryptionWorks();
+    // testIfEncryptionWorks();
 
     // TODO: Delete when done using sout.
-    Logger.info("HASHING TEST, HASH BEFORE SENDING:" + encryptedMessage.getHeader().getHashedContent());
+    // Logger.info("HASHING TEST, HASH BEFORE SENDING:" + encryptedMessage.getHeader().getHashedContent());
 
     if (isConnected && socketWriter != null) {
       socketWriter.println(encryptedMessage);
-      Logger.info("Sent message to server: " + encryptedMessage);
+      // Logger.info("Sent message to server: " + encryptedMessage);
     } else {
       Logger.error("Unable to send message, socket is not connected.");
       messageQueue.offer(encryptedMessage); // Buffer the message
