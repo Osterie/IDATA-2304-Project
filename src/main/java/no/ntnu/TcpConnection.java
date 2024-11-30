@@ -19,6 +19,7 @@ import no.ntnu.tools.Logger;
 import no.ntnu.tools.encryption.KeyGenerator;
 import no.ntnu.tools.encryption.MessageEncryptor;
 import no.ntnu.tools.encryption.MessageHasher;
+import no.ntnu.tools.encryption.PublicKeyHolder;
 
 public abstract class TcpConnection {
 
@@ -36,10 +37,9 @@ public abstract class TcpConnection {
   private static final int MAX_RETRIES = 5;
   private static final int RETRY_DELAY_MS = 1000; // Time between retries
 
-  // Generate key pair
-  private KeyPair recipientKeyPair = KeyGenerator.generateRSAKeyPair();
-  private PublicKey recipientPublicKey = recipientKeyPair.getPublic();
-  private PrivateKey recipientPrivateKey = recipientKeyPair.getPrivate();
+  // Retrieves keys from keyholder.
+  private PublicKey recipientPublicKey = PublicKeyHolder.getPublicKey();
+  private PrivateKey recipientPrivateKey = PublicKeyHolder.getPrivateKey();
 
   protected TcpConnection() {
     this.messageQueue = new LinkedList<>();
@@ -316,6 +316,14 @@ public abstract class TcpConnection {
     try {
       if (this.socketReader != null) {
         clientRequest = this.socketReader.readLine();
+
+        // TODO: Uncomment when the encryption in sendMessage is done.
+        //try {
+        //  clientRequest = MessageEncryptor.decryptStringMessage(clientRequest, recipientPrivateKey);
+        //} catch (Exception e) {
+        //  throw new RuntimeException(e);
+        //}
+
       } else {
         Logger.error("Socket reader is null");
       }
@@ -339,22 +347,7 @@ public abstract class TcpConnection {
       // TODO: HandleMessage should take Message not String.
       Message message = this.parseMessage(serverMessage);
 
-      // Decryption
-      try {
-        // TODO: Encryption in send message hinders control panel to run.
-        // Logger.info("BEFORE DECRYPTION:" + message.getBody().getTransmission().toString());
-        // Decrypts protocol
-        // message = MessageEncryptor.decryptStringMessage(message,
-        // recipientPrivateKey);
-        // Logger.info("AFTER DECRYPTION:" + message.getBody().getTransmission().toString());
-      } catch (Exception e) {
-        System.err.println("Could not decrypt message: " + e.getMessage());
-      }
-
-      // TODO: Delete when done using sout.
-      // Logger.info("HASHING TEST, HASH AFTER BEING SENT OVER:" + message.getHeader().getHashedContent());
       MessageHasher.addHashedContentToMessage(message);
-      // Logger.info("HASHING TEST, CHECKING IF EQUAL:" + message.getHeader().getHashedContent());
 
       // Extract hash from header
       String hashedContentFromHeader = message.getHeader().getHashedContent();
@@ -416,24 +409,6 @@ public abstract class TcpConnection {
     return message;
   }
 
-  // TODO: Delete when done using.
-  // private void testIfEncryptionWorks() {
-  //   Message message = new Message(new MessageHeader(Endpoints.GREENHOUSE, "7", ""),
-  //       new MessageBody(new GetNodeCommand()));
-
-  //   ErrorWindow.showError("tit", "It works");
-  //   // TODO: This test shows it works.
-  //   try {
-  //     Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
-  //     message = MessageEncryptor.encryptMessage(message, recipientPublicKey);
-  //     Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
-  //     message = MessageEncryptor.decryptStringMessage(message, recipientPrivateKey);
-  //     Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
-  //   } catch (Exception e) {
-  //     System.err.println("Could not decrypt message: " + e.getMessage());
-  //   }
-  // }
-
   /**
    * Sends a message to the connected socket.
    * 
@@ -444,16 +419,22 @@ public abstract class TcpConnection {
     // Adds hashed version of body content to header,
     Message originalMessage = MessageHasher.addHashedContentToMessage(message);
 
-    // TODO: This hinders the control panel to run.
+    // TODO: Not all takes string, therefore encryption not working.
     // Encrypt original body content
-    // Message encryptedMessage = MessageEncryptor.encryptMessage(originalMessage,
-    // recipientPublicKey);
-    Message encryptedMessage = message;
-    // TODO: Delete when done using
-    // testIfEncryptionWorks();
+    String encryptedMessage2 = MessageEncryptor.encryptMessage(originalMessage,
+    recipientPublicKey);
 
-    // TODO: Delete when done using sout.
-    // Logger.info("HASHING TEST, HASH BEFORE SENDING:" + encryptedMessage.getHeader().getHashedContent());
+    // TODO: Delete sout after showing it works.
+    System.out.println("AFTER ENCRYPTION: " + encryptedMessage2);
+    try {
+      encryptedMessage2 = MessageEncryptor.decryptStringMessage(encryptedMessage2, recipientPrivateKey);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    System.out.println("AFTER DECRYPTION: " + encryptedMessage2 + " " + message.toString());
+
+    // TODO: This one is replaced with the one over when encryption works.
+    Message encryptedMessage = message;
 
     if (isConnected && socketWriter != null) {
       socketWriter.println(encryptedMessage);

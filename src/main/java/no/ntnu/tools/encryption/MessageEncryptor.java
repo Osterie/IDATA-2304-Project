@@ -3,8 +3,8 @@ package no.ntnu.tools.encryption;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import javax.crypto.SecretKey;
-import no.ntnu.messages.Message;
-import no.ntnu.messages.Transmission;
+
+import no.ntnu.messages.*;
 import no.ntnu.tools.encryption.asymmetric.HybridRSAEncryptor;
 
 
@@ -20,70 +20,76 @@ public class MessageEncryptor {
    * @param recipientPublicKey the recipient's public key
    * @return the encrypted message
    */
-  public static Message encryptMessage(Message message, PublicKey recipientPublicKey) {
+  public static String encryptMessage(Message message, PublicKey recipientPublicKey) {
     Message encryptedMessage = message;
+    String encryptedAeskey = null;
+    String encryptedBody = null;
+    String encryptedHeader = null;
+    String encryptedMessageTest = null;
 
     try {
       // Generate AES key
       SecretKey aesKey = HybridRSAEncryptor.generateAESKey();
 
       // Original content
-      String originalContent = encryptedMessage.getBody().toString();
-      String originalId = encryptedMessage.getHeader().getId();
+      MessageHeader originalHeader = encryptedMessage.getHeader();
+      MessageBody originalBody = encryptedMessage.getBody();
+
+      // Encrypt message
+      encryptedMessageTest = HybridRSAEncryptor.encryptWithAES(message.toString(), aesKey);
 
       // Encrypted content
-      String encryptedContent = HybridRSAEncryptor.encryptWithAES(originalContent, aesKey);
-      String encryptedId = HybridRSAEncryptor.encryptWithAES(originalId, aesKey);
+      encryptedHeader = HybridRSAEncryptor.encryptWithAES(originalHeader.toString(), aesKey);
+      encryptedBody = HybridRSAEncryptor.encryptWithAES(originalBody.toString(), aesKey);
 
       // Encrypt the AES key with the recipient's public key
-      String encryptedAesKey = HybridRSAEncryptor.encryptAESKeyWithRSA(aesKey, recipientPublicKey);
-
-      // Store encrypted AES key in header
-      encryptedMessage.getHeader().setEncryptedAES(encryptedAesKey);
-
-      // Transmission with encrypted content
-      Transmission encryptedTransmission = encryptedMessage.getBody().getTransmission();
-      encryptedTransmission.setTransmission(encryptedContent);
-
-      // Add encrypted content to body
-      encryptedMessage.getBody().setTransmission(encryptedTransmission);
+      encryptedAeskey = HybridRSAEncryptor.encryptAESKeyWithRSA(aesKey, recipientPublicKey);
 
       // Add encrypted content to header
-      encryptedMessage.getHeader().setId(encryptedId);
+      // encryptedMessage.getHeader().setId(encryptedId);
 
     } catch (Exception e) {
       System.err.println("Error occurred during encryption: " + e.getMessage());
       e.printStackTrace();
     }
 
-    return encryptedMessage;
+    return encryptedMessageTest + Delimiters.HEADER_BODY.getValue() + encryptedAeskey;
   }
 
   /**
    * Decrypts an encrypted message using the recipient's private key.
    *
-   * @param encryptedMessage the message to be decrypted
+   * @param encryptedMessageString the message to be decrypted
    * @param privateKey       the recipient's private key
    * @return the decrypted message
    * @throws Exception if decryption fails
    */
-  public static Message decryptStringMessage(Message encryptedMessage, PrivateKey privateKey)
+  public static String decryptStringMessage(String encryptedMessageString, PrivateKey privateKey)
           throws Exception {
-    // Decrypt the AES key using the private key
-    SecretKey decryptedAesKey = HybridRSAEncryptor.decryptAESKeyWithRSA(
-            encryptedMessage.getHeader().getEncryptedAES(), privateKey);
 
-    // Decrypt the message using the AES key
-    String decryptedTransmission = HybridRSAEncryptor.decryptWithAES(
-            encryptedMessage.getBody().getTransmission().getTransmissionString(),
-            decryptedAesKey);
-    String decryptedId = HybridRSAEncryptor.decryptWithAES(
-            encryptedMessage.getHeader().getId(),
-            decryptedAesKey);
+    String decryptedHeaderString = null;
+    String decryptedBodyString = null;
+    String decryptedMessage = null;
 
-    Message decryptedMessage = encryptedMessage;
-    decryptedMessage.getBody().getTransmission().setTransmission(decryptedTransmission);
-    decryptedMessage.getHeader().setId(decryptedId);
+    // Split the string by "-"
+    String[] elements = encryptedMessageString.split("-");
+
+    // Check if the split results in exactly 3 elements
+    if (elements.length == 2) {
+      // Access individual elements
+      String element1 = elements[0];
+      String element2 = elements[1];
+
+      // AES key
+      SecretKey aesKey = HybridRSAEncryptor.decryptAESKeyWithRSA(element2, privateKey);
+
+      // Decrypt elements
+      decryptedMessage = HybridRSAEncryptor.decryptWithAES(element1, aesKey);
+
+    } else {
+      System.out.println(encryptedMessageString);
+      System.out.println("The input does not have exactly 3 elements separated by '-'.");
+    }
 
     return decryptedMessage;
   }
