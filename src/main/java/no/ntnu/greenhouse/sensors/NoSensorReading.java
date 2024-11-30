@@ -7,6 +7,8 @@ public class NoSensorReading extends SensorReading {
     super(SensorType.NONE);
   }
 
+
+  // TODO use to string instead
   @Override
   public String getFormatted() {
     return "NoSensor";

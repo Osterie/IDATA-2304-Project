@@ -6,7 +6,8 @@ import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.tools.Logger;
 
 /**
- * An actuator that can change the environment in a way. The actuator will make impact on the
+ * An actuator that can change the environment in a way. The actuator will make
+ * impact on the
  * sensors attached to this same node.
  */
 public class Actuator {
@@ -80,11 +81,16 @@ public class Actuator {
   /**
    * Register the impact of this actuator when active.
    *
-   * @param sensorType     Which type of sensor readings will be impacted. Example: "temperature"
-   * @param diffWhenActive What will be the introduced difference in the sensor reading when
-   *                       the actuator is active. For example, if this value is 2.0 and the
-   *                       sensorType is "temperature", this means that "activating this actuator
-   *                       will increase the readings of temperature sensors attached to the
+   * @param sensorType     Which type of sensor readings will be impacted.
+   *                       Example: "temperature"
+   * @param diffWhenActive What will be the introduced difference in the sensor
+   *                       reading when
+   *                       the actuator is active. For example, if this value is
+   *                       2.0 and the
+   *                       sensorType is "temperature", this means that
+   *                       "activating this actuator
+   *                       will increase the readings of temperature sensors
+   *                       attached to the
    *                       same node by +2 degrees".
    */
   public void setImpact(SensorType sensorType, double diffWhenActive) {
@@ -125,7 +131,8 @@ public class Actuator {
    */
   public Actuator createClone() {
     Actuator a = new Actuator(type, nodeId, TURN_OFF_TEXT, TURN_ON_TEXT);
-    // Note - we pass a reference to the same map! This should not be problem, as long as we
+    // Note - we pass a reference to the same map! This should not be problem, as
+    // long as we
     // don't modify the impacts AFTER creating the template
     a.impacts = impacts;
     return a;
@@ -139,6 +146,9 @@ public class Actuator {
     notifyChanges();
   }
 
+  /**
+   * Notify the listener about the change in the actuator state.
+   */
   private void notifyChanges() {
     Logger.success("Actuator " + id + " on node " + nodeId + " is now " + (this.on ? "ON" : "OFF"));
     if (this.listener != null) {
@@ -176,7 +186,7 @@ public class Actuator {
 
   }
 
-  // TODO we don't do it like this.
+  // TODO change to fit protocol
   /**
    * Get a string representation of the actuator.
    * 
@@ -213,8 +223,9 @@ public class Actuator {
   /**
    * Get the ID of the actuator.
    *
-   * @return An ID which is guaranteed to be unique at a node level, not necessarily unique at
-   *     the whole greenhouse-network level.
+   * @return An ID which is guaranteed to be unique at a node level, not
+   *         necessarily unique at
+   *         the whole greenhouse-network level.
    */
   public int getId() {
     return id;

@@ -6,11 +6,10 @@ import no.ntnu.greenhouse.SensorType;
  * A numeric sensor which can sense the environment in a specific way.
  */
 public class NumericSensor extends Sensor<NumericSensorReading> {
-  // protected final NumericSensorReading reading;
 
   private final double min;
   private final double max;
-  // TODO make static?
+
   private final String dataFormat = "NUM";
 
   /**
@@ -27,7 +26,7 @@ public class NumericSensor extends Sensor<NumericSensorReading> {
     this.reading = new NumericSensorReading(type, current, unit);
     this.min = min;
     this.max = max;
-    ensureValueBoundsAndPrecision(current);
+    this.ensureValueBoundsAndPrecision(current);
   }
 
   /**

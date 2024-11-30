@@ -102,52 +102,66 @@ public class SensorPane extends TitledPane {
   // TODO refactor this logic. Create a method above this method and such. This method should create a label and then another for images.
   // Alternatively, would not be necessary when we have implemented the component builder class.
 
+  /**
+   * Creates sensor label and remember it for future updates.
+   *
+   * @param sensor The sensor reading for creating the label.
+   * @return A Node representing the sensor label.
+   */
   private Node createAndRememberSensorLabel(SensorReading sensor) {
     ComponentBuilder builder = new ComponentBuilder();
     return builder.createComponent(sensor);
   }
 
+//  /**
+//   * Clear previous thumbnail and add a thumbnail to the UI.
+//   *
+//   * @param thumbnail The thumbnail to add.
+//   */
+//  private void addThumbnailToUI(Node thumbnail) {
+//    if (thumbnail == null) {
+//      throw new IllegalArgumentException("Thumbnail is null");
+//    }
+//    Platform.runLater(() -> {
+//      contentBox.getChildren().clear();
+//      contentBox.getChildren().addAll(thumbnail);
+//    });
+//  }
+//
+//  private Node createNumericSensorLabel(SensorReading sensor) {
+//    SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
+//    sensorProps.add(props);
+//    Label label = new Label();
+//    label.textProperty().bind(props);
+//    return label;
+//  }
+//
+//  private String generateSensorText(SensorReading sensor) {
+//    return sensor.getFormatted();
+//  }
+
   /**
-   * Clear previous thumbnail and add a thumbnail to the UI.
+   * Updates sensor label in the GUI at the specified index.
+   * If index already exists, it updates the existing component.
+   * If index does not exist, it adds a new component for the sensor.
    *
-   * @param thumbnail The thumbnail to add.
+   * @param sensor The sensor reading to update or add.
+   * @param index  The index at which to update or add the sensor component.
    */
-  private void addThumbnailToUI(Node thumbnail) {
-    if (thumbnail == null) {
-      throw new IllegalArgumentException("Thumbnail is null");
-    }
-    Platform.runLater(() -> {
-      contentBox.getChildren().clear();
-      contentBox.getChildren().addAll(thumbnail);
-    });
-  }
-
-  private Node createNumericSensorLabel(SensorReading sensor) {
-    SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
-    sensorProps.add(props);
-    Label label = new Label();
-    label.textProperty().bind(props);
-    return label;
-  }
-
-  private String generateSensorText(SensorReading sensor) {
-    return sensor.getFormatted();
-  }
-
   private void updateSensorLabel(SensorReading sensor, int index) {
-    // Check if the index already exists in the contentBox
+    // Checks if the index already exists in the contentBox
     if (index < contentBox.getChildren().size()) {
-      // Update the existing component
+      // Updates the existing component
       Node existingNode = contentBox.getChildren().get(index);
       ComponentBuilder builder = new ComponentBuilder();
       Node updatedNode = builder.createComponent(sensor);
 
-      // Replace the existing component only if it has changed
+      // Replaces the existing component only if it has changed
       if (!existingNode.equals(updatedNode)) {
         Platform.runLater(() -> contentBox.getChildren().set(index, updatedNode));
       }
     } else {
-      // Add a new component for a new sensor
+      // Adds a new component for a new sensor
       Logger.info("Adding new sensor component at index: " + index);
       Platform.runLater(() -> contentBox.getChildren().add(createAndRememberSensorLabel(sensor)));
     }

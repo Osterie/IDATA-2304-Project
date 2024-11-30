@@ -12,7 +12,8 @@ public class ActuatorCollection implements Iterable<Actuator> {
   private final Map<Integer, Actuator> actuators = new HashMap<>();
 
   /**
-   * Print a short info about all the actuators. Usable for debugging. Does NOT print a newline!
+   * Print a short info about all the actuators. Usable for debugging. Does NOT
+   * print a newline!
    */
   public void debugPrint() {
 

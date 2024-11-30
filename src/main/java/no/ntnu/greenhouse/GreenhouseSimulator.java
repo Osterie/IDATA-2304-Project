@@ -16,10 +16,10 @@ public class GreenhouseSimulator {
   // The nodes in the greenhouse, keyed by their unique ID
   private final Map<Integer, SensorActuatorNode> nodes = new HashMap<>();
 
-  private final Map<Integer, NodeConnectionHandler> nodeConnections = new HashMap<>();  // Store connections for each node
+  private final Map<Integer, NodeConnectionHandler> nodeConnections = new HashMap<>(); // Store connections for each
+                                                                                       // node
 
   private final ExecutorService threadPool = Executors.newCachedThreadPool();
-
 
   /**
    * Create a new greenhouse simulator.
@@ -36,7 +36,10 @@ public class GreenhouseSimulator {
     Logger.info("Greenhouse initialized");
   }
 
-  private void createNodes(){
+  /**
+   * Creates some nodes in the greenhouse.
+   */
+  private void createNodes() {
     SensorActuatorNode node1 = new DeviceBuilder().addTemperatureSensor(1)
         .addHumiditySensor(2)
         .addWindowActuator(1)
@@ -60,17 +63,18 @@ public class GreenhouseSimulator {
     nodes.put(node3.getId(), node3);
 
     // SensorActuatorNode node4 = new DeviceBuilder().addAudioSensor(1)
-    //     .build();
+    // .build();
     // nodes.put(node4.getId(), node4);
 
     SensorActuatorNode node5 = new DeviceBuilder().addImageSensor(1)
         .build();
     nodes.put(node5.getId(), node5);
-        
+
   }
 
   /**
-   * Start a simulation of a greenhouse - all the sensor and actuator nodes inside it.
+   * Start a simulation of a greenhouse - all the sensor and actuator nodes inside
+   * it.
    */
   public void start() {
     this.initiateCommunication();
@@ -82,36 +86,47 @@ public class GreenhouseSimulator {
   }
 
   /**
-   * Start the remote control.
-   * Able to send commands if started
+   * Start communication with the server for all nodes.
    */
-  public void initiateCommunication(){
+  public void initiateCommunication() {
     for (SensorActuatorNode node : nodes.values()) {
       this.startNodeHandler(node);
     }
   }
 
+  /**
+   * Start communication with the server for a single node.
+   *
+   * @param node The node to start communication with
+   */
   private void startNodeHandler(SensorActuatorNode node) {
-    NodeConnectionHandler nodeHandler = new NodeConnectionHandler(node, ServerConfig.getHost(), ServerConfig.getPortNumber());
+    NodeConnectionHandler nodeHandler = new NodeConnectionHandler(node, ServerConfig.getHost(),
+        ServerConfig.getPortNumber());
     this.nodeConnections.put(node.getId(), nodeHandler);
     threadPool.submit(nodeHandler);
   }
 
+  /**
+   * Stop the simulation of the greenhouse.
+   */
   public void stop() {
     this.stopCommunication();
     for (SensorActuatorNode node : nodes.values()) {
-        node.stop();
+      node.stop();
     }
     threadPool.shutdown();
-}
+  }
 
+  /**
+   * Stop communication with the server for all nodes.
+   */
   private void stopCommunication() {
-  
+
     for (NodeConnectionHandler handler : nodeConnections.values()) {
-        handler.close();
+      handler.close();
     }
     for (SensorActuatorNode node : nodes.values()) {
-        node.stop();
+      node.stop();
     }
     Logger.info("Greenhouse simulator stopped.");
   }

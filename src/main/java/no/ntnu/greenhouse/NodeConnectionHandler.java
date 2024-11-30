@@ -106,7 +106,6 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
      * @param response the received failure response.
      */
     private void handleFailureResponse(FailureResponse response) {
-        // TODO what are some failues which can be handled?
         Logger.error("Received failure response for node: " + response);
     }
 }
