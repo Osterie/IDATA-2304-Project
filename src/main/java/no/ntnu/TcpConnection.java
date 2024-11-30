@@ -421,7 +421,7 @@ public abstract class TcpConnection {
   private void testIfEncryptionWorks() {
     Message message = new Message(new MessageHeader(Endpoints.GREENHOUSE, "7", ""),
         new MessageBody(new GetNodeCommand()));
-    
+
     // TODO: This test shows it works.
     try {
       Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());

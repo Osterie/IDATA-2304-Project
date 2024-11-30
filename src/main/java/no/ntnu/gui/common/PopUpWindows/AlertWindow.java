@@ -10,8 +10,10 @@ import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 
 /**
- * An abstract utility class for displaying alert messages to the user in a modal window.
- * This class contains the common logic for displaying alert windows, and subclasses should define the alert type.
+ * An abstract utility class for displaying alert
+ * messages to the user in a modal window.
+ * This class contains the common logic for displaying
+ * alert windows, and subclasses should define the alert type.
  */
 public abstract class AlertWindow  {
 

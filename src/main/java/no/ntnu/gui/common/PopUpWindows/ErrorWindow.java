@@ -10,11 +10,13 @@ public class ErrorWindow extends AlertWindow {
 
   @Override
   protected AlertType getAlertType() {
-    return AlertType.ERROR; // Return the ERROR alert type for errors
+    // Return the ERROR alert type for errors
+    return AlertType.ERROR;
   }
 
   @Override
   protected String getHeaderText() {
-    return "An Error Occurred"; // Header for error alerts
+    // Header for error alerts
+    return "An Error Occurred";
   }
 }

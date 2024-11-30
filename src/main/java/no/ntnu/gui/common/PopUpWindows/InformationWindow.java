@@ -10,11 +10,13 @@ public class InformationWindow extends AlertWindow {
 
   @Override
   protected AlertType getAlertType() {
-    return AlertType.INFORMATION; // Return the INFORMATION alert type for informational messages
+    // Return the INFORMATION alert type for informational messages
+    return AlertType.INFORMATION;
   }
 
   @Override
   protected String getHeaderText() {
-    return "Information"; // Header for information alerts
+    // Header for information alerts
+    return "Information";
   }
 }
