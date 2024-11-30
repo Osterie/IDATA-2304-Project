@@ -1,4 +1,4 @@
-package no.ntnu.greenhouse.sensors;
+package no.ntnu.greenhouse.sensor;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -8,7 +8,6 @@ import no.ntnu.tools.stringification.Base64ImageEncoder;
 
 import javax.imageio.ImageIO;
 
-import no.ntnu.greenhouse.SensorType;
 import no.ntnu.tools.Logger;
 
 /**

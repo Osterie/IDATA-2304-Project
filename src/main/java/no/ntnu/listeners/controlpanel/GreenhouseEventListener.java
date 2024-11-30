@@ -2,7 +2,7 @@ package no.ntnu.listeners.controlpanel;
 
 import java.util.List;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.sensor.SensorReading;
 
 /**
  * Listener of events happening "inside a greenhouse", such as a node appearing, disappearing,

@@ -2,8 +2,8 @@ package no.ntnu.greenhouse;
 
 import java.util.List;
 
-import no.ntnu.greenhouse.sensors.Sensor;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.sensor.Sensor;
+import no.ntnu.greenhouse.sensor.SensorReading;
 import no.ntnu.messages.Delimiters;
 
 /**

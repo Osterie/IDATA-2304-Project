@@ -1,6 +1,4 @@
-package no.ntnu.greenhouse.sensors;
-
-import no.ntnu.greenhouse.SensorType;
+package no.ntnu.greenhouse.sensor;
 
 /**
  * A numeric sensor which can sense the environment in a specific way.

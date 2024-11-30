@@ -11,8 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
-import no.ntnu.greenhouse.sensors.Sensor;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.sensor.Sensor;
+import no.ntnu.greenhouse.sensor.SensorReading;
 import no.ntnu.gui.common.ComponentBuilder;
 import no.ntnu.tools.Logger;
 

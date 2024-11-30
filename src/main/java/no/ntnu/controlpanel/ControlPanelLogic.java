@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.actuator.Actuator;
+import no.ntnu.greenhouse.sensor.SensorReading;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.controlpanel.GreenhouseEventListener;

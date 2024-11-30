@@ -1,8 +1,6 @@
-package no.ntnu.greenhouse.sensors;
+package no.ntnu.greenhouse.sensor;
 
 import java.util.Objects;
-
-import no.ntnu.greenhouse.SensorType;
 
 /**
  * Represents one sensor reading (value).

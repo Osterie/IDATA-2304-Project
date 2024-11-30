@@ -1,8 +1,8 @@
 package no.ntnu.messages.commands.greenhouse;
 
-import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.ActuatorCollection;
 import no.ntnu.greenhouse.NodeLogic;
+import no.ntnu.greenhouse.actuator.Actuator;
+import no.ntnu.greenhouse.actuator.ActuatorCollection;
 import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;

@@ -1,9 +1,7 @@
-package no.ntnu.greenhouse.sensors;
+package no.ntnu.greenhouse.sensor;
 
 
 import java.sql.SQLOutput;
-
-import no.ntnu.greenhouse.SensorType;
 
 /**
  * An image sensor which can sense the environment in a specific way.

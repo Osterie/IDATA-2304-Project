@@ -10,10 +10,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import no.ntnu.greenhouse.sensors.AudioSensorReading;
-import no.ntnu.greenhouse.sensors.ImageSensorReading;
-import no.ntnu.greenhouse.sensors.NumericSensorReading;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.sensor.AudioSensorReading;
+import no.ntnu.greenhouse.sensor.ImageSensorReading;
+import no.ntnu.greenhouse.sensor.NumericSensorReading;
+import no.ntnu.greenhouse.sensor.SensorReading;
 import no.ntnu.tools.Logger;
 
 /**

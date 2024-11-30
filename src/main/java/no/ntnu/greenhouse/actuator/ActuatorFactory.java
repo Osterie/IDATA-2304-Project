@@ -1,4 +1,6 @@
-package no.ntnu.greenhouse;
+package no.ntnu.greenhouse.actuator;
+
+import no.ntnu.greenhouse.sensor.SensorType;
 
 /**
  * Factory for creating actuators.

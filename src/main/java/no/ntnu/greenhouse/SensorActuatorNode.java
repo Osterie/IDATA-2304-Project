@@ -7,10 +7,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import no.ntnu.greenhouse.sensors.ImageSensorReading;
-import no.ntnu.greenhouse.sensors.NumericSensorReading;
-import no.ntnu.greenhouse.sensors.Sensor;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.actuator.Actuator;
+import no.ntnu.greenhouse.actuator.ActuatorCollection;
+import no.ntnu.greenhouse.sensor.ImageSensorReading;
+import no.ntnu.greenhouse.sensor.NumericSensorReading;
+import no.ntnu.greenhouse.sensor.Sensor;
+import no.ntnu.greenhouse.sensor.SensorReading;
+import no.ntnu.greenhouse.sensor.SensorType;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.greenhouse.NodeStateListener;

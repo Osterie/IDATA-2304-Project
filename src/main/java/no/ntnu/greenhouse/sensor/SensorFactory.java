@@ -1,13 +1,6 @@
-package no.ntnu.greenhouse;
+package no.ntnu.greenhouse.sensor;
 
 import no.ntnu.constants.Resources;
-import no.ntnu.greenhouse.sensors.Sensor;
-import no.ntnu.greenhouse.sensors.AudioSensor;
-import no.ntnu.greenhouse.sensors.AudioSensorReading;
-import no.ntnu.greenhouse.sensors.ImageSensor;
-import no.ntnu.greenhouse.sensors.ImageSensorReading;
-import no.ntnu.greenhouse.sensors.NumericSensor;
-import no.ntnu.greenhouse.sensors.NumericSensorReading;
 
 /**
  * A factory for producing sensors and actuators of specific types.

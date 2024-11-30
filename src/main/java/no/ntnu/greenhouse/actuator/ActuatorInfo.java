@@ -1,4 +1,4 @@
-package no.ntnu.greenhouse;
+package no.ntnu.greenhouse.actuator;
 
 /**
  * Represents the different types of actuators in the greenhouse.

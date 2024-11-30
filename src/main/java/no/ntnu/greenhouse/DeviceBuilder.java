@@ -1,5 +1,9 @@
 package no.ntnu.greenhouse;
 
+import no.ntnu.greenhouse.actuator.Actuator;
+import no.ntnu.greenhouse.actuator.ActuatorFactory;
+import no.ntnu.greenhouse.sensor.SensorFactory;
+
 /**
  * The DeviceBuilder class is used to construct a SensorActuatorNode with various sensors and actuators.
  * It provides methods to add different types of sensors and actuators to the node.

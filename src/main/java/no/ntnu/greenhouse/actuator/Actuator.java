@@ -1,7 +1,10 @@
-package no.ntnu.greenhouse;
+package no.ntnu.greenhouse.actuator;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import no.ntnu.greenhouse.SensorActuatorNode;
+import no.ntnu.greenhouse.sensor.SensorType;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.tools.Logger;
 

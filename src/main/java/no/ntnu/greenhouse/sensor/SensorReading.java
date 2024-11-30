@@ -1,6 +1,4 @@
-package no.ntnu.greenhouse.sensors;
-
-import no.ntnu.greenhouse.SensorType;
+package no.ntnu.greenhouse.sensor;
 
 /**
  * Represents a generic sensor reading.

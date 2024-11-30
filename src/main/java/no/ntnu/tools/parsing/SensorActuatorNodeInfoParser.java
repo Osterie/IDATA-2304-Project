@@ -4,7 +4,7 @@ import static no.ntnu.tools.parsing.Parser.parseBooleanOrError;
 import static no.ntnu.tools.parsing.Parser.parseIntegerOrError;
 
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
-import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.actuator.Actuator;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.messages.Delimiters;
 import no.ntnu.tools.Logger;
