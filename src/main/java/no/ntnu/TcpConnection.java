@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import no.ntnu.constants.Endpoints;
+import no.ntnu.gui.common.PopUpWindows.InformationWindow;
 import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
 import no.ntnu.messages.*;
 import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
@@ -421,7 +422,6 @@ public abstract class TcpConnection {
     Message message = new Message(new MessageHeader(Endpoints.GREENHOUSE, "7", ""),
         new MessageBody(new GetNodeCommand()));
 
-    ErrorWindow.showError("tit", "It works");
     // TODO: This test shows it works.
     try {
       Logger.info("ENCRYPTION TEST: " + message.getBody().getTransmission().toString());
