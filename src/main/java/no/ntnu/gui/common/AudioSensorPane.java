@@ -16,6 +16,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import no.ntnu.greenhouse.sensor.AudioSensorReading;
+import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
+import no.ntnu.gui.common.PopUpWindows.InformationWindow;
 
 /**
  * The AudioSensorPane class represents a pane that displays and plays audio from an AudioSensorReading.
@@ -27,6 +29,12 @@ import no.ntnu.greenhouse.sensor.AudioSensorReading;
 public class AudioSensorPane {
 
     private AudioSensorReading sensorReading;
+
+    // Error window
+    ErrorWindow errorWindow = new ErrorWindow();
+
+    // Info window
+    InformationWindow informationWindow = new InformationWindow();
     
     /**
      * Constructs an AudioSensorPane with the specified AudioSensorReading.
@@ -49,6 +57,7 @@ public class AudioSensorPane {
     File audioFile = audioSensor.getAudioFile();
     
     if (audioFile == null || !audioFile.exists()) {
+        informationWindow.showAlert("Audio file", "Audio file not found!");
         return new Label("Audio file not found");
     }
 
@@ -60,6 +69,7 @@ public class AudioSensorPane {
         try {
             playAudio(audioFile);
         } catch (Exception ex) {
+            errorWindow.showAlert("Audio error", "Could not play audio!");
             ex.printStackTrace();
         }
     });

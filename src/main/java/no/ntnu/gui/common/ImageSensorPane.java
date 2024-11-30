@@ -14,6 +14,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.greenhouse.sensor.ImageSensorReading;
 import no.ntnu.greenhouse.sensor.SensorReading;
+import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
+import no.ntnu.gui.common.PopUpWindows.InformationWindow;
 import no.ntnu.tools.Logger;
 
 /**
@@ -36,6 +38,12 @@ public class ImageSensorPane extends Pane {
 
   private ImageSensorReading sensorReading; 
   private ImageView thumbnail;
+
+  // Error window
+  ErrorWindow errorWindow = new ErrorWindow();
+
+  // Info window
+  InformationWindow informationWindow = new InformationWindow();
     
     /**
      * Constructs an ImageSensorPane with the specified ImageSensorReading.
@@ -73,11 +81,13 @@ public class ImageSensorPane extends Pane {
    * @param sensorreading the ImageSensorReading containing the image to display
    * @return a Node containing the image thumbnail and label, or a label indicating no image found
    */
-  public Node createContent(ImageSensorReading sensorreading) {
+  public Node createContent(ImageSensorReading sensorReading) {
     
-    BufferedImage bufferedImage = sensorreading.getImage();
+    BufferedImage bufferedImage = sensorReading.getImage();
     if (bufferedImage == null) {
         Logger.error("Buffered image is null");
+
+        informationWindow.showAlert("Image file", "No image found!");
 
         return new Label("No image found");
     }
