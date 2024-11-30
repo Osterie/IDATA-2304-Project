@@ -5,20 +5,26 @@ import no.ntnu.messages.Transmission;
 
 /**
  * Represents an abstract response to a transmission in the messaging system.
- * A response contains a protocol string, the transmission that triggered the response,
+ * A response contains a protocol string, the transmission that triggered the
+ * response,
  * and any additional response data.
- * Subclasses should define specific types of responses, such as success or failure responses.
+ * Subclasses should define specific types of responses, such as success or
+ * failure responses.
  */
 public abstract class Response extends Transmission {
     private String responseData;
     private Transmission transmission;
 
     /**
-     * Constructs a {@code Response} with the specified protocol string, transmission, and response data.
+     * Constructs a {@code Response} with the specified protocol string,
+     * transmission, and response data.
      *
-     * @param responseProtocolString The protocol string representing the type of response (e.g., "SUCCESS", "FAILURE").
-     * @param transmission                The {@link Transmission} that triggered this response.
-     * @param responseData           Additional data describing the response. Can be null or empty.
+     * @param responseProtocolString The protocol string representing the type of
+     *                               response (e.g., "SUCCESS", "FAILURE").
+     * @param transmission           The {@link Transmission} that triggered this
+     *                               response.
+     * @param responseData           Additional data describing the response. Can be
+     *                               null or empty.
      */
     protected Response(String responseProtocolString, Transmission transmission, String responseData) {
         super(responseProtocolString);

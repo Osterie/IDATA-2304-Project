@@ -23,7 +23,7 @@
   - [ ] ADRIAN Commands
     - [ ] ADRIAN Greenhouse
     - [x] ADRIAN Other
-  - [ ] ADRIAN Responses
+  - [x] ADRIAN Responses
   - [ ] ADRIAN Other
 - [x] ADRIAN Ensure high quality code for TcpConnection.java
 - [x] ADRIAN Ensure high quality code for SocketCommunicationChannel.java
