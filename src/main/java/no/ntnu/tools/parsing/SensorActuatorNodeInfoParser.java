@@ -87,9 +87,9 @@ public class SensorActuatorNodeInfoParser {
     Actuator actuator = new Actuator(actuatorId, actuatorType, info.getId(), turnOnText, turnOffText);
 
     if (isOn) {
-      actuator.turnOn();
+      actuator.turnOn(false);
     } else {
-      actuator.turnOff();
+      actuator.turnOff(false);
     }
 
     actuator.setListener(listener);

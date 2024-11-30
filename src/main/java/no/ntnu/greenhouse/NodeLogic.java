@@ -62,7 +62,7 @@ public class NodeLogic {
                     sensorData += "AUD: =  NoAudio,";
                 }else {
                     sensorData += "NUM: =  NoData,";
-            }
+                }
             }
         }
         // Remove the last comma

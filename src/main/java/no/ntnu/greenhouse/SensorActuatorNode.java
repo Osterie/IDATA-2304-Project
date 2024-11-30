@@ -363,7 +363,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     if (actuator == null) {
       Logger.error("Actuator not found on node " + actuatorId);
     }
-    actuator.set(on);
+    actuator.set(on, true);
   }
 
   /**
@@ -373,7 +373,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    */
   public void setAllActuators(boolean on) {
     for (Actuator actuator : actuators) {
-      actuator.set(on);
+      actuator.set(on, true);
     }
   }
 }

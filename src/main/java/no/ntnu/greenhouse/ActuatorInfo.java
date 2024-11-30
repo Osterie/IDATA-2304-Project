@@ -54,38 +54,4 @@ public enum ActuatorInfo {
     public String getTurnOffText() {
         return turnOffText;
     }
-
-    public boolean equals(ActuatorInfo other) {
-        return this.type.equals(other.type);
-    }
-
-    public boolean equals(String other) {
-        return this.type.equals(other);
-    }
-
-    /**
-     * turns a string into an actuator type
-     * 
-     * @param text the string to get the actuator type from
-     * @return the actuator type
-     */
-    public static ActuatorInfo fromString(String text) {
-        text = text.trim().toLowerCase();
-        for (ActuatorInfo b : ActuatorInfo.values()) {
-            if (b.type.equalsIgnoreCase(text)) {
-                return b;
-            }
-        }
-        return NONE;
-    }
-
-    /**
-     * Get the actuator type as a string.
-     * 
-     * @return the actuator type as a string
-     */
-    @Override
-    public String toString() {
-        return type;
-    }
 }

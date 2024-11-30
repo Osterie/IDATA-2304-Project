@@ -203,20 +203,24 @@ public class Actuator {
   /**
    * Turn on the actuator.
    */
-  public void turnOn() {
+  public void turnOn(boolean notifyChanges) {
     if (!on) {
       on = true;
-      notifyChanges();
+      if (notifyChanges){
+        this.notifyChanges();
+      }
     }
   }
 
   /**
    * Turn off the actuator.
    */
-  public void turnOff() {
+  public void turnOff(boolean notifyChanges) {
     if (on) {
       on = false;
-      notifyChanges();
+      if (notifyChanges){
+        this.notifyChanges();
+      }
     }
   }
 
@@ -240,11 +244,11 @@ public class Actuator {
    *
    * @param on Turn on when true, turn off when false
    */
-  public void set(boolean on) {
+  public void set(boolean on, boolean notifyChanges) {
     if (on) {
-      turnOn();
+      turnOn(notifyChanges);
     } else {
-      turnOff();
+      turnOff(notifyChanges);
     }
   }
 }

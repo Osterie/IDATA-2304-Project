@@ -261,9 +261,9 @@ public class ControlPanelApplication extends Application
       Actuator actuator = getStoredActuator(nodeId, actuatorId);
       if (actuator != null) {
         if (isOn) {
-          actuator.turnOn();
+          actuator.turnOn(false);
         } else {
-          actuator.turnOff();
+          actuator.turnOff(false);
         }
         actuatorPane.update(actuator);
       } else {

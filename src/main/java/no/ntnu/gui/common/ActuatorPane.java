@@ -83,9 +83,9 @@ public class ActuatorPane extends TitledPane {
     checkbox.selectedProperty().bindBidirectional(isSelected);
     checkbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue != null && newValue) {
-        actuator.turnOn(); // Turns the actuator on if the checkbox is selected.
+        actuator.turnOn(true); // Turns the actuator on if the checkbox is selected.
       } else {
-        actuator.turnOff(); // Turns the actuator off otherwise.
+        actuator.turnOff(true); // Turns the actuator off otherwise.
       }
     });
     return checkbox;
@@ -137,7 +137,7 @@ public class ActuatorPane extends TitledPane {
    */
   private void turnOffAllActuators() {
     actuators.forEach(actuator -> {
-      actuator.turnOff();
+      actuator.turnOff(true);
       update(actuator); // Update the actuator display
     });
   }
