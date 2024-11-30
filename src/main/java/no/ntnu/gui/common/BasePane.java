@@ -1,5 +1,6 @@
 package no.ntnu.gui.common;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
@@ -17,10 +18,14 @@ public abstract class BasePane extends TitledPane {
     }
 
     public void addComponent(Node component) {
+        Platform.runLater(() -> {
         contentBox.getChildren().add(component);
+        });
     }
 
     public void clearComponents() {
+        Platform.runLater(() -> {
         contentBox.getChildren().clear();
+        });
     }
 }

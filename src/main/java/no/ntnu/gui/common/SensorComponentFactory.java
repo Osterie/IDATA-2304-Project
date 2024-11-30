@@ -24,7 +24,6 @@ public class SensorComponentFactory {
 
     private static Node createNumericComponent(NumericSensorReading sensor) {
         Label label = new Label(sensor.getFormatted());
-        label.getStyleClass().add("numeric-sensor-label");
         return label;
     }
 
