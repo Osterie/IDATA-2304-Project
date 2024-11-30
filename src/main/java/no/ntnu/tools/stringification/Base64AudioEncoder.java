@@ -27,46 +27,45 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public class Base64AudioEncoder {
 
-    /**
-     * Converts an audio file into a Base64 encoded string.
-     *
-     * @param audioFile The audio file to be converted.
-     * @return A Base64 encoded string representing the audio file.
-     * @throws IOException if the audio file cannot be read.
-     */
-    public static String audioToString(File audioFile) throws IOException {
+  /**
+   * Converts an audio file into a Base64 encoded string.
+   *
+   * @param audioFile The audio file to be converted.
+   * @return A Base64 encoded string representing the audio file.
+   * @throws IOException if the audio file cannot be read.
+   */
+  public static String audioToString(File audioFile) throws IOException {
 
-        if (audioFile == null) {
-            throw new IllegalArgumentException("Audio file cannot be null");
-        }
-
-        try (FileInputStream fileInputStream = new FileInputStream(audioFile)) {
-            byte[] audioBytes = new byte[(int) audioFile.length()];
-            fileInputStream.read(audioBytes);
-
-            // Encode the byte array to Base64 and return as a string
-            return Base64.getEncoder().encodeToString(audioBytes);
-        }
-
+    if (audioFile == null) {
+      throw new IllegalArgumentException("Audio file cannot be null");
     }
 
-    /**
-     * Converts a Base64 encoded string back into an audio file.
-     *
-     * @param base64String The Base64 string representing the audio file.
-     * @param outputFile The file to write the decoded audio data to.
-     * @return The file with the decoded audio data.
-     * @throws IOException if the Base64 string cannot be decoded or the file cannot be written.
-     */
-    public static File stringToAudio(String base64String) throws IOException {
-        File outputFile = File.createTempFile("audio", ".wav");
-        byte[] decodedBytes = Base64.getDecoder().decode(base64String);
-        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decodedBytes);
-             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+    try (FileInputStream fileInputStream = new FileInputStream(audioFile)) {
+      byte[] audioBytes = new byte[(int) audioFile.length()];
+      fileInputStream.read(audioBytes);
 
-            byteArrayOutputStream.write(decodedBytes);
-            byteArrayOutputStream.writeTo(new FileOutputStream(outputFile));
-        }
-        return outputFile;
+      // Encode the byte array to Base64 and return as a string
+      return Base64.getEncoder().encodeToString(audioBytes);
     }
+
+  }
+
+  /**
+   * Converts a Base64 encoded string back into an audio file.
+   *
+   * @param base64String The Base64 string representing the audio file.
+   * @return The file with the decoded audio data.
+   * @throws IOException if the Base64 string cannot be decoded or the file cannot be written.
+   */
+  public static File stringToAudio(String base64String) throws IOException {
+    File outputFile = File.createTempFile("audio", ".wav");
+    byte[] decodedBytes = Base64.getDecoder().decode(base64String);
+    try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(decodedBytes);
+         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+
+      byteArrayOutputStream.write(decodedBytes);
+      byteArrayOutputStream.writeTo(new FileOutputStream(outputFile));
+    }
+    return outputFile;
+  }
 }
