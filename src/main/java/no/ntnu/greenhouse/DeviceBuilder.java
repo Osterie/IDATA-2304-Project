@@ -1,6 +1,5 @@
 package no.ntnu.greenhouse;
 
-
 /**
  * The DeviceBuilder class is used to construct a SensorActuatorNode with various sensors and actuators.
  * It provides methods to add different types of sensors and actuators to the node.
@@ -34,12 +33,12 @@ package no.ntnu.greenhouse;
 public class DeviceBuilder {
 
     private final SensorActuatorNode node;
-    
+
     private static int nextNodeId = 1;
 
-  
     /**
-     * Constructs a DeviceBuilder instance and initializes a new SensorActuatorNode with a unique ID.
+     * Constructs a DeviceBuilder instance and initializes a new SensorActuatorNode
+     * with a unique ID.
      */
     public DeviceBuilder() {
         this.node = new SensorActuatorNode(generateUniqueNodeId());
@@ -50,7 +49,7 @@ public class DeviceBuilder {
      *
      * @return The configured SensorActuatorNode
      */
-    public SensorActuatorNode build(){
+    public SensorActuatorNode build() {
         return node;
     }
 
@@ -60,7 +59,7 @@ public class DeviceBuilder {
      * @param count The number of temperature sensors to add
      * @return The builder object
      */
-    public DeviceBuilder addTemperatureSensor(int count){
+    public DeviceBuilder addTemperatureSensor(int count) {
         if (count > 0) {
             this.node.addSensors(SensorFactory.createTemperatureSensor(), count);
         }
@@ -73,7 +72,7 @@ public class DeviceBuilder {
      * @param count The number of humidity sensors to add
      * @return The builder object
      */
-    public DeviceBuilder addHumiditySensor(int count){
+    public DeviceBuilder addHumiditySensor(int count) {
         if (count > 0) {
             this.node.addSensors(SensorFactory.createHumiditySensor(), count);
         }
@@ -86,7 +85,7 @@ public class DeviceBuilder {
      * @param count The number of light sensors to add
      * @return The builder object
      */
-    public DeviceBuilder addLightSensor(int count){
+    public DeviceBuilder addLightSensor(int count) {
         if (count > 0) {
             this.node.addSensors(SensorFactory.createLightSensor(), count);
         }
@@ -99,7 +98,7 @@ public class DeviceBuilder {
      * @param count The number of pH sensors to add
      * @return The builder object
      */
-    public DeviceBuilder addPhSensor(int count){
+    public DeviceBuilder addPhSensor(int count) {
         if (count > 0) {
             this.node.addSensors(SensorFactory.createPhSensor(), count);
         }
@@ -112,9 +111,9 @@ public class DeviceBuilder {
      * @param count The number of image sensors to add
      * @return The builder object
      */
-    public DeviceBuilder addImageSensor(int count){
+    public DeviceBuilder addImageSensor(int count) {
         if (count > 0) {
-            this. node.addSensors(SensorFactory.createImageSensor(), count);
+            this.node.addSensors(SensorFactory.createImageSensor(), count);
         }
         return this;
     }
@@ -125,7 +124,7 @@ public class DeviceBuilder {
      * @param count The number of audio sensors to add
      * @return The builder object
      */
-    public DeviceBuilder addAudioSensor(int count){
+    public DeviceBuilder addAudioSensor(int count) {
         if (count > 0) {
             this.node.addSensors(SensorFactory.createAudioSensor(), count);
         }
@@ -138,7 +137,7 @@ public class DeviceBuilder {
      * @param count The number of window actuators to add
      * @return The builder object
      */
-    public DeviceBuilder addWindowActuator(int count){
+    public DeviceBuilder addWindowActuator(int count) {
         if (count > 0) {
             this.addActuators(node, ActuatorFactory.createWindow(node.getId()), count);
         }
@@ -151,7 +150,7 @@ public class DeviceBuilder {
      * @param count The number of fan actuators to add
      * @return The builder object
      */
-    public DeviceBuilder addFanActuator(int count){
+    public DeviceBuilder addFanActuator(int count) {
         if (count > 0) {
             this.addActuators(node, ActuatorFactory.createFan(node.getId()), count);
         }
@@ -164,7 +163,7 @@ public class DeviceBuilder {
      * @param count The number of heater actuators to add
      * @return The builder object
      */
-    public DeviceBuilder addHeaterActuator(int count){
+    public DeviceBuilder addHeaterActuator(int count) {
         if (count > 0) {
             this.addActuators(node, ActuatorFactory.createHeater(node.getId()), count);
         }
@@ -177,7 +176,7 @@ public class DeviceBuilder {
      * @param count The number of light actuators to add
      * @return The builder object
      */
-    public DeviceBuilder addLightActuator(int count){
+    public DeviceBuilder addLightActuator(int count) {
         if (count > 0) {
             this.addActuators(node, ActuatorFactory.createLight(node.getId()), count);
         }
