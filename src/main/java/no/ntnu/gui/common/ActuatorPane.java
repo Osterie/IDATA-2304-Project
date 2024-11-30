@@ -1,5 +1,9 @@
 package no.ntnu.gui.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import no.ntnu.greenhouse.actuator.Actuator;
@@ -8,6 +12,7 @@ import no.ntnu.greenhouse.actuator.ActuatorCollection;
 public class ActuatorPane extends BasePane {
 
     private final ActuatorCollection actuators;
+    private final Map<Actuator, SimpleBooleanProperty> actuatorActive = new HashMap<>();
 
     public ActuatorPane(ActuatorCollection actuators) {
         super("Actuators");
@@ -17,7 +22,7 @@ public class ActuatorPane extends BasePane {
 
     private void initialize() {
         for (Actuator actuator : actuators) {
-            Node actuatorGui = ActuatorComponentFactory.createActuatorComponent(actuator);
+            Node actuatorGui = ActuatorComponentFactory.createActuatorComponent(actuator, actuatorActive);
             addComponent(actuatorGui);
         }
         addTurnOffAllButton();
@@ -41,4 +46,5 @@ public class ActuatorPane extends BasePane {
         clearComponents(); // Clear the existing UI
         initialize(); // Re-initialize to update the UI with the latest states
     }
+
   }

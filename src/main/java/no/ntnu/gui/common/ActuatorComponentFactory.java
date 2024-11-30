@@ -1,5 +1,8 @@
 package no.ntnu.gui.common;
 
+import java.util.Map;
+
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -20,7 +23,7 @@ public class ActuatorComponentFactory {
     //         return createActuator1Component(Actuator);
     //     }
 
-    public static Node createActuatorComponent(Actuator actuator) {
+    public static Node createActuatorComponent(Actuator actuator, Map<Actuator, SimpleBooleanProperty> actuatorActive) {
         HBox box = new HBox();
         box.setSpacing(5);
 
@@ -28,13 +31,7 @@ public class ActuatorComponentFactory {
         Label label = new Label(generateActuatorText(actuator));
 
         // Checkbox
-        CheckBox checkBox = new CheckBox();
-        checkBox.setSelected(actuator.isOn());
-        checkBox.selectedProperty().addListener((observer, oldValue, newValue) -> {
-            if (newValue) actuator.turnOn(true);
-            else actuator.turnOff(true);
-        });
-        
+        CheckBox checkBox = createActuatorCheckbox(actuator, actuatorActive);
         box.getChildren().addAll(label, checkBox);
         return box;
     }
@@ -54,4 +51,19 @@ public class ActuatorComponentFactory {
     }
     return actuator.getType() + ": " + state;
   }
+
+  private static CheckBox createActuatorCheckbox(Actuator actuator, Map<Actuator, SimpleBooleanProperty> actuatorActive) {
+     CheckBox checkbox = new CheckBox();
+     SimpleBooleanProperty isSelected = new SimpleBooleanProperty(actuator.isOn());
+     actuatorActive.put(actuator, isSelected); // Store the property for later updates.
+     checkbox.selectedProperty().bindBidirectional(isSelected);
+     checkbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+       if (newValue != null && newValue) {
+         actuator.turnOn(true); // Turns the actuator on if the checkbox is selected.
+       } else {
+         actuator.turnOff(true); // Turns the actuator off otherwise.
+       }
+     });
+     return checkbox;
+   }
 }
