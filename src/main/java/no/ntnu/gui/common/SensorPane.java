@@ -1,7 +1,7 @@
 package no.ntnu.gui.common;
 
 import javafx.scene.Node;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.sensor.SensorReading;
 
 public class SensorPane extends BasePane {
 

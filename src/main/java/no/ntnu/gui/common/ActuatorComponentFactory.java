@@ -4,7 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.actuator.Actuator;
 
 
 //FACTORY IS TO EASALY EXTEND THE CODE FURTHER
@@ -30,9 +30,9 @@ public class ActuatorComponentFactory {
         // Checkbox
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(actuator.isOn());
-        checkBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) actuator.turnOn();
-            else actuator.turnOff();
+        checkBox.selectedProperty().addListener((observer, oldValue, newValue) -> {
+            if (newValue) actuator.turnOn(true);
+            else actuator.turnOff(true);
         });
         
         box.getChildren().addAll(label, checkBox);

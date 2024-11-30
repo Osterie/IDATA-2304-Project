@@ -2,8 +2,8 @@ package no.ntnu.gui.common;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.ActuatorCollection;
+import no.ntnu.greenhouse.actuator.Actuator;
+import no.ntnu.greenhouse.actuator.ActuatorCollection;
 
 public class ActuatorPane extends BasePane {
 
@@ -32,7 +32,7 @@ public class ActuatorPane extends BasePane {
 
     private void turnOffAllActuators() {
         for (Actuator actuator : actuators) {
-            actuator.turnOff(); // Update actuator state
+            actuator.turnOff(true);
         }
         refreshActuatorDisplay();
     }

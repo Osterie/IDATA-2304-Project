@@ -2,10 +2,11 @@ package no.ntnu.gui.common;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import no.ntnu.greenhouse.sensors.AudioSensorReading;
-import no.ntnu.greenhouse.sensors.ImageSensorReading;
-import no.ntnu.greenhouse.sensors.NumericSensorReading;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.sensor.AudioSensorReading;
+import no.ntnu.greenhouse.sensor.ImageSensorReading;
+import no.ntnu.greenhouse.sensor.NumericSensorReading;
+import no.ntnu.greenhouse.sensor.SensorReading;
+
 
 public class SensorComponentFactory {
 
