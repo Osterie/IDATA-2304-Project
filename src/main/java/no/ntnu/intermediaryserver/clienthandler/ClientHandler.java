@@ -195,7 +195,7 @@ public class ClientHandler extends TcpConnection implements Runnable {
             String clientId = clientIdentificationCommand.getId();
 
             if (clientId.equals(Endpoints.NOT_PREDEFINED.getValue())) {
-                clientId = this.socket.getRemoteSocketAddress().toString();
+                clientId = this.getSocket().getRemoteSocketAddress().toString();
             }
             
             this.logic.setClientIdentification(new ClientIdentification(clientType, clientId));

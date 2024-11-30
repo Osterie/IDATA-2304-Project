@@ -117,7 +117,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, self.getSensorNoderTarget());
         MessageBody body = new MessageBody(new GetSensorDataCommand());
         Message message = new Message(header, body);
-        if (self.isOn && !self.isReconnecting()) {
+        if (self.isConnected() && !self.isReconnecting()) {
           self.sendMessage(message);
         }
         else{
