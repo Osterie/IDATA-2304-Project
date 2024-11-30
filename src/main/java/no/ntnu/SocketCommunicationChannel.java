@@ -14,6 +14,12 @@ import no.ntnu.tools.Logger;
 public abstract class SocketCommunicationChannel extends TcpConnection {
   protected ClientIdentification clientIdentification;
 
+  /**
+   * Creates a new socket communication channel.
+   * 
+   * @param host The host to connect to.
+   * @param port The port to connect to.
+   */
   protected SocketCommunicationChannel(String host, int port) {
     super();
     try {
@@ -24,6 +30,11 @@ public abstract class SocketCommunicationChannel extends TcpConnection {
     }
   }
 
+  /**
+   * Establishes a connection with the server by sending an identification message.
+   * 
+   * @param clientIdentification The client identification to send.
+   */
   public void establishConnectionWithServer(ClientIdentification clientIdentification) {
     if (clientIdentification == null) {
       Logger.error("Client type or ID is null, cannot establish connection.");
@@ -31,11 +42,16 @@ public abstract class SocketCommunicationChannel extends TcpConnection {
     }
 
     this.clientIdentification = clientIdentification;
-
     Message identificationMessage = this.createIdentificationMessage(clientIdentification);
     this.sendMessage(identificationMessage);
   }
 
+  /**
+   * Overrides the super classes reconnection actions.
+   * Since the client identification is not done in the super class, we do it here
+   * and then call the super class reconnection actions.
+   * 
+   */
   @Override
   protected void doReconnectedActions(){
     this.establishConnectionWithServer(this.clientIdentification);
@@ -51,7 +67,7 @@ public abstract class SocketCommunicationChannel extends TcpConnection {
   private Message createIdentificationMessage(ClientIdentification clientIdentification) {
     Transmission identificationCommand = new ClientIdentificationTransmission(clientIdentification);
     MessageBody body = new MessageBody(identificationCommand);
-    MessageHeader header = new MessageHeader(Endpoints.SERVER, "none");
+    MessageHeader header = new MessageHeader(Endpoints.SERVER, Endpoints.NONE.getValue());
     return new Message(header, body);
   }
 }

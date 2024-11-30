@@ -14,7 +14,7 @@
 - [ ] ADRIAN Ensure high quality code for all classes under greenhouse folder
 - [ ] ADRIAN Ensure high quality code for all classes under messages folder
 - [x] ADRIAN Ensure high quality code for TcpConnection.java
-- [ ] ADRIAN Ensure high quality code for SocketCommunicationChannel.java
+- [x] ADRIAN Ensure high quality code for SocketCommunicationChannel.java
 - [ ] TOBIAS Forsikre god kode kvalitet i tools
 - [ ] SEBASTIAN Pass på god kode for GUI common folder
 
