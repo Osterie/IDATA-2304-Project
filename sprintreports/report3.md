@@ -18,38 +18,68 @@ Sprint stenographer: Knut Olav
 
 ## **Sprint Summary**
 - **Total Planned Work:**
-    - TODO
+    - Improve the control panel communication by updating the socket system.
+    - add threading to control panel.
+    - Create header/body for messages
+    - refactor intermediary server
+    - Tidy up work and write JavaDoc
 
 - **Completed Work:**
-    - TODO
+    - Control panel socket updated for better communication.
+    - Added threading to handle multiple requests in the control panel.
+    - Created header/body structure for messages to simplify communication.
+    - Intermediary server refactored and well-documented.
+    - Built a tool to simplify GUI creation using JavaFX.
+    - Refactored sensor classes to make it easier to add new sensor types.
+    - Enhanced the structure of commands and messages for better functionality.
 
 - **Carried Over Work:**
-    - TODO
+    - Write more JavaDoc.
+    - Some error handling and testing for commands and messages.
 
 ---
 
 ## **Sprint Progress**
-| Task | Assignee | Status (Completed, In Progress, Blocked) |
-|--|----------|------------------------------------------|
-
+| Task                                                          | Assignee  | Status      |
+|---------------------------------------------------------------|-----------|-------------|
+| Create a component builder Class                              | Knut      | Completed   |
+| Refactoring of control panel socket                           | Adrian    | Completed   |
+| Added thread for listening to request in control panel socket | Adrian    | Completed   |
+| Fixed method calls                                            | Adrian    | Completed   |
+| implemented of header/body in clienthandler                   | Adrian    | Completed   |
+| Refactor intermediary server and classes                      | Daniel    | Completed   |
+| Refactor sensor classes                                       | Sebastian | Completed   |
+| Add tests for message and intermediary server                 | Daniel    | Completed   |
+| Added actuator state updates in control panel                 | Adrian    | Completed   |
+| Refactor command structure                                    | Tobias    | Completed   |
+| JavaDoc                                                       | Everyone  | In progress |
 ---
 
 ## **Challenges/Blockers**
-- **Challenge 1:** [Description, impact, and proposed solution or action]
+- **Challenge 1:** 
+  - **Impact:** 
+  - **Proposed Solution:** 
 - **Challenge 2:** [Description, impact, and proposed solution or action]
 
 ---
 
 ## **Risks & Dependencies**
-- **Risk 1:** [Description and impact on project]
+- **Risk 1:**
+  - **Impact:**
 - **Dependency 1:** [External dependency affecting sprint completion]
 
 ---
 
 ## **Retrospective Summary**
-- **What Went Well:** [List successful practices, teamwork highlights]
-- **What Could Be Improved:** [Areas needing improvement, e.g., planning, communication]
-- **Actions for Next Sprint:** [Action items or changes planned for the next sprint]
+- **What Went Well:**
+  - The team did well managing the workload and completing the planned tasks.
+  - Refactoring made it easier work on the project.
+  - Collaboration especially during challenging parts were effective.
+- **What Could Be Improved:**
+  - Identifying performance bottlenecks earlier to avoid wasting time.
+- **Actions for Next Sprint:**
+  - Improve documentation to make the system easier for each other to use.
+  - Add more tests and improve error handling.
 
 ---
 
