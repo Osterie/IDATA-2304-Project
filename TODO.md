@@ -160,7 +160,8 @@
 - [x] TOBIAS report1
 - [x] TOBIAS report2
 - [ ] KNUT? report3
-- [ ] TOBIAS report4
+- [x] TOBIAS report4
+- [x] TOBIAS report5
 
 # PROTOCOL DESCRIPTION REQUIREMENTS
 

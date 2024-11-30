@@ -22,12 +22,16 @@ Sprint stenographer: Tobias
   - Implement Message and Command interfaces/classes.
   - Create different Message/Command subclasses.
   - Send messages between intermediary server and clients.
+  - Finish protocol.
+  - Finish video.
 
 - **Completed Work:**
   - Created a comprehensive TODO list and distributed tasks.
   - Enhanced functionality for the control panel to handle actuator states and sensor readings.
   - Added Base64 image encoder and corresponding test classes.
   - Added tests for cipher encryption.
+  - Protocol finished.
+  - Video finished.
 
 - **Carried Over Work:**
   - Unfinished Story Points: [TBD]
@@ -36,18 +40,18 @@ Sprint stenographer: Tobias
 ---
 
 ## **Sprint Progress**
-| Task                                         | Assignee          | Status       |
-|----------------------------------------------|-------------------|--------------|
-| Create TODOs                                 | Adrian            | Completed    |
-| Add thread for listening in control panel    | Adrian            | Completed    |
-| Add CSS to classes                           | Tobias            | Completed    |
-| Enable control panel to accept readings      | Sebastian         | Completed    |
-| Allow control panel to change actuator state | Adrian         | Completed    |
-| Retrieve actuators from greenhouse           | Adrian            | Completed    |
-| Add Base64 image encoder                     | Tobias            | Completed    |
-| Add test class for Base64 encoder            | Tobias            | Completed    |
-| Reformat ControlPanelCommunicationChannel    | Adrian            | Completed    |
-| Add tests for cipher encryption              | Tobias            | Completed    |
+| Task                                         | Assignee     | Status       |
+|----------------------------------------------|--------------|--------------|
+| Create TODOs                                 | Adrian       | Completed    |
+| Add thread for listening in control panel    | Adrian       | Completed    |
+| Add CSS to classes                           | Tobias       | Completed    |
+| Enable control panel to accept readings      | Sebastian    | Completed    |
+| Allow control panel to change actuator state | Adrian       | Completed    |
+| Retrieve actuators from greenhouse           | Adrian       | Completed    |
+| Add Base64 image encoder                     | Tobias       | Completed    |
+| Add test class for Base64 encoder            | Tobias       | Completed    |
+| Reformat ControlPanelCommunicationChannel    | Adrian       | Completed    |
+| Add tests for cipher encryption              | Tobias       | Completed    |
 
 ---
 
