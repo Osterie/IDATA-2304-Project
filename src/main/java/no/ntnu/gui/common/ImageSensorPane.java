@@ -52,6 +52,7 @@ public class ImageSensorPane extends Pane {
     BufferedImage bufferedImage = imageSensor.getImage();
     if (bufferedImage == null) {
         Logger.error("Buffered image is null");
+
         return new Label("No image found");
     }
 
