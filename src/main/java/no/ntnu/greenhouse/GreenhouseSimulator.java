@@ -62,11 +62,11 @@ public class GreenhouseSimulator {
         .build();
     nodes.put(node3.getId(), node3);
 
-    // SensorActuatorNode node4 = new DeviceBuilder().addAudioSensor(1)
-    // .build();
-    // nodes.put(node4.getId(), node4);
+    SensorActuatorNode node4 = new DeviceBuilder().addAudioSensor(1)
+    .build();
+    nodes.put(node4.getId(), node4);
 
-    SensorActuatorNode node5 = new DeviceBuilder().addImageSensor(1)
+    SensorActuatorNode node5 = new DeviceBuilder().addImageSensor(1).addAudioSensor(1).addHumiditySensor(1)
         .build();
     nodes.put(node5.getId(), node5);
 

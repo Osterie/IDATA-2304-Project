@@ -60,7 +60,7 @@ public class SensorReadingsParser {
    * @throws IllegalArgumentException if the reading is null, empty, or not in the expected format
    */
   private static SensorReading parseReading(String reading) {
-    Logger.info("Reading: " + reading);
+    //Logger.info("Reading: " + reading);
     if (reading == null || reading.isEmpty()) {
       throw new IllegalArgumentException("Sensor reading can't be empty");
     }

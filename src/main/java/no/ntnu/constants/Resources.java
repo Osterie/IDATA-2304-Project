@@ -3,7 +3,7 @@ package no.ntnu.constants;
 public enum Resources {
     BASE_PATH("resources/"),
     IMAGES(BASE_PATH.getPath() + "images/"),
-    AUDIO(BASE_PATH.getPath() + "audio/");
+    AUDIO(BASE_PATH.getPath() + "audiofiles/");
 
     private final String path;
 

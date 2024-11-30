@@ -28,7 +28,7 @@
 - [x] ADRIAN Ensure high quality code for TcpConnection.java
 - [x] ADRIAN Ensure high quality code for SocketCommunicationChannel.java
 - [x] TOBIAS Forsikre god kode kvalitet i tools
-- [ ] SEBASTIAN Pass på god kode for GUI common folder
+- [x] SEBASTIAN Pass på god kode for GUI common folder
 
 # Probably wont do
 
@@ -60,9 +60,9 @@
 - [x] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
 - [ ] Judge if sensor pane should be scrollable. I tried it out, and it didn't look good, and it didn't feel good to use.
 - [x] TOBIAS ScrollPane for controlPanel.
-- [ ] SEBASTIAN Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
+- [x] SEBASTIAN Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
 - [ ] DANIEL Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
-- [ ] SEBASTIAN Actuator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such. Each actuator should have "Turned on/off text" when they are made.
+- [x] SEBASTIAN Actuator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such. Each actuator should have "Turned on/off text" when they are made.
 
 - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
 - [x] ADRIAN Sensors for light, PH.
@@ -302,7 +302,7 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 - [x] For å håndtere dette på en god måte. Hva med at greenhouse nodes hvor actuatoren ble endret, sier fra til server, som videre sier det til alle control panel. Slik unngår vi å måtte spør om status til actuators hele tiden (fra control panel)
 - [x] ADRIAN receive sensor data periodically only for current tab in control panel.
 - [x] SEBASTIAN. Send image data from greenhouse to control panel. 
-- [ ] SEBASTIAN Parse image reading in control panel.
+- [x] SEBASTIAN Parse image reading in control panel.
 
 ## GUI
 
@@ -351,7 +351,7 @@ clear "definition of done", etc. For example, an issue like "improve GUI" is a b
 does it mean? When is it complete?
 - [ ] DANIEL 4. How the work was progressing - what did you accomplish in each sprint? Which issues were
 planned, and which ones were completed?
-- [ ] SEBASTIAN 5. A short retrospective after each sprint - what went well, and how can you improve?
+- [x] SEBASTIAN 5. A short retrospective after each sprint - what went well, and how can you improve?
 
 It is suggested that you keep the sprint documentation in Git as well, but you are allowed to use
 Wiki pages, Jira or other tools if you want.
