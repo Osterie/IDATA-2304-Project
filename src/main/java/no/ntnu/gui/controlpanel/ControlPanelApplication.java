@@ -86,13 +86,15 @@ public class ControlPanelApplication extends Application
     VBox rootLayout = new VBox();
 
     // Creates the ribbon using the RibbonFactory
-    Node ribbon = Ribbon.createRibbon(this::refreshControlPanel, () ->
-            Logger.info("Settings clicked"));
+    Node ribbon = Ribbon.createRibbon(this::refreshControlPanel, () -> Logger.info("Settings clicked"));
+    ribbon.getStyleClass().add("ribbon"); // Add CSS class to the ribbon
     rootLayout.getChildren().add(ribbon);
 
     // ScrollPane and TabPane setup
     ScrollPane scrollPane = new ScrollPane();
+    scrollPane.getStyleClass().add("scroll-pane"); // Add CSS class to the ScrollPane
     TabPane tabPane = new TabPane();
+    tabPane.getStyleClass().add("tab-pane"); // Add CSS class to the TabPane
     scrollPane.setContent(tabPane);
     scrollPane.setFitToWidth(true);
 
@@ -100,15 +102,14 @@ public class ControlPanelApplication extends Application
     nodeManager = new NodeManager(tabPane, () -> {
       // Add the placeholder message
       Label placeholder = createEmptyContent();
+      placeholder.getStyleClass().add("placeholder-label");
       rootLayout.getChildren().set(1, placeholder);
-    }, () -> {
-      // Remove the placeholder message
-      rootLayout.getChildren().set(1, scrollPane);
-    }, this.channel);
+    }, () -> rootLayout.getChildren().set(1, scrollPane), this.channel);
 
     rootLayout.getChildren().add(createEmptyContent()); // Start with the placeholder
 
     mainScene = new Scene(rootLayout, WINDOW_WIDTH, WINDOW_HEIGHT);
+    mainScene.getStylesheets().add(getClass().getResource("/css/controlpanel.css").toExternalForm());
     stage.setScene(mainScene);
     stage.show();
 
