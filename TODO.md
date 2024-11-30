@@ -370,7 +370,7 @@ of each? Preferably, include model’s diagrams here. (1-2min)
 - [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project.
 (1-3min)
 - [x] ADRIAN 8. Reflect on potential improvements and future work. (1 min)
-- Instead of separating different parts of a message using different delimiters, like "-", ";" and so on, we could have used a well established protocol like JSON or XML. This would make it easier to read the messages, and also easier to parse them. 
+- Currently the messages we send are separated into different parts, like header and body, and each of these parts are further subdivided, we do this by using different delimiters like "-" ";" and such. A better solution which we could call future work is to instead use a well established protocol like JSON or XML. This would make it easier to read the messages, and also easier to parse them. We already have experience with both JSON and XML which means it would not have been a big problem to hypthetically implement one of these protocols in the future.
 
 - Additionally, we are somewhat lacking with catching and managing errors. We have an enum for different Failure reasons, but we don't use many of them and don't have many of them either. To help with implement better error handling, we would need more and better tests and utilize them further than what we already have.
 
