@@ -28,11 +28,11 @@ public class MessageEncryptor {
       SecretKey aesKey = HybridRSAEncryptor.generateAESKey();
 
       // Original content
-      String originalContent = encryptedMessage.getBody().toString();
+      String originalTransmission = encryptedMessage.getBody().getTransmission().toString();
       String originalId = encryptedMessage.getHeader().getId();
 
       // Encrypted content
-      String encryptedContent = HybridRSAEncryptor.encryptWithAES(originalContent, aesKey);
+      String encryptedTransmission = HybridRSAEncryptor.encryptWithAES(originalTransmission, aesKey);
       String encryptedId = HybridRSAEncryptor.encryptWithAES(originalId, aesKey);
 
       // Encrypt the AES key with the recipient's public key
@@ -41,13 +41,10 @@ public class MessageEncryptor {
       // Store encrypted AES key in header
       encryptedMessage.getHeader().setEncryptedAES(encryptedAesKey);
 
-      // Transmission with encrypted content
-      Transmission encryptedTransmission = encryptedMessage.getBody().getTransmission();
-      encryptedTransmission.setTransmission(encryptedContent);
-
       // Add encrypted content to body
-      encryptedMessage.getBody().setTransmission(encryptedTransmission);
-
+      System.out.println("HEEEEERE: " + encryptedTransmission);
+      encryptedMessage.getBody().getTransmission().setTransmission(encryptedTransmission);
+      System.out.println("HEEEEERE: " + encryptedMessage.getBody().getTransmission().toString());
       // Add encrypted content to header
       encryptedMessage.getHeader().setId(encryptedId);
 
