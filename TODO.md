@@ -9,7 +9,7 @@
 - [ ] TOBIAS Refactor tools.
 - [ ] KNUT Refactor gui ControlPanel.
 
-- [ ] ADRIAN Ensure high quality code for all classes under controlpanel folder
+- [x] ADRIAN Ensure high quality code for all classes under controlpanel folder
 - [ ] ADRIAN Ensure high quality code for all classes under intermediary server folder
 - [ ] ADRIAN Ensure high quality code for all classes under greenhouse folder
 - [ ] ADRIAN Ensure high quality code for all classes under messages folder
