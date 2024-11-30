@@ -24,7 +24,7 @@
 }
 
 .ribbon-button {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #0073e6;
     -fx-text-fill: #0073e6;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
@@ -36,12 +36,12 @@
 }
 
 .ribbon-button:hover {
-    -fx-background-color: #e6f7ff;
+    -fx-background-color: #0073e6;
 }
 
 /* TabPane styling */
 .tab-pane {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #0073e6;
     -fx-border-color: #cccccc;
     -fx-padding: 5px;
 }
