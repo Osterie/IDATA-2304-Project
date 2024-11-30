@@ -8,13 +8,12 @@ import javafx.scene.layout.VBox;
 /**
  * Factory class for creating the ribbon in the control panel.
  */
-public class RibbonFactory {
+public class Ribbon {
 
     /**
      * Creates the ribbon containing the menu bar with application options.
      *
      * @param refreshAction  The action to perform when the refresh option is clicked.
-     * @param settingsAction The action to perform when the settings option is clicked.
      * @return A VBox containing the ribbon components.
      */
     public static VBox createRibbon(Runnable refreshAction, Runnable settingsAction) {
@@ -23,7 +22,6 @@ public class RibbonFactory {
         Menu fileMenu = new Menu("Options");
 
         MenuItem refreshItem = new MenuItem("Refresh");
-        MenuItem settingsItem = new MenuItem("Settings");
         MenuItem exitItem = new MenuItem("Exit");
 
         refreshItem.setOnAction(event -> {
@@ -32,15 +30,9 @@ public class RibbonFactory {
             }
         });
 
-        settingsItem.setOnAction(event -> {
-            if (settingsAction != null) {
-                settingsAction.run();
-            }
-        });
-
         exitItem.setOnAction(event -> Platform.exit());
 
-        fileMenu.getItems().addAll(refreshItem, settingsItem, exitItem);
+        fileMenu.getItems().addAll(refreshItem, exitItem);
         ribbonMenuBar.getMenus().add(fileMenu);
 
         return new VBox(ribbonMenuBar);

@@ -74,7 +74,7 @@ public class ControlPanelApplication extends Application
         VBox rootLayout = new VBox();
 
         // Creates the ribbon using the RibbonFactory
-        Node ribbon = RibbonFactory.createRibbon(this::refreshControlPanel, () -> Logger.info("Settings clicked"));
+        Node ribbon = Ribbon.createRibbon(this::refreshControlPanel, () -> Logger.info("Settings clicked"));
         rootLayout.getChildren().add(ribbon);
 
         // ScrollPane and TabPane setup

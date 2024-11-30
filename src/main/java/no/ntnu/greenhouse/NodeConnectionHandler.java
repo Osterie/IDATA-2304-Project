@@ -69,7 +69,7 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
      * @param message The message received.
      */
     @Override
-    protected void handleMessage(Message message) {
+    protected void handleSpecificMessage(Message message) {
         Logger.info("Received message for node! " + this.nodeLogic.getId() + ": " + message);
 
         MessageHeader header = message.getHeader();
