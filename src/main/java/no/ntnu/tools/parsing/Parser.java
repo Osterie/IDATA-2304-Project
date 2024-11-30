@@ -51,8 +51,9 @@ public class Parser {
    * @param s            The string to parse
    * @param errorMessage The error message to show if parsing fails
    * @return The boolean value contained in the string
-   * @throws IllegalArgumentException When the provided string does not contain a valid boolean value,
-   *                                  throw an exception with the provided error message
+   * @throws IllegalArgumentException When the provided
+   *        string does not contain a valid boolean value,
+   *        throw an exception with the provided error message
    */
   public static boolean parseBooleanOrError(String s, String errorMessage) {
     if (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("1")) {

@@ -1,17 +1,29 @@
 package no.ntnu.tools.encryption.symmetric;
 
 /**
- * This class is used to encrypt and decrypt string messages
+ * This class is used to encrypt and decrypt string messages using the Caesar cipher.
+ *
+ * <p><strong>Deprecated:</strong> The Caesar cipher is considered insecure due to its simplicity
+ * and lack of cryptographic strength. It is not suitable for real-world encryption purposes.
+ * Use a modern encryption algorithm such as AES instead.</p>
  */
+@Deprecated
 public class CeasarCipherEncryptor {
 
-    //Constant for the shift amount
+    // Constant for the shift amount
     private static final int SHIFT = 3;
 
     /**
-     * This method takes in a message as a string
-     * and gives back an encrypted string using Caesar cipher.
+     * Encrypts the given string using the Caesar cipher.
+     *
+     * <p><strong>Deprecated:</strong> The Caesar cipher is insecure and should not be used
+     * for encrypting sensitive data. Consider using a secure encryption library like Java's
+     * built-in `javax.crypto` package for encryption.</p>
+     *
+     * @param message the string to be encrypted
+     * @return the encrypted string
      */
+    @Deprecated
     public static String encryptString(String message) {
         StringBuilder encryptedMessage = new StringBuilder();
 
@@ -31,9 +43,15 @@ public class CeasarCipherEncryptor {
     }
 
     /**
-     * This method takes in an encrypted string
-     * and gives back a decrypted string using Caesar cipher.
+     * Decrypts the given string using the Caesar cipher.
+     *
+     * <p><strong>Deprecated:</strong> The Caesar cipher is insecure and should not be used
+     * for decrypting sensitive data. Consider using a secure decryption library instead.</p>
+     *
+     * @param encryptedMessage the encrypted string to be decrypted
+     * @return the decrypted string
      */
+    @Deprecated
     public static String decryptString(String encryptedMessage) {
         StringBuilder decryptedMessage = new StringBuilder();
 

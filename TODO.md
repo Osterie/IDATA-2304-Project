@@ -7,14 +7,24 @@
 
 - [ ] TODO change nodeId to only be int, or that it can be string. (go for can be string.)
 - [ ] TOBIAS Refactor tools.
-- [ ] KNUT Refactor gui ControlPanel.
 
+- [ ] SEBASTIAN Refactor SensorReadingParser.java
+
+- [ ] KNUT pass på god kode for gui controlpanel.
 - [x] ADRIAN Ensure high quality code for all classes under controlpanel folder
-- [ ] ADRIAN Ensure high quality code for all classes under intermediary server folder
-  - [ ] ADRIAN clienthandler folder
+- [x] ADRIAN Ensure high quality code for all classes under intermediary server folder
+  - [x] ADRIAN clienthandler folder
   - [x] ADRIAN server folder
 - [ ] ADRIAN Ensure high quality code for all classes under greenhouse folder
-- [ ] ADRIAN Ensure high quality code for all classes under messages folder
+  - [ ] ADRIAN actuator folder
+  - [ ] ADRIAN sensor folder
+  - [x] ADRIAN other
+- [x] ADRIAN Ensure high quality code for all classes under messages folder
+  - [x] ADRIAN Commands
+    - [x] ADRIAN Greenhouse
+    - [x] ADRIAN Other
+  - [x] ADRIAN Responses
+  - [x] ADRIAN Other
 - [x] ADRIAN Ensure high quality code for TcpConnection.java
 - [x] ADRIAN Ensure high quality code for SocketCommunicationChannel.java
 - [ ] TOBIAS Forsikre god kode kvalitet i tools
@@ -43,7 +53,6 @@
 - [x] ADRIAN Separate factory for actuators.
 <!-- - [ ] TOBIAS for generateHeader method usage, what if header is null? handle this. -->
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
-- [ ] KNUT clicking the ON/OFF buttons should not change the state when clicking in control panel, only change from the server response. If failed to get a response show a tooltip or somthn with a "failed or whatever" message.
 - [ ] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
 <!-- - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
 - [ ] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
@@ -58,7 +67,7 @@
 - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
 - [x] ADRIAN Sensors for light, PH.
 - [ ] TOBIAS Implement encryption. Måtte flytte det til neste sprint.
-- [ ] ADRIAN Handling is the integrity of the data is altered. 
+- [x] ADRIAN Handling is the integrity of the data is altered.
 - [x] TOBIAS Hashing the data and storing it in header(?) for checking integrity. 
 - [x] TOBIAS add hash in header of Message.
 - [x] ADRIAN handle message should take a message
@@ -296,12 +305,11 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 
 ## GUI
 
-- [ ] KNUT. Implement ComponentBuilder class
 - [ ] KNUT. Visualize charts.
 - [ ] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
 - [x] KNUT. Utbedre UI for ControlPanelApplication, Sett TurnOffAllActuators button til actuatorPane og fjern nodeSelect
 - [X] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
-- [ ] KNUT Imlement Component Builder.
+- [X] KNUT Implement Component Builder.
 - [x] ADRIAN. Make actuator buttons send data.
 - [ ] DANIEL. Do the task which was sent in discord. Which was something about gui components for adding more sensors and actuators to a node. Also in the main window of the greenhouse, have components for adding more nodes, with sensors and actuators. Also when a new node is added, connect it to the server and notify the control panels
 

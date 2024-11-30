@@ -1,8 +1,9 @@
-package no.ntnu.greenhouse;
+package no.ntnu.greenhouse.actuator;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import no.ntnu.tools.Logger;
 
 /**
@@ -12,7 +13,8 @@ public class ActuatorCollection implements Iterable<Actuator> {
   private final Map<Integer, Actuator> actuators = new HashMap<>();
 
   /**
-   * Print a short info about all the actuators. Usable for debugging. Does NOT print a newline!
+   * Print a short info about all the actuators. Usable for debugging. Does NOT
+   * print a newline!
    */
   public void debugPrint() {
 
@@ -41,6 +43,9 @@ public class ActuatorCollection implements Iterable<Actuator> {
     return actuators.get(id);
   }
 
+  /**
+   * Iterator for the collection.
+   */
   @Override
   public Iterator<Actuator> iterator() {
     return actuators.values().iterator();

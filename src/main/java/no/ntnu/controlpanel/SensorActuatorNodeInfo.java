@@ -1,7 +1,7 @@
 package no.ntnu.controlpanel;
 
-import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.ActuatorCollection;
+import no.ntnu.greenhouse.actuator.Actuator;
+import no.ntnu.greenhouse.actuator.ActuatorCollection;
 
 /**
  * Contains information about one sensor/actuator node. This is NOT the node itself, rather

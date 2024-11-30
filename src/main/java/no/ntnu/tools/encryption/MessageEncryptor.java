@@ -1,74 +1,90 @@
 package no.ntnu.tools.encryption;
 
-import no.ntnu.messages.Message;
-import no.ntnu.messages.Transmission;
-import no.ntnu.tools.Logger;
-import no.ntnu.tools.encryption.asymmetric.HybridRSAEncryptor;
-import javax.crypto.SecretKey;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import javax.crypto.SecretKey;
+import no.ntnu.messages.Message;
+import no.ntnu.messages.Transmission;
+import no.ntnu.tools.encryption.asymmetric.HybridRSAEncryptor;
 
+
+/**
+ * Provides methods for encrypting and decrypting messages.
+ */
 public class MessageEncryptor {
 
-    /**
-     * Takes message in and returns the encrypted version back.
-     *
-     * @param message the message to be encrypted.
-     *
-     * @return message that is encrypted.
-     */
-    public static Message encryptMessage(Message message, PublicKey recipientPublicKey) {
+  /**
+   * Encrypts a given message using the recipient's public key.
+   *
+   * @param message            the message to be encrypted
+   * @param recipientPublicKey the recipient's public key
+   * @return the encrypted message
+   */
+  public static Message encryptMessage(Message message, PublicKey recipientPublicKey) {
+    Message encryptedMessage = message;
 
-        Message encryptedMessage = message;
+    try {
+      // Generate AES key
+      SecretKey aesKey = HybridRSAEncryptor.generateAESKey();
 
-        try {
-            // Generate AES key
-            SecretKey aesKey = HybridRSAEncryptor.generateAESKey();
+      // Original content
+      String originalContent = encryptedMessage.getBody().toString();
+      String originalId = encryptedMessage.getHeader().getId();
 
-            // Encrypt the message
-            String originalContent = encryptedMessage.getBody().toString();
-            String encryptedContent = HybridRSAEncryptor.encryptWithAES(originalContent, aesKey);
+      // Encrypted content
+      String encryptedContent = HybridRSAEncryptor.encryptWithAES(originalContent, aesKey);
+      String encryptedId = HybridRSAEncryptor.encryptWithAES(originalId, aesKey);
 
-            // Encrypt the AES key with the recipient's public key
-            String encryptedAESKey = HybridRSAEncryptor.encryptAESKeyWithRSA(aesKey, recipientPublicKey);
+      // Encrypt the AES key with the recipient's public key
+      String encryptedAesKey = HybridRSAEncryptor.encryptAESKeyWithRSA(aesKey, recipientPublicKey);
 
-            // Stores encrypted AES key in header
-            encryptedMessage.getHeader().setEncryptedAES(encryptedAESKey);
+      // Store encrypted AES key in header
+      encryptedMessage.getHeader().setEncryptedAES(encryptedAesKey);
 
-            // Transmission with encrypted content
-            Transmission encryptedTransmission = encryptedMessage.getBody().getTransmission();
-            encryptedTransmission.setTransmission(encryptedContent);
+      // Transmission with encrypted content
+      Transmission encryptedTransmission = encryptedMessage.getBody().getTransmission();
+      encryptedTransmission.setTransmission(encryptedContent);
 
-            // Add encrypted content to body
-            encryptedMessage.getBody().setTransmission(encryptedTransmission);
+      // Add encrypted content to body
+      encryptedMessage.getBody().setTransmission(encryptedTransmission);
 
-        } catch (Exception e) {
-            System.err.println("Error occurred during encryption: " + e.getMessage());
-            e.printStackTrace();
-        }
+      // Add encrypted content to header
+      encryptedMessage.getHeader().setId(encryptedId);
 
-        return encryptedMessage;
+    } catch (Exception e) {
+      System.err.println("Error occurred during encryption: " + e.getMessage());
+      e.printStackTrace();
     }
 
-    /**
-     * Takes in encrypted message string with keys and returns the decrypted version back.
-     *
-     * @param encryptedMessage messsage to be decrypted.
-     * @param privateKey
-     *
-     * @return message that is decrypted.
-     */
-    public static Message decryptStringMessage(Message encryptedMessage, PrivateKey privateKey) throws Exception {
-        // Decrypt the AES key using the private key
-        SecretKey decryptedAESKey = HybridRSAEncryptor.decryptAESKeyWithRSA(encryptedMessage.getHeader().getEncryptedAES(), privateKey);
-        Logger.info("Decrypted AES Key.");
+    return encryptedMessage;
+  }
 
-        // Decrypt the message using the AES key
-        String decryptedTransmission = HybridRSAEncryptor.decryptWithAES(encryptedMessage.getBody().getTransmission().getTransmissionString(), decryptedAESKey);
+  /**
+   * Decrypts an encrypted message using the recipient's private key.
+   *
+   * @param encryptedMessage the message to be decrypted
+   * @param privateKey       the recipient's private key
+   * @return the decrypted message
+   * @throws Exception if decryption fails
+   */
+  public static Message decryptStringMessage(Message encryptedMessage, PrivateKey privateKey)
+          throws Exception {
+    // Decrypt the AES key using the private key
+    SecretKey decryptedAesKey = HybridRSAEncryptor.decryptAESKeyWithRSA(
+            encryptedMessage.getHeader().getEncryptedAES(), privateKey);
 
-        Message decryptedMessage = encryptedMessage;
-        decryptedMessage.getBody().getTransmission().setTransmission(decryptedTransmission);
+    // Decrypt the message using the AES key
+    String decryptedTransmission = HybridRSAEncryptor.decryptWithAES(
+            encryptedMessage.getBody().getTransmission().getTransmissionString(),
+            decryptedAesKey);
+    String decryptedId = HybridRSAEncryptor.decryptWithAES(
+            encryptedMessage.getHeader().getId(),
+            decryptedAesKey);
 
-        return decryptedMessage;
-    };
+    Message decryptedMessage = encryptedMessage;
+    decryptedMessage.getBody().getTransmission().setTransmission(decryptedTransmission);
+    decryptedMessage.getHeader().setId(decryptedId);
+
+    return decryptedMessage;
+  }
 }

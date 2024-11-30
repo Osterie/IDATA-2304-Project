@@ -1,6 +1,6 @@
 package no.ntnu.listeners.common;
 
-import no.ntnu.greenhouse.Actuator;
+import no.ntnu.greenhouse.actuator.Actuator;
 
 /**
  * Listener for actuator state changes.

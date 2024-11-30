@@ -19,7 +19,7 @@ public class GetNodeIdCommand extends GreenhouseCommand {
     /**
      * Executes the command to get the node ID.
      * 
-     * @param logic The node logic to execute the command on.
+     * @param logic      The node logic to execute the command on.
      * @param fromHeader The header of the message that triggered this command.
      * @return A message containing the node ID.
      */

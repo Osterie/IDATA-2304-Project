@@ -1,12 +1,16 @@
-package no.ntnu.greenhouse;
+package no.ntnu.greenhouse.actuator;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import no.ntnu.greenhouse.SensorActuatorNode;
+import no.ntnu.greenhouse.sensor.SensorType;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.tools.Logger;
 
 /**
- * An actuator that can change the environment in a way. The actuator will make impact on the
+ * An actuator that can change the environment in a way. The actuator will make
+ * impact on the
  * sensors attached to this same node.
  */
 public class Actuator {
@@ -15,8 +19,8 @@ public class Actuator {
   private final int nodeId;
   private final int id;
   private Map<SensorType, Double> impacts = new HashMap<>();
-  private final String TurnOffText;
-  private final String TurnOnText;
+  private final String TURN_OFF_TEXT;
+  private final String TURN_ON_TEXT;
 
   private ActuatorListener listener;
 
@@ -28,7 +32,7 @@ public class Actuator {
    * @param type   The type of the actuator.
    * @param nodeId ID of the node to which this actuator is connected.
    */
-  public Actuator(String type, int nodeId, String TurnOnText, String TurnOffText) {
+  public Actuator(String type, int nodeId, String TURN_ON_TEXT, String TURN_OFF_TEXT) {
     if (type == null) {
       throw new IllegalArgumentException("Type cannot be null or empty");
     }
@@ -36,8 +40,8 @@ public class Actuator {
     this.nodeId = nodeId;
     this.on = false;
     this.id = generateUniqueId();
-    this.TurnOffText = TurnOffText;
-    this.TurnOnText = TurnOnText;
+    this.TURN_ON_TEXT = TURN_ON_TEXT;
+    this.TURN_OFF_TEXT = TURN_OFF_TEXT;
   }
 
   /**
@@ -47,7 +51,7 @@ public class Actuator {
    * @param type   The type of the actuator.
    * @param nodeId ID of the node to which this actuator is connected.
    */
-  public Actuator(int id, String type, int nodeId, String TurnOnText, String TurnOffText) {
+  public Actuator(int id, String type, int nodeId, String TURN_OFF_TEXT, String TURN_ON_TEXT) {
     if (type == null) {
       throw new IllegalArgumentException("Type cannot be null or empty");
     }
@@ -55,8 +59,8 @@ public class Actuator {
     this.nodeId = nodeId;
     this.on = false;
     this.id = id;
-    this.TurnOnText = TurnOnText;
-    this.TurnOffText = TurnOffText;
+    this.TURN_OFF_TEXT = TURN_OFF_TEXT;
+    this.TURN_ON_TEXT = TURN_ON_TEXT;
   }
 
   /**
@@ -80,11 +84,16 @@ public class Actuator {
   /**
    * Register the impact of this actuator when active.
    *
-   * @param sensorType     Which type of sensor readings will be impacted. Example: "temperature"
-   * @param diffWhenActive What will be the introduced difference in the sensor reading when
-   *                       the actuator is active. For example, if this value is 2.0 and the
-   *                       sensorType is "temperature", this means that "activating this actuator
-   *                       will increase the readings of temperature sensors attached to the
+   * @param sensorType     Which type of sensor readings will be impacted.
+   *                       Example: "temperature"
+   * @param diffWhenActive What will be the introduced difference in the sensor
+   *                       reading when
+   *                       the actuator is active. For example, if this value is
+   *                       2.0 and the
+   *                       sensorType is "temperature", this means that
+   *                       "activating this actuator
+   *                       will increase the readings of temperature sensors
+   *                       attached to the
    *                       same node by +2 degrees".
    */
   public void setImpact(SensorType sensorType, double diffWhenActive) {
@@ -106,7 +115,7 @@ public class Actuator {
    * @return The text that should be displayed when the actuator is turned off.
    */
   public String getTurnOffText() {
-    return this.TurnOnText;
+    return this.TURN_OFF_TEXT;
   }
 
   /**
@@ -115,7 +124,7 @@ public class Actuator {
    * @return The text that should be displayed when the actuator is turned on.
    */
   public String getTurnOnText() {
-    return this.TurnOffText;
+    return this.TURN_ON_TEXT;
   }
 
   /**
@@ -124,8 +133,9 @@ public class Actuator {
    * @return A clone of this actuator, where all the fields are the same
    */
   public Actuator createClone() {
-    Actuator a = new Actuator(type, nodeId, TurnOnText, TurnOffText);
-    // Note - we pass a reference to the same map! This should not be problem, as long as we
+    Actuator a = new Actuator(type, nodeId, TURN_OFF_TEXT, TURN_ON_TEXT);
+    // Note - we pass a reference to the same map! This should not be problem, as
+    // long as we
     // don't modify the impacts AFTER creating the template
     a.impacts = impacts;
     return a;
@@ -139,6 +149,9 @@ public class Actuator {
     notifyChanges();
   }
 
+  /**
+   * Notify the listener about the change in the actuator state.
+   */
   private void notifyChanges() {
     Logger.success("Actuator " + id + " on node " + nodeId + " is now " + (this.on ? "ON" : "OFF"));
     if (this.listener != null) {
@@ -176,7 +189,7 @@ public class Actuator {
 
   }
 
-  // TODO we don't do it like this.
+  // TODO change to fit protocol
   /**
    * Get a string representation of the actuator.
    * 
@@ -193,28 +206,33 @@ public class Actuator {
   /**
    * Turn on the actuator.
    */
-  public void turnOn() {
+  public void turnOn(boolean notifyChanges) {
     if (!on) {
       on = true;
-      notifyChanges();
+      if (notifyChanges){
+        this.notifyChanges();
+      }
     }
   }
 
   /**
    * Turn off the actuator.
    */
-  public void turnOff() {
+  public void turnOff(boolean notifyChanges) {
     if (on) {
       on = false;
-      notifyChanges();
+      if (notifyChanges){
+        this.notifyChanges();
+      }
     }
   }
 
   /**
    * Get the ID of the actuator.
    *
-   * @return An ID which is guaranteed to be unique at a node level, not necessarily unique at
-   *     the whole greenhouse-network level.
+   * @return An ID which is guaranteed to be unique at a node level, not
+   *         necessarily unique at
+   *         the whole greenhouse-network level.
    */
   public int getId() {
     return id;
@@ -229,11 +247,11 @@ public class Actuator {
    *
    * @param on Turn on when true, turn off when false
    */
-  public void set(boolean on) {
+  public void set(boolean on, boolean notifyChanges) {
     if (on) {
-      turnOn();
+      turnOn(notifyChanges);
     } else {
-      turnOff();
+      turnOff(notifyChanges);
     }
   }
 }

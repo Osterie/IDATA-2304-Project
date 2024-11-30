@@ -8,22 +8,26 @@ import no.ntnu.messages.commands.Parameters;
 
 /**
  * Represents a transmission for client identification.
- * This is used to identify a client (e.g., control panel or greenhouse) by its endpoint type
+ * This is used to identify a client (e.g., control panel or greenhouse) by its
+ * endpoint type
  * and unique identifier.
  */
 public class ClientIdentificationTransmission extends Transmission implements Parameters {
     protected String id;
     protected Endpoints client;
 
+    private static final String TRANSMISSION_STRING = "CLIENT_IDENTIFICATION";
+
     /**
-     * Constructs a {@code ClientIdentificationTransmission} with the specified client type and ID.
+     * Constructs a {@code ClientIdentificationTransmission} with the specified
+     * client type and ID.
      *
      * @param client The {@link Endpoints} type representing the client.
      * @param id     The unique identifier of the client. Must not be null.
      * @throws IllegalArgumentException If the ID is null.
      */
     public ClientIdentificationTransmission(Endpoints client, String id) {
-        super("CLIENT_IDENTIFICATION");
+        super(TRANSMISSION_STRING);
         if (id == null) {
             throw new IllegalArgumentException("ID cannot be null");
         }
@@ -31,18 +35,26 @@ public class ClientIdentificationTransmission extends Transmission implements Pa
         this.id = id;
     }
 
+    /**
+     * Constructs a {@code ClientIdentificationTransmission} with the specified
+     * client identification.
+     *
+     * @param clientIdentification The client identification to use.
+     */
     public ClientIdentificationTransmission(ClientIdentification clientIdentification) {
-        super("CLIENT_IDENTIFICATION");
+        super(TRANSMISSION_STRING);
         this.client = clientIdentification.getClientType();
         this.id = clientIdentification.getClientId();
     }
 
     /**
-     * Constructs a {@code ClientIdentificationTransmission} without initializing the client or ID.
-     * The fields can be set later using setters or the {@code setParameters} method.
+     * Constructs a {@code ClientIdentificationTransmission} without initializing
+     * the client or ID.
+     * The fields can be set later using setters or the {@code setParameters}
+     * method.
      */
     public ClientIdentificationTransmission() {
-        super("CLIENT_IDENTIFICATION");
+        super(TRANSMISSION_STRING);
     }
 
     /**
@@ -84,8 +96,10 @@ public class ClientIdentificationTransmission extends Transmission implements Pa
     /**
      * Sets the parameters of this transmission from an array of strings.
      *
-     * @param parameters An array containing exactly two parameters: client type and client ID.
-     * @throws IllegalArgumentException If the number of parameters is not 2, if parameters are null,
+     * @param parameters An array containing exactly two parameters: client type and
+     *                   client ID.
+     * @throws IllegalArgumentException If the number of parameters is not 2, if
+     *                                  parameters are null,
      *                                  or if the client type is invalid.
      */
     @Override

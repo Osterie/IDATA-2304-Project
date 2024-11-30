@@ -6,7 +6,7 @@ import static no.ntnu.tools.parsing.Parser.parseIntegerOrError;
 import java.util.List;
 
 import no.ntnu.constants.Endpoints;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.sensor.SensorReading;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.messages.Delimiters;
 import no.ntnu.messages.MessageBody;

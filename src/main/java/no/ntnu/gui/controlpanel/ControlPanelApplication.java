@@ -20,8 +20,8 @@ import javafx.stage.Stage;
 import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
-import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.actuator.Actuator;
+import no.ntnu.greenhouse.sensor.SensorReading;
 import no.ntnu.gui.common.ActuatorPane;
 import no.ntnu.gui.common.SensorPane;
 import no.ntnu.listeners.common.CommunicationChannelListener;
@@ -261,9 +261,9 @@ public class ControlPanelApplication extends Application
       Actuator actuator = getStoredActuator(nodeId, actuatorId);
       if (actuator != null) {
         if (isOn) {
-          actuator.turnOn();
+          actuator.turnOn(false);
         } else {
-          actuator.turnOff();
+          actuator.turnOff(false);
         }
         actuatorPane.refreshActuatorDisplay();;
       } else {

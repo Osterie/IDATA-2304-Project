@@ -3,16 +3,17 @@ package no.ntnu.greenhouse;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import no.ntnu.greenhouse.sensors.ImageSensorReading;
-import no.ntnu.greenhouse.sensors.NumericSensorReading;
-import no.ntnu.greenhouse.sensors.Sensor;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.actuator.Actuator;
+import no.ntnu.greenhouse.actuator.ActuatorCollection;
+import no.ntnu.greenhouse.sensor.ImageSensorReading;
+import no.ntnu.greenhouse.sensor.NumericSensorReading;
+import no.ntnu.greenhouse.sensor.Sensor;
+import no.ntnu.greenhouse.sensor.SensorReading;
+import no.ntnu.greenhouse.sensor.SensorType;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.common.CommunicationChannelListener;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
@@ -40,7 +41,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   private final Random random = new Random();
 
   /**
-   * Create a sensor/actuator node. Note: the node itself does not check whether the ID is unique.
+   * Create a sensor/actuator node. Note: the node itself does not check whether
+   * the ID is unique.
    * This is done at the greenhouse-level.
    *
    * @param id A unique ID of the node
@@ -62,8 +64,10 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   /**
    * Add sensors to the node.
    *
-   * @param template The template to use for the sensors. The template will be cloned.
-   *                 This template defines the type of sensors, the value range, value
+   * @param template The template to use for the sensors. The template will be
+   *                 cloned.
+   *                 This template defines the type of sensors, the value range,
+   *                 value
    *                 generation algorithms, etc.
    * @param n        The number of sensors to add to the node.
    */
@@ -80,7 +84,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     }
 
     for (int i = 0; i < n; ++i) {
-      sensors.add(template.createClone());
+      this.sensors.add(template.createClone());
     }
   }
 
@@ -94,61 +98,63 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
       throw new IllegalArgumentException("Actuator cannot be null");
     }
     actuator.setListener(this);
-    actuators.add(actuator);
+    this.actuators.add(actuator);
     Logger.info("Created " + actuator.getType() + "[" + actuator.getId() + "] on node " + id);
   }
 
   /**
    * Register a new listener for sensor updates.
    *
-   * @param listener The listener which will get notified every time sensor values change.
+   * @param listener The listener which will get notified every time sensor values
+   *                 change.
    */
   public void addSensorListener(SensorListener listener) {
     if (listener == null) {
       throw new IllegalArgumentException("SensorListener cannot be null");
     }
-    if (!sensorListeners.contains(listener)) {
-      sensorListeners.add(listener);
+    if (!this.sensorListeners.contains(listener)) {
+      this.sensorListeners.add(listener);
     }
   }
 
   /**
    * Register a new listener for actuator updates.
    *
-   * @param listener The listener which will get notified every time actuator state changes.
+   * @param listener The listener which will get notified every time actuator
+   *                 state changes.
    */
   public void addActuatorListener(ActuatorListener listener) {
     if (listener == null) {
       throw new IllegalArgumentException("ActuatorListener cannot be null");
     }
-    if (!actuatorListeners.contains(listener)) {
-      actuatorListeners.add(listener);
+    if (!this.actuatorListeners.contains(listener)) {
+      this.actuatorListeners.add(listener);
     }
   }
 
   /**
    * Register a new listener for node state updates.
    *
-   * @param listener The listener which will get notified when the state of this node changes
+   * @param listener The listener which will get notified when the state of this
+   *                 node changes
    */
   public void addStateListener(NodeStateListener listener) {
     if (listener == null) {
       throw new IllegalArgumentException("NodeStateListener cannot be null");
     }
-    if (!stateListeners.contains(listener)) {
-      stateListeners.add(listener);
+    if (!this.stateListeners.contains(listener)) {
+      this.stateListeners.add(listener);
     }
   }
-
 
   /**
    * Start simulating the sensor node's operation.
    */
   public void start() {
-    if (!running) {
-      startPeriodicSensorReading();
-      running = true;
-      notifyStateChanges(true);
+    if (!this.running) {
+      this.startPeriodicSensorReading();
+      this.running = true;
+      this.notifyStateChanges(true);
     }
   }
 
@@ -156,11 +162,11 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * Stop simulating the sensor node's operation.
    */
   public void stop() {
-    if (running) {
+    if (this.running) {
       Logger.info("-- Stopping simulation of node " + id);
-      stopPeriodicSensorReading();
-      running = false;
-      notifyStateChanges(false);
+      this.stopPeriodicSensorReading();
+      this.running = false;
+      this.notifyStateChanges(false);
     }
   }
 
@@ -170,41 +176,45 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @return True if it is in a running-state, false otherwise
    */
   public boolean isRunning() {
-    return running;
+    return this.running;
   }
 
+  /**
+   * Start generating new sensor values periodically.
+   */
   private void startPeriodicSensorReading() {
     Runnable newSensorValueTask = this::generateNewSensorValues;
     long randomStartDelay = random.nextLong(SENSING_DELAY);
-    scheduler.scheduleAtFixedRate(newSensorValueTask, randomStartDelay, SENSING_DELAY, TimeUnit.MILLISECONDS);
+    this.scheduler.scheduleAtFixedRate(newSensorValueTask, randomStartDelay, SENSING_DELAY, TimeUnit.MILLISECONDS);
   }
 
+  /**
+   * Stop generating new sensor values periodically.
+   */
   private void stopPeriodicSensorReading() {
-    scheduler.shutdownNow();
+    this.scheduler.shutdownNow();
   }
 
   /**
    * Generate new sensor values and send a notification to all listeners.
    */
   public void generateNewSensorValues() {
-    // Logger.infoNoNewline("Node #" + id);
-    addRandomNoiseToSensors();
-    notifySensorChanges();
-    // debugPrint();
+    this.addRandomNoiseToSensors();
+    this.notifySensorChanges();
   }
 
+  /**
+   * Add random noise to all sensors.
+   */
   private void addRandomNoiseToSensors() {
     sensors.parallelStream().forEach(Sensor::addRandomNoise);
-    // for (Sensor sensor : sensors) {
-    //   sensor.addRandomNoise();
-    // }
   }
 
+  /**
+   * Print a debug message with all the sensor values and actuator states.
+   */
   private void debugPrint() {
     for (Sensor sensor : sensors) {
-
-      // TODO refactor. Can make a debug class for the sensor nodes which handles this.
-      // Type cast
       SensorReading reading = sensor.getReading();
       if (reading instanceof NumericSensorReading) {
         NumericSensorReading numericSensorReading = (NumericSensorReading) reading;
@@ -212,7 +222,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
       } else if (reading instanceof ImageSensorReading) {
         ImageSensorReading imageSensorReading = (ImageSensorReading) reading;
         Logger.infoNoNewline(" " + imageSensorReading.getType());
-      } 
+      }
     }
     Logger.infoNoNewline(" :");
     actuators.debugPrint();
@@ -223,7 +233,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * Toggle an actuator attached to this device.
    *
    * @param actuatorId The ID of the actuator to toggle
-   * @throws IllegalArgumentException If no actuator with given configuration is found on this node
+   * @throws IllegalArgumentException If no actuator with given configuration is
+   *                                  found on this node
    */
   public void toggleActuator(int actuatorId) {
     Actuator actuator = getActuator(actuatorId);
@@ -233,16 +244,32 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     actuator.toggle();
   }
 
+  /**
+   * Get an actuator by its ID.
+   *
+   * @param actuatorId The ID of the actuator to get
+   * @return The actuator with the given ID, or null if not found
+   */
   public Actuator getActuator(int actuatorId) {
     return actuators.get(actuatorId);
   }
 
+  /**
+   * Notify all listeners that the sensor values have changed.
+   */
   private void notifySensorChanges() {
     for (SensorListener listener : sensorListeners) {
       listener.sensorsUpdated(sensors);
     }
   }
 
+  /**
+   * An actuator has been turned on or off. Apply an impact from it to all sensors
+   * of given type. And notify the listeners.
+   *
+   * @param sensorType The type of sensors affected
+   * @param impact     The impact to apply
+   */
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
     if (actuator == null) {
@@ -250,17 +277,21 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
       return;
     }
     actuator.applyImpact(this);
-    notifyActuatorChange(actuator);
+    this.notifyActuatorChange(actuator);
   }
 
+  /**
+   * Notify the listeners that an actuator has changed its state.
+   *
+   * @param actuator The actuator that has changed
+   */
   private void notifyActuatorChange(Actuator actuator) {
     String onOff = actuator.isOn() ? "ON" : "off";
     Logger.info(" => " + actuator.getType() + " on node " + id + " " + onOff);
-    for (ActuatorListener listener : actuatorListeners) {
+    for (ActuatorListener listener : this.actuatorListeners) {
       listener.actuatorUpdated(id, actuator);
     }
   }
-
 
   /**
    * Notify the listeners that the state of this node has changed.
@@ -280,7 +311,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   /**
-   * An actuator has been turned on or off. Apply an impact from it to all sensors of given type.
+   * An actuator has been turned on or off. Apply an impact from it to all sensors
+   * of given type.
    *
    * @param sensorType The type of sensors affected
    * @param impact     The impact to apply
@@ -289,7 +321,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     if (sensorType == null) {
       throw new IllegalArgumentException("Sensor type cannot be null or empty");
     }
-    for (Sensor sensor : sensors) {
+    for (Sensor sensor : this.sensors) {
       if (sensor.getType().equals(sensorType)) {
         sensor.applyImpact(impact);
       }
@@ -302,7 +334,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @return List of all the sensors
    */
   public List<Sensor> getSensors() {
-    return sensors;
+    return this.sensors;
   }
 
   /**
@@ -324,9 +356,12 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    * @return A collection of the actuators
    */
   public ActuatorCollection getActuators() {
-    return actuators;
+    return this.actuators;
   }
 
+  /**
+   * Handles the case when the communication channel is closed.
+   */
   @Override
   public void onCommunicationChannelClosed() {
     Logger.info("Communication channel closed for node " + id);
@@ -343,9 +378,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
     Actuator actuator = getActuator(actuatorId);
     if (actuator == null) {
       Logger.error("Actuator not found on node " + actuatorId);
-      // throw new IllegalArgumentException("Actuator not found on node " + actuatorId);
     }
-    actuator.set(on);
+    actuator.set(on, true);
   }
 
   /**
@@ -355,7 +389,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
    */
   public void setAllActuators(boolean on) {
     for (Actuator actuator : actuators) {
-      actuator.set(on);
+      actuator.set(on, true);
     }
   }
 }

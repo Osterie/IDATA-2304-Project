@@ -1,8 +1,6 @@
-package no.ntnu.greenhouse.sensors;
+package no.ntnu.greenhouse.sensor;
 
 import java.util.Objects;
-
-import no.ntnu.greenhouse.SensorType;
 
 /**
  * Represents one sensor reading (value).
@@ -52,6 +50,7 @@ public class NumericSensorReading extends SensorReading {
     this.value = newValue;
   }
 
+  // TODO change to fit protocol
   /**
    * Get a string representation of the sensor reading.
    *
@@ -62,8 +61,10 @@ public class NumericSensorReading extends SensorReading {
     return "{ type=" + this.type + ", value=" + value + ", unit=" + unit + " }";
   }
 
+  // TODO use to string instead
   /**
-   * Get a human-readable (formatted) version of the current reading, including the unit.
+   * Get a human-readable (formatted) version of the current reading, including
+   * the unit.
    *
    * @return The sensor reading and the unit
    */
@@ -71,12 +72,12 @@ public class NumericSensorReading extends SensorReading {
     return this.getType() + " = " + this.value + " " + this.unit;
   }
 
-
   /**
    * Indicates whether some other object is "equal to" this one.
    * 
    * @param o the reference object with which to compare.
-   * @return {@code true} if this object is the same as the obj argument; {@code false} otherwise.
+   * @return {@code true} if this object is the same as the obj argument;
+   *         {@code false} otherwise.
    */
   @Override
   public boolean equals(Object o) {

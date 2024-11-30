@@ -15,7 +15,8 @@ public abstract class GreenhouseCommand extends Transmission {
     /**
      * Constructor for GreenhouseCommand.
      * 
-     * @param commandString the string representation of the command. For example "TURN_OFF_ALL_ACTUATORS".
+     * @param commandString the string representation of the command. For example
+     *                      "TURN_OFF_ALL_ACTUATORS".
      */
     public GreenhouseCommand(String commandString) {
         super(commandString);

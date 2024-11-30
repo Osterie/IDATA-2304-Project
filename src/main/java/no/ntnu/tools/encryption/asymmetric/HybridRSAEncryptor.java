@@ -1,9 +1,10 @@
 package no.ntnu.tools.encryption.asymmetric;
+
+import java.security.*;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.*;
 import java.util.Base64;
 
 /**
@@ -32,110 +33,111 @@ import java.util.Base64;
  * Ensure your environment has JCE Unlimited Strength installed for AES-256.
  */
 public class HybridRSAEncryptor {
-    private static final int AES_KEY_SIZE = 256;  // or 128, 192 depending on your needs
-    private static final int RSA_KEY_SIZE = 2048;
+  private static final int AES_KEY_SIZE = 256;  // or 128, 192 depending on your needs
+  private static final int RSA_KEY_SIZE = 2048;
 
-    /**
-     * Generates a new AES key for symmetric encryption.
-     *
-     * @return A SecretKey for AES encryption.
-     * @throws Exception if an error occurs during key generation.
-     */
-    public static SecretKey generateAESKey() throws Exception {
-        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-        // Initializes key generator with specified key size
-        keyGen.init(AES_KEY_SIZE);
+  /**
+   * Generates a new AES key for symmetric encryption.
+   *
+   * @return A SecretKey for AES encryption.
+   * @throws Exception if an error occurs during key generation.
+   */
+  public static SecretKey generateAESKey() throws Exception {
+    KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+    // Initializes key generator with specified key size
+    keyGen.init(AES_KEY_SIZE);
 
-        return keyGen.generateKey();
-    }
+    return keyGen.generateKey();
+  }
 
-    /**
-     * Encrypts a message with AES using the provided AES key.
-     *
-     * @param message The plaintext message to encrypt.
-     * @param aesKey The AES key for encryption.
-     * @return The encrypted message as a Base64 encoded string.
-     * @throws Exception if encryption fails.
-     */
-    public static String encryptWithAES(String message, SecretKey aesKey) throws Exception {
-        Cipher aesCipher = Cipher.getInstance("AES");
-        // Initializes Cipher with AES key
-        aesCipher.init(Cipher.ENCRYPT_MODE, aesKey);
+  /**
+   * Encrypts a message with AES using the provided AES key.
+   *
+   * @param message The plaintext message to encrypt.
+   * @param aesKey The AES key for encryption.
+   * @return The encrypted message as a Base64 encoded string.
+   * @throws Exception if encryption fails.
+   */
+  public static String encryptWithAES(String message, SecretKey aesKey) throws Exception {
+    Cipher aesCipher = Cipher.getInstance("AES");
+    // Initializes Cipher with AES key
+    aesCipher.init(Cipher.ENCRYPT_MODE, aesKey);
 
-        // Encrypted message as bytes
-        byte[] encryptedBytes = aesCipher.doFinal(message.getBytes());
+    // Encrypted message as bytes
+    byte[] encryptedBytes = aesCipher.doFinal(message.getBytes());
 
-        return Base64.getEncoder().encodeToString(encryptedBytes);
-    }
+    return Base64.getEncoder().encodeToString(encryptedBytes);
+  }
 
-    /**
-     * Encrypts the AES key using RSA with the recipient's public key.
-     *
-     * @param aesKey The AES key to encrypt.
-     * @param publicKey The RSA public key for encryption.
-     * @return The encrypted AES key as a Base64 encoded string.
-     * @throws Exception if encryption fails.
-     */
-    public static String encryptAESKeyWithRSA(SecretKey aesKey, PublicKey publicKey) throws Exception {
-        Cipher rsaCipher = Cipher.getInstance("RSA");
-        // Initializes Cipher with public key
-        rsaCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+  /**
+   * Encrypts the AES key using RSA with the recipient's public key.
+   *
+   * @param aesKey The AES key to encrypt.
+   * @param publicKey The RSA public key for encryption.
+   * @return The encrypted AES key as a Base64 encoded string.
+   * @throws Exception if encryption fails.
+   */
+  public static String encryptAESKeyWithRSA(SecretKey aesKey,
+                                            PublicKey publicKey) throws Exception {
+    Cipher rsaCipher = Cipher.getInstance("RSA");
+    // Initializes Cipher with public key
+    rsaCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
-        // Encrypted message as bytes
-        byte[] encryptedKeyBytes = rsaCipher.doFinal(aesKey.getEncoded());
+    // Encrypted message as bytes
+    byte[] encryptedKeyBytes = rsaCipher.doFinal(aesKey.getEncoded());
 
-        return Base64.getEncoder().encodeToString(encryptedKeyBytes);
-    }
+    return Base64.getEncoder().encodeToString(encryptedKeyBytes);
+  }
 
-    /**
-     * Decrypts an AES encrypted message using the provided AES key.
-     *
-     * @param encryptedMessage The AES encrypted message as a Base64 string.
-     * @param aesKey The AES key for decryption.
-     * @return The decrypted plaintext message.
-     * @throws Exception if decryption fails.
-     */
-    public static String decryptWithAES(String encryptedMessage, SecretKey aesKey) throws Exception {
-        Cipher aesCipher = Cipher.getInstance("AES");
-        // Initializes Cipher with AES key
-        aesCipher.init(Cipher.DECRYPT_MODE, aesKey);
+  /**
+   * Decrypts an AES encrypted message using the provided AES key.
+   *
+   * @param encryptedMessage The AES encrypted message as a Base64 string.
+   * @param aesKey The AES key for decryption.
+   * @return The decrypted plaintext message.
+   * @throws Exception if decryption fails.
+   */
+  public static String decryptWithAES(String encryptedMessage, SecretKey aesKey) throws Exception {
+    Cipher aesCipher = Cipher.getInstance("AES");
+    // Initializes Cipher with AES key
+    aesCipher.init(Cipher.DECRYPT_MODE, aesKey);
 
-        // Encrypted message as bytes
-        byte[] decryptedBytes = aesCipher.doFinal(Base64.getDecoder().decode(encryptedMessage));
+    // Encrypted message as bytes
+    byte[] decryptedBytes = aesCipher.doFinal(Base64.getDecoder().decode(encryptedMessage));
 
-        return new String(decryptedBytes);
-    }
+    return new String(decryptedBytes);
+  }
 
-    /**
-     * Decrypts the AES key using RSA with the recipient's private key.
-     *
-     * @param encryptedAESKey The encrypted AES key as a Base64 string.
-     * @param privateKey The RSA private key for decryption.
-     * @return The decrypted AES SecretKey.
-     * @throws Exception if decryption fails.
-     */
-    public static SecretKey decryptAESKeyWithRSA(String encryptedAESKey, PrivateKey privateKey) throws Exception {
-        Cipher rsaCipher = Cipher.getInstance("RSA");
-        // Initializes Cipher with private key
-        rsaCipher.init(Cipher.DECRYPT_MODE, privateKey);
+  /**
+   * Decrypts the AES key using RSA with the recipient's private key.
+   *
+   * @param encryptedAESKey The encrypted AES key as a Base64 string.
+   * @param privateKey The RSA private key for decryption.
+   * @return The decrypted AES SecretKey.
+   * @throws Exception if decryption fails.
+   */
+  public static SecretKey decryptAESKeyWithRSA(String encryptedAESKey, PrivateKey privateKey) throws Exception {
+    Cipher rsaCipher = Cipher.getInstance("RSA");
+    // Initializes Cipher with private key
+    rsaCipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-        // Encrypted message as bytes
-        byte[] decryptedKeyBytes = rsaCipher.doFinal(Base64.getDecoder().decode(encryptedAESKey));
+    // Encrypted message as bytes
+    byte[] decryptedKeyBytes = rsaCipher.doFinal(Base64.getDecoder().decode(encryptedAESKey));
 
-        return new SecretKeySpec(decryptedKeyBytes, "AES");
-    }
+    return new SecretKeySpec(decryptedKeyBytes, "AES");
+  }
 
-    /**
-     * Generates a new RSA key pair for asymmetric encryption.
-     *
-     * @return A KeyPair with a public and private RSA key.
-     * @throws Exception if key pair generation fails.
-     */
-    public static KeyPair generateRSAKeyPair() throws Exception {
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-        // Initializes key generator with specified key size
-        keyGen.initialize(RSA_KEY_SIZE);
+  /**
+   * Generates a new RSA key pair for asymmetric encryption.
+   *
+   * @return A KeyPair with a public and private RSA key.
+   * @throws Exception if key pair generation fails.
+   */
+  public static KeyPair generateRSAKeyPair() throws Exception {
+    KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+    // Initializes key generator with specified key size
+    keyGen.initialize(RSA_KEY_SIZE);
 
-        return keyGen.generateKeyPair();
-    }
+    return keyGen.generateKeyPair();
+  }
 }

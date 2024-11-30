@@ -15,7 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import no.ntnu.greenhouse.sensors.AudioSensorReading;
+import no.ntnu.greenhouse.sensor.AudioSensorReading;
 
 public class AudioSensorPane {
 

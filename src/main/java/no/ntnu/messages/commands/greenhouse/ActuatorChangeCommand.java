@@ -39,7 +39,8 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
     }
 
     /**
-     * Executes the command to change the state of an actuator for the node of nodeLogic.
+     * Executes the command to change the state of an actuator for the node of
+     * nodeLogic.
      *
      * @param nodeLogic  the logic of the node where the actuator is located
      * @param fromHeader the header of the message from which this command
@@ -51,10 +52,9 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
 
         nodeLogic.getNode().setActuator(this.actuatorId, this.isOn);
 
-
         SuccessResponse successResponse = new SuccessResponse(this, this.createResponseData(nodeLogic));
         MessageBody response = new MessageBody(successResponse);
-        
+
         MessageHeader header = new MessageHeader(fromHeader.getReceiver(), Endpoints.BROADCAST.getValue());
         return new Message(header, response);
     }
@@ -115,9 +115,11 @@ public class ActuatorChangeCommand extends GreenhouseCommand implements Paramete
     }
 
     /**
-     * Returns a string representation of the ActuatorChangeCommand, which follows the protocol.
+     * Returns a string representation of the ActuatorChangeCommand, which follows
+     * the protocol.
      *
-     * @return a string representation of the command, formatted according to the protocol.
+     * @return a string representation of the command, formatted according to the
+     *         protocol.
      */
     @Override
     public String toString() {

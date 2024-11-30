@@ -13,8 +13,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.constants.Resources;
-import no.ntnu.greenhouse.sensors.ImageSensorReading;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.sensor.ImageSensorReading;
+import no.ntnu.greenhouse.sensor.SensorReading;
 import no.ntnu.tools.Logger;
 
 

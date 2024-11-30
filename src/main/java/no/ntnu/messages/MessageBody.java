@@ -3,7 +3,8 @@ package no.ntnu.messages;
 /**
  * Represents the body of a message.
  * The body consists of a transmission and its associated data.
- * It serves as the content of the message, providing specific instructions or information.
+ * It serves as the content of the message, providing specific instructions or
+ * information.
  */
 public class MessageBody {
 
@@ -13,7 +14,8 @@ public class MessageBody {
     /**
      * Constructs a MessageBody
      *
-     * @param transmission The transmission to include in the message body. Must not be null.
+     * @param transmission The transmission to include in the message body. Must not
+     *                     be null.
      */
     public MessageBody(Transmission transmission) throws IllegalArgumentException {
         if (transmission == null) {
@@ -46,7 +48,8 @@ public class MessageBody {
     /**
      * Parses a MessageBody from its protocol string representation.
      *
-     * @param protocolString The protocol string to parse. Expected format: `transmission[FIELD_DELIMITER]data`.
+     * @param protocolString The protocol string to parse. Expected format:
+     *                       `transmission[FIELD_DELIMITER]data`.
      * @return The parsed {@link MessageBody} object.
      */
     public static MessageBody fromString(String protocolString) {
@@ -54,10 +57,11 @@ public class MessageBody {
         Transmission transmission = transmissionTranslator.toTransmission(protocolString);
         return new MessageBody(transmission);
     }
-    
+
     /**
      * Converts this message body to its protocol string representation.
-     * The format is: `transmission[FIELD_DELIMITER]data` or `transmission` if data is null or empty.
+     * The format is: `transmission[FIELD_DELIMITER]data` or `transmission` if data
+     * is null or empty.
      *
      * @return The protocol string representation of the message body.
      */

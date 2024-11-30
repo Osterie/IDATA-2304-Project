@@ -1,10 +1,9 @@
-package no.ntnu.greenhouse.sensors;
+package no.ntnu.greenhouse.sensor;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-import no.ntnu.greenhouse.SensorType;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.stringification.Base64AudioEncoder;
 

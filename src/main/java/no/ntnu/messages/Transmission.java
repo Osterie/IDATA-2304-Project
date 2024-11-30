@@ -7,15 +7,15 @@ public abstract class Transmission {
 
     protected String protocolString;
 
-    
     /**
      * Constructor for Transmission.
      * 
-     * @param protocolString the string representation of the transmission. For example "GET_INFORMATION".
+     * @param protocolString the string representation of the transmission. For
+     *                       example "GET_INFORMATION".
      */
     public Transmission(String protocolString) {
         this.protocolString = protocolString;
-        
+
     }
 
     /**
@@ -26,12 +26,13 @@ public abstract class Transmission {
     public void setTransmission(String protocolString) {
         this.protocolString = protocolString;
     }
+
     /**
      * Get the transmission string.
      * 
      * @return the transmission string.
      */
-    public String getTransmissionString(){
+    public String getTransmissionString() {
         return this.protocolString;
     }
 
