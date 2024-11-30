@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
+import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.actuator.Actuator;
 import no.ntnu.greenhouse.sensor.SensorReading;
@@ -23,6 +24,7 @@ public class NodeManager {
     private final TabPane nodeTabPane;
     private final Runnable onAllNodesRemoved;
     private final Runnable onFirstNodeAdded;
+    private final ControlPanelCommunicationChannel channel;
 
     private final Map<Integer, SensorPane> sensorPanes = new HashMap<>();
     private final Map<Integer, ActuatorPane> actuatorPanes = new HashMap<>();
@@ -36,11 +38,12 @@ public class NodeManager {
      * @param onAllNodesRemoved A callback to run when all nodes are removed.
      * @param onFirstNodeAdded  A callback to run when the first node is added.
      */
-    public NodeManager(TabPane nodeTabPane, Runnable onAllNodesRemoved, Runnable onFirstNodeAdded) {
+    public NodeManager(TabPane nodeTabPane, Runnable onAllNodesRemoved, Runnable onFirstNodeAdded, ControlPanelCommunicationChannel channel) {
         this.nodeTabPane = nodeTabPane;
         this.onAllNodesRemoved = onAllNodesRemoved;
         this.onFirstNodeAdded = onFirstNodeAdded;
         this.nodeTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        this.channel = channel;
     }
 
     /**
@@ -98,6 +101,10 @@ public class NodeManager {
             if (sensorPane != null) {
                 sensorPane.update(sensors);
                 Logger.info("Updated sensor data for node " + nodeId);
+            }
+            else{
+                Logger.error("No sensor section for node " + nodeId + ", asking for node info again");
+                channel.askForNodes();
             }
         });
     }

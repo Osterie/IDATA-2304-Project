@@ -91,7 +91,7 @@ public class ControlPanelApplication extends Application
         }, () -> {
             // Remove the placeholder message
             rootLayout.getChildren().set(1, scrollPane);
-        });
+        }, this.channel);
 
         rootLayout.getChildren().add(createEmptyContent()); // Start with the placeholder
 
