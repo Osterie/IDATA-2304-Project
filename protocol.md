@@ -83,25 +83,44 @@ stateless?
 TODO - Do you have some specific value types you use in several messages? They you can describe 
 them here.
 
-## Message format
+## Message Format
+All messages consist of the following parts:
 
-TODO - describe the general format of all messages. Then describe specific format for each 
-message type in your protocol.
+### **Header**
+- `DST`: Destination (e.g., `GREENHOUSE` or `CONTROL_PANEL`)
+- `DST_ID`: The ID of the destination (specific node or broadcast ID)
+- `DATA_TYPE`: Specifies the type of message (e.g., `COMMAND`, `RESPONSE`)
 
-TODO
-What we need
-Header.
-- Who is the receiver (GREENHOUSE or CONTROL_PANEL)
-- ID of the receiver
-- Data type
+### **Body**
+- Contains the command or message payload.
 
-BODY
-- Command
-
+### **Example Message**
 
 Result:
 - DST;DST_ID;DATA_TYPE COMMAND
 - GREENHOUSE;AllId;STRING GET_NODE_ID
+
+### Message Types
+
+#### **1. Command Messages**
+- Sent from `CONTROL_PANEL` to `GREENHOUSE`.
+- Examples:
+    - `GET_NODE_ID`: Request node ID from a greenhouse node.
+    - `ACTUATOR_CHANGE`: Change the state of an actuator.
+
+#### **2. Sensor Messages**
+- Sent from `GREENHOUSE` to `CONTROL_PANEL`.
+- Examples:
+    - Status updates for sensors.
+    - Actuator state confirmations.
+
+### Message Flow
+
+#### **Control Panel**
+- Sends commands like `GET_NODE_ID` or `ACTUATOR_CHANGE` to specific nodes or broadcasts to all nodes.
+
+#### **Greenhouse Node**
+- Receives commands, processes them, and optionally sends back responses (e.g., node ID or execution status).
 
 ### Command types
 
@@ -120,9 +139,22 @@ GREENHOUSE COMMANDS
 - TurnOffAllActuatorInNodeCommand: Command to turn off all ACTUATORS.
 - TurnOnAllActuatorInNodeCommand: Command to turn on all ACTUATORS.
 
+---
+
+## Errors and Handling
+### **Examples of Errors**
+1. **Invalid Message Format**:
+    - Return a failure response indicating the reason.
+2. **Unknown Command**:
+    - Ignore the message or log an error.
+3. **Client Not Found**:
+    - Notify the sender or log the issue.
+
 ### Error messages
 
 TODO - describe the possible error messages that nodes can send in your system.
+
+---
 
 ## An example scenario
 

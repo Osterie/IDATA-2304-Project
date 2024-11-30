@@ -179,10 +179,10 @@ For each of the design choices provide a short justification: why did you choose
 - [ ] KNUT. • Is your protocol connection-oriented or connection-less?
 - [ ] KNUT. • Is the protocol state-full or state-less?
 - [ ] DANIEL 8.  The different types and special values (constants) used
-- [ ] TOBIAS 9.  The message format:
+- [x] TOBIAS 9.  The message format:
 - [x] TOBIAS ? • The allowed message types (sensor messages, command messages)
-- [ ] TOBIAS • The type of marshalling used (fixed size, separators, TLV?)
-- [ ] TOBIAS • Which messages are sent by which node? For example, are some messages only sent by the control-panel node?
+- [x] TOBIAS • The type of marshalling used (fixed size, separators, TLV?)
+- [x] TOBIAS • Which messages are sent by which node? For example, are some messages only sent by the control-panel node?
 - [ ] DANIEL 10.  The different errors that can occur and how each node should react on the errors. For example,
 what if a message in an unexpected format is received? Is it ignored, or does the recipient send
 a reply with an error code?
