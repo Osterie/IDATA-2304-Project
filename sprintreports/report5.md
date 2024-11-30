@@ -1,6 +1,6 @@
 # **Sprint Report**
 
-Sprint master: Daniel  
+Sprint master: Daniel 
 Sprint stenographer: Tobias
 
 ## **Sprint Overview**
