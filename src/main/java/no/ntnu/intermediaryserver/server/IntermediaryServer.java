@@ -17,7 +17,7 @@ import no.ntnu.tools.Logger;
  * connections, then assigns each client to a handler thread for processing.
  */
 public class IntermediaryServer implements Runnable {
-    private boolean isTcpServerRunning;
+    private boolean serverIsRunning;
 
     // Thread-safe collections for managing client sockets
     private final ConcurrentHashMap<String, ClientHandler> clientHandlers = new ConcurrentHashMap<>();
@@ -29,29 +29,35 @@ public class IntermediaryServer implements Runnable {
      * Creates a new thread to handle each client connection.
      */
     public void startServer() {
-        listeningSocket = this.openListeningSocket();
-        if (listeningSocket != null) {
-            this.isTcpServerRunning = true;
-            Logger.info("Server started on port " + listeningSocket.getLocalPort());
+        this.listeningSocket = this.openListeningSocket();
 
-            // TODO refactor.
-            // Runs the whole time while application is up
-            while (isTcpServerRunning) {
-                try {
+        if (this.listeningSocket == null) {
+            Logger.error("Could not open server socket.");
+            return;
+        }
 
-                    // Accepts the next client connection
-                    ClientHandler clientHandler = acceptNextClientConnection();
-                    if (clientHandler != null) {
-                        new Thread(clientHandler).start();
-                    }
-                } catch (Exception e) {
-                    Logger.error("Error in server loop: " + e.getMessage());
+        this.serverIsRunning = true;
+
+        // Runs the whole time while application is up
+        while (this.serverIsRunning) {
+            try {
+                // Accepts the next client connection
+                ClientHandler clientHandler = acceptNextClientConnection();
+                if (clientHandler != null) {
+                    new Thread(clientHandler).start();
                 }
-                this.delay(10);
+            } catch (Exception e) {
+                Logger.error("Error in server loop: " + e.getMessage());
             }
+            this.delay(10);
         }
     }
 
+    /**
+     * Adds a small delay to the server thread to prevent excessive CPU usage.
+     *
+     * @param delay the delay in milliseconds
+     */
     private void delay(int delay) {
         // Add a small delay to prevent excessive CPU usage
         try {
@@ -66,16 +72,18 @@ public class IntermediaryServer implements Runnable {
      * Stops the server and closes the listening socket.
      */
     public synchronized void stopServer() {
-        if (isTcpServerRunning) {
-            isTcpServerRunning = false;
-            try {
-                if (listeningSocket != null && !listeningSocket.isClosed()) {
-                    listeningSocket.close();
-                }
-                Logger.info("Server stopped.");
-            } catch (IOException e) {
-                Logger.error("Error closing server socket: " + e.getMessage());
+        if (!this.serverIsRunning) {
+            Logger.warn("Server is already stopped.");
+            return;
+        }
+        this.serverIsRunning = false;
+        try {
+            if (this.listeningSocket != null && !this.listeningSocket.isClosed()) {
+                this.listeningSocket.close();
             }
+            Logger.info("Server stopped.");
+        } catch (IOException e) {
+            Logger.error("Error closing server socket: " + e.getMessage());
         }
     }
 
@@ -116,6 +124,12 @@ public class IntermediaryServer implements Runnable {
         return this.clientHandlers.get(clientType + clientId);
     }
 
+    /**
+     * Retrieves all client sockets of a specific type.
+     *
+     * @param clientType the type of client (CONTROL_PANEL or GREENHOUSE)
+     * @return a list of client handlers for the specified client type
+     */
     public List<ClientHandler> getClientHandlers(Endpoints clientType) {
         ArrayList<ClientHandler> sockets = new ArrayList<>();
 

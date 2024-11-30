@@ -11,6 +11,8 @@
 
 - [x] ADRIAN Ensure high quality code for all classes under controlpanel folder
 - [ ] ADRIAN Ensure high quality code for all classes under intermediary server folder
+  - [ ] ADRIAN clienthandler folder
+  - [x] ADRIAN server folder
 - [ ] ADRIAN Ensure high quality code for all classes under greenhouse folder
 - [ ] ADRIAN Ensure high quality code for all classes under messages folder
 - [x] ADRIAN Ensure high quality code for TcpConnection.java
