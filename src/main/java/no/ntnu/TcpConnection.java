@@ -12,6 +12,7 @@ import java.util.Queue;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.messages.*;
 import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
+import no.ntnu.messages.responses.FailureReason;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.encryption.KeyGenerator;
 import no.ntnu.tools.encryption.MessageEncryptor;
@@ -361,7 +362,13 @@ public abstract class TcpConnection {
 
       // Match the two hashes
       if (hashedContentFromHeader.equals(receivedMessageHash)) {
-        System.out.println("Yeah baby, light ...");
+        // No integiry loss.
+      }
+      else{
+        // Integrity loss
+        // Send message again. 
+        this.handleIntegrityError(message);
+        return;
       }
 
       this.handleMessage(message);
@@ -371,6 +378,18 @@ public abstract class TcpConnection {
       this.close();
     }
     // TODO handle if null and such
+  }
+
+  /**
+   * Handles integrity error by resending the message.
+   * 
+   * @param message the message to resend.
+   */
+  private void handleIntegrityError(Message message) {
+    Logger.error("Integrity error detected");
+    // Resend the message
+    this.sendMessage(message);
+
   }
 
   /**
