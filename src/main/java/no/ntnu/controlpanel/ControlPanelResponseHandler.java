@@ -190,13 +190,11 @@ public class ControlPanelResponseHandler {
 
     FailureReason reason = response.getFailureReason();
 
-    switch(reason) {
-      case FAILED_TO_IDENTIFY_CLIENT:
+    if (reason == FailureReason.FAILED_TO_IDENTIFY_CLIENT) {
         ClientIdentification clientIdentification = new ClientIdentification(Endpoints.CONTROL_PANEL,
             Endpoints.NOT_PREDEFINED.getValue());
         this.communicationChannel.establishConnectionWithServer(clientIdentification);
-        break;
-      default:
+    } else {
         Logger.error("Unknown command: " + response);
     }
   }

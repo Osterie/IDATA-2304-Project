@@ -9,12 +9,12 @@
 - [ ] TOBIAS Refactor tools.
 - [ ] KNUT Refactor gui ControlPanel.
 
-- [ ] ADRIAN Pass på god kode for controlpanel
-- [ ] ADRIAN Pass på god kode for intermediary server
-- [ ] ADRIAN Pass på god kode for greenhouse
-- [ ] ADRIAN Pass på god kode for messages
-- [ ] ADRIAN TcpCOnnection.java
-- [ ] ADRIAN SocketCommunicationChannel.java
+- [x] ADRIAN Ensure high quality code for all classes under controlpanel folder
+- [ ] ADRIAN Ensure high quality code for all classes under intermediary server folder
+- [ ] ADRIAN Ensure high quality code for all classes under greenhouse folder
+- [ ] ADRIAN Ensure high quality code for all classes under messages folder
+- [x] ADRIAN Ensure high quality code for TcpConnection.java
+- [x] ADRIAN Ensure high quality code for SocketCommunicationChannel.java
 - [ ] TOBIAS Forsikre god kode kvalitet i tools
 - [ ] SEBASTIAN Pass på god kode for GUI common folder
 

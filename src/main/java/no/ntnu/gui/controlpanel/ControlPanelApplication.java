@@ -374,7 +374,11 @@ public class ControlPanelApplication extends Application
    */
   @Override
   public void onCommunicationChannelClosed() {
-    Logger.info("Communication closed, closing the GUI");
-    Platform.runLater(Platform::exit);
+    // TODO @TobyJavascript HER KAN DU VISE EN FEILMEDLING OM AT NOE HAR SKJEDD OG DET IKKE LENGER ER KOBLING MELLOM KONTROLLPANEL OG SERVER
+    // TODO DU KAN VISE EN FEILMELDING ELLER NOE OG SI AT BRUKER KAN RELOADE ELLER NOE SÅNT.
+
+
+    // Logger.info("Communication closed, closing the GUI");
+    // Platform.runLater(Platform::exit);
   }
 }

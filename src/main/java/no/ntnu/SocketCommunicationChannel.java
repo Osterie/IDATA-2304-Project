@@ -14,11 +14,12 @@ import no.ntnu.tools.Logger;
 public abstract class SocketCommunicationChannel extends TcpConnection {
   protected ClientIdentification clientIdentification;
 
-  private volatile boolean isReconnecting; // Flag to prevent simultaneous reconnects
-
-  private static final int MAX_RETRIES = 5;
-  private static final int RETRY_DELAY_MS = 1000; // Time between retries
-
+  /**
+   * Creates a new socket communication channel.
+   * 
+   * @param host The host to connect to.
+   * @param port The port to connect to.
+   */
   protected SocketCommunicationChannel(String host, int port) {
     super();
     try {
@@ -29,8 +30,11 @@ public abstract class SocketCommunicationChannel extends TcpConnection {
     }
   }
 
-  protected abstract void handleMessage(Message message);
-
+  /**
+   * Establishes a connection with the server by sending an identification message.
+   * 
+   * @param clientIdentification The client identification to send.
+   */
   public void establishConnectionWithServer(ClientIdentification clientIdentification) {
     if (clientIdentification == null) {
       Logger.error("Client type or ID is null, cannot establish connection.");
@@ -38,46 +42,20 @@ public abstract class SocketCommunicationChannel extends TcpConnection {
     }
 
     this.clientIdentification = clientIdentification;
-
     Message identificationMessage = this.createIdentificationMessage(clientIdentification);
     this.sendMessage(identificationMessage);
   }
 
-  // TODO do differenlty.
+  /**
+   * Overrides the super classes reconnection actions.
+   * Since the client identification is not done in the super class, we do it here
+   * and then call the super class reconnection actions.
+   * 
+   */
   @Override
-  public synchronized void reconnect(String host, int port) {
-
-    if (this.isReconnecting) {
-      Logger.info("Reconnection already in progress. Skipping this attempt.");
-      return;
-    }
-
-    this.isReconnecting = true;
-
-    int attempts = 0;
-    while (!this.isOn && attempts < MAX_RETRIES) {
-      try {
-        Thread.sleep(RETRY_DELAY_MS * (int) Math.pow(2, attempts)); // Exponential backoff
-        Logger.info("Reconnecting attempt " + (attempts + 1));
-        this.close(); // Ensure previous resources are cleaned up
-        this.initializeStreams(host, port);
-        this.establishConnectionWithServer(this.clientIdentification);
-        this.isOn = true;
-        this.flushBufferedMessages(); // Optional: flush buffered messages
-        Logger.info("Reconnection successful.");
-        // TODO don't have break?
-        break;
-      } catch (IOException | InterruptedException e) {
-        attempts++;
-        Logger.error("Reconnection attempt " + attempts + " failed: " + e.getMessage());
-      }
-    }
-
-    if (!isOn) {
-      Logger.error("Failed to reconnect after " + attempts + " attempts.");
-    }
-
-    isReconnecting = false;
+  protected void doReconnectedActions(){
+    this.establishConnectionWithServer(this.clientIdentification);
+    super.doReconnectedActions();
   }
 
   /**
@@ -89,7 +67,7 @@ public abstract class SocketCommunicationChannel extends TcpConnection {
   private Message createIdentificationMessage(ClientIdentification clientIdentification) {
     Transmission identificationCommand = new ClientIdentificationTransmission(clientIdentification);
     MessageBody body = new MessageBody(identificationCommand);
-    MessageHeader header = new MessageHeader(Endpoints.SERVER, "none");
+    MessageHeader header = new MessageHeader(Endpoints.SERVER, Endpoints.NONE.getValue());
     return new Message(header, body);
   }
 }

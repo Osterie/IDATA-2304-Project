@@ -3,7 +3,6 @@ package no.ntnu.controlpanel;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
@@ -23,8 +22,8 @@ import no.ntnu.messages.Message;
 public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
   
   private final ControlPanelResponseHandler responseHandler;
-  
   private final ControlPanelLogic logic;
+
   private String targetId = Endpoints.BROADCAST.getValue(); // Used to target a greenhouse node for sensor data requests
   
 
@@ -117,25 +116,20 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, self.getSensorNoderTarget());
         MessageBody body = new MessageBody(new GetSensorDataCommand());
         Message message = new Message(header, body);
-        if (self.isOn && !self.isReconnecting()) {
+        if (self.isConnected() && !self.isReconnecting()) {
           self.sendMessage(message);
         }
         else{
-          Logger.info("Unable to send message...");
+          Logger.info("Connection closed and not recconecting. Stopping sensor data requests.");
+          timer.cancel();
         }
       }
     }, 5000, period * 1000L);
   }
 
   /**
-   * Spawn a new sensor/actuator node information after a given delay.
-   *
-   * @param specification A (temporary) manual configuration of the node in the
-   *                      following format
-   *                      [nodeId] semicolon
-   *                      [actuator_count_1] underscore [actuator_type_1] space
-   *                      ... space
-   *                      [actuator_count_M] underscore [actuator_type_M]
+   * Request greenhouse ids.
+   * Sends a command to the server to request greenhouse node ids for all greenhouse nodes.
    */
   public void askForNodes() {
     try {
@@ -149,11 +143,10 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   }
 
   /**
-   * Spawn a new sensor/actuator node information after a given delay.
-   * Sends a command to the server to spawn a new node after a specified delay.
-   *
-   * @param nodeId The ID of the node to spawn
-   * @param START_DELAY The delay in seconds before spawning the node
+   * Sends a command to a specific node to request information about it.
+   * Requested information includes the node's actuators and their state.
+   * 
+   * @param nodeId The ID of the node to request information from.
    */
   public void askForNodeInfo(String nodeId) {
     try {
@@ -164,5 +157,15 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     } catch (Exception e) {
       Logger.error("Failed to spawn node: " + e.getMessage());
     }
+  }
+
+  /**
+   * Close the communication channel.
+   * Closes the communication channel and notifies the logic that the channel is closed.
+   */
+  @Override
+  public void close(){
+    super.close();
+    this.logic.onCommunicationChannelClosed();
   }
 }
