@@ -47,11 +47,10 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
      * Send an actuator change command to the server.
      * Constructs and sends a message to change the state of an actuator.
      *
-     * @param nodeId     The ID of the node
      * @param actuatorId The ID of the actuator
      * @param isOn       The desired state of the actuator
      */
-    public void sendActuatorChange(int nodeId, int actuatorId, boolean isOn) {
+    public void sendActuatorChange(int actuatorId, boolean isOn) {
         MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, Endpoints.BROADCAST.getValue());
 
         ActuatorChangeCommand command = new ActuatorChangeCommand(actuatorId, isOn);
@@ -141,6 +140,6 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
      */
     @Override
     public void actuatorUpdated(int nodeId, Actuator actuator) {
-        sendActuatorChange(nodeId, actuator.getId(), actuator.isOn());
+        sendActuatorChange(actuator.getId(), actuator.isOn());
     }
 }
