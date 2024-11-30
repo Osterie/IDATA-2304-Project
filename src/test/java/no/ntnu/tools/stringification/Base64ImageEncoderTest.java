@@ -2,6 +2,7 @@ package no.ntnu.tools.stringification;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import no.ntnu.constants.Resources;
 import no.ntnu.tools.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,7 +18,7 @@ public class Base64ImageEncoderTest {
     @BeforeAll
     public static void setup() {
         // Provide valid image paths for testing
-        inputImageFile = new File("images/picsart_chuck.jpeg");  // Replace with your image path
+        inputImageFile = new File(Resources.IMAGES.getPath() + "picsart_chuck.jpeg");  // Replace with your image path
     }
 
     // @Test

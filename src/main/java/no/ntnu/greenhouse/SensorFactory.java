@@ -3,6 +3,7 @@ package no.ntnu.greenhouse;
 import no.ntnu.greenhouse.sensors.ImageSensor;
 import no.ntnu.greenhouse.sensors.NumericSensor;
 import no.ntnu.greenhouse.sensors.Sensor;
+import no.ntnu.constants.Resources;
 import no.ntnu.greenhouse.sensors.AudioSensor;
 
 /**
@@ -34,10 +35,10 @@ public class SensorFactory {
   private static final String PH_UNIT = "";
     
   private static final SensorType SENSOR_TYPE_IMAGE = SensorType.IMAGE;
-  private static final String PATH_TO_IMAGES = "images/";
+  private static final String PATH_TO_IMAGES = Resources.IMAGES.getPath();
 
   private static final SensorType SENSOR_TYPE_AUDIO = SensorType.AUDIO;
-  private static final String PATH_TO_AUDIO = "audiofiles/";
+  private static final String PATH_TO_AUDIO = Resources.AUDIO.getPath();
 
   /**
    * Constructing the factory is not allowed.

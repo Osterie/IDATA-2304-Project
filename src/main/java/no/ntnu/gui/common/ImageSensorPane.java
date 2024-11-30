@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import no.ntnu.constants.Resources;
 import no.ntnu.greenhouse.sensors.ImageSensorReading;
 import no.ntnu.greenhouse.sensors.SensorReading;
 import no.ntnu.tools.Logger;
@@ -47,7 +48,7 @@ public class ImageSensorPane extends Pane {
 
     //TODO REFACTOR TO GET IMAGE FROM SENSOR
     // Generate image
-    imageSensor.generateRandomImage("images/");
+    imageSensor.generateRandomImage(Resources.IMAGES.getPath());
     BufferedImage bufferedImage = imageSensor.getImage();
     if (bufferedImage == null) {
         Logger.error("Buffered image is null");
