@@ -4,35 +4,45 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * This class is used to hash strings.
+ * Provides functionality to hash strings using the SHA-256 algorithm.
+ *
+ * <p>This class is designed to hash input strings for validation purposes,
+ * as hashing is a one-way process. The resulting hash cannot be reversed
+ * to obtain the original input.</p>
  */
 public class Hasher {
 
-    // TODO: Fill methods with hashing method
-
     /**
-     * This method takes in a message as a string
-     * and gives back an encrypted string.
+     * Hashes the given input string using the SHA-256 algorithm and returns
+     * the hashed value as a hexadecimal string.
      *
-     * Important! Since hashing is one-way,
-     * it should only be used for validating
-     * sent information
+     * <p>Note: Since hashing is one-way, this method should only be used
+     * for validating sent information and not for encryption.</p>
+     *
+     * @param message the input string to be hashed
+     * @return the hashed value of the input string as a hexadecimal string
+     * @throws RuntimeException if the SHA-256 hashing algorithm is not available
      */
     public static String encryptString(String message) {
         try {
-            // Create SHA-256 MessageDigest instance
+            // Create an instance of SHA-256 MessageDigest
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+            // Compute the hash and obtain the result as a byte array
             byte[] hashBytes = digest.digest(message.getBytes());
 
-            // Convert byte array into a hexadecimal string
+            // Convert the byte array into a hexadecimal string
             StringBuilder hexString = new StringBuilder();
             for (byte b : hashBytes) {
                 String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
+                if (hex.length() == 1) {
+                    hexString.append('0'); // Append leading zero for single-digit hex values
+                }
                 hexString.append(hex);
             }
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
+            // Wrap the exception in a runtime exception with an informative message
             throw new RuntimeException("Error: SHA-256 algorithm not found.", e);
         }
     }
