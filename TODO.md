@@ -19,12 +19,12 @@
   - [ ] ADRIAN actuator folder
   - [ ] ADRIAN sensor folder
   - [x] ADRIAN other
-- [ ] ADRIAN Ensure high quality code for all classes under messages folder
+- [x] ADRIAN Ensure high quality code for all classes under messages folder
   - [x] ADRIAN Commands
     - [x] ADRIAN Greenhouse
     - [x] ADRIAN Other
   - [x] ADRIAN Responses
-  - [ ] ADRIAN Other
+  - [x] ADRIAN Other
 - [x] ADRIAN Ensure high quality code for TcpConnection.java
 - [x] ADRIAN Ensure high quality code for SocketCommunicationChannel.java
 - [ ] TOBIAS Forsikre god kode kvalitet i tools
