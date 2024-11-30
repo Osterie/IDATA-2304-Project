@@ -45,7 +45,7 @@ public class SensorComponentFactory {
      * @return a Node containing the formatted sensor reading
      */
     private static Node createNumericComponent(NumericSensorReading sensor) {
-        Label label = new Label(sensor.getFormatted());
+        Label label = new Label(sensor.humanReadableInfo());
         return label;
     }
 

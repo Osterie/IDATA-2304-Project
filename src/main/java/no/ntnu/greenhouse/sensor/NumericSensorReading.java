@@ -52,15 +52,15 @@ public class NumericSensorReading extends SensorReading {
     this.value = newValue;
   }
 
-  // TODO change to fit protocol
+  
   /**
-   * Get a string representation of the sensor reading.
+   * Returns a human-readable string representation of the sensor reading.
+   * The format of the returned string is: "type = value unit".
    *
-   * @return A string representation of the sensor reading
+   * @return a string containing the type, value, and unit of the sensor reading.
    */
-  @Override
-  public String toString() {
-    return "{ type=" + this.type + ", value=" + value + ", unit=" + unit + " }";
+  public String humanReadableInfo() {
+    return this.getType().getType() + " = " + this.value + " " + this.unit;
   }
 
   // TODO use to string instead
