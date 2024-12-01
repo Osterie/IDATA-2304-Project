@@ -137,7 +137,7 @@ public class Actuator {
    * @return A clone of this actuator, where all the fields are the same
    */
   public Actuator createClone() {
-    Actuator a = new Actuator(type, nodeId, turnOffText, turnOnText);
+    Actuator a = new Actuator(type, nodeId, turnOnText, turnOffText);
     // Note - we pass a reference to the same map! This should not be problem, as
     // long as we
     // don't modify the impacts AFTER creating the template
