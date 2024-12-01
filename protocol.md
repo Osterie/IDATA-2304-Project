@@ -127,6 +127,38 @@ Result:
 #### **Greenhouse Node**
 - Receives commands, processes them, and optionally sends back responses (e.g., node ID or execution status).
 
+### Marshalling in Message Formatting
+
+In this Java application, **marshalling** refers to the process of converting data into a specific format for communication between components (such as the `Control Panel` and `Greenhouse`). This process ensures that data can be serialized into messages with proper delimiters, allowing the message to be easily parsed, transmitted, and interpreted on the receiving end.
+
+#### Delimiters in Marshalling
+
+The `Delimiters` enum in the `no.ntnu.messages` package defines various separators that are crucial for the formatting and parsing of messages. These delimiters ensure that different parts of a message (e.g., header, body, and parameters) are properly separated.
+
+##### **Delimiters for Marshalling**
+
+The following delimiters are defined:
+
+1. **`HEADER_BODY`** (`"-"`)
+    - Used to separate the **header** from the **body** of a message.
+    - Example: `HEADER-BODY`
+
+2. **`HEADER_FIELD`** (`";"`)
+    - Used to separate fields in the **header** of the message.
+    - Example: `DST;DST_ID;DATA_TYPE`
+
+3. **`BODY_FIELD`** (`HEADER_FIELD.getValue()`)
+    - Default delimiter between fields in the **body** of a message, which is the same as the `HEADER_FIELD` delimiter.
+    - Example: `ACTUATOR_CHANGE;ON`
+
+4. **`BODY_FIELD_PARAMETERS`** (`","`)
+    - Used to separate **parameters** in the **body** of a message. This delimiter is used specifically when a command or sensor message requires multiple parameters.
+    - Example: `1,ON`
+
+5. **`BODY_SENSOR_SEPARATOR`** (`"¤"`)
+    - Used to separate **sensor data** in the body of a message.
+    - Example: `Temperature¤Humidity¤Soil Moisture`
+
 ### Command types
 
 COMMON COMMANDS
