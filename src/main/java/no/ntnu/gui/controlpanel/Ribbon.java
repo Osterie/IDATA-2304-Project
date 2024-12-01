@@ -15,7 +15,8 @@ public class Ribbon {
   /**
    * Creates the ribbon containing the menu bar with application options.
    *
-   * @param refreshAction  The action to perform when the refresh option is clicked.
+   * @param refreshAction The action to perform when the refresh option is
+   *                      clicked.
    * @return A VBox containing the ribbon components.
    */
   public static VBox createRibbon(Runnable refreshAction) {
