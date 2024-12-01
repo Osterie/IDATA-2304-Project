@@ -3,7 +3,6 @@ package no.ntnu.tools.encryption;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import javax.crypto.SecretKey;
-
 import no.ntnu.messages.*;
 import no.ntnu.tools.encryption.asymmetric.HybridRSAEncryptor;
 
@@ -23,30 +22,17 @@ public class MessageEncryptor {
   public static String encryptMessage(Message message, PublicKey recipientPublicKey) {
     Message encryptedMessage = message;
     String encryptedAeskey = null;
-    String encryptedBody = null;
-    String encryptedHeader = null;
     String encryptedMessageTest = null;
 
     try {
       // Generate AES key
       SecretKey aesKey = HybridRSAEncryptor.generateAESKey();
 
-      // Original content
-      MessageHeader originalHeader = encryptedMessage.getHeader();
-      MessageBody originalBody = encryptedMessage.getBody();
-
       // Encrypt message
       encryptedMessageTest = HybridRSAEncryptor.encryptWithAES(message.toString(), aesKey);
 
-      // Encrypted content
-      encryptedHeader = HybridRSAEncryptor.encryptWithAES(originalHeader.toString(), aesKey);
-      encryptedBody = HybridRSAEncryptor.encryptWithAES(originalBody.toString(), aesKey);
-
       // Encrypt the AES key with the recipient's public key
       encryptedAeskey = HybridRSAEncryptor.encryptAESKeyWithRSA(aesKey, recipientPublicKey);
-
-      // Add encrypted content to header
-      // encryptedMessage.getHeader().setId(encryptedId);
 
     } catch (Exception e) {
       System.err.println("Error occurred during encryption: " + e.getMessage());
@@ -67,8 +53,6 @@ public class MessageEncryptor {
   public static String decryptStringMessage(String encryptedMessageString, PrivateKey privateKey)
           throws Exception {
 
-    String decryptedHeaderString = null;
-    String decryptedBodyString = null;
     String decryptedMessage = null;
 
     // Split the string by "-"
@@ -87,8 +71,8 @@ public class MessageEncryptor {
       decryptedMessage = HybridRSAEncryptor.decryptWithAES(element1, aesKey);
 
     } else {
-      // System.out.println(encryptedMessageString);
-      System.out.println("The input does not have exactly 3 elements separated by '-'.");
+      System.out.println(encryptedMessageString);
+      System.out.println("The input does not have exactly 2 elements separated by '-'.");
     }
 
     return decryptedMessage;
