@@ -326,32 +326,6 @@ either using public-key cryptography or other methods.
 
 - [x] 5. ADRIAN Support of more flexible actuator commands. By default, it is expected that a command is sent to a specific sensor node, specific actuator. If you manage to support also either broadcast commands (to all sensor nodes at a time), or multicast (to specific groups of sensor nodes), this is considered an extra.
 
-BROADCAST.
-
-# WORK PROCESS DOCUMENTATION REQUIREMENTS
-provide some form of documentation of the following:
-- [ ] KNUT 1. How the work was planned in terms of iterations (sprints)
-- [x] ADRIAN 2. How the tasks were distributed - who was responsible for what. Note - it is NOT OK to have someone in the group responsible only for creating videos. This course is primarily about network protocols and network programming. Every group member must demonstrate expertise within these fields. Perhaps one student works more on the protocol, another on the server programming, and the third on client programming, that is fine. But it is not fine if one student does all the programming, one just writes documentation (sprint reports) and the third creates a video. How are the second and third students showing their computer network expertise?
-
-## How the tasks were distributed
-Tasks were distributed in a TODO.md file under our version control. To create tasks we started by analyzing which tasks the project described, and then we wrote them down and tried to evenly distribute them. While working on the project more TODOs were thought about, written down, and distributed. After we had completed our TODOs we assigned ourselves to other undone TODOs.
-
-## who was responsible for what.
-When programming we did not assign people areas to work on. TODOs were not distributed necessarily based on what other TODOs a member worked on, which was to try to ensure that everyone leared about all parts of the project. Also for writing protocol, everyone were given the responsibility of writing some part of the protocol.
-For completing the work process documentation, everyone was assigned different tasks, which ensured that everyone contributed to all aspects of the project. For the final video everyone had some part to create for the video. 
-
-- [ ] KNUT 3. How was the work broken down into issues? Remember the principles you learned about issue
-definition in the System development course. Issues should be small, have descriptive names,
-clear "definition of done", etc. For example, an issue like "improve GUI" is a bad issue. What
-does it mean? When is it complete?
-- [ ] DANIEL 4. How the work was progressing - what did you accomplish in each sprint? Which issues were
-planned, and which ones were completed?
-- [x] SEBASTIAN 5. A short retrospective after each sprint - what went well, and how can you improve?
-
-It is suggested that you keep the sprint documentation in Git as well, but you are allowed to use
-Wiki pages, Jira or other tools if you want.
-
-
 # VIDEO
 
 - [X] KNUT 1. Introduction of the application: what problem does your solution solve? (1min)
