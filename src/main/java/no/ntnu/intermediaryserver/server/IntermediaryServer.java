@@ -87,12 +87,11 @@ public class IntermediaryServer implements Runnable {
   }
 
   /**
-   * Adds a client to the appropriate collection, based on client type.
+   * Adds a client to the collection of client sockets.
    *
    * @param clientType    the type of client (CONTROL_PANEL or GREENHOUSE)
    * @param clientId      the unique identifier for the client
    * @param clientHandler the client handler for the client
-   * @throws UnknownClientException if the client type is not recognized
    */
   public synchronized void addClientHandler(Endpoints clientType, String clientId,
                                             ClientHandler clientHandler) {
