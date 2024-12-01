@@ -213,8 +213,6 @@ GREENHOUSE COMMANDS
 - **INTEGRITY_ERROR**:
 - Indicates that the message integrity check failed.
 
-TODO - describe the possible error messages that nodes can send in your system.
-
 ---
 
 ## An example scenario
