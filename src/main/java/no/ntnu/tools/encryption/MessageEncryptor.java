@@ -2,6 +2,7 @@ package no.ntnu.tools.encryption;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Base64;
 import javax.crypto.SecretKey;
 import no.ntnu.messages.*;
 import no.ntnu.tools.Logger;
@@ -38,7 +39,7 @@ public class MessageEncryptor {
       e.printStackTrace();
     }
 
-    return encryptedMessage + Delimiters.HEADER_BODY.getValue() + encryptedAeskey;
+    return encryptedMessage + "-" + encryptedAeskey;
   }
 
   /**
@@ -63,14 +64,23 @@ public class MessageEncryptor {
       String element1 = elements[0];
       String element2 = elements[1];
 
-      // AES key
-      SecretKey aesKey = HybridRSAEncryptor.decryptAESKeyWithRSA(element2, privateKey);
+      try {
+        SecretKey aesKey = HybridRSAEncryptor.decryptAESKeyWithRSA(element2, privateKey);
+        decryptedMessage = HybridRSAEncryptor.decryptWithAES(element1, aesKey);
 
-      // Decrypt elements
-      decryptedMessage = HybridRSAEncryptor.decryptWithAES(element1, aesKey);
+        Base64.getDecoder().decode(element1); // Validate encrypted message
+        Base64.getDecoder().decode(element2); // Validate encrypted AES key
+      } catch (Exception e) {
+        Logger.error("Decryption failed: " + e.getMessage());
+        throw e;
+      }
 
     } else {
       Logger.info("The input does not have exactly 2 elements separated by '-'.");
+    }
+
+    if (decryptedMessage == null) {
+      Logger.error("Problem decrypting message, message ended up: null");
     }
 
     return decryptedMessage;
