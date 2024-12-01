@@ -6,25 +6,24 @@ import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
 
 /**
- * Represents a general command
- *
+ * Represents a general command.
  * excecuteCommand: Abstract method used for carrying out command
  */
 public abstract class Command extends Transmission {
 
-    protected Command(String commandString) {
-        super(commandString);
-    }
+  protected Command(String commandString) {
+    super(commandString);
+  }
 
-    /**
-     * Abstract method for executing command
-     */
-    public abstract Message execute(NodeLogic logic, MessageHeader fromHeader);
+  /**
+   * Abstract method for executing command.
+   */
+  public abstract Message execute(NodeLogic logic, MessageHeader fromHeader);
 
-    /**
-     * Abstract method for converting command to string which follows transmission
-     * protocol.
-     * Ensures that all commands implement the toString method
-     */
-    public abstract String toString();
+  /**
+   * Abstract method for converting command to string which follows transmission
+   * protocol.
+   * Ensures that all commands implement the toString method
+   */
+  public abstract String toString();
 }

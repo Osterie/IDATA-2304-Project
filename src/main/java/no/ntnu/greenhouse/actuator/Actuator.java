@@ -1,11 +1,10 @@
 package no.ntnu.greenhouse.actuator;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static no.ntnu.tools.parsing.Parser.parseBooleanOrError;
 import static no.ntnu.tools.parsing.Parser.parseIntegerOrError;
 
+import java.util.HashMap;
+import java.util.Map;
 import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.greenhouse.sensor.SensorType;
 import no.ntnu.listeners.common.ActuatorListener;
@@ -69,7 +68,7 @@ public class Actuator {
 
   /**
    * Generate a unique ID for the actuator.
-   * 
+   *
    * @return A unique ID for the actuator.
    */
   private static int generateUniqueId() {
@@ -115,7 +114,7 @@ public class Actuator {
 
   /**
    * Get the turn off text.
-   * 
+   *
    * @return The text that should be displayed when the actuator is turned off.
    */
   public String getTurnOffText() {
@@ -124,7 +123,7 @@ public class Actuator {
 
   /**
    * Get the turn on text.
-   * 
+   *
    * @return The text that should be displayed when the actuator is turned on.
    */
   public String getTurnOnText() {
@@ -195,7 +194,7 @@ public class Actuator {
   /**
    * Create an actuator from a string.
    *
-   * @param s     The string to parse
+   * @param s      The string to parse
    * @param nodeId The ID of the node to which this actuator is connected
    * @return The created actuator
    */
@@ -223,7 +222,7 @@ public class Actuator {
 
   /**
    * Get a string representation of the actuator.
-   * 
+   *
    * @return A string representation of the actuator
    */
   @Override
@@ -266,8 +265,7 @@ public class Actuator {
   /**
    * Get the ID of the actuator.
    *
-   * @return An ID which is guaranteed to be unique at a node level, not
-   *         necessarily unique at
+   * @return An ID which is guaranteed to be unique at a node level, not necessarily unique at
    *         the whole greenhouse-network level.
    */
   public int getId() {

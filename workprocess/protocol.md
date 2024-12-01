@@ -16,6 +16,7 @@ distributed application.
 * **RSA encryption (asymmetric)** - An encryption method where a public key is used for encryption and a private key for decryption.
 * **TCP** - Transmission Control Protocol, a communication standard enabling reliable data transfer over a network.
 
+---
 
 ## The underlying transport protocol
 
@@ -27,7 +28,7 @@ TODO - what transport-layer protocol do you use? TCP? UDP? What port number(s)? 
 
 
 ## The architecture
-![ArchitectureOgApplication](img.png)
+![ArchitectureOgApplication](architecture.png)
 **Clients**
 Clients are the nodes that initiate communication with the server to send requests and receive responses.
 
@@ -41,6 +42,7 @@ Clients are the nodes that initiate communication with the server to send reques
 **Server**
 The central entity managing client connections and routing messages. It is responsible for receiving sensor data from greenhouse nodes, sending commands to greenhouse nodes, and relaying sensor data to control panels (When it recieves messages it sends the message where the message want to be sent ish.). It is represented by the `IntermediaryServer` class, which uses `ClientHandler` to manage individual client connections.
 
+---
 
 ## The flow of information and events
 
@@ -65,6 +67,8 @@ When the user interacts with the control panel GUI, the control panel sends comm
 Greenhouse nodes connect to the intermediary server, which routes messages between the greenhouse nodes and control panels. The greenhouse nodes send sensor data to the intermediary server when data is requested, which forwards it to the control panels. When the greenhouse node receives a command, it executes the command and sends a response back to the intermediary server, which forwards it to the control panel.
 
 The greenhouse cannot push information.
+
+---
 
 ## Connection and state
 
@@ -91,6 +95,8 @@ Delimiters;
 with the value `,`.
 - BODY_SENSOR_SEPARATOR : Delimiter between sensor data in the body of a message, established with the value `¤`.
 
+---
+
 ## Message Format
 All messages consist of the following parts:
 
@@ -115,6 +121,8 @@ Result:
 - DST;DST_ID;DATA_TYPE COMMAND
 - GREENHOUSE;AllId;STRING GET_NODE_ID
 
+---
+
 ### Message Types
 
 #### **1. Command Messages**
@@ -132,6 +140,85 @@ Result:
 #### **3. Indetification request**
 - Sent from `GREENHOUSE` and `GREENHOUSE` to `SERVER`
 
+### Message formats and command types
+TODO - describe the general format of all messages. Then describe specific format for each
+message type in your protocol.
+
+---
+
+#### Commands
+
+Where:
+- **DST**: Destination (`CONTROL_PANEL` or `GREENHOUSE`).
+- **DST_ID**: Specific ID of the destination (e.g., `Node123`) or `ALL` for broadcast.
+- **DATA_TYPE**: Type of the message (e.g., `COMMAND`, `RESPONSE`).
+- **COMMAND**: The command type.
+- **PARAMS**: Command-specific parameters, separated by commas if multiple.
+
+##### **1. ActuatorChangeCommand**
+**Purpose**: Change the state of a specific actuator.
+
+**Format**:
+DST;DST_ID;COMMAND;ACTUATOR_CHANGE;ACTUATOR_ID,STATE
+
+##### **2. GetNodeCommand**
+**Purpose**: Retrieve information about a specific node
+
+**Format**: DST;DST_ID;COMMAND;GET_NODE
+
+##### **3. GetNodeIdCommand**
+**Purpose**: Retrieve the ID of a specific node.
+
+**Format**: DST;DST_ID;COMMAND;GET_NODE_ID
+
+##### **4. GetSensorDataCommand**
+**Purpose**: Retrieve data from a specific sensor.
+
+**Format**: DST;DST_ID;COMMAND;GET_SENSOR_DATA;SENSOR_ID
+
+##### **5. TurnOffAllActuatorInNodeCommand**
+**Purpose**: Turn off all actuators in a specific node.
+
+**Format**: DST;DST_ID;COMMAND;TURN_OFF_ALL_ACTUATORS
+
+##### **6. TurnOnAllActuatorInNodeCommand**
+**Purpose**: Turn on all actuators in a specific node.
+
+**Format**: DST;DST_ID;COMMAND;TURN_ON_ALL_ACTUATORS
+
+---
+
+#### Responses
+
+Where:
+- **DST**: Destination (`CONTROL_PANEL` or `GREENHOUSE`).
+- **DST_ID**: Specific ID of the destination (e.g., `Node123`) or `ALL` for broadcast.
+- **DATA_TYPE**: Type of the original message (e.g., `COMMAND`).
+- **COMMAND**: The command that triggered the response.
+- **RESPONSE_TYPE**: Indicates whether the response is `SUCCESS` or `FAILURE`.
+- **RESPONSE_DATA**: Additional details about the success or failure.
+
+##### **1. SuccessResponse**
+**Purpose**: Indicates that the transmission was executed successfully.
+
+**Format**: DST;DST_ID;DATA_TYPE;COMMAND;SUCCESS;RESPONSE_DATA
+
+**Response**: CONTROL_PANEL;Node123;COMMAND;GET_NODE_ID;SUCCESS;Node123
+
+##### **2. FailureResponse**
+**Purpose**: Indicates that the transmission failed.
+
+**Format**: DST;DST_ID;DATA_TYPE;COMMAND;FAILURE;FAILURE_REASON
+
+**Failure Reasons**:
+- `SERVER_NOT_RUNNING`: The server is not operational.
+- `FAILED_TO_IDENTIFY_CLIENT`: The client could not be identified.
+- `INTEGRITY_ERROR`: There was an error in message integrity.
+
+**Response**: CONTROL_PANEL;Node123;COMMAND;ACTUATOR_CHANGE;FAILURE;INTEGRITY_ERROR
+
+---
+
 ### Message Flow
 
 #### **Control Panel**
@@ -139,6 +226,8 @@ Result:
 
 #### **Greenhouse Node**
 - Receives commands, processes them, and optionally sends back responses (e.g., node ID or execution status).
+
+---
 
 ### Marshalling in Message Formatting
 
@@ -172,23 +261,6 @@ The following delimiters are defined:
     - Used to separate **sensor data** in the body of a message.
     - Example: `Temperature¤Humidity¤Soil Moisture`
 
-### Command types
-
-COMMON COMMANDS
-
-- ClientIdentificationTransmission: Represents a transmission for client identification.
-
-GREENHOUSE COMMANDS
-
-- GreenhouseCommand: Abstract class representing a command from GREENHOUSE.
-
-- ActuatorChangeCommand: 
-- GetNodeCommand: Get info on specific NODE.
-- GetNodeIdCommand: Get id for specific NODE.
-- GetSensorDataCommand: Retrieve data from specific SENSOR.
-- TurnOffAllActuatorInNodeCommand: Command to turn off all ACTUATORS.
-- TurnOnAllActuatorInNodeCommand: Command to turn on all ACTUATORS.
-
 ---
 
 ## Errors and Handling
@@ -199,6 +271,8 @@ GREENHOUSE COMMANDS
     - Ignore the message or log an error.
 3. **Client Not Found**:
     - Notify the sender or log the issue.
+
+---
 
 ### Error messages
 
@@ -220,43 +294,57 @@ GREENHOUSE COMMANDS
 TODO - describe a typical scenario. How would it look like from communication perspective? When 
 are connections established? Which packets are sent? How do nodes react on the packets? An 
 example scenario could be as follows:
-1. A sensor node with ID=1 is started. It has a temperature sensor, two humidity sensors. It can
-   also open a window.
-2. A sensor node with ID=2 is started. It has a single temperature sensor and can control two fans
-   and a heater.
-3. A control panel node is started.
-4. Another control panel node is started.
-5. A sensor node with ID=3 is started. It has a two temperature sensors and no actuators.
-6. After 5 seconds all three sensor/actuator nodes broadcast their sensor data.
-7. The user of the first-control panel presses on the button "ON" for the first fan of
-   sensor/actuator node with ID=2.
-8. The user of the second control-panel node presses on the button "turn off all actuators".
+
+1. The server gets started, and the server listens for clients.
+2. Greenhouse nodes start up with one node with a temperature sensor and a heater actuator.
+3. The greenhouse establishes a connection with the server, the greenhouse connects to the port number
+4. The greenhouse sends an identification message to the server.
+5. Server receives identification message and stores the node in a list of nodes.
+6. Control panel starts up and connects to the server.
+7. The control panel sends an identification message to the server.
+8. Server receives identification message and stores the node in a list of nodes.
+9. Control panel sends a message that holds a header with the destination as the client type, which is greenhouse, and with broadcast as the id. Broadcast is a special value witch the server will interpret. While the body holds a command to get sensorId.
+10. Server receives message.
+11. Server checks the client type and client id in the header, which it used to fetch a stored connection to the greenhouse node. In this case since the id is broadcast, the message will instead be sent to all clients of the given type.
+12. Server switches the header client type and client id to instead be the client type and client id client who sent the message to the server, which is control panel.
+13. Server sends the message to the greenhouse node.
+14. Greenhouse node receives message and parses it, executes the getSensorID.
+15. Greenhouse fetches the sensor of with the corresponding id and puts it in a response. 
+16. Greenhouse sends the response to the server.
+17. Server receives the response, checks header again and does the same as mentioned previously.
+18. Server sends the message to the control panel.
+19. Control panel receives the response and parses the response.
+20. Control panel notifies listeners about the new sensor data.
+21. Since the control panel gui is a listener, it is notified and the sensor data is added to the GUI.
+
 
 ## Reliability and security
 
 ### Security:
 
-**Justification for RSA**: RSA is a well-established cryptographic algorithm offering strong security
+- For our application we wanted to implement RSA encryption, but ended up not using it because of bugs and tight schedule. But the tools for encryption is made.
+
+- Justification for RSA: RSA is a well-established cryptographic algorithm offering strong security
 for encrypting sensitive data or securely exchanging keys. Its public/private key mechanism
 ensures that only authorized users with the private key can decrypt the data.
 
-**Justification for asymmetric encryption**: Unlike symmetric encryption, RSA does not require both
+- Justification for asymmetric encryption: Unlike symmetric encryption, RSA does not require both
 parties to share a secret key beforehand, which simplifies key distribution and enhances
 security for scenarios where secure communication is required over untrusted networks.
 
-<p>Note: This class uses 2048-bit RSA keys, providing robust security. For even greater protection,
+Note: This class uses 2048-bit RSA keys, providing robust security. For even greater protection,
 consider using 3072 or 4096-bit keys, depending on performance and security requirements.
 
 ### Reliability:
-  - For reliability a hashing algorithm is being used.
+- For reliability a hashing algorithm is being used.
 
-  - Justification for hashing algorithm: Hashing algorithms like SHA-256 are used to ensure data integrity. The hash
-  function generates a fixed-size output (hash) that uniquely represents the message. When
-  transmitting messages over unreliable networks, hashes can verify the integrity of the
-  message and ensure it has not been tampered with or altered. This also provides
-  lightweight verification without adding computational overhead.
+- Justification for hashing algorithm: Hashing algorithms like SHA-256 are used to ensure data integrity. The hash
+function generates a fixed-size output (hash) that uniquely represents the message. When
+transmitting messages over unreliable networks, hashes can verify the integrity of the
+message and ensure it has not been tampered with or altered. This also provides
+lightweight verification without adding computational overhead.
 
-    - Message Integrity Check: By hashing the message on both the sender and receiver
-  sides, we ensure that any corruption during transmission can be detected. If the
-  received hash doesn't match the hash computed on the receiver's side, the message is
-  considered tampered or corrupted, and the sender is notified to resend.
+  - Message Integrity Check: By hashing the message on both the sender and receiver
+sides, we ensure that any corruption during transmission can be detected. If the
+received hash doesn't match the hash computed on the receiver's side, the message is
+considered tampered or corrupted, and the sender is notified to resend.

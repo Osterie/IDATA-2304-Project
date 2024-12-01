@@ -3,7 +3,6 @@ package no.ntnu.greenhouse.sensor;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
-
 import no.ntnu.messages.Delimiters;
 import no.ntnu.tools.Logger;
 import no.ntnu.tools.stringification.Base64AudioEncoder;
@@ -28,10 +27,10 @@ public class AudioSensorReading extends SensorReading {
   }
 
   /**
-   * Create an audio sensor reading with a specific starting file.
+   * Create an audio sensor reading.
    *
-   * @param type          The type of the sensor.
-   * @param audioFilePath The file path to the audio data.
+   * @param type         The type of the sensor.
+   * @param startingFile The starting audio file
    */
   public AudioSensorReading(SensorType type, File startingFile) {
     super(type);
@@ -64,7 +63,8 @@ public class AudioSensorReading extends SensorReading {
         chosenFile = files[randomIndex];
 
         // Extract file extension for the chosen file
-        this.fileExtension = chosenFile.getName().substring(chosenFile.getName().lastIndexOf(".") + 1);
+        this.fileExtension =
+            chosenFile.getName().substring(chosenFile.getName().lastIndexOf(".") + 1);
       } else {
         Logger.info("No audio files found in the specified directory.");
       }
@@ -84,7 +84,8 @@ public class AudioSensorReading extends SensorReading {
    */
   @Override
   public String getFormatted() {
-    return this.getType().getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.getAudioFormatted()
+    return this.getType().getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue()
+        + this.getAudioFormatted()
         + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.fileExtension;
   }
 
@@ -105,7 +106,7 @@ public class AudioSensorReading extends SensorReading {
 
   /**
    * Indicates whether some other object is "equal to" this one.
-   * 
+   *
    * @param o the reference object with which to compare.
    * @return {@code true} if this object is the same as the obj
    *         argument; {@code false} otherwise.

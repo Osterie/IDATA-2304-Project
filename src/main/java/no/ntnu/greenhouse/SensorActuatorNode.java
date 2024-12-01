@@ -6,7 +6,6 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import no.ntnu.greenhouse.actuator.Actuator;
 import no.ntnu.greenhouse.actuator.ActuatorCollection;
 import no.ntnu.greenhouse.sensor.ImageSensorReading;
@@ -185,7 +184,8 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   private void startPeriodicSensorReading() {
     Runnable newSensorValueTask = this::generateNewSensorValues;
     long randomStartDelay = random.nextLong(SENSING_DELAY);
-    this.scheduler.scheduleAtFixedRate(newSensorValueTask, randomStartDelay, SENSING_DELAY, TimeUnit.MILLISECONDS);
+    this.scheduler.scheduleAtFixedRate(newSensorValueTask, randomStartDelay, SENSING_DELAY,
+        TimeUnit.MILLISECONDS);
   }
 
   /**
@@ -264,11 +264,7 @@ public class SensorActuatorNode implements ActuatorListener, CommunicationChanne
   }
 
   /**
-   * An actuator has been turned on or off. Apply an impact from it to all sensors
-   * of given type. And notify the listeners.
-   *
-   * @param sensorType The type of sensors affected
-   * @param impact     The impact to apply
+   * Notify all listeners that the actuator values have changed.
    */
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {

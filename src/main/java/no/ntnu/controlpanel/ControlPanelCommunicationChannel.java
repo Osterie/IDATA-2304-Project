@@ -2,30 +2,31 @@ package no.ntnu.controlpanel;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.constants.Endpoints;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
-import no.ntnu.tools.Logger;
+import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.commands.greenhouse.ActuatorChangeCommand;
 import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
 import no.ntnu.messages.commands.greenhouse.GetSensorDataCommand;
-import no.ntnu.messages.Message;
+import no.ntnu.tools.Logger;
 
 /**
  * A communication channel for the control panel. This class is responsible for
  * sending commands to the server and receiving responses. It also listens for
  * incoming events from the server.
  */
-public class ControlPanelCommunicationChannel extends SocketCommunicationChannel implements CommunicationChannel {
-  
+public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
+    implements CommunicationChannel {
+
   private final ControlPanelResponseHandler responseHandler;
   private final ControlPanelLogic logic;
 
-  private String targetId = Endpoints.BROADCAST.getValue(); // Used to target a greenhouse node for sensor data requests
-  
+  private String targetId = Endpoints.BROADCAST.getValue();
+  // Used to target a greenhouse node for sensor data requests
+
 
   /**
    * Create a communication channel for the control panel.
@@ -40,7 +41,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
     this.logic = logic;
     this.responseHandler = new ControlPanelResponseHandler(this, this.logic);
 
-    ClientIdentification clientIdentification = new ClientIdentification(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
+    ClientIdentification clientIdentification =
+        new ClientIdentification(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
     this.establishConnectionWithServer(clientIdentification);
   }
 
@@ -53,11 +55,11 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   @Override
   protected void handleSpecificMessage(Message message) {
     // Logger.info("Received message from server: " + message);
-    
+
     MessageHeader header = message.getHeader();
     MessageBody body = message.getBody();
     Endpoints client = header.getReceiver();
-    
+
     this.responseHandler.handleResponse(client, body);
   }
 
@@ -87,7 +89,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    *
    * @param targetId The target sensor node ID
    */
-  public void setSensorNodeTarget(String targetId){
+  public void setSensorNodeTarget(String targetId) {
     this.targetId = targetId;
   }
 
@@ -96,7 +98,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    *
    * @return The target sensor node ID
    */
-  public String getSensorNoderTarget(){
+  public String getSensorNoderTarget() {
     return this.targetId;
   }
 
@@ -118,8 +120,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
         Message message = new Message(header, body);
         if (self.isConnected() && !self.isReconnecting()) {
           self.sendMessage(message);
-        }
-        else{
+        } else {
           Logger.info("Connection closed and not recconecting. Stopping sensor data requests.");
           timer.cancel();
         }
@@ -133,7 +134,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    */
   public void askForNodes() {
     try {
-      MessageHeader header = new MessageHeader(Endpoints.GREENHOUSE, Endpoints.BROADCAST.getValue());
+      MessageHeader header =
+          new MessageHeader(Endpoints.GREENHOUSE, Endpoints.BROADCAST.getValue());
       MessageBody body = new MessageBody(new GetNodeCommand());
       Message message = new Message(header, body);
       this.sendMessage(message);
@@ -145,7 +147,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   /**
    * Sends a command to a specific node to request information about it.
    * Requested information includes the node's actuators and their state.
-   * 
+   *
    * @param nodeId The ID of the node to request information from.
    */
   public void askForNodeInfo(String nodeId) {
@@ -164,8 +166,10 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    * Closes the communication channel and notifies the logic that the channel is closed.
    */
   @Override
-  public void close(){
+  public void close() {
     super.close();
-    this.logic.onCommunicationChannelClosed();
+    if (this.logic != null){
+      this.logic.onCommunicationChannelClosed();
+    }
   }
 }

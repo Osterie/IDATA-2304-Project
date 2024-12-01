@@ -2,7 +2,6 @@ package no.ntnu.gui.greenhouse;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -11,13 +10,14 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import no.ntnu.tools.Logger;
 
 /**
  * Main GUI window for the greenhouse simulator.
- * Displays a simple interface with instructions, an image, and a copyright notice.
+ * Displays a simple interface with instructions, an image, and a copyright
+ * notice.
  * This window provides users with a message on how to exit, an image,
- * and a copyright notice for the image. If the image is not found, a placeholder is shown instead.
+ * and a copyright notice for the image. If the image is not found, a
+ * placeholder is shown instead.
  */
 public class MainGreenhouseGuiWindow extends Scene {
   public static final int WIDTH = 300;
@@ -25,7 +25,8 @@ public class MainGreenhouseGuiWindow extends Scene {
 
   /**
    * Constructor for the main GUI window.
-   * Initializes the scene with the specified width and height and applies the CSS styles.
+   * Initializes the scene with the specified width and height and applies the CSS
+   * styles.
    */
   public MainGreenhouseGuiWindow() {
     super(createMainContent(), WIDTH, HEIGHT);
@@ -35,7 +36,8 @@ public class MainGreenhouseGuiWindow extends Scene {
 
   /**
    * Creates the main content layout for the scene.
-   * Includes an information label, the master image, and a copyright notice in a vertical layout.
+   * Includes an information label, the master image, and a copyright notice in a
+   * vertical layout.
    *
    * @return The main container for the GUI content.
    */
@@ -70,9 +72,11 @@ public class MainGreenhouseGuiWindow extends Scene {
 
   /**
    * Creates an image node that displays the master image.
-   * Attempts to load the image from a file. If unsuccessful, displays a placeholder label.
+   * Attempts to load the image from a file. If unsuccessful, displays a
+   * placeholder label.
    *
-   * @return An ImageView if the image is successfully loaded; otherwise, a placeholder Label.
+   * @return An ImageView if the image is successfully loaded; otherwise, a
+   *         placeholder Label.
    */
   private static Node createMasterImage() {
     Node node;

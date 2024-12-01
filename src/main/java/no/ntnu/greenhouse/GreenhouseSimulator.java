@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import no.ntnu.intermediaryserver.server.ServerConfig;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.tools.Logger;
@@ -16,8 +15,9 @@ public class GreenhouseSimulator {
   // The nodes in the greenhouse, keyed by their unique ID
   private final Map<Integer, SensorActuatorNode> nodes = new HashMap<>();
 
-  private final Map<Integer, NodeConnectionHandler> nodeConnections = new HashMap<>(); // Store connections for each
-                                                                                       // node
+  private final Map<Integer, NodeConnectionHandler> nodeConnections = new HashMap<>();
+  // Store connections for each
+  // node
 
   private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
@@ -63,11 +63,12 @@ public class GreenhouseSimulator {
     nodes.put(node3.getId(), node3);
 
     SensorActuatorNode node4 = new DeviceBuilder().addAudioSensor(1)
-    .build();
+        .build();
     nodes.put(node4.getId(), node4);
 
-    SensorActuatorNode node5 = new DeviceBuilder().addImageSensor(1).addAudioSensor(1).addHumiditySensor(1)
-        .build();
+    SensorActuatorNode node5 =
+        new DeviceBuilder().addImageSensor(1).addAudioSensor(1).addHumiditySensor(1)
+            .build();
     nodes.put(node5.getId(), node5);
 
   }

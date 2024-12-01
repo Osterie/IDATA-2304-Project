@@ -13,6 +13,7 @@ public class AudioSensor extends Sensor<AudioSensorReading> {
    * Create an audio sensor.
    *
    * @param type          The type of the sensor.
+   *
    * @param audioFilePath The file path to the audio data
    */
   public AudioSensor(SensorType type, String audioFilePath) {
@@ -56,7 +57,7 @@ public class AudioSensor extends Sensor<AudioSensorReading> {
 
   /**
    * Creates and returns a clone of this AudioSensor object.
-   * 
+   *
    * @return a new AudioSensor object with the same data format, audio file path,
    *         and reading as this AudioSensor.
    */

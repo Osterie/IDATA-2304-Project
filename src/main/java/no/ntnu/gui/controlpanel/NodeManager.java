@@ -15,7 +15,6 @@ import no.ntnu.gui.common.ActuatorPane;
 import no.ntnu.gui.common.SensorPane;
 import no.ntnu.tools.Logger;
 
-
 /**
  * Manages the nodes in the Control Panel Application.
  */
@@ -94,7 +93,7 @@ public class NodeManager {
   /**
    * Updates the sensor data for a node.
    *
-   * @param nodeId The ID of the node.
+   * @param nodeId  The ID of the node.
    * @param sensors The sensor readings to update.
    */
   public void updateSensorData(int nodeId, List<SensorReading> sensors) {
@@ -113,9 +112,9 @@ public class NodeManager {
   /**
    * Updates the state of an actuator.
    *
-   * @param nodeId The ID of the node.
+   * @param nodeId     The ID of the node.
    * @param actuatorId The ID of the actuator.
-   * @param isOn The new state of the actuator.
+   * @param isOn       The new state of the actuator.
    */
   public void updateActuatorState(int nodeId, int actuatorId, boolean isOn) {
     Platform.runLater(() -> {

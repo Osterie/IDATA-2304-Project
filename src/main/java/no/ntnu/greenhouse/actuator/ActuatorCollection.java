@@ -3,7 +3,6 @@ package no.ntnu.greenhouse.actuator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import no.ntnu.tools.Logger;
 
 /**

@@ -7,12 +7,13 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.greenhouse.SensorActuatorNode;
-import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
+import no.ntnu.gui.common.popupwindows.ErrorWindow;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.tools.Logger;
 
 /**
- * JavaFX application that runs a greenhouse simulation with a graphical user interface (GUI).
+ * JavaFX application that runs a greenhouse simulation with a graphical user
+ * interface (GUI).
  * This class manages the lifecycle of the application, the GUI window,
  * and interaction with sensor/actuator nodes.
  */
@@ -55,7 +56,6 @@ public class GreenhouseApplication extends Application implements NodeStateListe
     // Set up a listener for closing the application
     mainStage.setOnCloseRequest(event -> closeApplication());
 
-
     // Start the simulator
     simulator.start();
   }
@@ -74,8 +74,10 @@ public class GreenhouseApplication extends Application implements NodeStateListe
   }
 
   /**
-   * Closes the application, stopping the simulator and performing any necessary cleanup.
-   * This method is invoked when the window is closed or the user exits the application.
+   * Closes the application, stopping the simulator and performing any necessary
+   * cleanup.
+   * This method is invoked when the window is closed or the user exits the
+   * application.
    */
   private void closeApplication() {
     Logger.info("Closing Greenhouse application...");
@@ -121,8 +123,10 @@ public class GreenhouseApplication extends Application implements NodeStateListe
 
   /**
    * Called when a sensor/actuator node is stopped.
-   * The associated GUI window is closed and removed from the list of open windows.
-   * If there are no more windows open, the main application window is also closed.
+   * The associated GUI window is closed and removed from the list of open
+   * windows.
+   * If there are no more windows open, the main application window is also
+   * closed.
    *
    * @param node The sensor/actuator node that has been stopped
    */

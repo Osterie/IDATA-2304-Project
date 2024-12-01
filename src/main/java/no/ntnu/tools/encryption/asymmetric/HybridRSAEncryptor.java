@@ -1,11 +1,16 @@
 package no.ntnu.tools.encryption.asymmetric;
 
-import java.security.*;
+
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
+
 
 /**
  * The RSAEncryptor class provides a secure hybrid encryption approach combining both
@@ -116,7 +121,8 @@ public class HybridRSAEncryptor {
    * @return The decrypted AES SecretKey.
    * @throws Exception if decryption fails.
    */
-  public static SecretKey decryptAESKeyWithRSA(String encryptedAESKey, PrivateKey privateKey) throws Exception {
+  public static SecretKey decryptAESKeyWithRSA(String encryptedAESKey, PrivateKey privateKey)
+          throws Exception {
     Cipher rsaCipher = Cipher.getInstance("RSA");
     // Initializes Cipher with private key
     rsaCipher.init(Cipher.DECRYPT_MODE, privateKey);
