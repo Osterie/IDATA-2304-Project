@@ -291,6 +291,7 @@ public class ControlPanelApplication extends Application
   @Override
   public void onCommunicationChannelClosed() {
     InformationWindow infoWindow = new InformationWindow();
-    infoWindow.showAlert("Communication", "The communication to the server has been lost, if you just refreshed, the connection will re-establish.");
+    infoWindow.showAlert("Communication",
+        "The communication to the server has been lost, if you just refreshed, the connection will re-establish.");
   }
 }
