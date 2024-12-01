@@ -25,7 +25,7 @@ For completing the work process documentation, everyone was assigned different t
 
 ## Retrospective after each sprint
 
-Each sprint has a short retrospective at the end of the sprint.
+Each sprint has a short retrospective at the end of the sprint. This contains information about what went well, what could be improved, and actions for the next sprint. This is to ensure that we learn from our mistakes and improve our workflow for the next sprint.
 
 
 - [ ] KNUT 3. How was the work broken down into issues? Remember the principles you learned about issue
