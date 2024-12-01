@@ -308,6 +308,31 @@ example scenario could be as follows:
 
 ---
 
+The server gets started, and the server listens for clients.
+The server receives an identification message from the greenhouse node and stores the node in a list of nodes.
+
+Greenhouse nodes start up with one node with a temperature sensor and a heater actuator.
+The greenhouse establishes a connection with the server, the greenhouse connects to the port number
+The greenhouse sends an identification message to the server.
+Server receives identification message and stores the node in a list of nodes.
+Control panel starts up and connects to the server.
+The control panel sends an identification message to the server.
+Server receives identification message and stores the node in a list of nodes.
+Control panel sends a getSensorID command to the server.
+Server receives the getSensorID command. 
+Server stores the receiver client and the id of the sensor that was in the header the command from Control panel.
+Server switches the receiver client to Control panel and the id in the header to the id of the sensor that sent the 
+command.
+Server sends the getSensorID command to the greenhouse node with the updated header.
+Greenhouse node receives the getSensorID command and parses the command.
+Greenhouse fetches the sensor of with the corresponding id and puts it in a response. 
+Greenhouse sends the response to the server.
+Server receives the response and stores the receiver client and the id of the sensor that was in 
+the header the command from Control panel. Server sends the response to the control panel.
+Control panel receives the response and parses the response. Control panel sends the response to the corresponding sensor.
+Sensor receives the response and updates the actuator accordingly. Control panel updates the GUI with the new sensor data.
+
+
 ## Reliability and security
 
 ### Security:
