@@ -1,0 +1,1 @@
+The files under this folder are due to the fact that this project is only a simulation, and the data which for example image sensors or audio sensors read/send cannot be created by the sensors (which they probably do in real life). Therefore we simulate this by reading some data from files.
