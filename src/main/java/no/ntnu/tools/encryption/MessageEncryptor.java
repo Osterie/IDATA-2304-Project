@@ -4,6 +4,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import javax.crypto.SecretKey;
 import no.ntnu.messages.*;
+import no.ntnu.tools.Logger;
 import no.ntnu.tools.encryption.asymmetric.HybridRSAEncryptor;
 
 
@@ -20,26 +21,24 @@ public class MessageEncryptor {
    * @return the encrypted message
    */
   public static String encryptMessage(Message message, PublicKey recipientPublicKey) {
-    Message encryptedMessage = message;
+    String encryptedMessage = message.toString();
     String encryptedAeskey = null;
-    String encryptedMessageTest = null;
 
     try {
       // Generate AES key
       SecretKey aesKey = HybridRSAEncryptor.generateAESKey();
 
       // Encrypt message
-      encryptedMessageTest = HybridRSAEncryptor.encryptWithAES(message.toString(), aesKey);
+      encryptedMessage = HybridRSAEncryptor.encryptWithAES(encryptedMessage, aesKey);
 
       // Encrypt the AES key with the recipient's public key
       encryptedAeskey = HybridRSAEncryptor.encryptAESKeyWithRSA(aesKey, recipientPublicKey);
-
     } catch (Exception e) {
-      System.err.println("Error occurred during encryption: " + e.getMessage());
+      Logger.error("Error occurred during encryption: " + e.getMessage());
       e.printStackTrace();
     }
 
-    return encryptedMessageTest + Delimiters.HEADER_BODY.getValue() + encryptedAeskey;
+    return encryptedMessage + Delimiters.HEADER_BODY.getValue() + encryptedAeskey;
   }
 
   /**
@@ -71,8 +70,7 @@ public class MessageEncryptor {
       decryptedMessage = HybridRSAEncryptor.decryptWithAES(element1, aesKey);
 
     } else {
-      System.out.println(encryptedMessageString);
-      System.out.println("The input does not have exactly 2 elements separated by '-'.");
+      Logger.info("The input does not have exactly 2 elements separated by '-'.");
     }
 
     return decryptedMessage;

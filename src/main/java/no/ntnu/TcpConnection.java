@@ -316,6 +316,8 @@ public abstract class TcpConnection {
     try {
       if (this.socketReader != null) {
         clientRequest = this.socketReader.readLine();
+        // Decrypt message
+        clientRequest = this.decryptMessage(clientRequest);
       } else {
         Logger.error("Socket reader is null");
       }
@@ -325,13 +327,19 @@ public abstract class TcpConnection {
     return clientRequest;
   }
 
+  /**
+   * This method decrypts encryped message string.
+   *
+   * @param message message to be decrypted.
+   * @return the decrypted message.
+   */
   protected String decryptMessage(String message) {
     String encryptMessage = message;
 
     if (encryptMessage != null) {
       // Decrypts message
       try {
-        encryptMessage = MessageEncryptor.decryptStringMessage(encryptMessage, recipientPrivateKey);
+        //encryptMessage = MessageEncryptor.decryptStringMessage(encryptMessage, recipientPrivateKey);
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
@@ -340,14 +348,27 @@ public abstract class TcpConnection {
     return encryptMessage;
   }
 
-  // TODO @TobyJavascript when done, refactor
+  /**
+   * This method returns the encrypted string of input message.
+   *
+   * @param message message to be encrypted.
+   * @return encrypted message.
+   */
+  protected String encryptMessage(Message message) {
+    // Encrypt original body content
+    String encryptedMessage = message.toString();
+    //encryptedMessage = MessageEncryptor.encryptMessage(message, recipientPublicKey);
+
+    return encryptedMessage;
+  }
+
   /**
    * Reads and handles a message from the connected socket.
    * 
    * @throws IOException if an I/O error occurs when reading the message.
    */
   protected void readMessage() throws IOException {
-    String serverMessage = decryptMessage(this.readLine());
+    String serverMessage = this.readLine();
     if (serverMessage != null) {
       Message message = this.parseMessage(serverMessage);
 
@@ -423,9 +444,7 @@ public abstract class TcpConnection {
     // Adds hashed version of body content to header,
     Message originalMessage = MessageHasher.addHashedContentToMessage(message);
 
-    // Encrypt original body content
-    String encryptedMessage = MessageEncryptor.encryptMessage(originalMessage,
-    recipientPublicKey);
+    String encryptedMessage = this.encryptMessage(originalMessage);
 
     if (isConnected && socketWriter != null) {
       socketWriter.println(encryptedMessage);
