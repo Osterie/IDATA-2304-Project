@@ -15,11 +15,12 @@ import no.ntnu.gui.common.SensorPane;
 import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.listeners.greenhouse.SensorListener;
 
-
 /**
- * Represents a GUI window that provides an overview and control interface for a specific
+ * Represents a GUI window that provides an overview and control interface for a
+ * specific
  * sensor/actuator node in the greenhouse system.
- * This window displays information about the sensors and actuators of the node and allows
+ * This window displays information about the sensors and actuators of the node
+ * and allows
  * interaction with them.
  */
 public class NodeGuiWindow extends Stage implements SensorListener, ActuatorListener {
@@ -62,7 +63,8 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
 
   /**
    * Positions the window based on the node's ID and sets the minimum size.
-   * The window's position will vary according to the node's ID, using horizontal and
+   * The window's position will vary according to the node's ID, using horizontal
+   * and
    * vertical offsets.
    */
   private void setPositionAndSize() {
@@ -74,7 +76,8 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
 
   /**
    * Initializes listeners for the node's sensor and actuator updates.
-   * These listeners will update the GUI when changes occur in the node's sensors or actuators.
+   * These listeners will update the GUI when changes occur in the node's sensors
+   * or actuators.
    *
    * @param node The node whose sensors and actuators are being listened to.
    */
@@ -97,10 +100,12 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
   }
 
   /**
-   * Creates the main content of the window, including panels for sensors and actuators,
+   * Creates the main content of the window, including panels for sensors and
+   * actuators,
    * wrapped in a ScrollPane.
    *
-   * @return The root container (ScrollPane) that contains the sensor and actuator panels.
+   * @return The root container (ScrollPane) that contains the sensor and actuator
+   *         panels.
    */
   private Parent createContent() {
     // Create panels for displaying sensors and actuators
@@ -151,7 +156,7 @@ public class NodeGuiWindow extends Stage implements SensorListener, ActuatorList
    * This method is called when an actuator of the node is updated.
    * It updates the actuator pane with the new state of the actuator.
    *
-   * @param nodeId The ID of the node whose actuator was updated.
+   * @param nodeId   The ID of the node whose actuator was updated.
    * @param actuator The updated actuator.
    */
   @Override

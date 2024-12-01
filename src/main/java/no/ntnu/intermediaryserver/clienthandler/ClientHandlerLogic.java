@@ -8,7 +8,7 @@ import no.ntnu.messages.MessageHeader;
 import no.ntnu.tools.Logger;
 
 public class ClientHandlerLogic {
-    
+
     private final ClientHandler clientHandler;
     private final IntermediaryServer server;
     private ClientIdentification clientIdentification;
@@ -17,21 +17,22 @@ public class ClientHandlerLogic {
      * Creates a new instance of the client handler logic.
      * 
      * @param clientHandler The client handler
-     * @param server The server
+     * @param server        The server
      */
-    public ClientHandlerLogic(ClientHandler clientHandler, IntermediaryServer server){
+    public ClientHandlerLogic(ClientHandler clientHandler, IntermediaryServer server) {
         this.clientHandler = clientHandler;
         this.server = server;
     }
 
     /**
      * Generates a message header for the sender of a message.
-     * When we send a message received from a client, we have to put in the header what client sent it.
+     * When we send a message received from a client, we have to put in the header
+     * what client sent it.
      * This is so that the sent message can be sent back to the original sender.
      * 
      * @return The message header for the sender
      */
-    public MessageHeader generateSenderHeader(){
+    public MessageHeader generateSenderHeader() {
         if (this.getClientType() == null || this.getClientId() == null) {
             Logger.error("Client type or id is null");
             return null;
@@ -39,15 +40,14 @@ public class ClientHandlerLogic {
         return new MessageHeader(this.getClientType(), this.getClientId());
     }
 
-    
     /**
      * Gets the client handler for a given client type and ID from the server.
      * 
      * @param clientType The client type
-     * @param clientId The client ID
+     * @param clientId   The client ID
      * @return The client handler for the client type and ID
      */
-    public ClientHandler getClientHandler(Endpoints clientType, String clientId){
+    public ClientHandler getClientHandler(Endpoints clientType, String clientId) {
         return server.getClientHandler(clientType, clientId);
     }
 
@@ -57,7 +57,7 @@ public class ClientHandlerLogic {
      * @param header The message header containing the client type
      * @return A list of client handlers for the client type specified in the header
      */
-    public List<ClientHandler> getAllClientHandlers(Endpoints clientType){
+    public List<ClientHandler> getAllClientHandlers(Endpoints clientType) {
         return server.getClientHandlers(clientType);
     }
 
@@ -66,7 +66,7 @@ public class ClientHandlerLogic {
      * 
      * @param clientIdentification The client identification to set.
      */
-    public void setClientIdentification(ClientIdentification clientIdentification){
+    public void setClientIdentification(ClientIdentification clientIdentification) {
         this.clientIdentification = clientIdentification;
     }
 
@@ -75,7 +75,7 @@ public class ClientHandlerLogic {
      * 
      * @return The client type of the client being handled
      */
-    private Endpoints getClientType(){
+    private Endpoints getClientType() {
         return this.clientIdentification.getClientType();
     }
 
@@ -84,7 +84,7 @@ public class ClientHandlerLogic {
      * 
      * @return The client ID of the client being handled
      */
-    private String getClientId(){
+    private String getClientId() {
         return this.clientIdentification.getClientId();
     }
 
@@ -99,4 +99,3 @@ public class ClientHandlerLogic {
         }
     }
 }
-

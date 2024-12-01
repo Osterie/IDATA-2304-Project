@@ -2,7 +2,8 @@ package no.ntnu.intermediaryserver.clienthandler;
 
 /**
  * Custom exception thrown when a client type is unknown or unrecognized.
- * This is used to handle cases where a client attempts to connect with an invalid or unexpected type.
+ * This is used to handle cases where a client attempts to connect with an
+ * invalid or unexpected type.
  */
 public class UnknownClientException extends RuntimeException {
 

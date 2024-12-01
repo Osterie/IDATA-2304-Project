@@ -15,7 +15,8 @@ public class Ribbon {
   /**
    * Creates the ribbon containing the menu bar with application options.
    *
-   * @param refreshAction  The action to perform when the refresh option is clicked.
+   * @param refreshAction The action to perform when the refresh option is
+   *                      clicked.
    * @return A VBox containing the ribbon components.
    */
   public static VBox createRibbon(Runnable refreshAction) {
@@ -36,7 +37,7 @@ public class Ribbon {
     MenuItem exitItem = new MenuItem("Exit");
     exitItem.setOnAction(event -> Platform.exit());
 
-    //Adds the items to the menu bar
+    // Adds the items to the menu bar
     fileMenu.getItems().addAll(refreshItem, exitItem);
     ribbonMenuBar.getMenus().add(fileMenu);
 
