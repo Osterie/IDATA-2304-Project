@@ -1,4 +1,4 @@
-package no.ntnu.tools;
+package no.ntnu.tools.parsing;
 
 /**
  * A helper class for parsing strings.
@@ -42,6 +42,26 @@ public class Parser {
       return Double.parseDouble(s);
     } catch (NumberFormatException e) {
       throw new NumberFormatException(errorMessage);
+    }
+  }
+
+  /**
+   * Try to parse a string as a boolean, show an error message when the parsing fails.
+   *
+   * @param s            The string to parse
+   * @param errorMessage The error message to show if parsing fails
+   * @return The boolean value contained in the string
+   * @throws IllegalArgumentException When the provided
+   *        string does not contain a valid boolean value,
+   *        throw an exception with the provided error message
+   */
+  public static boolean parseBooleanOrError(String s, String errorMessage) {
+    if (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("1")) {
+      return true;
+    } else if (s.equalsIgnoreCase("false") || s.equalsIgnoreCase("0")) {
+      return false;
+    } else {
+      throw new IllegalArgumentException(errorMessage);
     }
   }
 }

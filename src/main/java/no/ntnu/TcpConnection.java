@@ -5,33 +5,80 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.security.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import no.ntnu.messages.Message;
+import no.ntnu.constants.Endpoints;
+import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
+import no.ntnu.messages.*;
+import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
+import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
+import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.tools.Logger;
+import no.ntnu.tools.encryption.KeyGenerator;
+import no.ntnu.tools.encryption.MessageEncryptor;
 import no.ntnu.tools.encryption.MessageHasher;
+import no.ntnu.tools.encryption.PublicKeyHolder;
 
 public abstract class TcpConnection {
-  // TODO make stuff private
-  protected Socket socket;
-  protected BufferedReader socketReader;
-  protected PrintWriter socketWriter;
-  protected boolean isOn; // TODO change name?
-  protected Queue<Message> messageQueue;
 
-  private boolean isReconnecting = false;
+  private Socket socket;
+  private BufferedReader socketReader;
+  private PrintWriter socketWriter;
+  private boolean isConnected;
+  private Queue<Message> messageQueue;
 
-  protected String host;
-  protected int port;
+  private String host;
+  private int port;
 
   private boolean autoReconnect = true;
-
+  private boolean isReconnecting = false;
   private static final int MAX_RETRIES = 5;
   private static final int RETRY_DELAY_MS = 1000; // Time between retries
 
-  public TcpConnection() {
+  // Retrieves keys from keyholder.
+  private PublicKey recipientPublicKey = PublicKeyHolder.getPublicKey();
+  private PrivateKey recipientPrivateKey = PublicKeyHolder.getPrivateKey();
+
+  protected TcpConnection() {
     this.messageQueue = new LinkedList<>();
+  }
+
+  /**
+   * Returns the socket.
+   * 
+   * @return the socket.
+   */
+  protected Socket getSocket() {
+    return socket;
+  }
+
+  /**
+   * Sets whether the socket is reconnecting.
+   * 
+   * @param isReconnecting true if the socket is reconnecting, false otherwise.
+   */
+  private void setIsReconnecting(boolean isReconnecting) {
+    this.isReconnecting = isReconnecting;
+  }
+
+  /**
+   * Returns true if the socket is reconnecting, false otherwise.
+   * 
+   * @return true if the socket is reconnecting, false otherwise.
+   */
+  protected boolean isReconnecting() {
+    return this.isReconnecting;
+  }
+
+  /**
+   * Sets whether the socket is connected.
+   * 
+   * @param isConnected true if the socket is connected, false otherwise.
+   */
+  protected void setConnected(boolean isConnected) {
+    this.isConnected = isConnected;
   }
 
   /**
@@ -40,7 +87,7 @@ public abstract class TcpConnection {
    * @return true if the socket is connected, false otherwise.
    */
   public boolean isConnected() {
-    return isOn;
+    return this.isConnected;
   }
 
   /**
@@ -53,24 +100,26 @@ public abstract class TcpConnection {
   }
 
   /**
+   * Returns true if the connection should automatically reconnect if lost, false
+   * otherwise.
+   * 
+   * @return true if the connection should automatically reconnect if lost, false
+   *         otherwise.
+   */
+  private boolean isAutoReconnect() {
+    return this.autoReconnect;
+  }
+
+  /**
    * Connects to the given socket.
    * 
    * @param socket the socket to connect to.
    */
   public void connect(Socket socket) {
     try {
-      this.socket = socket;
-      this.socket.setKeepAlive(true);
-      this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-      this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
-      this.isOn = true;
-      this.host = socket.getInetAddress().getHostAddress();
-      this.port = socket.getPort();
-      Logger.info("Socket connection established with " + this.host + ":" + this.port);
-      // listenForMessages();
+      this.initializeSocket(socket);
     } catch (IOException e) {
-      Logger.error("Could not establish connection to the server: " + e.getMessage());
-      reconnect(this.host, this.port);
+      this.handleConnectionError(e, this.host, this.port);
     }
   }
 
@@ -82,67 +131,131 @@ public abstract class TcpConnection {
    */
   public void connect(String host, int port) {
     try {
-      Logger.info("Trying to establish connection to " + host + ":" + port);
-      this.socket = new Socket(host, port);
-      this.socket.setKeepAlive(true);
-      this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-      this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
-      this.isOn = true;
-      this.host = host;
-      this.port = port;
-      Logger.info("Socket connection established with " + host + ":" + port);
-      // listenForMessages();
+      Socket socket = new Socket(host, port);
+      this.initializeSocket(socket);
     } catch (IOException e) {
-      Logger.error("Could not establish connection to the server: " + e.getMessage());
-      reconnect(host, port);
+      this.handleConnectionError(e, host, port);
     }
   }
 
-  // TODO make private
+  /**
+   * Initializes the socket and sets up the reader and writer streams.
+   * 
+   * @param socket the socket to initialize.
+   * @throws IOException if an I/O error occurs during initialization.
+   */
+  private void initializeSocket(Socket socket) throws IOException {
+    this.socket = socket;
+    this.socket.setKeepAlive(true);
+    this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+    this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
+    this.setConnected(true);
+    this.host = socket.getInetAddress().getHostAddress();
+    this.port = socket.getPort();
+    Logger.info("Socket connection established with " + this.host + ":" + this.port);
+  }
+
+  /**
+   * Handles connection errors by logging and attempting to reconnect.
+   * 
+   * @param e    the exception encountered.
+   * @param host the host to reconnect to.
+   * @param port the port to reconnect to.
+   */
+  private void handleConnectionError(IOException e, String host, int port) {
+    Logger.error("Could not establish connection to the server: " + e.getMessage());
+    this.reconnect(host, port);
+  }
+
   /**
    * Reconnects to the given host and port if connection lost.
    * 
    * @param host the host to connect to.
    * @param port the port to connect to.
    */
-  public synchronized void reconnect(String host, int port) {
+  protected synchronized void reconnect(String host, int port) {
 
-    if (!autoReconnect) {
-      Logger.info("Auto-reconnect is disabled. Skipping reconnection attempt.");
+    if (!this.shouldReconnect()) {
       return;
     }
 
-    if (this.isReconnecting) {
-      Logger.info("Reconnection already in progress. Skipping this attempt.");
-      return;
-    }
-
-    this.isReconnecting = true;
+    this.setIsReconnecting(true);
 
     int attempts = 0;
-    while (!this.isOn && attempts < MAX_RETRIES) {
+    while (!this.isConnected() && attempts < MAX_RETRIES) {
       try {
-        Thread.sleep(RETRY_DELAY_MS * (int) Math.pow(2, attempts)); // Exponential backoff
-        Logger.info("Reconnecting attempt " + (attempts + 1));
-        this.close(); // Ensure previous resources are cleaned up
-        this.initializeStreams(host, port);
-        // this.establishConnectionWithServer(this.clientIdentification);
-        this.isOn = true;
-        this.flushBufferedMessages(); // Optional: flush buffered messages
+        this.sleepForReconnection(attempts);
+        this.doReconnectionActions(host, port);
         Logger.info("Reconnection successful.");
-        // TODO don't have break?
-        break;
-      } catch (IOException | InterruptedException e) {
+      } catch (IOException e) {
         attempts++;
         Logger.error("Reconnection attempt " + attempts + " failed: " + e.getMessage());
+        this.setConnected(false);
       }
     }
 
-    if (!isOn) {
+    if (!isConnected()) {
       Logger.error("Failed to reconnect after " + attempts + " attempts.");
     }
 
-    isReconnecting = false;
+    this.setIsReconnecting(false);
+  }
+
+  /**
+   * Returns true if the connection should attempt to reconnect, false otherwise.
+   * If auto-reconnect is disabled or a reconnection is already in progress, it
+   * should not attempt to reconnect.
+   * 
+   * @return true if the connection should attempt to reconnect, false otherwise.
+   */
+  private boolean shouldReconnect() {
+
+    boolean shouldReconnect = true;
+
+    if (!this.isAutoReconnect()) {
+      Logger.info("Auto-reconnect is disabled. Skipping reconnection attempt.");
+      shouldReconnect = false;
+    } else if (this.isReconnecting()) {
+      Logger.info("Reconnection already in progress. Skipping this attempt.");
+      shouldReconnect = false;
+    }
+
+    return shouldReconnect;
+  }
+
+  /**
+   * Performs the actions needed to reconnet.
+   * 
+   * @param host the host to reconnect to.
+   * @param port the port to reconnect to.
+   * @throws IOException if an I/O error occurs during reconnection.
+   */
+  private void doReconnectionActions(String host, int port) throws IOException {
+    this.initializeStreams(host, port);
+  }
+
+  /**
+   * Performs the actions needed after a successful reconnection.
+   * subclasses can override this method to perform additional actions if needed.
+   */
+  protected void doReconnectedActions() {
+    this.flushBufferedMessages();
+  }
+
+  /**
+   * Sleeps for an increasing amount of time before attempting to reconnect.
+   * 
+   * @param attempts the number of reconnection attempts made so far.
+   */
+  private void sleepForReconnection(int attempts) {
+    try {
+      Logger.info("Reconnecting attempt " + (attempts + 1));
+      int delay = RETRY_DELAY_MS * (int) Math.pow(2, attempts);
+      Thread.sleep(delay); // Exponential backoff
+    } catch (InterruptedException e) {
+      Logger.error("Failed to sleep for reconnection: " + e.getMessage());
+      Thread.currentThread().interrupt();
+    }
   }
 
   /**
@@ -155,12 +268,11 @@ public abstract class TcpConnection {
    */
   protected void initializeStreams(String host, int port) throws IOException {
     Logger.info("Trying to establish connection to " + host + ":" + port);
-    this.close(); // Ensure any existing connection is closed
     this.socket = new Socket(host, port);
     this.socket.setKeepAlive(true);
     this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
     this.socketWriter = new PrintWriter(this.socket.getOutputStream(), true);
-    this.isOn = true;
+    this.setConnected(true);
     this.host = host;
     this.port = port;
     Logger.info("Socket connection established with " + host + ":" + port);
@@ -183,14 +295,13 @@ public abstract class TcpConnection {
    */
   protected void listenForMessages() {
     try {
-      while (this.isOn) {
+      while (this.isConnected()) {
         this.readMessage();
       }
       Logger.info("Server message listener stopped.");
     } catch (IOException e) {
-      this.close();
       Logger.error("Connection lost: " + e.getMessage());
-      this.isOn = false;
+      this.setConnected(false);
       this.reconnect(this.host, this.port);
     }
   }
@@ -205,6 +316,14 @@ public abstract class TcpConnection {
     try {
       if (this.socketReader != null) {
         clientRequest = this.socketReader.readLine();
+
+        // TODO: Uncomment when the encryption in sendMessage is done.
+        //try {
+        //  clientRequest = MessageEncryptor.decryptStringMessage(clientRequest, recipientPrivateKey);
+        //} catch (Exception e) {
+        //  throw new RuntimeException(e);
+        //}
+
       } else {
         Logger.error("Socket reader is null");
       }
@@ -214,6 +333,7 @@ public abstract class TcpConnection {
     return clientRequest;
   }
 
+  // TODO @TobyJavascript when done, refactor
   /**
    * Reads and handles a message from the connected socket.
    * 
@@ -222,15 +342,12 @@ public abstract class TcpConnection {
   protected void readMessage() throws IOException {
     String serverMessage = this.readLine();
     if (serverMessage != null) {
-      Logger.info("Received from server: " + serverMessage);
+      // Logger.info("Received from server: " + serverMessage);
       // TODO: It needs decryption.
       // TODO: HandleMessage should take Message not String.
       Message message = this.parseMessage(serverMessage);
 
-      // TODO: Delete when done using sout.
-      System.out.println("HASHING TEST, HASH AFTER BEING SENT OVER:" + message.getHeader().getHashedContent());
       MessageHasher.addHashedContentToMessage(message);
-      System.out.println("HASHING TEST, CHECKING IF EQUAL:" + message.getHeader().getHashedContent());
 
       // Extract hash from header
       String hashedContentFromHeader = message.getHeader().getHashedContent();
@@ -240,16 +357,32 @@ public abstract class TcpConnection {
 
       // Match the two hashes
       if (hashedContentFromHeader.equals(receivedMessageHash)) {
-        // TODO: Something should be done based on if It's true or not.
+        // No integiry loss.
+      }
+      else{
+        // Integrity loss
+        // Send message again. 
+        this.handleIntegrityError(message);
+        return;
       }
 
       this.handleMessage(message);
     } else {
       Logger.warn("Server message is null, closing connection");
-      // TODO do differently?
       this.close();
     }
-    // TODO handle if null and such
+  }
+
+  /**
+   * Handles integrity error by resending the message.
+   * 
+   * @param message the message to resend.
+   */
+  private void handleIntegrityError(Message message) {
+    Logger.error("Integrity error detected");
+    // Resend the message
+    this.sendMessage(message);
+
   }
 
   /**
@@ -276,8 +409,6 @@ public abstract class TcpConnection {
     return message;
   }
 
-  // TODO: Should this class encrypt a message if handleMessage decrypts? If so,
-  // should it have its own method before sending?
   /**
    * Sends a message to the connected socket.
    * 
@@ -285,15 +416,29 @@ public abstract class TcpConnection {
    */
   public synchronized void sendMessage(Message message) {
 
-    // Adds hashed body content to header and encrypts the message.
-    // TODO: Needs encyption
-    Message encryptedMessage = MessageHasher.addHashedContentToMessage(message);;
-    // TODO: Delete when done using sout.
-    System.out.println("HASHING TEST, HASH BEFORE SENDING:" + encryptedMessage.getHeader().getHashedContent());
+    // Adds hashed version of body content to header,
+    Message originalMessage = MessageHasher.addHashedContentToMessage(message);
 
-    if (isOn && socketWriter != null) {
+    // TODO: Not all takes string, therefore encryption not working.
+    // Encrypt original body content
+    String encryptedMessage2 = MessageEncryptor.encryptMessage(originalMessage,
+    recipientPublicKey);
+
+    // TODO: Delete sout after showing it works.
+    // System.out.println("AFTER ENCRYPTION: " + encryptedMessage2);
+    try {
+      encryptedMessage2 = MessageEncryptor.decryptStringMessage(encryptedMessage2, recipientPrivateKey);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    // System.out.println("AFTER DECRYPTION: " + encryptedMessage2 + " " + message.toString());
+
+    // TODO: This one is replaced with the one over when encryption works.
+    Message encryptedMessage = message;
+
+    if (isConnected && socketWriter != null) {
       socketWriter.println(encryptedMessage);
-      Logger.info("Sent message to server: " + encryptedMessage);
+      // Logger.info("Sent message to server: " + encryptedMessage);
     } else {
       Logger.error("Unable to send message, socket is not connected.");
       messageQueue.offer(encryptedMessage); // Buffer the message
@@ -301,13 +446,11 @@ public abstract class TcpConnection {
     }
   }
 
-  // TODO do differenlty? use a send method perhaps
-  // TODO should it be synchronized?
   /**
    * Flushes the buffered messages to the connected socket.
    */
   protected synchronized void flushBufferedMessages() {
-    
+
     boolean tryingToSend = true;
 
     while (!messageQueue.isEmpty() && tryingToSend) {
@@ -315,8 +458,7 @@ public abstract class TcpConnection {
       try {
         // Check if the socket is still open
         if (socket != null && !socket.isClosed() && socket.isConnected() && socketWriter != null) {
-          socketWriter.println(message);
-          socketWriter.flush(); // Ensure the message is sent immediately
+          this.sendMessage(message);
           Logger.info("Resent buffered message: " + message);
         } else {
           throw new IOException("Socket is not open or not connected.");
@@ -329,12 +471,10 @@ public abstract class TcpConnection {
     }
   }
 
-  // TODO make private?
   /**
    * Closes the socket connection.
    */
   public synchronized void close() {
-    // TODO refactor, if the close fails for any part, the next part wont be closed.
 
     try {
       if (socket != null)
@@ -343,37 +483,53 @@ public abstract class TcpConnection {
         socketReader.close();
       if (socketWriter != null)
         socketWriter.close();
-      isOn = false;
+      isConnected = false;
       Logger.info("Socket connection closed.");
     } catch (IOException e) {
       Logger.error("Failed to close socket connection: " + e.getMessage());
     }
   }
 
-  // TODO make private?
-  /**
-   * Returns the socket.
-   * 
-   * @return the socket.
-   */
-  public Socket getSocket() {
-    return socket;
+    /**
+     * Handles a message received from the client. This method is final to
+     * ensure consistent handling logic across all subclasses.
+     * Subclasses can override `handleSpecificMessage` to provide custom logic.
+     */
+    protected final void handleMessage(Message message) {
+      // Common handling logic
+      if (message.getBody().getTransmission() instanceof SuccessResponse) {
+          SuccessResponse response = (SuccessResponse) message.getBody().getTransmission();
+
+          Transmission transmission = response.getTransmission();
+
+          if (transmission instanceof ClientIdentificationTransmission) {
+              ClientIdentificationTransmission clientIdentificationTransmission =
+                      (ClientIdentificationTransmission) transmission;
+
+              // Common logic for handling client identification
+              handleClientIdentification(clientIdentificationTransmission);
+          }
+      }
+
+      // Delegate to subclass for specific logic
+      handleSpecificMessage(message);
   }
 
-  // TODO use this method, should be private.
-  /**
-   * Returns true if the socket is reconnecting, false otherwise.
-   * 
-   * @return true if the socket is reconnecting, false otherwise.
-   */
-  public boolean isReconnecting() {
-    return isReconnecting;
+      /**
+     * Processes the client identification transmission. This is shared logic
+     * that applies to all subclasses.
+     */
+    private void handleClientIdentification(ClientIdentificationTransmission transmission) {
+      // Perform common handling logic for client identification
+      // e.g., publicKey = transmission.getPublicKey();
+      // TODO her
   }
 
-  /**
-   * Handles the received message.
-   * 
-   * @param message the message to handle.
-   */
-  protected abstract void handleMessage(Message message);
+
+      /**
+     * Allows subclasses to implement their specific handling logic.
+     *
+     * @param message The message to handle
+     */
+    protected abstract void handleSpecificMessage(Message message);
 }

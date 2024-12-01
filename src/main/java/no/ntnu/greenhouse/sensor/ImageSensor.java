@@ -1,9 +1,7 @@
-package no.ntnu.greenhouse.sensors;
+package no.ntnu.greenhouse.sensor;
 
 
 import java.sql.SQLOutput;
-
-import no.ntnu.greenhouse.SensorType;
 
 /**
  * An image sensor which can sense the environment in a specific way.
@@ -25,6 +23,7 @@ public class ImageSensor extends Sensor<ImageSensorReading> {
   public ImageSensor(SensorType type, String imagesFilePath) {
     this.reading = new ImageSensorReading(type);
     this.imagesFilePath = imagesFilePath;
+    this.reading.generateRandomImage(imagesFilePath);
     this.turnOn();
   }
 

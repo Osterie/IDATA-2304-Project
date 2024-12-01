@@ -1,0 +1,63 @@
+/* Root container styling */
+.root {
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+    -fx-alignment: top-center;
+    -fx-background-color: #f4f4f4;
+}
+
+/* Style for the placeholder label */
+.placeholder-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #888888;
+    -fx-alignment: center;
+    -fx-padding: 20px;
+}
+
+/* Ribbon styles */
+.ribbon {
+    -fx-background-color: #0073e6;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+    -fx-alignment: center;
+}
+
+.ribbon-button {
+    -fx-background-color: #0073e6;
+    -fx-text-fill: #0073e6;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-color: #0073e6;
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+
+.ribbon-button:hover {
+    -fx-background-color: #0073e6;
+}
+
+/* TabPane styling */
+.tab-pane {
+    -fx-background-color: #0073e6;
+    -fx-border-color: #cccccc;
+    -fx-padding: 5px;
+}
+
+/* ScrollPane styling */
+.scroll-pane {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+}
+
+/* Error and information alerts */
+.alert-window {
+    -fx-background-color: #fff3f3;
+    -fx-border-color: #ff0000;
+    -fx-padding: 15px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff0000;
+}

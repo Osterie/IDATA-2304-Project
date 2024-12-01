@@ -13,8 +13,6 @@ public enum Endpoints {
 
     NONE("NONE");
 
-
-
     private final String value;
 
     Endpoints(String value) {

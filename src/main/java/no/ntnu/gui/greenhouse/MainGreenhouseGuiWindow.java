@@ -77,7 +77,7 @@ public class MainGreenhouseGuiWindow extends Scene {
   private static Node createMasterImage() {
     Node node;
     try {
-      InputStream fileContent = new FileInputStream("images/picsart_chuck.jpg");
+      InputStream fileContent = new FileInputStream("resources/images/picsart_chuck.jpg");
       ImageView imageView = new ImageView();
       imageView.setImage(new Image(fileContent));
       imageView.getStyleClass().add("image-view");

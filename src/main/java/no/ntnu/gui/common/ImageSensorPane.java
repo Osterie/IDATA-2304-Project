@@ -12,45 +12,83 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import no.ntnu.greenhouse.sensors.ImageSensorReading;
-import no.ntnu.greenhouse.sensors.SensorReading;
+import no.ntnu.greenhouse.sensor.ImageSensorReading;
+import no.ntnu.greenhouse.sensor.SensorReading;
+import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
+import no.ntnu.gui.common.PopUpWindows.InformationWindow;
 import no.ntnu.tools.Logger;
 
-
+/**
+ * The ImageSensorPane class extends the Pane class and is responsible for displaying
+ * an image from an ImageSensorReading. It provides methods to retrieve the current
+ * sensor reading and the thumbnail image view, as well as creating content nodes
+ * for displaying the image and handling user interactions to view the full image.
+ *
+ * <p>Features include:
+ * <ul>
+ *   <li>Constructing an ImageSensorPane with a specified ImageSensorReading.</li>
+ *   <li>Retrieving the current sensor reading.</li>
+ *   <li>Retrieving the thumbnail image view.</li>
+ *   <li>Creating a content node displaying an image thumbnail with a click listener
+ *       to open the full image in a new window.</li>
+ *   <li>Displaying the provided image in a new window with a specified size.</li>
+ * </ul>
+ */
 public class ImageSensorPane extends Pane {
 
   private ImageSensorReading sensorReading; 
   private ImageView thumbnail;
+
+  // Error window
+  ErrorWindow errorWindow = new ErrorWindow();
+
+  // Info window
+  InformationWindow informationWindow = new InformationWindow();
     
+    /**
+     * Constructs an ImageSensorPane with the specified ImageSensorReading.
+     *
+     * @param sensorReading the ImageSensorReading to be used by this pane
+     */
     public ImageSensorPane(ImageSensorReading sensorReading) {
         this.sensorReading = sensorReading;
     }
 
+    /**
+     * Retrieves the current sensor reading.
+     *
+     * @return the current SensorReading object.
+     */
     public SensorReading getSensorReading() {
         return sensorReading;
     }
 
+    /**
+     * Retrieves the thumbnail image view.
+     *
+     * @return the ImageView representing the thumbnail.
+     */
     public ImageView getThumbnail() {
         return thumbnail;
     }
 
-    /**
-   * Creates a JavaFX Node that displays a thumbnail image for the given sensor reading.
-   * The thumbnail is clickable and opens a new window displaying the full image.
+  /**
+   * Creates a content node displaying an image from the given ImageSensorReading.
+   * If the image is null, a label indicating "No image found" is returned.
+   * Otherwise, a thumbnail of the image is created and displayed with a click listener
+   * to open the full image in a new window.
    *
-   * @param sensor the sensor reading containing the image data
-   * @return a VBox containing the image label and thumbnail
+   * @param sensorreading the ImageSensorReading containing the image to display
+   * @return a Node containing the image thumbnail and label, or a label indicating no image found
    */
-  public Node createContent() {
-    Logger.info("Creating image view for thumbnail");
-    ImageSensorReading imageSensor = this.sensorReading;
-
-    //TODO REFACTOR TO GET IMAGE FROM SENSOR
-    // Generate image
-    imageSensor.generateRandomImage("images/");
-    BufferedImage bufferedImage = imageSensor.getImage();
+  public Node createContent(ImageSensorReading sensorReading) {
+    
+    BufferedImage bufferedImage = sensorReading.getImage();
     if (bufferedImage == null) {
         Logger.error("Buffered image is null");
+
+        informationWindow.showAlert("Image file", "No image found!");
+
         return new Label("No image found");
     }
 
@@ -73,11 +111,10 @@ public class ImageSensorPane extends Pane {
     return imageNode;
   }
 
-
-    /**
-   * Displays the given image in a new window with a specified size.
+  /**
+   * Displays the provided image in a new window (Stage) with a specified size.
    *
-   * @param image the Image object to be displayed in full size
+   * @param image The Image object to be displayed in full size.
    */
   private void showFullImage(Image image) {
     // Create a new Stage (window)
@@ -97,8 +134,4 @@ public class ImageSensorPane extends Pane {
     // Show the stage
     fullImageStage.show();
   }
-
-  
-
-    // Add your methods and properties here
 }

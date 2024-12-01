@@ -1,9 +1,6 @@
-package no.ntnu.greenhouse;
+package no.ntnu.greenhouse.sensor;
 
-import no.ntnu.greenhouse.sensors.ImageSensor;
-import no.ntnu.greenhouse.sensors.NumericSensor;
-import no.ntnu.greenhouse.sensors.Sensor;
-import no.ntnu.greenhouse.sensors.AudioSensor;
+import no.ntnu.constants.Resources;
 
 /**
  * A factory for producing sensors and actuators of specific types.
@@ -31,12 +28,13 @@ public class SensorFactory {
   private static final double MIN_PH = 4;
   private static final double MAX_PH = 10;
   private static final double NORMAL_GREENHOUSE_PH = 7;
-    
+  private static final String PH_UNIT = " ";
+
   private static final SensorType SENSOR_TYPE_IMAGE = SensorType.IMAGE;
-  private static final String PATH_TO_IMAGES = "images/";
+  private static final String PATH_TO_IMAGES = Resources.IMAGES.getPath();
 
   private static final SensorType SENSOR_TYPE_AUDIO = SensorType.AUDIO;
-  private static final String PATH_TO_AUDIO = "audiofiles/";
+  private static final String PATH_TO_AUDIO = Resources.AUDIO.getPath();
 
   /**
    * Constructing the factory is not allowed.
@@ -49,7 +47,7 @@ public class SensorFactory {
    *
    * @return A typical temperature sensor, which can be used as a template
    */
-  public static Sensor createTemperatureSensor() {
+  public static Sensor<NumericSensorReading> createTemperatureSensor() {
     return new NumericSensor(SENSOR_TYPE_TEMPERATURE, MIN_TEMPERATURE, MAX_TEMPERATURE,
         randomize(NORMAL_GREENHOUSE_TEMPERATURE, 1.0), TEMPERATURE_UNIT);
   }
@@ -59,7 +57,7 @@ public class SensorFactory {
    *
    * @return A typical humidity sensor which can be used as a template
    */
-  public static Sensor createHumiditySensor() {
+  public static Sensor<NumericSensorReading> createHumiditySensor() {
     return new NumericSensor(SENSOR_TYPE_HUMIDITY, MIN_HUMIDITY, MAX_HUMIDITY,
         randomize(NORMAL_GREENHOUSE_HUMIDITY, 5.0), HUMIDITY_UNIT);
   }
@@ -69,7 +67,7 @@ public class SensorFactory {
    *
    * @return A typical light sensor which can be used as a template
    */
-  public static Sensor createLightSensor() {
+  public static Sensor<NumericSensorReading> createLightSensor() {
     return new NumericSensor(SENSOR_TYPE_LIGHT, MIN_LIGHT, MAX_LIGHT,
         randomize(NORMAL_GREENHOUSE_LIGHT, 1000.0), LIGHT_UNIT);
   }
@@ -79,9 +77,9 @@ public class SensorFactory {
    *
    * @return A typical pH sensor which can be used as a template
    */
-  public static Sensor createPhSensor() {
+  public static Sensor<NumericSensorReading> createPhSensor() {
     return new NumericSensor(SENSOR_TYPE_PH, MIN_PH, MAX_PH,
-        randomize(NORMAL_GREENHOUSE_PH, 0.5), "");
+        randomize(NORMAL_GREENHOUSE_PH, 0.5), PH_UNIT);
   }
 
   /**
@@ -89,14 +87,18 @@ public class SensorFactory {
    *
    * @return The image sensor
    */
-  public static Sensor createImageSensor() {
+  public static Sensor<ImageSensorReading> createImageSensor() {
     return new ImageSensor(SENSOR_TYPE_IMAGE, PATH_TO_IMAGES);
   }
 
-  public static Sensor createAudioSensor() {
+  /**
+   * Create an audio sensor.
+   *
+   * @return The audio sensor
+   */
+  public static Sensor<AudioSensorReading> createAudioSensor() {
     return new AudioSensor(SENSOR_TYPE_AUDIO, PATH_TO_AUDIO);
   }
-
 
   /**
    * Generate a random value within the range [x-d; x+d].

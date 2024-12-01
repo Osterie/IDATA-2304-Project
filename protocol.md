@@ -41,15 +41,37 @@ Clients are the nodes that initiate communication with the server to send reques
 
 2. **Control panels:** These are GUIs that visualize the sensor data and send commands to the server to control the actuators.
 
+TODO: Contorlpanel is 
+
 **Server**
-The central entity managing client connections and routing messages. It is responsible for receiving sensor data from greenhouse nodes, sending commands to greenhouse nodes, and relaying sensor data to control panels. It is represented by the `IntermediaryServer` class, which uses `ClientHandler` to manage individual client connections.
+The central entity managing client connections and routing messages. It is responsible for receiving sensor data from greenhouse nodes, sending commands to greenhouse nodes, and relaying sensor data to control panels (When it recieves messages it sends the message where the message want to be sent ish.). It is represented by the `IntermediaryServer` class, which uses `ClientHandler` to manage individual client connections.
 
 
 ## The flow of information and events
 
-TODO - describe what each network node does and when. Some periodic events? Some reaction on 
-incoming packets? Perhaps split into several subsections, where each subsection describes one 
-node type (For example: one subsection for sensor/actuator nodes, one for control panel nodes).
+### Intermediary server
+
+The different nodes in the system communicate with each other through the intermediary server. The intermediary server is responsible for managing client connections and routing messages between clients. It uses the `ClientHandler` class to manage individual client connections. When a node, control panel or greenhouse, first conenct to the intermediary server, they send an identification message so that the server can keep track of the nodes. The server then uses this information to route messages between the nodes.
+
+### Control panel
+
+Control panels connect to the intermediary server, which routes the control panel's commands to the greenhouse nodes. The control panel can send commands to the greenhouse nodes to control the actuators. The control panel can also request sensor data from the greenhouse nodes, which the intermediary server retrieves and sends back to the control panel.
+
+The control panel can pull information from the greenhouse nodes at any time by sending commands, which are routed from the server to the correct greenhouse nodes.
+
+In addition to pulling information at will, the control panel periodically sends a command requesting sensor data from the greenhouse node(s).
+
+When the control panel receives a response from its sent command, it handles it differently depending on the command type. For example, if the command was to get sensor data, the control panel would notify listeners about the new sensor data.
+
+When the user interacts with the control panel GUI, the control panel sends commands to the intermediary server, which routes them to the appropriate greenhouse nodes.
+
+### Greenhouse node
+
+Greenhouse nodes connect to the intermediary server, which routes messages between the greenhouse nodes and control panels. The greenhouse nodes send sensor data to the intermediary server when data is requested, which forwards it to the control panels. When the greenhouse node receives a command, it executes the command and sends a response back to the intermediary server, which forwards it to the control panel.
+
+The greenhouse cannot push information.
+
+<!-- TODO - describe what each network node does and when. Some periodic events? Some reaction on incoming packets? Perhaps split into several subsections, where each subsection describes one node type (For example: one subsection for sensor/actuator nodes, one for control panel nodes). -->
 
 ## Connection and state
 
@@ -61,25 +83,44 @@ stateless?
 TODO - Do you have some specific value types you use in several messages? They you can describe 
 them here.
 
-## Message format
+## Message Format
+All messages consist of the following parts:
 
-TODO - describe the general format of all messages. Then describe specific format for each 
-message type in your protocol.
+### **Header**
+- `DST`: Destination (e.g., `GREENHOUSE` or `CONTROL_PANEL`)
+- `DST_ID`: The ID of the destination (specific node or broadcast ID)
+- `DATA_TYPE`: Specifies the type of message (e.g., `COMMAND`, `RESPONSE`)
 
-TODO
-What we need
-Header.
-- Who is the receiver (GREENHOUSE or CONTROL_PANEL)
-- ID of the receiver
-- Data type
+### **Body**
+- Contains the command or message payload.
 
-BODY
-- Command
-
+### **Example Message**
 
 Result:
 - DST;DST_ID;DATA_TYPE COMMAND
 - GREENHOUSE;AllId;STRING GET_NODE_ID
+
+### Message Types
+
+#### **1. Command Messages**
+- Sent from `CONTROL_PANEL` to `GREENHOUSE`.
+- Examples:
+    - `GET_NODE_ID`: Request node ID from a greenhouse node.
+    - `ACTUATOR_CHANGE`: Change the state of an actuator.
+
+#### **2. Sensor Messages**
+- Sent from `GREENHOUSE` to `CONTROL_PANEL`.
+- Examples:
+    - Status updates for sensors.
+    - Actuator state confirmations.
+
+### Message Flow
+
+#### **Control Panel**
+- Sends commands like `GET_NODE_ID` or `ACTUATOR_CHANGE` to specific nodes or broadcasts to all nodes.
+
+#### **Greenhouse Node**
+- Receives commands, processes them, and optionally sends back responses (e.g., node ID or execution status).
 
 ### Command types
 
@@ -98,9 +139,22 @@ GREENHOUSE COMMANDS
 - TurnOffAllActuatorInNodeCommand: Command to turn off all ACTUATORS.
 - TurnOnAllActuatorInNodeCommand: Command to turn on all ACTUATORS.
 
+---
+
+## Errors and Handling
+### **Examples of Errors**
+1. **Invalid Message Format**:
+    - Return a failure response indicating the reason.
+2. **Unknown Command**:
+    - Ignore the message or log an error.
+3. **Client Not Found**:
+    - Notify the sender or log the issue.
+
 ### Error messages
 
 TODO - describe the possible error messages that nodes can send in your system.
+
+---
 
 ## An example scenario
 

@@ -1,6 +1,4 @@
-package no.ntnu.greenhouse.sensors;
-
-import no.ntnu.greenhouse.SensorType;
+package no.ntnu.greenhouse.sensor;
 
 /**
  * An audio sensor which can sense the environment in a specific way.
@@ -20,6 +18,7 @@ public class AudioSensor extends Sensor<AudioSensorReading> {
   public AudioSensor(SensorType type, String audioFilePath) {
     this.reading = new AudioSensorReading(type);
     this.audioFilePath = audioFilePath;
+    this.reading.generateRandomAudio(audioFilePath);
     this.turnOn();
   }
 

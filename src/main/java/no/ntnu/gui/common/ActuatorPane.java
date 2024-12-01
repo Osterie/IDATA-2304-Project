@@ -2,172 +2,115 @@ package no.ntnu.gui.common;
 
 import java.util.HashMap;
 import java.util.Map;
-import javafx.application.Platform;
+
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TitledPane;
+import no.ntnu.greenhouse.actuator.Actuator;
+import no.ntnu.greenhouse.actuator.ActuatorCollection;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import no.ntnu.greenhouse.Actuator;
-import no.ntnu.greenhouse.ActuatorCollection;
 
 /**
- * Represents a GUI component displaying a list of actuators and their states.
- * The `ActuatorPane` allows users to view and interact with actuators, enabling
- * them to turn actuators on or off and observe their current state. Additionally,
- * a "Turn Off All Actuators" button allows users to turn off all actuators within
- * the same node.
+ * ActuatorPane is a custom JavaFX pane that displays and manages a collection of actuators.
+ * It extends the BasePane class and provides functionality to initialize the pane with
+ * actuator components, add a button to turn off all actuators, and refresh the actuator display.
+ *
+ * <p>The class includes the following methods:
+ * <ul>
+ *   <li>{@link #ActuatorPane(ActuatorCollection)}: Constructor that initializes the pane with a given collection of actuators.</li>
+ *   <li>{@link #initialize()}: Initializes the ActuatorPane by creating and adding GUI components for each actuator.</li>
+ *   <li>{@link #addTurnOffAllButton()}: Adds a button to the pane that, when clicked, turns off all actuators.</li>
+ *   <li>{@link #turnOffAllActuators()}: Turns off all actuators in the list and refreshes the actuator display.</li>
+ *   <li>{@link #refreshActuatorDisplay()}: Refreshes the actuator display by clearing the existing UI components and re-initializing them.</li>
+ * </ul>
+ *
+ * <p>Each actuator is represented by a GUI component created using the ActuatorComponentFactory.
+ * The pane also maintains a map of actuators and their corresponding active states using SimpleBooleanProperty.
  */
-public class ActuatorPane extends TitledPane {
-  // Maps to hold the GUI state for each actuator.
-  private final Map<Actuator, SimpleStringProperty> actuatorValue = new HashMap<>();
-  private final Map<Actuator, SimpleBooleanProperty> actuatorActive = new HashMap<>();
-  private final ActuatorCollection actuators;
+public class ActuatorPane extends BasePane {
 
-  /**
-   * Creates an `ActuatorPane` to display the given collection of actuators.
-   *
-   * @param actuators The collection of actuators to display in the pane.
-   */
-  public ActuatorPane(ActuatorCollection actuators) {
-    super();
-    this.actuators = actuators;
-    setText("Actuators"); // Sets the title of the pane.
-    VBox vbox = new VBox();
-    vbox.setSpacing(10); // Adds spacing between the child elements.
-    setContent(vbox); // Adds the VBox to the pane's content.
-    addActuatorControls(actuators, vbox);
-    addTurnOffAllButton(vbox); // Add the "Turn Off All Actuators" button.
-    GuiTools.stretchVertically(this); // Ensures the pane stretches vertically.
-  }
+    private final ActuatorCollection actuators;
+    private final Map<Actuator, SimpleBooleanProperty> actuatorActive = new HashMap<>();
 
-  /**
-   * Adds controls for each actuator in the collection to the provided parent container.
-   *
-   * @param actuators A collection of actuators to display.
-   * @param parent    The parent container where the controls will be added.
-   */
-  private void addActuatorControls(ActuatorCollection actuators, Pane parent) {
-    actuators.forEach(actuator ->
-            parent.getChildren().add(createActuatorGui(actuator))
-    );
-  }
-
-  /**
-   * Creates the GUI representation for a single actuator.
-   *
-   * @param actuator The actuator for which to create a GUI.
-   * @return A Node representing the GUI of the actuator.
-   */
-  private Node createActuatorGui(Actuator actuator) {
-    HBox actuatorGui = new HBox(createActuatorLabel(actuator), createActuatorCheckbox(actuator));
-    actuatorGui.setSpacing(5); // Adds spacing between the label and checkbox.
-    return actuatorGui;
-  }
-
-  /**
-   * Creates a checkbox linked to the given actuator, allowing the user to toggle its state.
-   *
-   * @param actuator The actuator to control with the checkbox.
-   * @return A CheckBox bound to the actuator's state.
-   */
-  private CheckBox createActuatorCheckbox(Actuator actuator) {
-    CheckBox checkbox = new CheckBox();
-    SimpleBooleanProperty isSelected = new SimpleBooleanProperty(actuator.isOn());
-    actuatorActive.put(actuator, isSelected); // Store the property for later updates.
-    checkbox.selectedProperty().bindBidirectional(isSelected);
-    checkbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue != null && newValue) {
-        actuator.turnOn(); // Turns the actuator on if the checkbox is selected.
-      } else {
-        actuator.turnOff(); // Turns the actuator off otherwise.
-      }
-    });
-    return checkbox;
-  }
-
-  /**
-   * Creates a label for the given actuator, showing its type and current state.
-   *
-   * @param actuator The actuator for which to create the label.
-   * @return A Label bound to the actuator's state text.
-   */
-  private Label createActuatorLabel(Actuator actuator) {
-    SimpleStringProperty props = new SimpleStringProperty(generateActuatorText(actuator));
-    actuatorValue.put(actuator, props);
-    Label label = new Label();
-    label.textProperty().bind(props);
-    return label;
-  }
-
-  /**
-   * Generates the text representation of an actuator's state.
-   *
-   * @param actuator The actuator whose text representation is generated.
-   * @return A string showing the actuator's type and its specific state.
-   */
-  private String generateActuatorText(Actuator actuator) {
-    // TODO this is not an accepted solution.
-    String state;
-    switch (actuator.getType().toLowerCase()) {
-      case "heater":
-        state = actuator.isOn() ? "On" : "Off";
-        break;
-      case "fan":
-        state = actuator.isOn() ? "On" : "Off";
-        break;
-      case "window":
-        state = actuator.isOn() ? "Open" : "Closed";
-        break;
-      default:
-        state = actuator.isOn() ? "On" : "Off";
-        break;
-    }
-    return actuator.getType() + ": " + state;
-  }
-
-  /**
-   * Adds a "Turn Off All Actuators" button to the pane.
-   *
-   * @param parent The parent container where the button will be added.
-   */
-  private void addTurnOffAllButton(Pane parent) {
-    Button turnOffAllButton = new Button("Turn Off All Actuators");
-    turnOffAllButton.setOnAction(event -> turnOffAllActuators());
-    parent.getChildren().add(turnOffAllButton);
-  }
-
-  /**
-   * Turns off all actuators in the collection.
-   */
-  private void turnOffAllActuators() {
-    actuators.forEach(actuator -> {
-      actuator.turnOff();
-      update(actuator); // Update the actuator display
-    });
-  }
-
-  /**
-   * Updates the GUI to reflect the current state of the given actuator.
-   *
-   * @param actuator The actuator whose state has changed.
-   * @throws IllegalStateException if the actuator is not managed by this pane.
-   */
-  public void update(Actuator actuator) {
-    SimpleStringProperty actuatorText = actuatorValue.get(actuator);
-    SimpleBooleanProperty actuatorSelected = actuatorActive.get(actuator);
-    if (actuatorText == null || actuatorSelected == null) {
-      throw new IllegalStateException("Can't update GUI for an unknown actuator: " + actuator);
+    /**
+     * A panel that displays and manages a collection of actuators.
+     *
+     * @param actuators The collection of actuators to be managed and displayed.
+     */
+    public ActuatorPane(ActuatorCollection actuators) {
+        super("Actuators");
+        this.actuators = actuators;
+        initialize();
     }
 
-    Platform.runLater(() -> {
-      actuatorText.set(generateActuatorText(actuator)); // Updates the label text.
-      actuatorSelected.set(actuator.isOn()); // Updates the checkbox state.
-    });
-  }
+    /**
+     * Initializes the ActuatorPane by creating and adding GUI components for each actuator.
+     * It iterates through the list of actuators, creates a corresponding GUI component for each actuator,
+     * and adds it to the pane. Additionally, it adds a button to turn off all actuators.
+     */
+    private void initialize() {
+        for (Actuator actuator : actuators) {
+            Node actuatorGui = ActuatorComponentFactory.createActuatorComponent(actuator, actuatorActive);
+            addComponent(actuatorGui);
+        }
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+        hbox.getChildren().addAll(createTurnOnAllButton(), createTurnOffAllButton());
+        addComponent(hbox);
+        
+    }
+
+
+    /**
+     * Adds a button to the pane that, when clicked, turns off all actuators.
+     * The button is labeled "Turn Off All Actuators".
+     */
+    private Button createTurnOffAllButton() {
+        Button turnOffAllButton = new Button("Turn Off All Actuators");
+        turnOffAllButton.setOnAction(e -> turnOffAllActuators());
+        return turnOffAllButton;
+    }
+
+    /**
+     * Turns off all actuators in the list and refreshes the actuator display.
+     * This method iterates through all actuators and turns each one off.
+     */
+    private void turnOffAllActuators() {
+        for (Actuator actuator : actuators) {
+            actuator.turnOff(true);
+        }
+        refreshActuatorDisplay();
+    }
+
+    /**
+     * Adds a button to the pane that, when clicked, turns on all actuators.
+     * The button is labeled "Turn On All Actuators".
+     */
+    private Button createTurnOnAllButton() {
+        Button turnOnAllButton = new Button("Turn On All Actuators");
+        turnOnAllButton.setOnAction(e -> turnOnAllActuators());
+        return turnOnAllButton;
+    }
+
+    /**
+     * Turns on all actuators in the list and refreshes the actuator display.
+     * This method iterates through all actuators and turns each one on.
+     */
+    private void turnOnAllActuators() {
+        for (Actuator actuator : actuators) {
+            actuator.turnOn(true);
+        }
+        refreshActuatorDisplay();
+    }
+
+    /**
+     * Refreshes the actuator display by clearing the existing UI components
+     * and re-initializing them to update the UI with the latest states.
+     */
+    public void refreshActuatorDisplay() {
+        clearComponents(); // Clear the existing UI
+        initialize(); // Re-initialize to update the UI with the latest states
+    }
+
 }
+

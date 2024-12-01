@@ -2,15 +2,9 @@ package no.ntnu.messages;
 
 import java.util.HashMap;
 
-import no.ntnu.messages.Transmission;
 import no.ntnu.messages.commands.Parameters;
 import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
-import no.ntnu.messages.commands.greenhouse.ActuatorChangeCommand;
-import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
-import no.ntnu.messages.commands.greenhouse.GetNodeIdCommand;
-import no.ntnu.messages.commands.greenhouse.GetSensorDataCommand;
-import no.ntnu.messages.commands.greenhouse.TurnOffAllActuatorInNodeCommand;
-import no.ntnu.messages.commands.greenhouse.TurnOnAllActuatorInNodeCommand;
+import no.ntnu.messages.commands.greenhouse.*;
 import no.ntnu.messages.responses.FailureResponse;
 import no.ntnu.messages.responses.Response;
 import no.ntnu.messages.responses.SuccessResponse;
@@ -21,88 +15,114 @@ import no.ntnu.tools.Logger;
  */
 public class TransmissionTranslator {
 
-    private HashMap<String, Transmission> transmissionMap;
+    private final HashMap<String, Transmission> transmissionMap;
 
     /**
-     * Initializes a transmission translator
+     * Initializes a TransmissionTranslator.
      */
     public TransmissionTranslator() {
-
         this.transmissionMap = new HashMap<>();
-
-        // Transmissions
-        this.transmissionMap.put(new ClientIdentificationTransmission().getTransmissionString(), new ClientIdentificationTransmission());
-        
-        // Commands
-        this.transmissionMap.put(new ActuatorChangeCommand().getTransmissionString(), new ActuatorChangeCommand());
-        this.transmissionMap.put(new GetNodeIdCommand().getTransmissionString(), new GetNodeIdCommand());
-        this.transmissionMap.put(new GetNodeCommand().getTransmissionString(), new GetNodeCommand());
-        this.transmissionMap.put(new GetSensorDataCommand().getTransmissionString(), new GetSensorDataCommand());
-        this.transmissionMap.put(new TurnOnAllActuatorInNodeCommand().getTransmissionString(), new TurnOnAllActuatorInNodeCommand());
-        this.transmissionMap.put(new TurnOffAllActuatorInNodeCommand().getTransmissionString(), new TurnOffAllActuatorInNodeCommand());
-        
-        // Responses
-        this.transmissionMap.put(new FailureResponse().getTransmissionString(), new FailureResponse());
-        this.transmissionMap.put(new SuccessResponse().getTransmissionString(), new SuccessResponse());
-
-        // TODO: Add commands if missing
+        this.initializeTransmissions();
     }
 
     /**
-     * Converts a string to a transmission object
+     * Populates the transmission map with available transmissions.
+     */
+    private void initializeTransmissions() {
+        // Transmissions
+        this.addTransmission(new ClientIdentificationTransmission());
+
+        // Commands
+        this.addTransmission(new ActuatorChangeCommand());
+        this.addTransmission(new GetNodeIdCommand());
+        this.addTransmission(new GetNodeCommand());
+        this.addTransmission(new GetSensorDataCommand());
+        this.addTransmission(new TurnOnAllActuatorInNodeCommand());
+        this.addTransmission(new TurnOffAllActuatorInNodeCommand());
+
+        // Responses
+        this.addTransmission(new FailureResponse());
+        this.addTransmission(new SuccessResponse());
+    }
+
+    /**
+     * Adds a transmission to the map using its transmission string as the key.
+     * 
+     * @param transmission the transmission to add
+     */
+    private void addTransmission(Transmission transmission) {
+        this.transmissionMap.put(transmission.getTransmissionString(), transmission);
+    }
+
+    /**
+     * Converts a string to a Transmission object.
      * 
      * @param string the string to convert
-     * @return the transmission object
+     * @return the corresponding Transmission object, or null if not found
      */
     public Transmission toTransmission(String string) {
-
-        // TODO refactor 
         Logger.info("Converting string to transmission: " + string);
-        String[] parts = string.split(Delimiters.BODY_FIELD_PARAMETERS.getValue(), 2);
-        String transmissionType = parts[0];
-        
-        Transmission transmission = this.getTransmission(transmissionType);
-        if (transmission == null){
+        String transmissionType = identifyTransmissionType(string);
+
+        Transmission transmission = getTransmission(transmissionType);
+        if (transmission == null) {
             Logger.error("Transmission not found: " + transmissionType);
             return null;
         }
 
-        if (transmission instanceof Parameters) {
-            if (parts.length > 1) {
-                String[] parameters = parts[1].split(Delimiters.BODY_FIELD_PARAMETERS.getValue());
-                ((Parameters) transmission).setParameters(parameters);
-            }
-        }
-        else if (transmission instanceof Response) {
-
-            String[] parameters = parts[1].split(Delimiters.BODY_FIELD_PARAMETERS.getValue(), 2);
-            String commandAsString = parameters[0];
-            Transmission command = (Transmission) this.toTransmission(commandAsString);
-
-            String responseData = parameters[1];
-
-            ((Response) transmission).setTransmission(command);
-            ((Response) transmission).setResponseData(responseData);
-        }
-
+        this.populateTransmission(transmission, string);
         return transmission;
     }
 
     /**
-     * Gets a transmission object from the transmission map.
+     * Identifies the type of transmission from a string.
+     * 
+     * @param string the string to analyze
+     * @return the transmission type, or an empty string if not found
+     */
+    private String identifyTransmissionType(String string) {
+        String[] fields = string.split(Delimiters.BODY_FIELD.getValue(), 2);
+        String[] headerFields = fields[0].split(Delimiters.BODY_FIELD_PARAMETERS.getValue(), 2);
+        return headerFields[0];
+    }
+
+    /**
+     * Retrieves a Transmission object from the map by type.
      * 
      * @param transmissionType the type of transmission
-     * @return the transmission object
+     * @return the corresponding Transmission object, or null if not found
      */
     private Transmission getTransmission(String transmissionType) {
         return this.transmissionMap.get(transmissionType);
     }
 
     /**
-     * Converts a transmission object to a string
+     * Populates a transmission object with data from a string.
      * 
-     * @param transmission the transmission object to convert
-     * @return the string
+     * @param transmission the transmission to populate
+     * @param string       the data string
+     */
+    private void populateTransmission(Transmission transmission, String string) {
+        String[] parts = string.split(Delimiters.BODY_FIELD_PARAMETERS.getValue(), 2);
+
+        if (transmission instanceof Parameters && parts.length > 1) {
+            String[] parameters = parts[1].split(Delimiters.BODY_FIELD_PARAMETERS.getValue());
+            ((Parameters) transmission).setParameters(parameters);
+        } else if (transmission instanceof Response && parts.length > 1) {
+            String[] responseParts = parts[1].split(Delimiters.BODY_FIELD_PARAMETERS.getValue(), 2);
+            if (responseParts.length == 2) {
+                Transmission command = toTransmission(responseParts[0]);
+                ((Response) transmission).setTransmission(command);
+                ((Response) transmission).setResponseData(responseParts[1]);
+            }
+        }
+    }
+
+    /**
+     * Converts a Transmission object to a string.
+     * 
+     * @param transmission the transmission to convert
+     * @return the resulting string
      */
     public String toString(Transmission transmission) {
         return transmission.toString();

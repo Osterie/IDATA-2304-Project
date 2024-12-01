@@ -7,9 +7,6 @@ import no.ntnu.tools.Logger;
  */
 public class Message {
 
-    // TODO should this be a field?
-    private static final String HEADER_BODY_DELIMITER = Delimiters.HEADER_BODY.getValue();
-
     // The message header containing metadata
     private MessageHeader header;
     // The message body containing the actual content
@@ -75,13 +72,14 @@ public class Message {
      * @throws IllegalArgumentException if the protocol string is invalid.
      */
     public static Message fromString(String protocolString) {
-        // TODO refactor
+
         // Split the string into header and body using the delimiter
-        String[] parts = protocolString.split(HEADER_BODY_DELIMITER, 2);
+        String[] parts = protocolString.split(Delimiters.HEADER_BODY.getValue(), 2);
         if (parts.length < 2) {
             Logger.error("Invalid message format: " + protocolString);
             throw new IllegalArgumentException("Invalid message format");
         }
+
         // Parse the header and body separately
         MessageHeader header = MessageHeader.fromString(parts[0]);
         MessageBody body = MessageBody.fromString(parts[1]);
@@ -99,6 +97,6 @@ public class Message {
         if (header == null || body == null) {
             throw new IllegalArgumentException("Header and body cannot be null");
         }
-        return header + HEADER_BODY_DELIMITER + body;
+        return header + Delimiters.HEADER_BODY.getValue() + body;
     }
 }

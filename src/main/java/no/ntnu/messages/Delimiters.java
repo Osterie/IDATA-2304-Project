@@ -2,7 +2,8 @@ package no.ntnu.messages;
 
 /**
  * Enum representing various delimiters used in message formatting and parsing.
- * These delimiters are essential for separating different components of a message,
+ * These delimiters are essential for separating different components of a
+ * message,
  * such as headers, body, and body parameters.
  */
 public enum Delimiters {
@@ -13,11 +14,17 @@ public enum Delimiters {
     /** Delimiter between fields in the header of a message. */
     HEADER_FIELD(";"),
 
-    /** Delimiter between fields in the body of a message, defaulting to the header delimiter. */
+    /**
+     * Delimiter between fields in the body of a message, defaulting to the header
+     * delimiter.
+     */
     BODY_FIELD(HEADER_FIELD.getValue()),
 
     /** Delimiter between a fields parameters in the body of a message. */
-    BODY_FIELD_PARAMETERS(",");
+    BODY_FIELD_PARAMETERS(","),
+
+    /** Delimiter between sensor data in the body of a message. */
+    BODY_SENSOR_SEPARATOR("¤");
 
     private final String value;
 
@@ -43,7 +50,8 @@ public enum Delimiters {
      * Retrieves a {@link Delimiters} instance based on its string value.
      *
      * @param target The string value to match.
-     * @return The matching {@link Delimiters} instance, or {@code null} if no match is found.
+     * @return The matching {@link Delimiters} instance, or {@code null} if no match
+     *         is found.
      * @throws IllegalArgumentException If {@code target} is null or empty.
      */
     public static Delimiters fromString(String target) {

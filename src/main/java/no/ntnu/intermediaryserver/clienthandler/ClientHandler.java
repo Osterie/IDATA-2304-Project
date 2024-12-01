@@ -19,12 +19,13 @@ import no.ntnu.tools.Logger;
 
 /**
  * Handles communication with a client connected to the IntermediaryServer.
- * This class runs in its own thread to manage the client's requests and responses.
+ * This class runs in its own thread to manage the client's requests and
+ * responses.
  */
 public class ClientHandler extends TcpConnection implements Runnable {
-    
+
     private final ClientHandlerLogic logic;
-    
+
     /**
      * Constructs a ClientHandler for a given client socket and server.
      *
@@ -55,8 +56,13 @@ public class ClientHandler extends TcpConnection implements Runnable {
         }
     }
 
+    /**
+     * Handes a message received from the client.
+     * handles the message by sending it to the client specified in the header of
+     * the message.
+     */
     @Override
-    protected void handleMessage(Message message){
+    protected void handleSpecificMessage(Message message) {
         this.sendToClient(message);
     }
 
@@ -66,7 +72,6 @@ public class ClientHandler extends TcpConnection implements Runnable {
      * @param message The message from the client
      */
     private void sendToClient(Message message) {
-        // Logger.info("message: " + message);
         String targetId = message.getHeader().getId();
 
         if (targetId.equalsIgnoreCase(Endpoints.BROADCAST.getValue())) {
@@ -84,27 +89,28 @@ public class ClientHandler extends TcpConnection implements Runnable {
      */
     private void broadcastMessage(Message message) {
         // Gets the client handlers for the client type specified in the message header.
-        ArrayList<ClientHandler> clientHandlers = (ArrayList<ClientHandler>) this.logic.getAllClientHandlers(message.getHeader().getReceiver());
+        ArrayList<ClientHandler> clientHandlers = (ArrayList<ClientHandler>) this.logic
+                .getAllClientHandlers(message.getHeader().getReceiver());
         message.setHeader(this.logic.generateSenderHeader());
-        
+
         Logger.info("Sending message to all clients: " + message);
         for (ClientHandler clientHandler : clientHandlers) {
             clientHandler.sendMessage(message);
         }
     }
 
+    /**
+     * Sends a message to a specific client.
+     * 
+     * @param message The message to send
+     */
     private void sendMessageToClient(Message message) {
-        MessageHeader header = message.getHeader();
-        Endpoints receiverClientType = header.getReceiver();
-        String receiverId = header.getId();
+        ClientHandler receiver = this.getClientHandler(message);
+        if (receiver == null) {
+            return;
+        }
 
-        ClientHandler receiver = this.logic.getClientHandler(receiverClientType, receiverId);
         try {
-            if (receiver == null) {
-                Logger.error("Not found: " + receiverClientType + " " + receiverId);
-            }
-            
-            // Logger.info("Sending message to " + receiverClientType + " " + receiverId + ": " + message);
             message.setHeader(this.logic.generateSenderHeader());
             receiver.sendMessage(message);
         } catch (Exception e) {
@@ -112,7 +118,26 @@ public class ClientHandler extends TcpConnection implements Runnable {
         }
     }
 
-    // TODO identification should be handle in another way. Another class?
+    /**
+     * Retrieves the client handler for the client specified in the message header.
+     * 
+     * @param message The message containing the client type and ID
+     * @return The client handler for the client specified in the message header
+     */
+    private ClientHandler getClientHandler(Message message) {
+        MessageHeader header = message.getHeader();
+        Endpoints clientType = header.getReceiver();
+        String clientId = header.getId();
+
+        ClientHandler client = this.logic.getClientHandler(clientType, clientId);
+
+        if (client == null) {
+            Logger.error("Not found: " + clientType + " " + clientId);
+        }
+
+        return client;
+    }
+
     /**
      * Identifies the type of the client (control panel or greenhouse).
      */
@@ -125,87 +150,74 @@ public class ClientHandler extends TcpConnection implements Runnable {
         }
 
         String identification = this.readLine();
-        if (identification == null) {
-            Logger.error("Error identifying client type, listening for identification message...");
-            this.identifyClientType(attempts+1); // TODO check that this works
-            return;
-        }
+        Response response = this.processIdentification(identification);
+        Message responseMessage = this.generateIdentificationResponseMessage(response);
 
-        // TODO: Check hashed body content here?
-        // TODO rename to incommingMessage
-        Message message = Message.fromString(identification);
-        Response response = this.processIdentification(message);
-
-        // MessageHeader header = message.getHeader();
-        MessageHeader header = new MessageHeader(Endpoints.SERVER, Endpoints.NONE.getValue());
-        MessageBody body = message.getBody();
-
-        MessageBody newBody = new MessageBody(response);
-        Message responseMessage = new Message(header, newBody);
-
-        if (response == null) {
-
+        this.sendMessage(responseMessage);
+        if (response == null || response instanceof FailureResponse) {
             Logger.error("Could not identify client type, sending failure response: " + responseMessage);
-
-            this.sendMessage(responseMessage);
-            this.identifyClientType(attempts+1);
-            return;
-        }
-        else if (response instanceof FailureResponse) {
-            Logger.error("Could not identify client type, sending failure response: " + responseMessage);
-
-            this.sendMessage(responseMessage);
-            this.identifyClientType(attempts+1);
-            return;
-        }
-        else if (response instanceof SuccessResponse) {
-            message.setBody(new MessageBody(response));
-            this.sendMessage(message);
+            this.identifyClientType(attempts + 1);
+        } else if (response instanceof SuccessResponse) {
             this.logic.addSelfToServer();
-        }
-        else {
-            Logger.error("Could not identify client type, listening for identification message...");
-            this.identifyClientType(attempts+1);
-            return;
         }
     }
 
-    // TODO refactor
+    /**
+     * Generates a response message for the client identification.
+     *
+     * @param response The response to the client identification
+     * @return The response message
+     */
+    private Message generateIdentificationResponseMessage(Response response) {
+        MessageHeader newHeader = new MessageHeader(Endpoints.SERVER, Endpoints.NONE.getValue());
+        MessageBody newBody = new MessageBody(response);
+        return new Message(newHeader, newBody);
+    }
+
     /**
      * Processes the identification message from the client.
      *
      * @param identification The identification message
      * @return true if identification was successful, false otherwise
      */
-    private Response processIdentification(Message identification) {
+    private Response processIdentification(String identification) {
 
         if (identification == null) {
             Logger.error("Invalid identification message: null");
             return new FailureResponse(new ClientIdentificationTransmission(), FailureReason.FAILED_TO_IDENTIFY_CLIENT);
         }
 
-        Response response;
-        MessageBody body = identification.getBody();
-        Transmission command = body.getTransmission();
+        Message message = Message.fromString(identification);
+        Transmission command = message.getBody().getTransmission();
 
+        Response response;
         if (command instanceof ClientIdentificationTransmission) {
             ClientIdentificationTransmission clientIdentificationCommand = (ClientIdentificationTransmission) command;
-            // TODO what if null?
-            Endpoints clientType = clientIdentificationCommand.getClient();
-            String clientId = clientIdentificationCommand.getId();
-
-            if (clientId.equals(Endpoints.NOT_PREDEFINED.getValue())) {
-                clientId = this.socket.getRemoteSocketAddress().toString();
-            }
-            
-            this.logic.setClientIdentification(new ClientIdentification(clientType, clientId));
-            response = new SuccessResponse(command, "Identification successful");
-        }
-        else{
-            Logger.error("Invalid identification message: " + identification);
-            response = new FailureResponse(new ClientIdentificationTransmission(), FailureReason.FAILED_TO_IDENTIFY_CLIENT);
+            response = this.handleClientIdentificationResponse(clientIdentificationCommand);
+        } else {
+            Logger.error("Invalid identification message: " + message);
+            response = new FailureResponse(new ClientIdentificationTransmission(),
+                    FailureReason.FAILED_TO_IDENTIFY_CLIENT);
         }
 
         return response;
+    }
+
+    /**
+     * Handles the client identification response.
+     *
+     * @param command The client identification command
+     * @return The response to the client identification
+     */
+    private Response handleClientIdentificationResponse(ClientIdentificationTransmission command) {
+        Endpoints clientType = command.getClient();
+        String clientId = command.getId();
+
+        if (clientId.equals(Endpoints.NOT_PREDEFINED.getValue())) {
+            clientId = this.getSocket().getRemoteSocketAddress().toString();
+        }
+
+        this.logic.setClientIdentification(new ClientIdentification(clientType, clientId));
+        return new SuccessResponse(command, "Identification successful"); // TODO send key here
     }
 }

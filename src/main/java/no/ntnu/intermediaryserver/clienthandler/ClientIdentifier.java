@@ -1,18 +1,22 @@
 package no.ntnu.intermediaryserver.clienthandler;
 
 import no.ntnu.constants.Endpoints;
+import no.ntnu.messages.Delimiters;
 import no.ntnu.tools.Logger;
 
 /**
- * The ClientIdentifier class is responsible for identifying a client by its type and unique ID.
- * It parses a client identification string to set both a valid client type and client ID.
+ * The ClientIdentifier class is responsible for identifying a client by its
+ * type and unique ID.
+ * It parses a client identification string to set both a valid client type and
+ * client ID.
  */
 public class ClientIdentifier {
 
-    //Enum representing the client type, such as Clients.CONTROL_PANEL or Clients.GREENHOUSE
+    // Enum representing the client type, such as Clients.CONTROL_PANEL or
+    // Clients.GREENHOUSE
     private Endpoints clientType;
 
-    //Unique ID for the greenhouse node or control panel
+    // Unique ID for the greenhouse node or control panel
     private String clientId;
 
     /**
@@ -24,11 +28,14 @@ public class ClientIdentifier {
     }
 
     /**
-     * Parses and identifies the client type and ID from the given identification string.
+     * Parses and identifies the client type and ID from the given identification
+     * string.
      * The string should be formatted as "clientType;clientId".
      *
-     * @param identification the identification string in "clientType;clientId" format
-     * @throws IllegalArgumentException if the identification string format is invalid
+     * @param identification the identification string in "clientType;clientId"
+     *                       format
+     * @throws IllegalArgumentException if the identification string format is
+     *                                  invalid
      *                                  or if clientType is not a recognized type
      */
     public void identifyClientType(String identification) {
@@ -90,13 +97,15 @@ public class ClientIdentifier {
     /**
      * Parses the identification string to separate client type and client ID.
      *
-     * @param identification the identification string in "clientType;clientId" format
-     * @return a String array containing clientType at index 0 and clientId at index 1
+     * @param identification the identification string in "clientType;clientId"
+     *                       format
+     * @return a String array containing clientType at index 0 and clientId at index
+     *         1
      * @throws IllegalArgumentException if the identification string does not match
      *                                  the expected format
      */
     private String[] identifyParts(String identification) {
-        String[] parts = identification.split(";");
+        String[] parts = identification.split(Delimiters.BODY_FIELD.getValue());
         if (parts.length != 2) {
             Logger.error("Invalid identification message: " + identification);
             throw new IllegalArgumentException("Invalid identification message: " + identification);

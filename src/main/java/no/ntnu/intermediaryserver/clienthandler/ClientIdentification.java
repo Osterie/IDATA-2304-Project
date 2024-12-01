@@ -13,17 +13,10 @@ public class ClientIdentification {
      * Creates a ClientIdentification object with the specified type and ID.
      *
      * @param clientType the type of the client as a Clients enum
-     * @param clientId the unique ID of the client
+     * @param clientId   the unique ID of the client
      * @throws UnknownClientException if the clientType is null, empty, or invalid
      */
     public ClientIdentification(Endpoints clientType, String clientId) {
-        if (clientType == null) {
-            throw new UnknownClientException("clientType cannot be null");
-        }
-        if (clientId == null || clientId.trim().isEmpty()) {
-            throw new UnknownClientException("clientId cannot be null or empty");
-        }
-
         this.setClientType(clientType);
         this.setClientId(clientId);
     }
@@ -47,6 +40,9 @@ public class ClientIdentification {
      * @param clientId the unique ID for the client as a String
      */
     private void setClientId(String clientId) {
+        if (clientId == null || clientId.trim().isEmpty()) {
+            throw new UnknownClientException("clientId cannot be null or empty");
+        }
         this.clientId = clientId;
     }
 

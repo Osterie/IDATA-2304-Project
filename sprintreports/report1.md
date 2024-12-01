@@ -5,7 +5,7 @@ Sprint stenographer: Tobias
 
 ## **Sprint Overview**
 - **Sprint Number:** Sprint 1
-- **Duration:** [30.09.2024 - 14.10.2024]
+- **Duration:** 30.09.2024 - 14.10.2024
 - **Sprint Goal:** Enhance functionality for sensor node creation and communication between components, and establish foundational classes for encryption and messaging.
 - **Team Members:**
   - Tobias Olsen Reiakvam - TobyJavascript

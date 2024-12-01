@@ -2,11 +2,14 @@ package no.ntnu.greenhouse;
 
 import no.ntnu.SocketCommunicationChannel;
 import no.ntnu.constants.Endpoints;
+import no.ntnu.greenhouse.actuator.Actuator;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
+import no.ntnu.listeners.common.ActuatorListener;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
 import no.ntnu.messages.Transmission;
+import no.ntnu.messages.commands.greenhouse.ActuatorChangeCommand;
 import no.ntnu.messages.commands.greenhouse.GreenhouseCommand;
 import no.ntnu.messages.responses.FailureResponse;
 import no.ntnu.messages.responses.SuccessResponse;
@@ -15,7 +18,7 @@ import no.ntnu.tools.Logger;
 /**
  * Handles the connection to the server for a node.
  */
-public class NodeConnectionHandler extends SocketCommunicationChannel implements Runnable {
+public class NodeConnectionHandler extends SocketCommunicationChannel implements Runnable, ActuatorListener {
     private final NodeLogic nodeLogic;
 
     /**
@@ -28,6 +31,7 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
     public NodeConnectionHandler(SensorActuatorNode node, String host, int port) {
         super(host, port);
         this.nodeLogic = new NodeLogic(node);
+        this.nodeLogic.addActuatorListener(this);
     }
 
     /**
@@ -40,12 +44,31 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
     }
 
     /**
+     * Send an actuator change command to the server.
+     * Constructs and sends a message to change the state of an actuator.
+     *
+     * @param actuatorId The ID of the actuator
+     * @param isOn       The desired state of the actuator
+     */
+    public void sendActuatorChange(int actuatorId, boolean isOn) {
+        MessageHeader header = new MessageHeader(Endpoints.CONTROL_PANEL, Endpoints.BROADCAST.getValue());
+
+        ActuatorChangeCommand command = new ActuatorChangeCommand(actuatorId, isOn);
+        String responseData = command.createResponseData(this.nodeLogic);
+        SuccessResponse response = new SuccessResponse(command, responseData);
+
+        MessageBody body = new MessageBody(response);
+        Message message = new Message(header, body);
+        this.sendMessage(message);
+    }
+
+    /**
      * Handle a message received from the server.
      *
      * @param message The message received.
      */
     @Override
-    protected void handleMessage(Message message) {
+    protected void handleSpecificMessage(Message message) {
         Logger.info("Received message for node! " + this.nodeLogic.getId() + ": " + message);
 
         MessageHeader header = message.getHeader();
@@ -106,7 +129,17 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
      * @param response the received failure response.
      */
     private void handleFailureResponse(FailureResponse response) {
-        // TODO what are some failues which can be handled?
         Logger.error("Received failure response for node: " + response);
+    }
+
+    /**
+     * Notify the server that an actuator has changed state.
+     *
+     * @param nodeId The ID of the node.
+     * @param actuator The actuator that has changed state.
+     */
+    @Override
+    public void actuatorUpdated(int nodeId, Actuator actuator) {
+        sendActuatorChange(actuator.getId(), actuator.isOn());
     }
 }

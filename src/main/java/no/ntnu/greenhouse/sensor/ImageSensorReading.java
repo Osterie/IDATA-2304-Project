@@ -1,14 +1,15 @@
-package no.ntnu.greenhouse.sensors;
+package no.ntnu.greenhouse.sensor;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.util.Random;
 import no.ntnu.tools.stringification.Base64ImageEncoder;
 
 import javax.imageio.ImageIO;
 
-import no.ntnu.greenhouse.SensorType;
+import no.ntnu.messages.Delimiters;
 import no.ntnu.tools.Logger;
 
 /**
@@ -69,7 +70,7 @@ public class ImageSensorReading extends SensorReading{
             }
         } catch (IOException e) {
             System.err.println("An error occurred while loading the image.");
-            e.printStackTrace();
+            // e.printStackTrace();
         }
 
         // Update current image if an image was successfully loaded
@@ -141,7 +142,8 @@ public class ImageSensorReading extends SensorReading{
     public String getFormatted() {
         // TODO we should have type here since that is done for numeric sensor reading, consistency.
         // Does not make sense that there is a " = " randomly.
-        return " = " + this.getImageFormatted() + " " + this.fileExtension;
+        // CHANGE TO USE BODY FIELD DELIMITER:
+        return this.type.getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.getImageFormatted(this.currentImage) + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.fileExtension;
     }
 
     /**
@@ -149,7 +151,11 @@ public class ImageSensorReading extends SensorReading{
      *
      * @return A Base64 encoded string representing the image
      */
-    private String getImageFormatted() {
+    private String getImageFormatted(BufferedImage image) {
+        if (image == null) {
+            throw new IllegalArgumentException("BufferedImage is null.");
+        }
+
         try {
             return Base64ImageEncoder.imageToString(this.currentImage, this.fileExtension);
         } catch (IOException e) {

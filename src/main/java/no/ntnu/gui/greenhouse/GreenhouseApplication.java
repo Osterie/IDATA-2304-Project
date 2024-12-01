@@ -2,29 +2,31 @@ package no.ntnu.gui.greenhouse;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.greenhouse.SensorActuatorNode;
+import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.tools.Logger;
 
 /**
  * JavaFX application that runs a greenhouse simulation with a graphical user interface (GUI).
- * This class manages the lifecycle of the application, the GUI window, and interaction with sensor/actuator nodes.
+ * This class manages the lifecycle of the application, the GUI window,
+ * and interaction with sensor/actuator nodes.
  */
 public class GreenhouseApplication extends Application implements NodeStateListener, Runnable {
 
-  private static GreenhouseSimulator simulator; // The greenhouse simulator instance
-  private final Map<SensorActuatorNode, NodeGuiWindow> nodeWindows = new HashMap<>(); // Mapping of nodes to their GUI windows
-  private Stage mainStage; // The primary stage for the JavaFX application
+  // The greenhouse simulator instance
+  private static GreenhouseSimulator simulator;
+  // Mapping of nodes to their GUI windows
+  private final Map<SensorActuatorNode, NodeGuiWindow> nodeWindows = new HashMap<>();
+  // The primary stage for the JavaFX application
+  private Stage mainStage;
 
-  private ScheduledExecutorService simulatorScheduler;
+  // Error window
+  ErrorWindow errorWindow = new ErrorWindow();
 
   /**
    * Initializes the GUI and sets up the simulation environment.
@@ -54,18 +56,14 @@ public class GreenhouseApplication extends Application implements NodeStateListe
     mainStage.setOnCloseRequest(event -> closeApplication());
 
 
-    // // Schedule simulator updates
-    // simulatorScheduler = Executors.newScheduledThreadPool(1);
-    // simulatorScheduler.scheduleAtFixedRate(simulator::update, 0, 100, TimeUnit.MILLISECONDS);
     // Start the simulator
     simulator.start();
   }
 
   /**
-   * Starts the application with an option to emulate fake events (for testing or simulation purposes).
+   * Starts the application with an option to emulate fake events (for testing or
+   * simulation purposes).
    * This is called from the main method when launching the application.
-   *
-   * @param fake When true, the simulator emulates fake events instead of opening real sockets.
    */
   public static void startApp() {
     Logger.info("Running greenhouse simulator with JavaFX GUI...");
@@ -87,12 +85,14 @@ public class GreenhouseApplication extends Application implements NodeStateListe
       // Stop the JavaFX application
       stop();
     } catch (Exception e) {
+      errorWindow.showAlert("Error", "Could not stop the application: " + e.getMessage());
       Logger.error("Could not stop the application: " + e.getMessage());
     }
   }
 
   /**
-   * Executes the simulation in a separate thread, starting the application in a non-blocking manner.
+   * Executes the simulation in a separate thread,
+   * starting the application in a non-blocking manner.
    * This is used when the application is run in a threaded environment.
    */
   @Override

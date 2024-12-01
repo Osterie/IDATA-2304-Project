@@ -1,8 +1,8 @@
-package no.ntnu.greenhouse.sensors;
+package no.ntnu.greenhouse.sensor;
 
 import java.util.Objects;
 
-import no.ntnu.greenhouse.SensorType;
+import no.ntnu.messages.Delimiters;
 
 /**
  * Represents one sensor reading (value).
@@ -52,31 +52,34 @@ public class NumericSensorReading extends SensorReading {
     this.value = newValue;
   }
 
+  
   /**
-   * Get a string representation of the sensor reading.
+   * Returns a human-readable string representation of the sensor reading.
+   * The format of the returned string is: "type = value unit".
    *
-   * @return A string representation of the sensor reading
+   * @return a string containing the type, value, and unit of the sensor reading.
    */
-  @Override
-  public String toString() {
-    return "{ type=" + this.type + ", value=" + value + ", unit=" + unit + " }";
+  public String humanReadableInfo() {
+    return this.getType().getType() + " = " + this.value + " " + this.unit;
   }
 
+  // TODO use to string instead
   /**
-   * Get a human-readable (formatted) version of the current reading, including the unit.
+   * Get a human-readable (formatted) version of the current reading, including
+   * the unit.
    *
    * @return The sensor reading and the unit
    */
   public String getFormatted() {
-    return this.getType() + " = " + this.value + " " + this.unit;
+    return this.getType().getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.value + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.unit;
   }
-
 
   /**
    * Indicates whether some other object is "equal to" this one.
    * 
    * @param o the reference object with which to compare.
-   * @return {@code true} if this object is the same as the obj argument; {@code false} otherwise.
+   * @return {@code true} if this object is the same as the obj argument;
+   *         {@code false} otherwise.
    */
   @Override
   public boolean equals(Object o) {

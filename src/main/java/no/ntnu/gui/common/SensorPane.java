@@ -1,160 +1,69 @@
 package no.ntnu.gui.common;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.TitledPane;
-import javafx.scene.layout.VBox;
-import no.ntnu.greenhouse.sensors.AudioSensorReading;
-import no.ntnu.greenhouse.sensors.ImageSensorReading;
-import no.ntnu.greenhouse.sensors.NumericSensorReading;
-import no.ntnu.greenhouse.sensors.Sensor;
-import no.ntnu.greenhouse.sensors.SensorReading;
-import no.ntnu.tools.Logger;
+import no.ntnu.greenhouse.sensor.SensorReading;
 
-// TODO refactor, create classes for alot of the logic in this class. This class does too much.
 /**
- * A section of GUI displaying sensor data.
+ * The SensorPane class is a UI component that displays a collection of sensor readings.
+ * It extends the BasePane class and provides methods to initialize and update the pane
+ * with sensor data.
+ * 
+ * <p>There are two constructors available:
+ * <ul>
+ *   <li>{@link #SensorPane(Iterable)}: Constructs a new SensorPane with the title "Sensors" and initializes it with the provided sensor readings.</li>
+ *   <li>{@link #SensorPane()}: Constructs a new SensorPane with the title "Sensors" without initializing it with sensor readings.</li>
+ * </ul>
+ * 
+ * <p>The class also provides the following methods:
+ * <ul>
+ *   <li>{@link #initialize(Iterable)}: Initializes the SensorPane with the provided sensor readings.</li>
+ *   <li>{@link #update(Iterable)}: Updates the SensorPane by clearing the current components and reinitializing them with the provided sensor readings.</li>
+ * </ul>
+ * 
+ * <p>Each sensor reading is represented by a UI component created by the SensorComponentFactory.
  */
-public class SensorPane extends TitledPane {
-  private final List<SimpleStringProperty> sensorProps = new ArrayList<>();
-  private final VBox contentBox = new VBox();
+public class SensorPane extends BasePane {
 
-  /**
-   * Create a sensor pane.
-   *
-   * @param sensors The sensor data to be displayed on the pane.
-   */
-  public SensorPane(Iterable<SensorReading> sensors) {
-    super();
-    initialize(sensors);
-  }
-
-  private void initialize(Iterable<SensorReading> sensors) {
-    setText("Sensors");
-    sensors.forEach(sensor ->
-        this.contentBox.getChildren().add(createAndRememberSensorLabel(sensor))
-    );
-    setContent(this.contentBox);
-  }
-
-  /**
-   * Create an empty sensor pane, without any data.
-   */
-  public SensorPane() {
-    initialize(new LinkedList<>());
-  }
-
-  /**
-   * Create a sensor pane.
-   * Wrapper for the other constructor with SensorReading-iterable parameter
-   *
-   * @param sensors The sensor data to be displayed on the pane.
-   */
-  public SensorPane(List<Sensor> sensors) {
-    try {
-      initialize(sensors.stream().map(Sensor::getReading).toList());
-    } catch (IllegalStateException e) {
-      if (e.getMessage().equals("The sensor is off.")) {
-        System.out.println("Cannot add sensor to sensor pane becuase sensor is off");
-      } else {
-        throw e;
-      }
+    /**
+     * Constructs a new SensorPane with the title "Sensors".
+     * For each sensor in the collection, a corresponding UI component is created and added to the pane.
+     */
+    public SensorPane(Iterable<SensorReading> sensors) {
+        super("Sensors");
+        initialize(sensors);
     }
-  }
 
-  /**
-   * Update the GUI according to the changes in sensor data.
-   *
-   * @param sensors The sensor data that has been updated
-   */
-  public void update(Iterable<SensorReading> sensors) {
-    int index = 0;
-    for (SensorReading sensor : sensors) {
-      updateSensorLabel(sensor, index++);
+    /**
+     * Constructs a new SensorPane with the title "Sensors".
+     */
+    public SensorPane() {
+        super("Sensors");
     }
-  }
 
-  /**
-   * Update the GUI according to the changes in sensor data.
-   * Wrapper for the other method with SensorReading-iterable parameter
-   *
-   * @param sensors The sensor data that has been updated
-   */
-  public void update(List<Sensor> sensors) {
-    try {
-      update(sensors.stream().map(Sensor::getReading).toList());
-    } catch (IllegalStateException e) {
-      if (e.getMessage().equals("The sensor is off.")) {
-        System.out.println("Cannot update sensor becuase sensor is off");
-      } else {
-        throw e;
-      }
+    /**
+     * Initializes the SensorPane.
+     * For each sensor in the collection, a corresponding UI component is created and added to the pane.
+     *
+     * @param sensors an iterable collection of SensorReading objects to be displayed in the pane
+     */
+    private void initialize(Iterable<SensorReading> sensors) {
+        for (SensorReading sensor : sensors) {
+            Node component = SensorComponentFactory.createComponent(sensor);
+            addComponent(component);
+        }
     }
-  }
 
-  // TODO refactor this logic. Create a method above this method and such. This method should create a label and then another for images.
-  // Alternatively, would not be necessary when we have implemented the component builder class.
-  private Node createAndRememberSensorLabel(SensorReading sensor) {
-    Node nodeToReturn;
-    
-    if (sensor instanceof NumericSensorReading) {
-      nodeToReturn = createNumericSensorLabel(sensor);
-    } else if (sensor instanceof ImageSensorReading) {
-      ImageSensorPane imageSensorNodePane = new ImageSensorPane((ImageSensorReading) sensor);
-      nodeToReturn = imageSensorNodePane.createContent();
-      this.addThumbnailToUI(imageSensorNodePane.getThumbnail());
-    } else if (sensor instanceof AudioSensorReading) {
-      AudioSensorPane audioSensorNodePane = new AudioSensorPane((AudioSensorReading) sensor);
-      nodeToReturn = audioSensorNodePane.createContent();
-    } else {
-      return new Label("Unknown sensor type: " + sensor.getClass());
-      // throw new IllegalArgumentException("Unknown sensor type: " + sensor.getClass());
+    /**
+     * Updates the sensor pane.
+     * This method clears the current components and reinitializes them
+     * with the provided sensor readings.
+     *
+     * @param sensors an Iterable of SensorReading objects to update the pane with
+     */
+    public void update(Iterable<SensorReading> sensors) {
+        clearComponents();
+        initialize(sensors);
     }
-    return nodeToReturn;
-  }
 
 
-  /**
-   * Clear previous thumbnail and add a thumbnail to the UI.
-   * 
-   * @param thumbnail The thumbnail to add.
-   */
-  private void addThumbnailToUI(Node thumbnail) {
-    if (thumbnail == null) {
-      throw new IllegalArgumentException("Thumbnail is null");
-    }
-    Platform.runLater(() -> {
-        contentBox.getChildren().clear();
-        contentBox.getChildren().addAll(thumbnail);
-    });
-  }
-
-
-private Node createNumericSensorLabel(SensorReading sensor){
-  SimpleStringProperty props = new SimpleStringProperty(generateSensorText(sensor));
-    sensorProps.add(props);
-    Label label = new Label();
-    label.textProperty().bind(props);
-  return label;
-}
-
-  private String generateSensorText(SensorReading sensor) {
-    return sensor.getFormatted();
-  }
-
-  private void updateSensorLabel(SensorReading sensor, int index) {
-    if (sensorProps.size() > index) {
-      SimpleStringProperty props = sensorProps.get(index);
-      Platform.runLater(() -> props.set(generateSensorText(sensor)));
-    } else {
-      Logger.info("Adding sensor[" + index + "]");
-      Platform.runLater(() -> contentBox.getChildren().add(createAndRememberSensorLabel(sensor)));
-    }
-  }
 }
