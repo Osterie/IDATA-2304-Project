@@ -1,10 +1,16 @@
 
 # WORK PROCESS DOCUMENTATION REQUIREMENTS
 provide some form of documentation of the following:
-- [ ] KNUT 1. How the work was planned in terms of iterations (sprints)
+- [X] KNUT 1. How the work was planned in terms of iterations (sprints)
 - [x] ADRIAN 2. How the tasks were distributed - who was responsible for what. Note - it is NOT OK to have someone in the group responsible only for creating videos. This course is primarily about network protocols and network programming. Every group member must demonstrate expertise within these fields. Perhaps one student works more on the protocol, another on the server programming, and the third on client programming, that is fine. But it is not fine if one student does all the programming, one just writes documentation (sprint reports) and the third creates a video. How are the second and third students showing their computer network expertise?
 
+## How the work was planned in terms of iterations (sprints)
 
+When we received the assignment,our first step was to review both the assignment details and the provided template code. We discussed our vision for the application, identified tasks,explored additional features, and discussed what type of protocol we would use.Once we had a clear idea of what we wanted to achieve we planned our workflow.
+
+We followed a scrum framework where we organized two-week long sprints. Each sprint began with a planning session,where we set goals, defined roles, outlined procedures, and addressed team dynamics following the MRPI (goals, roles, procedure, interpersonal questions) model. We maintained a TODO.md file to track project-related tasks, dividing and updating it as the project continued.
+
+During the sprints we held regular stand-up meetings where we tackled challengers and blockers. At the end of each sprint, we conducted retrospectives to reflect on successes and identify areas for improvement.
 
 ## How the tasks were distributed
 For programming, after having analyzed what the task required us to do, we wrote down these tasks as TODOs under our version control. These tasks were further subdivided into smaller tasks and distributed between the different members of the group. Whilst working on the project, we naturally wrote down more TODOs. To distribute the TODOs we talked to eachother about which tasks we wanted to complete, and if we completed our TODOs we would assign ourselves to new ones.  
