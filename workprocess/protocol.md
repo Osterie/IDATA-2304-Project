@@ -132,6 +132,67 @@ Result:
 #### **3. Indetification request**
 - Sent from `GREENHOUSE` and `GREENHOUSE` to `SERVER`
 
+### Command types
+
+COMMON COMMANDS
+
+- ClientIdentificationTransmission: Represents a transmission for client identification.
+
+GREENHOUSE COMMANDS
+
+- GreenhouseCommand: Abstract class representing a command from GREENHOUSE.
+
+- ActuatorChangeCommand:
+- GetNodeCommand: Get info on specific NODE.
+- GetNodeIdCommand: Get id for specific NODE.
+- GetSensorDataCommand: Retrieve data from specific SENSOR.
+- TurnOffAllActuatorInNodeCommand: Command to turn off all ACTUATORS.
+- TurnOnAllActuatorInNodeCommand: Command to turn on all ACTUATORS.
+
+---
+
+### Message formats and command types
+TODO - describe the general format of all messages. Then describe specific format for each
+message type in your protocol.
+
+Where:
+- **DST**: Destination (`CONTROL_PANEL` or `GREENHOUSE`).
+- **DST_ID**: Specific ID of the destination (e.g., `Node123`) or `ALL` for broadcast.
+- **DATA_TYPE**: Type of the message (e.g., `COMMAND`, `RESPONSE`).
+- **COMMAND**: The command type.
+- **PARAMS**: Command-specific parameters, separated by commas if multiple.
+
+#### **1. ActuatorChangeCommand**
+**Purpose**: Change the state of a specific actuator.
+
+**Format**:
+DST;DST_ID;COMMAND;ACTUATOR_CHANGE;ACTUATOR_ID,STATE
+
+#### **2. GetNodeCommand**
+**Purpose**: Retrieve information about a specific node
+
+**Format**: DST;DST_ID;COMMAND;GET_NODE
+
+#### **3. GetNodeIdCommand**
+**Purpose**: Retrieve the ID of a specific node.
+
+**Format**: DST;DST_ID;COMMAND;GET_NODE_ID
+
+#### **4. GetSensorDataCommand**
+**Purpose**: Retrieve data from a specific sensor.
+
+**Format**: DST;DST_ID;COMMAND;GET_SENSOR_DATA;SENSOR_ID
+
+#### **5. TurnOffAllActuatorInNodeCommand**
+**Purpose**: Turn off all actuators in a specific node.
+
+**Format**: DST;DST_ID;COMMAND;TURN_OFF_ALL_ACTUATORS
+
+#### **6. TurnOnAllActuatorInNodeCommand**
+**Purpose**: Turn on all actuators in a specific node.
+
+**Format**: DST;DST_ID;COMMAND;TURN_ON_ALL_ACTUATORS
+
 ### Message Flow
 
 #### **Control Panel**
@@ -171,25 +232,6 @@ The following delimiters are defined:
 5. **`BODY_SENSOR_SEPARATOR`** (`"¤"`)
     - Used to separate **sensor data** in the body of a message.
     - Example: `Temperature¤Humidity¤Soil Moisture`
-
-### Command types
-
-COMMON COMMANDS
-
-- ClientIdentificationTransmission: Represents a transmission for client identification.
-
-GREENHOUSE COMMANDS
-
-- GreenhouseCommand: Abstract class representing a command from GREENHOUSE.
-
-- ActuatorChangeCommand: 
-- GetNodeCommand: Get info on specific NODE.
-- GetNodeIdCommand: Get id for specific NODE.
-- GetSensorDataCommand: Retrieve data from specific SENSOR.
-- TurnOffAllActuatorInNodeCommand: Command to turn off all ACTUATORS.
-- TurnOnAllActuatorInNodeCommand: Command to turn on all ACTUATORS.
-
----
 
 ## Errors and Handling
 ### **Examples of Errors**
