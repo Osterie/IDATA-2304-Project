@@ -21,13 +21,13 @@ distributed application.
 
 TODO - what transport-layer protocol do you use? TCP? UDP? What port number(s)? Why did you choose this transport layer protocol?
 - TCP 
-- Port number: 50500
+- Port number: 50500, if already in use, tries a different port number. Increasing by 20 every time if it fails to connect to given port number.
 - We chose TCP because it is a connection-oriented protocol, which means that it guarantees the delivery of packets to the destination node. This is important for our system because we want to make sure that all messages are delivered to the destination node.
 
 
 
 ## The architecture
-
+![ArchitectureOgApplication](img.png)
 **Clients**
 Clients are the nodes that initiate communication with the server to send requests and receive responses.
 
@@ -66,17 +66,30 @@ Greenhouse nodes connect to the intermediary server, which routes messages betwe
 
 The greenhouse cannot push information.
 
-<!-- TODO - describe what each network node does and when. Some periodic events? Some reaction on incoming packets? Perhaps split into several subsections, where each subsection describes one node type (For example: one subsection for sensor/actuator nodes, one for control panel nodes). -->
-
 ## Connection and state
 
 The protocol used is connection-oriented, as it uses TCP, which establishes a connection between the client and the server before sending data.
-The protocol is stateful, as the server maintains the stata of the nodes connected to it.
+
+The protocol is stateful, as the server maintains the state of the nodes connected to it throughout the session.
+The state includes information such as Node ID, ClientTypes, and the connection status.
 
 ## Types, constants
+Client constants:
+- CONTROL_PANEL : Represents the control panel client, established with the value `CONTROL_PANEL`.
+- GREENHOUSE : Represents the greenhouse client, established with the value `GREENHOUSE`.
+- SERVER : Represents the intermediary server, established with the value `SERVER`.
 
-TODO - Do you have some specific value types you use in several messages? They you can describe 
-them here.
+- BROADCAST : Represents a broadcast message to all clients established with the value `BROADCAST`.
+- NOT_PREDEFINED : Represents a specific client ID, established with the value `?`.
+- NONE : Represents no client ID, established with the value `NONE`.
+
+Delimiters;
+- HEADER_BODY : Delimiter between the header and body of a message, established with the value `-`.
+- HEADER_FIELD : Delimiter between fields in the header of a message, established with the value `;`.
+- BODY_FIELD : Delimiter between fields in the body of a message, defaulting to the header delimiter.
+- BODY_FIELD_PARAMETERS : Delimiter between a fields parameters in the body of a message, established 
+with the value `,`.
+- BODY_SENSOR_SEPARATOR : Delimiter between sensor data in the body of a message, established with the value `¤`.
 
 ## Message Format
 All messages consist of the following parts:
@@ -87,10 +100,14 @@ All messages consist of the following parts:
 - `DATA_TYPE`: Specifies the type of message (e.g., `COMMAND`, `RESPONSE`)
 
 ### **Body**
-- Contains the command or message payload.
-- TODO: Transmission
-- Greenhouse and general command
-- Response and error response
+- Contains the transmission. A transmission can be either a response or a command. A response is a reply to a command, while a command is an instruction to execute an action. The response will contain some data for the executed command, and information about the success or failure of the command. Additionally the response will contain information about what command was executed.
+
+- Transmission:
+    - `COMMAND`: A command to execute an action.
+      - `GREENHOUSE_COMMAND`: A command for a greenhouse node.
+    - `RESPONSE`: A response to a command.
+      - `SUCCESS`: The command was executed successfully.
+      - `FAILURE`: The command failed to execute.
 
 ### **Example Message**
 
@@ -185,7 +202,16 @@ GREENHOUSE COMMANDS
 
 ### Error messages
 
-TODO - describe the possible error messages that nodes can send in your system.
+- **SERVER_NOT_RUNNING**: 
+- Indicates that the server is not running.
+
+
+- **Unknown Command**:
+- Indicates that the client has received an unknown command.
+
+
+- **INTEGRITY_ERROR**:
+- Indicates that the message integrity check failed.
 
 ---
 

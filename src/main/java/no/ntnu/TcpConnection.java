@@ -5,19 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.security.*;
-import java.util.Base64;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import no.ntnu.constants.Endpoints;
-import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
 import no.ntnu.messages.*;
 import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
-import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
 import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.tools.Logger;
-import no.ntnu.tools.encryption.*;
 
 public abstract class TcpConnection {
 
@@ -34,10 +28,6 @@ public abstract class TcpConnection {
   private boolean isReconnecting = false;
   private static final int MAX_RETRIES = 5;
   private static final int RETRY_DELAY_MS = 1000; // Time between retries
-
-  // Retrieves keys from keyholder.
-  private PublicKey recipientPublicKey = PublicKeyHolder.getPublicKey();
-  private PrivateKey recipientPrivateKey = PublicKeyHolder.getPrivateKey();
 
   protected TcpConnection() {
     this.messageQueue = new LinkedList<>();
@@ -314,58 +304,13 @@ public abstract class TcpConnection {
     try {
       if (this.socketReader != null) {
         clientRequest = this.socketReader.readLine();
-        Logger.info("MESSAGE IS: " + clientRequest);
-        // Decrypt message
-        clientRequest = this.decryptMessage(clientRequest);
       } else {
         Logger.error("Socket reader is null");
       }
     } catch (IOException e) {
       Logger.error("Could not receive client request: " + e.getMessage());
     }
-
-    Logger.info("MESSAGE IS: " + clientRequest);
     return clientRequest;
-  }
-
-  /**
-   * This method decrypts encryped message string.
-   *
-   * @param message message to be decrypted.
-   * @return the decrypted message.
-   */
-  protected String decryptMessage(String message) {
-    String encryptedMessage = message;
-
-    if (encryptedMessage != null) {
-      // Decrypts message
-      try {
-        //encryptedMessage = MessageEncryptor.decryptStringMessage(encryptedMessage, recipientPrivateKey);
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }
-
-    return encryptedMessage;
-  }
-
-  /**
-   * This method returns the encrypted string of input message.
-   *
-   * @param message message to be encrypted.
-   * @return encrypted message.
-   */
-  protected String encryptMessage(Message message) {
-    // Encrypt original body content
-    String encryptedMessage = message.toString();
-
-    try {
-      //encryptedMessage = MessageEncryptor.encryptMessage(message, recipientPublicKey);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-
-    return encryptedMessage;
   }
 
   /**
@@ -378,8 +323,6 @@ public abstract class TcpConnection {
     if (serverMessage != null) {
       Message message = this.parseMessage(serverMessage);
 
-      // Creates hash from body content
-      MessageHasher.addHashedContentToMessage(message);
       // Extract hash from created header
       String hashedContentFromHeader = message.getHeader().getHashedContent();
 
@@ -389,11 +332,9 @@ public abstract class TcpConnection {
       // Match the two hashes
       if (hashedContentFromHeader.equals(receivedMessageHash)) {
         // No integrity loss.
-        Logger.info("No integrity loss.");
-      }
-      else{
+      } else {
         // Integrity loss
-        // Send message again. 
+        // Send message again.
         this.handleIntegrityError(message);
         return;
       }
@@ -448,18 +389,12 @@ public abstract class TcpConnection {
    */
   public synchronized void sendMessage(Message message) {
 
-    // Adds hashed version of body content to header,
-    Message originalMessage = MessageHasher.addHashedContentToMessage(message);
-
-    // Encrypts message
-    String encryptedMessage = this.encryptMessage(originalMessage);
-
     if (isConnected && socketWriter != null) {
-      socketWriter.println(encryptedMessage);
+      socketWriter.println(message);
 
     } else {
       Logger.error("Unable to send message, socket is not connected.");
-      messageQueue.offer(originalMessage); // Buffer the message
+      messageQueue.offer(message); // Buffer the message
       reconnect(this.host, this.port);
     }
   }
@@ -508,46 +443,42 @@ public abstract class TcpConnection {
     }
   }
 
-    /**
-     * Handles a message received from the client. This method is final to
-     * ensure consistent handling logic across all subclasses.
-     * Subclasses can override `handleSpecificMessage` to provide custom logic.
-     */
-    protected final void handleMessage(Message message) {
-      // Common handling logic
-      if (message.getBody().getTransmission() instanceof SuccessResponse) {
-          SuccessResponse response = (SuccessResponse) message.getBody().getTransmission();
+  /**
+   * Handles a message received from the client. This method is final to
+   * ensure consistent handling logic across all subclasses.
+   * Subclasses can override `handleSpecificMessage` to provide custom logic.
+   */
+  protected final void handleMessage(Message message) {
+    // Common handling logic
+    if (message.getBody().getTransmission() instanceof SuccessResponse) {
+      SuccessResponse response = (SuccessResponse) message.getBody().getTransmission();
 
-          Transmission transmission = response.getTransmission();
+      Transmission transmission = response.getTransmission();
 
-          if (transmission instanceof ClientIdentificationTransmission) {
-              ClientIdentificationTransmission clientIdentificationTransmission =
-                      (ClientIdentificationTransmission) transmission;
+      if (transmission instanceof ClientIdentificationTransmission) {
+        ClientIdentificationTransmission clientIdentificationTransmission = (ClientIdentificationTransmission) transmission;
 
-              // Common logic for handling client identification
-              handleClientIdentification(clientIdentificationTransmission);
-          }
+        // Common logic for handling client identification
+        handleClientIdentification(clientIdentificationTransmission);
       }
+    }
 
-      // Delegate to subclass for specific logic
-      handleSpecificMessage(message);
+    // Delegate to subclass for specific logic
+    handleSpecificMessage(message);
   }
 
-      /**
-     * Processes the client identification transmission. This is shared logic
-     * that applies to all subclasses.
-     */
-    private void handleClientIdentification(ClientIdentificationTransmission transmission) {
-      // Perform common handling logic for client identification
-      // e.g., publicKey = transmission.getPublicKey();
-      // TODO her
+  /**
+   * Processes the client identification transmission. This is shared logic
+   * that applies to all subclasses.
+   */
+  private void handleClientIdentification(ClientIdentificationTransmission transmission) {
+    // Perform common handling logic for client identification
   }
 
-
-      /**
-     * Allows subclasses to implement their specific handling logic.
-     *
-     * @param message The message to handle
-     */
-    protected abstract void handleSpecificMessage(Message message);
+  /**
+   * Allows subclasses to implement their specific handling logic.
+   *
+   * @param message The message to handle
+   */
+  protected abstract void handleSpecificMessage(Message message);
 }
