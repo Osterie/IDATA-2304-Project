@@ -30,19 +30,22 @@ import no.ntnu.tools.Logger;
 public class ControlPanelApplication extends Application
         implements GreenhouseEventListener, CommunicationChannelListener {
 
+  // Window dimensions
   private static final int WINDOW_WIDTH = 500;
   private static final int WINDOW_HEIGHT = 440;
 
+  // Static fields for the logic and communication channel
   private static ControlPanelLogic logic;
   private static ControlPanelCommunicationChannel channel;
 
+  //Main scene and node manager
   private Scene mainScene;
   private NodeManager nodeManager;
 
   // Error window
   ErrorWindow errorWindow = new ErrorWindow();
 
-  // Info window
+  // Information window
   InformationWindow informationWindow = new InformationWindow();
 
   /**
@@ -86,6 +89,11 @@ public class ControlPanelApplication extends Application
     handleInitialChannelState();
   }
 
+  /**
+   * Validates that the communication channel is properly initialized.
+   *
+   * @throws IllegalStateException if the communication channel is not set.
+   */
   private void validateChannel() {
     if (channel == null) {
       throw new IllegalStateException(
@@ -93,12 +101,22 @@ public class ControlPanelApplication extends Application
     }
   }
 
+  /**
+   * Configures the primary stage with dimensions and a title.
+   *
+   * @param stage The primary stage to configure.
+   */
   private void configureStage(Stage stage) {
     stage.setMinWidth(WINDOW_WIDTH);
     stage.setMinHeight(WINDOW_HEIGHT);
     stage.setTitle("Control Panel");
   }
 
+  /**
+   * Sets up the root layout for the application.
+   *
+   * @return A VBox containing the root layout.
+   */
   private VBox setupRootLayout() {
     VBox rootLayout = new VBox();
 
@@ -110,12 +128,22 @@ public class ControlPanelApplication extends Application
     return rootLayout;
   }
 
+  /**
+   * Creates the ribbon for the application.
+   *
+   * @return A Node representing the ribbon.
+   */
   private Node createRibbon() {
     Node ribbon = Ribbon.createRibbon(this::refreshControlPanel);
     ribbon.getStyleClass().add("ribbon");
     return ribbon;
   }
 
+  /**
+   * Sets up the NodeManager for managing nodes in the UI.
+   *
+   * @param rootLayout The root layout to which the NodeManager will add components.
+   */
   private void setupNodeManager(VBox rootLayout) {
     ScrollPane scrollPane = setupScrollPane();
     TabPane tabPane = setupTabPane();
@@ -128,6 +156,11 @@ public class ControlPanelApplication extends Application
     }, () -> rootLayout.getChildren().set(1, scrollPane), channel);
   }
 
+  /**
+   * Creates ScrollPane for the application.
+   *
+   * @return A ScrollPane instance.
+   */
   private ScrollPane setupScrollPane() {
     ScrollPane scrollPane = new ScrollPane();
     scrollPane.getStyleClass().add("scroll-pane");
@@ -135,12 +168,23 @@ public class ControlPanelApplication extends Application
     return scrollPane;
   }
 
+  /**
+   * Creates TabPane for application.
+   *
+   * @return A TabPane instance.
+   */
   private TabPane setupTabPane() {
     TabPane tabPane = new TabPane();
     tabPane.getStyleClass().add("tab-pane");
     return tabPane;
   }
 
+  /**
+   * Sets up the main scene for the application.
+   *
+   * @param stage      The primary stage for the application.
+   * @param rootLayout The root layout to set in the scene.
+   */
   private void setupMainScene(Stage stage, VBox rootLayout) {
     mainScene = new Scene(rootLayout, WINDOW_WIDTH, WINDOW_HEIGHT);
     mainScene.getStylesheets().add(getClass().getResource("/css/controlpanel.css").toExternalForm());
@@ -148,11 +192,18 @@ public class ControlPanelApplication extends Application
     stage.show();
   }
 
+  /**
+   * Adds listeners to the control panel logic for handling events.
+   */
   private void addLogicListeners() {
     logic.addListener(this);
     logic.setCommunicationChannelListener(this);
   }
 
+  /**
+   * Handles the initial state of the communication channel.
+   * If the channel is not connected, the logic is notified.
+   */
   private void handleInitialChannelState() {
     if (!channel.isConnected()) {
       logic.onCommunicationChannelClosed();
