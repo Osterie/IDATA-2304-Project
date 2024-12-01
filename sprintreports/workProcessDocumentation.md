@@ -26,15 +26,6 @@ For completing the work process documentation, everyone was assigned different t
 
 Each sprint has a short retrospective at the end of the sprint. This contains information about what went well, what could be improved, and actions for the next sprint. This is to ensure that we learn from our mistakes and improve our workflow for the next sprint.
 
-
-- [ ] KNUT 3. How was the work broken down into issues? Remember the principles you learned about issue
-definition in the System development course. Issues should be small, have descriptive names,
-clear "definition of done", etc. For example, an issue like "improve GUI" is a bad issue. What
-does it mean? When is it complete?
-- [ ] DANIEL 4. How the work was progressing - what did you accomplish in each sprint? Which issues were
-planned, and which ones were completed?
-- [x] SEBASTIAN 5. A short retrospective after each sprint - what went well, and how can you improve?
-
 It is suggested that you keep the sprint documentation in Git as well, but you are allowed to use
 Wiki pages, Jira or other tools if you want.
 
