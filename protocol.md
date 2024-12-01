@@ -78,9 +78,22 @@ TODO - is your communication protocol connection-oriented or connection-less? Is
 stateless? 
 
 ## Types, constants
+Client constants:
+- CONTROL_PANEL : Represents the control panel client, established with the value `CONTROL_PANEL`.
+- GREENHOUSE : Represents the greenhouse client, established with the value `GREENHOUSE`.
+- SERVER : Represents the intermediary server, established with the value `SERVER`.
 
-TODO - Do you have some specific value types you use in several messages? They you can describe 
-them here.
+- BROADCAST : Represents a broadcast message to all clients established with the value `BROADCAST`.
+- NOT_PREDEFINED : Represents a specific client ID, established with the value `?`.
+- NONE : Represents no client ID, established with the value `NONE`.
+
+Delimiters;
+- HEADER_BODY : Delimiter between the header and body of a message, established with the value `-`.
+- HEADER_FIELD : Delimiter between fields in the header of a message, established with the value `;`.
+- BODY_FIELD : Delimiter between fields in the body of a message, defaulting to the header delimiter.
+- BODY_FIELD_PARAMETERS : Delimiter between a fields parameters in the body of a message, established 
+with the value `,`.
+- BODY_SENSOR_SEPARATOR : Delimiter between sensor data in the body of a message, established with the value `¤`.
 
 ## Message Format
 All messages consist of the following parts:

@@ -175,7 +175,7 @@ For each of the design choices provide a short justification: why did you choose
 - [ ] KNUT. 7.  The type of your protocol:
 - [ ] KNUT. • Is your protocol connection-oriented or connection-less?
 - [ ] KNUT. • Is the protocol state-full or state-less?
-- [ ] DANIEL 8.  The different types and special values (constants) used
+- [x] DANIEL 8.  The different types and special values (constants) used
 - [x] TOBIAS 9.  The message format:
 - [x] TOBIAS ? • The allowed message types (sensor messages, command messages)
 - [x] TOBIAS • The type of marshalling used (fixed size, separators, TLV?)
@@ -345,7 +345,7 @@ For completing the work process documentation, everyone was assigned different t
 definition in the System development course. Issues should be small, have descriptive names,
 clear "definition of done", etc. For example, an issue like "improve GUI" is a bad issue. What
 does it mean? When is it complete?
-- [ ] DANIEL 4. How the work was progressing - what did you accomplish in each sprint? Which issues were
+- [x] DANIEL 4. How the work was progressing - what did you accomplish in each sprint? Which issues were
 planned, and which ones were completed?
 - [x] SEBASTIAN 5. A short retrospective after each sprint - what went well, and how can you improve?
 
@@ -359,9 +359,9 @@ Wiki pages, Jira or other tools if you want.
 - [ ] SEBASTIAN 2. The information, materials, approach you used, and the research you did. (1min)
 - [X] KNUT 3. The work process: how did you organize work throughout the semester? Role of each team
 member? How did you work with the sprints? Were there any general themes for the sprints, phases of the project? (1min)
-- [ ] DANIEL 4. The architecture of your solution. What nodes are communicating? What is the responsibility
+- [x] DANIEL 4. The architecture of your solution. What nodes are communicating? What is the responsibility
 of each? Preferably, include model’s diagrams here. (1-2min)
-- [ ] TOBIAS OG DANIEL 5. Your communication protocol. Summarize it in a clear yet concise way. (3-4min)
+- [x] TOBIAS OG DANIEL 5. Your communication protocol. Summarize it in a clear yet concise way. (3-4min)
 
 - [ ] ALLE TODO 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
 
