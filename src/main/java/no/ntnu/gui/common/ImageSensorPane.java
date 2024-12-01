@@ -1,7 +1,6 @@
 package no.ntnu.gui.common;
 
 import java.awt.image.BufferedImage;
-
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -14,8 +13,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import no.ntnu.greenhouse.sensor.ImageSensorReading;
 import no.ntnu.greenhouse.sensor.SensorReading;
-import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
-import no.ntnu.gui.common.PopUpWindows.InformationWindow;
+import no.ntnu.gui.common.popupwindows.ErrorWindow;
+import no.ntnu.gui.common.popupwindows.InformationWindow;
 import no.ntnu.tools.Logger;
 
 /**
@@ -36,7 +35,7 @@ import no.ntnu.tools.Logger;
  */
 public class ImageSensorPane extends Pane {
 
-  private ImageSensorReading sensorReading; 
+  private ImageSensorReading sensorReading;
   private ImageView thumbnail;
 
   // Error window
@@ -44,52 +43,51 @@ public class ImageSensorPane extends Pane {
 
   // Info window
   InformationWindow informationWindow = new InformationWindow();
-    
-    /**
-     * Constructs an ImageSensorPane with the specified ImageSensorReading.
-     *
-     * @param sensorReading the ImageSensorReading to be used by this pane
-     */
-    public ImageSensorPane(ImageSensorReading sensorReading) {
-        this.sensorReading = sensorReading;
-    }
-
-    /**
-     * Retrieves the current sensor reading.
-     *
-     * @return the current SensorReading object.
-     */
-    public SensorReading getSensorReading() {
-        return sensorReading;
-    }
-
-    /**
-     * Retrieves the thumbnail image view.
-     *
-     * @return the ImageView representing the thumbnail.
-     */
-    public ImageView getThumbnail() {
-        return thumbnail;
-    }
 
   /**
-   * Creates a content node displaying an image from the given ImageSensorReading.
-   * If the image is null, a label indicating "No image found" is returned.
-   * Otherwise, a thumbnail of the image is created and displayed with a click listener
-   * to open the full image in a new window.
+   * Constructs an ImageSensorPane with the specified ImageSensorReading.
    *
-   * @param sensorreading the ImageSensorReading containing the image to display
-   * @return a Node containing the image thumbnail and label, or a label indicating no image found
+   * @param sensorReading the ImageSensorReading to be used by this pane
+   */
+  public ImageSensorPane(ImageSensorReading sensorReading) {
+    this.sensorReading = sensorReading;
+  }
+
+  /**
+   * Retrieves the current sensor reading.
+   *
+   * @return the current SensorReading object.
+   */
+  public SensorReading getSensorReading() {
+    return sensorReading;
+  }
+
+  /**
+   * Retrieves the thumbnail image view.
+   *
+   * @return the ImageView representing the thumbnail.
+   */
+  public ImageView getThumbnail() {
+    return thumbnail;
+  }
+
+  /**
+   * Creates the content for the ImageSensorPane.
+   * This method converts the image to a JavaFX Image and creates a thumbnail
+   * ImageView with a click listener to open the full image in a new window.
+   *
+   * @param sensorReading the ImageSensorReading to be displayed
+   * @return a Node containing the image thumbnail and a label
    */
   public Node createContent(ImageSensorReading sensorReading) {
-    
+
     BufferedImage bufferedImage = sensorReading.getImage();
     if (bufferedImage == null) {
-        Logger.error("Buffered image is null");
+      Logger.error("Buffered image is null");
 
-        informationWindow.showAlert("Image file", "No image found!");
+      informationWindow.showAlert("Image file", "No image found!");
 
-        return new Label("No image found");
+      return new Label("No image found");
     }
 
     // Convert to JavaFX Image

@@ -28,7 +28,7 @@ TODO - what transport-layer protocol do you use? TCP? UDP? What port number(s)? 
 
 
 ## The architecture
-![ArchitectureOgApplication](img.png)
+![ArchitectureOgApplication](architecture.png)
 **Clients**
 Clients are the nodes that initiate communication with the server to send requests and receive responses.
 
@@ -309,8 +309,6 @@ example scenario could be as follows:
 ---
 
 The server gets started, and the server listens for clients.
-The server receives an identification message from the greenhouse node and stores the node in a list of nodes.
-
 Greenhouse nodes start up with one node with a temperature sensor and a heater actuator.
 The greenhouse establishes a connection with the server, the greenhouse connects to the port number
 The greenhouse sends an identification message to the server.
@@ -318,11 +316,11 @@ Server receives identification message and stores the node in a list of nodes.
 Control panel starts up and connects to the server.
 The control panel sends an identification message to the server.
 Server receives identification message and stores the node in a list of nodes.
-Control panel sends a getSensorID command to the server.
+Control panel sends a message that holds a header with the destination as the greenhouse and the id of the greenhouse 
+node that the command is intended for and the hashed version of the body. While the body holds the command to get sensorId.
 Server receives the getSensorID command. 
-Server stores the receiver client and the id of the sensor that was in the header the command from Control panel.
-Server switches the receiver client to Control panel and the id in the header to the id of the sensor that sent the 
-command.
+Server checks who the receiver client is and switches the receiver client to Control panel and the id in the header 
+to the id of the sensor that sent the message.
 Server sends the getSensorID command to the greenhouse node with the updated header.
 Greenhouse node receives the getSensorID command and parses the command.
 Greenhouse fetches the sensor of with the corresponding id and puts it in a response. 

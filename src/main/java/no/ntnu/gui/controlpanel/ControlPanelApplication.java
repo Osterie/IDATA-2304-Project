@@ -15,9 +15,8 @@ import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
 import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.controlpanel.SensorActuatorNodeInfo;
 import no.ntnu.greenhouse.sensor.SensorReading;
-import no.ntnu.gui.common.PopUpWindows.AlertWindow;
-import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
-import no.ntnu.gui.common.PopUpWindows.InformationWindow;
+import no.ntnu.gui.common.popupwindows.ErrorWindow;
+import no.ntnu.gui.common.popupwindows.InformationWindow;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
 import no.ntnu.intermediaryserver.server.ServerConfig;
 import no.ntnu.listeners.common.CommunicationChannelListener;
@@ -192,8 +191,8 @@ public class ControlPanelApplication extends Application
    */
   private void setupMainScene(Stage stage, VBox rootLayout) {
     mainScene = new Scene(rootLayout, WINDOW_WIDTH, WINDOW_HEIGHT);
-    mainScene.getStylesheets().add(getClass().getResource
-            ("/css/controlpanel.css").toExternalForm());
+    mainScene.getStylesheets().add(getClass().getResource(
+        "/css/controlpanel.css").toExternalForm());
     stage.setScene(mainScene);
     stage.show();
   }
@@ -293,6 +292,6 @@ public class ControlPanelApplication extends Application
   public void onCommunicationChannelClosed() {
     InformationWindow infoWindow = new InformationWindow();
     infoWindow.showAlert("Communication", "The communication to the server has been lost, "
-            + "if you just refreshed, the connection will re-establish.");
+        + "if you just refreshed, the connection will re-establish.");
   }
 }

@@ -1,7 +1,6 @@
 package no.ntnu.gui.common;
 
 import java.util.Map;
-
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -14,7 +13,7 @@ import no.ntnu.greenhouse.actuator.Actuator;
 /**
  * The ActuatorComponentFactory class provides methods to create UI components
  * for actuators.
- * 
+ *
  * <p>
  * Methods:
  * </p>
@@ -44,7 +43,8 @@ public class ActuatorComponentFactory {
    * @param actuatorActive a map that holds the active state of each actuator
    * @return a Node containing the label and checkbox for the actuator
    */
-  public static Node createActuatorComponent(Actuator actuator, Map<Actuator, SimpleBooleanProperty> actuatorActive) {
+  public static Node createActuatorComponent(Actuator actuator,
+                                             Map<Actuator, SimpleBooleanProperty> actuatorActive) {
     HBox box = new HBox();
     box.setSpacing(5);
 
@@ -76,15 +76,14 @@ public class ActuatorComponentFactory {
   /**
    * Creates a CheckBox for an Actuator and binds its selected property to a
    * SimpleBooleanProperty.
-   * The CheckBox's selected state is synchronized with the Actuator's state.
-   * 
-   * @param actuator       The Actuator for which the CheckBox is created.
-   * @param actuatorActive A map to store the SimpleBooleanProperty associated
-   *                       with the Actuator.
-   * @return The created CheckBox.
+   *
+   * @param actuator       the actuator for which the checkbox is created
+   * @param actuatorActive a map that holds the active state of each actuator
+   * @return a CheckBox for the actuator
    */
   private static CheckBox createActuatorCheckbox(Actuator actuator,
-      Map<Actuator, SimpleBooleanProperty> actuatorActive) {
+                                                 Map<Actuator,
+                                                     SimpleBooleanProperty> actuatorActive) {
     CheckBox checkbox = new CheckBox();
     SimpleBooleanProperty isSelected = new SimpleBooleanProperty(actuator.isOn());
     actuatorActive.put(actuator, isSelected); // Store the property for later updates.
