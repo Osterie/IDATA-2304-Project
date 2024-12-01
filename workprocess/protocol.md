@@ -308,17 +308,18 @@ example scenario could be as follows:
 
 ---
 
-The server gets started, and the server listens for clients.
-Greenhouse nodes start up with one node with a temperature sensor and a heater actuator.
-The greenhouse establishes a connection with the server, the greenhouse connects to the port number
-The greenhouse sends an identification message to the server.
+* The server gets started, and the server listens for clients.
+* Greenhouse nodes start up with one node with a temperature sensor and a heater actuator.
+* The greenhouse establishes a connection with the server, the greenhouse connects to the port number
+* The greenhouse sends an identification message to the server.
+* Server receives identification message and stores the node in a list of nodes.
+* Control panel starts up and connects to the server.
+* The control panel sends an identification message to the server.
 Server receives identification message and stores the node in a list of nodes.
-Control panel starts up and connects to the server.
-The control panel sends an identification message to the server.
-Server receives identification message and stores the node in a list of nodes.
-Control panel sends a message that holds a header with the destination as the greenhouse and the id of the greenhouse 
+Control panel sends a message that holds a header with the destination as the client type witch is greenhouse and with 
+broadcast as the id. Broadcast is a special value witch the server will interpret.
 node that the command is intended for and the hashed version of the body. While the body holds the command to get sensorId.
-Server receives the getSensorID command. 
+Server receives the getSensorID command.
 Server checks who the receiver client is and switches the receiver client to Control panel and the id in the header 
 to the id of the sensor that sent the message.
 Server sends the getSensorID command to the greenhouse node with the updated header.
