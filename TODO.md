@@ -16,7 +16,7 @@
 
 - [x] SEBASTIAN Refactor SensorReadingParser.java
 
-- [X] KNUT pass på god kode for gui controlpanel.
+- [ ] KNUT pass på god kode for gui controlpanel (start metoden gjør meget mye.).
 - [x] ADRIAN Ensure high quality code for all classes under controlpanel folder (MISSING SOME JAVADOC STILL (tyty))
 - [x] ADRIAN Ensure high quality code for all classes under intermediary server folder
   - [x] ADRIAN clienthandler folder
