@@ -8,7 +8,7 @@ Project theme: a distributed smart greenhouse application, consisting of:
 * Sensor-actuator nodes
 * Visualization nodes
 
-See protocol description in [protocol.md](protocol.md).
+See protocol description in [protocol.md](workprocess/protocol.md).
 
 ## Getting started
 

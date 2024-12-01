@@ -218,6 +218,6 @@ public class ClientHandler extends TcpConnection implements Runnable {
         }
 
         this.logic.setClientIdentification(new ClientIdentification(clientType, clientId));
-        return new SuccessResponse(command, "Identification successful"); // TODO send key here
+        return new SuccessResponse(command, "Identification successful");
     }
 }

@@ -21,13 +21,13 @@ distributed application.
 
 TODO - what transport-layer protocol do you use? TCP? UDP? What port number(s)? Why did you choose this transport layer protocol?
 - TCP 
-- Port number: 50500
+- Port number: 50500, if already in use, tries a different port number. Increasing by 20 every time if it fails to connect to given port number.
 - We chose TCP because it is a connection-oriented protocol, which means that it guarantees the delivery of packets to the destination node. This is important for our system because we want to make sure that all messages are delivered to the destination node.
 
 
 
 ## The architecture
-
+![ArchitectureOgApplication](img.png)
 **Clients**
 Clients are the nodes that initiate communication with the server to send requests and receive responses.
 
@@ -66,8 +66,6 @@ Greenhouse nodes connect to the intermediary server, which routes messages betwe
 
 The greenhouse cannot push information.
 
-<!-- TODO - describe what each network node does and when. Some periodic events? Some reaction on incoming packets? Perhaps split into several subsections, where each subsection describes one node type (For example: one subsection for sensor/actuator nodes, one for control panel nodes). -->
-
 ## Connection and state
 
 The protocol used is connection-oriented, as it uses TCP, which establishes a connection between the client and the server before sending data.
@@ -102,10 +100,14 @@ All messages consist of the following parts:
 - `DATA_TYPE`: Specifies the type of message (e.g., `COMMAND`, `RESPONSE`)
 
 ### **Body**
-- Contains the command or message payload.
-- TODO: Transmission
-- Greenhouse and general command
-- Response and error response
+- Contains the transmission. A transmission can be either a response or a command. A response is a reply to a command, while a command is an instruction to execute an action. The response will contain some data for the executed command, and information about the success or failure of the command. Additionally the response will contain information about what command was executed.
+
+- Transmission:
+    - `COMMAND`: A command to execute an action.
+      - `GREENHOUSE_COMMAND`: A command for a greenhouse node.
+    - `RESPONSE`: A response to a command.
+      - `SUCCESS`: The command was executed successfully.
+      - `FAILURE`: The command failed to execute.
 
 ### **Example Message**
 
@@ -210,8 +212,6 @@ GREENHOUSE COMMANDS
 
 - **INTEGRITY_ERROR**:
 - Indicates that the message integrity check failed.
-
-TODO - describe the possible error messages that nodes can send in your system.
 
 ---
 
