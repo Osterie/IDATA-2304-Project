@@ -20,7 +20,7 @@ public class Ribbon {
    * @return A VBox containing the ribbon components.
    */
   public static VBox createRibbon(Runnable refreshAction) {
-    MenuBar ribbonMenuBar = new MenuBar();
+
 
     // Create the Options menu
     Menu fileMenu = new Menu("Options");
@@ -38,6 +38,7 @@ public class Ribbon {
     exitItem.setOnAction(event -> Platform.exit());
 
     //Adds the items to the menu bar
+    MenuBar ribbonMenuBar = new MenuBar();
     fileMenu.getItems().addAll(refreshItem, exitItem);
     ribbonMenuBar.getMenus().add(fileMenu);
 

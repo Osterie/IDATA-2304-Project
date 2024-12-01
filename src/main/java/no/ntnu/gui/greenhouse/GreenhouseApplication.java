@@ -7,7 +7,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import no.ntnu.greenhouse.GreenhouseSimulator;
 import no.ntnu.greenhouse.SensorActuatorNode;
-import no.ntnu.gui.common.PopUpWindows.ErrorWindow;
+import no.ntnu.gui.common.popupwindows.ErrorWindow;
 import no.ntnu.listeners.greenhouse.NodeStateListener;
 import no.ntnu.tools.Logger;
 
