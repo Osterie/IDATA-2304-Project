@@ -147,16 +147,13 @@ Sprint stenographer: Tobias
     - Implement Message and Command interfaces/classes.
     - Create different Message/Command subclasses.
     - Send messages between intermediary server and clients.
-    - Finish protocol.
-    - Finish video.
+    - Visualize charts.
 
 - **Completed Work:**
     - Created a comprehensive TODO list and distributed tasks.
     - Enhanced functionality for the control panel to handle actuator states and sensor readings.
     - Added Base64 image encoder and corresponding test classes.
     - Added tests for cipher encryption.
-    - Protocol finished.
-    - Video finished.
 
 - **Carried Over Work:**
     - Unfinished Story Points: [TBD]
@@ -209,7 +206,7 @@ Sprint stenographer: Tobias
 - Focus on completing messaging functionality.
 - Improve communication on cross-functional dependencies.
 
-# **Sprint Report**
+# **Sprint Report 3**
 
 Sprint master: Tobias
 Sprint stenographer: Knut Olav
