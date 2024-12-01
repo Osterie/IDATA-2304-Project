@@ -87,7 +87,7 @@ public class MessageEncryptor {
       decryptedMessage = HybridRSAEncryptor.decryptWithAES(element1, aesKey);
 
     } else {
-      System.out.println(encryptedMessageString);
+      // System.out.println(encryptedMessageString);
       System.out.println("The input does not have exactly 3 elements separated by '-'.");
     }
 

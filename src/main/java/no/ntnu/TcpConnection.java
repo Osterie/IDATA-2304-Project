@@ -425,13 +425,13 @@ public abstract class TcpConnection {
     recipientPublicKey);
 
     // TODO: Delete sout after showing it works.
-    System.out.println("AFTER ENCRYPTION: " + encryptedMessage2);
+    // System.out.println("AFTER ENCRYPTION: " + encryptedMessage2);
     try {
       encryptedMessage2 = MessageEncryptor.decryptStringMessage(encryptedMessage2, recipientPrivateKey);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    System.out.println("AFTER DECRYPTION: " + encryptedMessage2 + " " + message.toString());
+    // System.out.println("AFTER DECRYPTION: " + encryptedMessage2 + " " + message.toString());
 
     // TODO: This one is replaced with the one over when encryption works.
     Message encryptedMessage = message;
