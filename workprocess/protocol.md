@@ -115,6 +115,8 @@ Result:
 - DST;DST_ID;DATA_TYPE COMMAND
 - GREENHOUSE;AllId;STRING GET_NODE_ID
 
+---
+
 ### Message Types
 
 #### **1. Command Messages**
@@ -132,28 +134,13 @@ Result:
 #### **3. Indetification request**
 - Sent from `GREENHOUSE` and `GREENHOUSE` to `SERVER`
 
-### Command types
-
-COMMON COMMANDS
-
-- ClientIdentificationTransmission: Represents a transmission for client identification.
-
-GREENHOUSE COMMANDS
-
-- GreenhouseCommand: Abstract class representing a command from GREENHOUSE.
-
-- ActuatorChangeCommand:
-- GetNodeCommand: Get info on specific NODE.
-- GetNodeIdCommand: Get id for specific NODE.
-- GetSensorDataCommand: Retrieve data from specific SENSOR.
-- TurnOffAllActuatorInNodeCommand: Command to turn off all ACTUATORS.
-- TurnOnAllActuatorInNodeCommand: Command to turn on all ACTUATORS.
-
----
-
 ### Message formats and command types
 TODO - describe the general format of all messages. Then describe specific format for each
 message type in your protocol.
+
+---
+
+#### Commands
 
 Where:
 - **DST**: Destination (`CONTROL_PANEL` or `GREENHOUSE`).
@@ -162,36 +149,69 @@ Where:
 - **COMMAND**: The command type.
 - **PARAMS**: Command-specific parameters, separated by commas if multiple.
 
-#### **1. ActuatorChangeCommand**
+##### **1. ActuatorChangeCommand**
 **Purpose**: Change the state of a specific actuator.
 
 **Format**:
 DST;DST_ID;COMMAND;ACTUATOR_CHANGE;ACTUATOR_ID,STATE
 
-#### **2. GetNodeCommand**
+##### **2. GetNodeCommand**
 **Purpose**: Retrieve information about a specific node
 
 **Format**: DST;DST_ID;COMMAND;GET_NODE
 
-#### **3. GetNodeIdCommand**
+##### **3. GetNodeIdCommand**
 **Purpose**: Retrieve the ID of a specific node.
 
 **Format**: DST;DST_ID;COMMAND;GET_NODE_ID
 
-#### **4. GetSensorDataCommand**
+##### **4. GetSensorDataCommand**
 **Purpose**: Retrieve data from a specific sensor.
 
 **Format**: DST;DST_ID;COMMAND;GET_SENSOR_DATA;SENSOR_ID
 
-#### **5. TurnOffAllActuatorInNodeCommand**
+##### **5. TurnOffAllActuatorInNodeCommand**
 **Purpose**: Turn off all actuators in a specific node.
 
 **Format**: DST;DST_ID;COMMAND;TURN_OFF_ALL_ACTUATORS
 
-#### **6. TurnOnAllActuatorInNodeCommand**
+##### **6. TurnOnAllActuatorInNodeCommand**
 **Purpose**: Turn on all actuators in a specific node.
 
 **Format**: DST;DST_ID;COMMAND;TURN_ON_ALL_ACTUATORS
+
+---
+
+#### Responses
+
+Where:
+- **DST**: Destination (`CONTROL_PANEL` or `GREENHOUSE`).
+- **DST_ID**: Specific ID of the destination (e.g., `Node123`) or `ALL` for broadcast.
+- **DATA_TYPE**: Type of the original message (e.g., `COMMAND`).
+- **COMMAND**: The command that triggered the response.
+- **RESPONSE_TYPE**: Indicates whether the response is `SUCCESS` or `FAILURE`.
+- **RESPONSE_DATA**: Additional details about the success or failure.
+
+##### **1. SuccessResponse**
+**Purpose**: Indicates that the transmission was executed successfully.
+
+**Format**: DST;DST_ID;DATA_TYPE;COMMAND;SUCCESS;RESPONSE_DATA
+
+**Response**: CONTROL_PANEL;Node123;COMMAND;GET_NODE_ID;SUCCESS;Node123
+
+##### **2. FailureResponse**
+**Purpose**: Indicates that the transmission failed.
+
+**Format**: DST;DST_ID;DATA_TYPE;COMMAND;FAILURE;FAILURE_REASON
+
+**Failure Reasons**:
+- `SERVER_NOT_RUNNING`: The server is not operational.
+- `FAILED_TO_IDENTIFY_CLIENT`: The client could not be identified.
+- `INTEGRITY_ERROR`: There was an error in message integrity.
+
+**Response**: CONTROL_PANEL;Node123;COMMAND;ACTUATOR_CHANGE;FAILURE;INTEGRITY_ERROR
+
+---
 
 ### Message Flow
 
