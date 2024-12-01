@@ -124,25 +124,12 @@ public class ImageSensorReading extends SensorReading{
     }
 
     /**
-     * Get a string representation of the sensor reading.
-     *
-     * @return A string representation of the sensor reading
-     */
-    @Override
-    public String toString() {
-        return "{ type=" + this.type + ", image=" + this.currentImage.toString() + ", fileExtension=" + this.fileExtension + " }";
-    }
-
-    /**
      * Get a human-readable (formatted) version of the current reading.
      * 
      * @return The sensor reading and the unit
      */
     @Override
     public String getFormatted() {
-        // TODO we should have type here since that is done for numeric sensor reading, consistency.
-        // Does not make sense that there is a " = " randomly.
-        // CHANGE TO USE BODY FIELD DELIMITER:
         return this.type.getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.getImageFormatted(this.currentImage) + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.fileExtension;
     }
 

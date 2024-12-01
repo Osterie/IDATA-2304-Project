@@ -92,7 +92,6 @@ public void addRandomNoise() {
 }
 
 /**
- * TODO: implement some kind of impact, not just generate a random
  * Applies an impact to the audio sensor, which triggers the generation of a random audio reading.
  *
  * @param impact the magnitude of the impact to be applied

@@ -12,8 +12,6 @@ public class ImageSensor extends Sensor<ImageSensorReading> {
   private final String dataFormat = "IMG";
   private boolean isOn;
 
-  // TODO do not give image, just have a constant image
-
   /**
    * Create an image sensor.
    *
@@ -98,13 +96,7 @@ public class ImageSensor extends Sensor<ImageSensorReading> {
   public String toString() {
     return reading.toString();
   }
-/**
-  @Override
-  public void applyImpact(double impact) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'applyImpact'");
-  }
-  */
+  
 
     /**
      * Turn on the sensor.
