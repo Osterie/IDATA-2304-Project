@@ -7,12 +7,12 @@ package no.ntnu.intermediaryserver.clienthandler;
  */
 public class UnknownClientException extends RuntimeException {
 
-    /**
-     * Constructs a new UnknownClientException with the specified detail message.
-     *
-     * @param message the detail message explaining the reason for the exception
-     */
-    public UnknownClientException(String message) {
-        super(message);
-    }
+  /**
+   * Constructs a new UnknownClientException with the specified detail message.
+   *
+   * @param message the detail message explaining the reason for the exception
+   */
+  public UnknownClientException(String message) {
+    super(message);
+  }
 }
