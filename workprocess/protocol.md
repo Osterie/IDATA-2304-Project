@@ -27,7 +27,7 @@ TODO - what transport-layer protocol do you use? TCP? UDP? What port number(s)? 
 
 
 ## The architecture
-
+![ArchitectureOgApplication](img.png)
 **Clients**
 Clients are the nodes that initiate communication with the server to send requests and receive responses.
 
