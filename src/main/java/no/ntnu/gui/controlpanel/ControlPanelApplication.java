@@ -72,49 +72,88 @@ public class ControlPanelApplication extends Application
    *
    * @param stage The primary stage for this JavaFX application.
    */
-  @Override
   public void start(Stage stage) {
+    validateChannel();
+
+    configureStage(stage);
+    VBox rootLayout = setupRootLayout();
+
+    setupNodeManager(rootLayout);
+    setupMainScene(stage, rootLayout);
+
+    addLogicListeners();
+
+    handleInitialChannelState();
+  }
+
+  private void validateChannel() {
     if (channel == null) {
       throw new IllegalStateException(
               "No communication channel. See the README on how to use fake event spawner!");
     }
+  }
 
+  private void configureStage(Stage stage) {
     stage.setMinWidth(WINDOW_WIDTH);
     stage.setMinHeight(WINDOW_HEIGHT);
     stage.setTitle("Control Panel");
+  }
 
+  private VBox setupRootLayout() {
     VBox rootLayout = new VBox();
 
-    // Creates the ribbon using the RibbonFactory
-    Node ribbon = Ribbon.createRibbon(this::refreshControlPanel);
-    ribbon.getStyleClass().add("ribbon"); // Add CSS class to the ribbon
+    Node ribbon = createRibbon();
     rootLayout.getChildren().add(ribbon);
-
-    // ScrollPane and TabPane setup
-    ScrollPane scrollPane = new ScrollPane();
-    scrollPane.getStyleClass().add("scroll-pane"); // Add CSS class to the ScrollPane
-    TabPane tabPane = new TabPane();
-    tabPane.getStyleClass().add("tab-pane"); // Add CSS class to the TabPane
-    scrollPane.setContent(tabPane);
-    scrollPane.setFitToWidth(true);
-
-    // NodeManager setup
-    nodeManager = new NodeManager(tabPane, () -> {
-      // Add the placeholder message
-      Label placeholder = createEmptyContent();
-      placeholder.getStyleClass().add("placeholder-label");
-      rootLayout.getChildren().set(1, placeholder);
-    }, () -> rootLayout.getChildren().set(1, scrollPane), this.channel);
 
     rootLayout.getChildren().add(createEmptyContent()); // Start with the placeholder
 
+    return rootLayout;
+  }
+
+  private Node createRibbon() {
+    Node ribbon = Ribbon.createRibbon(this::refreshControlPanel);
+    ribbon.getStyleClass().add("ribbon");
+    return ribbon;
+  }
+
+  private void setupNodeManager(VBox rootLayout) {
+    ScrollPane scrollPane = setupScrollPane();
+    TabPane tabPane = setupTabPane();
+    scrollPane.setContent(tabPane);
+
+    nodeManager = new NodeManager(tabPane, () -> {
+      Label placeholder = createEmptyContent();
+      placeholder.getStyleClass().add("placeholder-label");
+      rootLayout.getChildren().set(1, placeholder);
+    }, () -> rootLayout.getChildren().set(1, scrollPane), channel);
+  }
+
+  private ScrollPane setupScrollPane() {
+    ScrollPane scrollPane = new ScrollPane();
+    scrollPane.getStyleClass().add("scroll-pane");
+    scrollPane.setFitToWidth(true);
+    return scrollPane;
+  }
+
+  private TabPane setupTabPane() {
+    TabPane tabPane = new TabPane();
+    tabPane.getStyleClass().add("tab-pane");
+    return tabPane;
+  }
+
+  private void setupMainScene(Stage stage, VBox rootLayout) {
     mainScene = new Scene(rootLayout, WINDOW_WIDTH, WINDOW_HEIGHT);
     mainScene.getStylesheets().add(getClass().getResource("/css/controlpanel.css").toExternalForm());
     stage.setScene(mainScene);
     stage.show();
+  }
 
+  private void addLogicListeners() {
     logic.addListener(this);
     logic.setCommunicationChannelListener(this);
+  }
+
+  private void handleInitialChannelState() {
     if (!channel.isConnected()) {
       logic.onCommunicationChannelClosed();
     }
