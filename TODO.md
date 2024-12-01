@@ -369,12 +369,15 @@ member? How did you work with the sprints? Were there any general themes for the
 of each? Preferably, include model’s diagrams here. (1-2min)
 - [ ] TOBIAS OG DANIEL 5. Your communication protocol. Summarize it in a clear yet concise way. (3-4min)
 - [ ] ALLE 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
+
+- Show that if greenhouse and/or control panel is started before the intermediary server, that they try to reconnect to the server, and then run the server to show they are able to connect whilst trying to reconnect.
+
 - [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project.
 (1-3min)
 - [x] ADRIAN 8. Reflect on potential improvements and future work. (1 min)
 - Currently the messages we send are separated into different parts, like header and body, and each of these parts are further subdivided, we do this by using different delimiters like "-" ";" and such. A better solution which we could call future work is to instead use a well established protocol like JSON or XML. This would make it easier to read the messages, and also easier to parse them. We already have experience with both JSON and XML which means it would not have been a big problem to hypthetically implement one of these protocols in the future.
 
-- Additionally, we are somewhat lacking with catching and managing errors. We have an enum for different Failure reasons, but we don't use many of them and don't have many of them either. To help with implement better error handling, we would need more and better tests and utilize them further than what we already have.
+- Additionally, we are somewhat lacking with catching and managing errors. We have an enum for different Failure reasons, but we don't use many of them and don't have many of them either. Currently we have an enum for if the server is not running, if the server failed to identify a client, and if we have integrity To help with implement better error handling, we would need more and better tests and utilize them further than what we already have.
 
 
 Note: it is not a big problem if your video is 17 or 18 minutes, but don’t make it to 35 minutes!
