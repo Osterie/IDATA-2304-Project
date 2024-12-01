@@ -92,6 +92,9 @@ All messages consist of the following parts:
 
 ### **Body**
 - Contains the command or message payload.
+- TODO: Transmission
+- Greenhouse and general command
+- Response and error response
 
 ### **Example Message**
 

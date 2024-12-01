@@ -316,14 +316,6 @@ public abstract class TcpConnection {
     try {
       if (this.socketReader != null) {
         clientRequest = this.socketReader.readLine();
-
-        // TODO: Uncomment when the encryption in sendMessage is done.
-        //try {
-        //  clientRequest = MessageEncryptor.decryptStringMessage(clientRequest, recipientPrivateKey);
-        //} catch (Exception e) {
-        //  throw new RuntimeException(e);
-        //}
-
       } else {
         Logger.error("Socket reader is null");
       }
@@ -333,6 +325,21 @@ public abstract class TcpConnection {
     return clientRequest;
   }
 
+  protected String decryptMessage(String message) {
+    String encryptMessage = message;
+
+    if (encryptMessage != null) {
+      // Decrypts message
+      try {
+        encryptMessage = MessageEncryptor.decryptStringMessage(encryptMessage, recipientPrivateKey);
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    return encryptMessage;
+  }
+
   // TODO @TobyJavascript when done, refactor
   /**
    * Reads and handles a message from the connected socket.
@@ -340,11 +347,8 @@ public abstract class TcpConnection {
    * @throws IOException if an I/O error occurs when reading the message.
    */
   protected void readMessage() throws IOException {
-    String serverMessage = this.readLine();
+    String serverMessage = decryptMessage(this.readLine());
     if (serverMessage != null) {
-      // Logger.info("Received from server: " + serverMessage);
-      // TODO: It needs decryption.
-      // TODO: HandleMessage should take Message not String.
       Message message = this.parseMessage(serverMessage);
 
       MessageHasher.addHashedContentToMessage(message);
@@ -419,29 +423,16 @@ public abstract class TcpConnection {
     // Adds hashed version of body content to header,
     Message originalMessage = MessageHasher.addHashedContentToMessage(message);
 
-    // TODO: Not all takes string, therefore encryption not working.
     // Encrypt original body content
-    String encryptedMessage2 = MessageEncryptor.encryptMessage(originalMessage,
+    String encryptedMessage = MessageEncryptor.encryptMessage(originalMessage,
     recipientPublicKey);
-
-    // TODO: Delete sout after showing it works.
-    // System.out.println("AFTER ENCRYPTION: " + encryptedMessage2);
-    try {
-      encryptedMessage2 = MessageEncryptor.decryptStringMessage(encryptedMessage2, recipientPrivateKey);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-    // System.out.println("AFTER DECRYPTION: " + encryptedMessage2 + " " + message.toString());
-
-    // TODO: This one is replaced with the one over when encryption works.
-    Message encryptedMessage = message;
 
     if (isConnected && socketWriter != null) {
       socketWriter.println(encryptedMessage);
       // Logger.info("Sent message to server: " + encryptedMessage);
     } else {
       Logger.error("Unable to send message, socket is not connected.");
-      messageQueue.offer(encryptedMessage); // Buffer the message
+      messageQueue.offer(originalMessage); // Buffer the message
       reconnect(this.host, this.port);
     }
   }
