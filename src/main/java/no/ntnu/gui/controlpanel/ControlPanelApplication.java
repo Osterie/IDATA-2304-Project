@@ -86,8 +86,7 @@ public class ControlPanelApplication extends Application
     VBox rootLayout = new VBox();
 
     // Creates the ribbon using the RibbonFactory
-    Node ribbon = Ribbon.createRibbon(this::refreshControlPanel, ()
-            -> Logger.info("Settings clicked"));
+    Node ribbon = Ribbon.createRibbon(this::refreshControlPanel);
     ribbon.getStyleClass().add("ribbon"); // Add CSS class to the ribbon
     rootLayout.getChildren().add(ribbon);
 
