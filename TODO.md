@@ -16,7 +16,7 @@
 
 - [x] SEBASTIAN Refactor SensorReadingParser.java
 
-- [X] KNUT pass på god kode for gui controlpanel.
+- [ ] KNUT pass på god kode for gui controlpanel (start metoden gjør meget mye.).
 - [x] ADRIAN Ensure high quality code for all classes under controlpanel folder (MISSING SOME JAVADOC STILL (tyty))
 - [x] ADRIAN Ensure high quality code for all classes under intermediary server folder
   - [x] ADRIAN clienthandler folder
@@ -230,7 +230,7 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 - [X] DANIEL. Lag test klasser som tester kommunikasjon mellom intermediary server og klientene (greenhouse nodes og control panels).
 - [X] DANIEL. Test at de kobler seg til serveren riktig, at de blir identifisert av serveren på riktig måte. Test hva som skjer om protokoller ikke blir fulgt, for eksemepel om første melding til server ikke er en identifiserende melding. 
 - [X] KNUT: Test å sende kommandoer, sjekk respons.
-- [ ] SEBASTIAN Test med flere kontrollere koblet til server, også spør om informasjon fra noder samtidig, både fra ulike noder og fra samme node og slikt.
+- [x] ADRIAN Test med flere kontrollere koblet til server, også spør om informasjon fra noder samtidig, både fra ulike noder og fra samme node og slikt.
 - [ ] TODO Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
 
 ## OTHER
@@ -362,9 +362,19 @@ member? How did you work with the sprints? Were there any general themes for the
 - [ ] DANIEL 4. The architecture of your solution. What nodes are communicating? What is the responsibility
 of each? Preferably, include model’s diagrams here. (1-2min)
 - [ ] TOBIAS OG DANIEL 5. Your communication protocol. Summarize it in a clear yet concise way. (3-4min)
+
 - [ ] ALLE TODO 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
 
+
+1. run intermidiary server
+2. run greenhouse
+2. run control panel
+
 - Show that if greenhouse and/or control panel is started before the intermediary server, that they try to reconnect to the server, and then run the server to show they are able to connect whilst trying to reconnect.
+- Run multiple control panels. (SHow that if yoy do something in one control panel, it is reflected in the other control panel and geenhosue)
+- Press buttons in greenhouse and show that it is reflected in control panel.
+- show turn on and turn off all actuators for a node.
+- when you close a contorl panel and open it again, it works.
 
 - [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project. (1-3min)
 
