@@ -1,13 +1,11 @@
 
 # WORK PROCESS DOCUMENTATION REQUIREMENTS
-provide some form of documentation of the following:
-- [X] KNUT 1. How the work was planned in terms of iterations (sprints)
 
 ## How the work was planned in terms of iterations (sprints)
 
 When we received the assignment,our first step was to review both the assignment details and the provided template code. We discussed our vision for the application, identified tasks,explored additional features, and discussed what type of protocol we would use.Once we had a clear idea of what we wanted to achieve we planned our workflow.
 
-We followed a scrum framework where we organized two-week long sprints. Each sprint began with a planning session,where we set goals, defined roles, outlined procedures, and addressed team dynamics following the MRPI (goals, roles, procedure, interpersonal questions) model. We maintained a TODO.md file to track project-related tasks, dividing and updating it as the project continued.
+We followed a scrum framework where we organized Sprints that lasted two weeks each. Each sprint began with a planning session,where we set goals, defined roles, outlined procedures, and addressed team dynamics following the MRPI (goals, roles, procedure, interpersonal questions) model. We maintained a TODO.md file to track project-related tasks, dividing and updating it as the project continued.
 
 During the sprints we held regular stand-up meetings where we tackled challengers and blockers. At the end of each sprint, we conducted retrospectives to reflect on successes and identify areas for improvement.
 
