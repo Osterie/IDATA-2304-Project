@@ -174,7 +174,7 @@ For each of the design choices provide a short justification: why did you choose
 - [?] KNUT. 7.  The type of your protocol:
 - [X] KNUT. • Is your protocol connection-oriented or connection-less?
 - [X] KNUT. • Is the protocol state-full or state-less?
-- [ ] DANIEL 8.  The different types and special values (constants) used
+- [x] DANIEL 8.  The different types and special values (constants) used
 - [x] TOBIAS 9.  The message format:
 - [x] TOBIAS ? • The allowed message types (sensor messages, command messages)
 - [x] TOBIAS • The type of marshalling used (fixed size, separators, TLV?)

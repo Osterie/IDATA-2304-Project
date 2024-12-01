@@ -198,6 +198,17 @@ GREENHOUSE COMMANDS
 
 ### Error messages
 
+- **SERVER_NOT_RUNNING**: 
+- Indicates that the server is not running.
+
+
+- **Unknown Command**:
+- Indicates that the client has received an unknown command.
+
+
+- **INTEGRITY_ERROR**:
+- Indicates that the message integrity check failed.
+
 TODO - describe the possible error messages that nodes can send in your system.
 
 ---
