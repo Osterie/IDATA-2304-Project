@@ -294,42 +294,28 @@ The following delimiters are defined:
 TODO - describe a typical scenario. How would it look like from communication perspective? When 
 are connections established? Which packets are sent? How do nodes react on the packets? An 
 example scenario could be as follows:
-1. A sensor node with ID=1 is started. It has a temperature sensor, two humidity sensors. It can
-   also open a window.
-2. A sensor node with ID=2 is started. It has a single temperature sensor and can control two fans
-   and a heater.
-3. A control panel node is started.
-4. Another control panel node is started.
-5. A sensor node with ID=3 is started. It has a two temperature sensors and no actuators.
-6. After 5 seconds all three sensor/actuator nodes broadcast their sensor data.
-7. The user of the first-control panel presses on the button "ON" for the first fan of
-   sensor/actuator node with ID=2.
-8. The user of the second control-panel node presses on the button "turn off all actuators".
 
----
-
-* The server gets started, and the server listens for clients.
-* Greenhouse nodes start up with one node with a temperature sensor and a heater actuator.
-* The greenhouse establishes a connection with the server, the greenhouse connects to the port number
-* The greenhouse sends an identification message to the server.
-* Server receives identification message and stores the node in a list of nodes.
-* Control panel starts up and connects to the server.
-* The control panel sends an identification message to the server.
-Server receives identification message and stores the node in a list of nodes.
-Control panel sends a message that holds a header with the destination as the client type witch is greenhouse and with 
-broadcast as the id. Broadcast is a special value witch the server will interpret.
-node that the command is intended for and the hashed version of the body. While the body holds the command to get sensorId.
-Server receives the getSensorID command.
-Server checks who the receiver client is and switches the receiver client to Control panel and the id in the header 
-to the id of the sensor that sent the message.
-Server sends the getSensorID command to the greenhouse node with the updated header.
-Greenhouse node receives the getSensorID command and parses the command.
-Greenhouse fetches the sensor of with the corresponding id and puts it in a response. 
-Greenhouse sends the response to the server.
-Server receives the response and stores the receiver client and the id of the sensor that was in 
-the header the command from Control panel. Server sends the response to the control panel.
-Control panel receives the response and parses the response. Control panel sends the response to the corresponding sensor.
-Sensor receives the response and updates the actuator accordingly. Control panel updates the GUI with the new sensor data.
+1. The server gets started, and the server listens for clients.
+2. Greenhouse nodes start up with one node with a temperature sensor and a heater actuator.
+3. The greenhouse establishes a connection with the server, the greenhouse connects to the port number
+4. The greenhouse sends an identification message to the server.
+5. Server receives identification message and stores the node in a list of nodes.
+6. Control panel starts up and connects to the server.
+7. The control panel sends an identification message to the server.
+8. Server receives identification message and stores the node in a list of nodes.
+9. Control panel sends a message that holds a header with the destination as the client type, which is greenhouse, and with broadcast as the id. Broadcast is a special value witch the server will interpret. While the body holds a command to get sensorId.
+10. Server receives message.
+11. Server checks the client type and client id in the header, which it used to fetch a stored connection to the greenhouse node. In this case since the id is broadcast, the message will instead be sent to all clients of the given type.
+12. Server switches the header client type and client id to instead be the client type and client id client who sent the message to the server, which is control panel.
+13. Server sends the message to the greenhouse node.
+14. Greenhouse node receives message and parses it, executes the getSensorID.
+15. Greenhouse fetches the sensor of with the corresponding id and puts it in a response. 
+16. Greenhouse sends the response to the server.
+17. Server receives the response, checks header again and does the same as mentioned previously.
+18. Server sends the message to the control panel.
+19. Control panel receives the response and parses the response.
+20. Control panel notifies listeners about the new sensor data.
+21. Since the control panel gui is a listener, it is notified and the sensor data is added to the GUI.
 
 
 ## Reliability and security
