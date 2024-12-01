@@ -24,6 +24,10 @@ import no.ntnu.tools.Logger;
 import no.ntnu.tools.parsing.SensorActuatorNodeInfoParser;
 import no.ntnu.tools.parsing.SensorReadingsParser;
 
+/**
+ * Handles respsones the control panel receives from the server and the
+ * greenhouse.
+ */
 public class ControlPanelResponseHandler {
 
   private ControlPanelCommunicationChannel communicationChannel;
@@ -38,8 +42,8 @@ public class ControlPanelResponseHandler {
    * Handle a response from a client.
    * Processes the response and performs actions based on the client type.
    *
-   * @param client   The client that sent the response
-   * @param body The response message body
+   * @param client The client that sent the response
+   * @param body   The response message body
    */
   public void handleResponse(Endpoints client, MessageBody body) {
 
@@ -191,11 +195,11 @@ public class ControlPanelResponseHandler {
     FailureReason reason = response.getFailureReason();
 
     if (reason == FailureReason.FAILED_TO_IDENTIFY_CLIENT) {
-        ClientIdentification clientIdentification = new ClientIdentification(Endpoints.CONTROL_PANEL,
-            Endpoints.NOT_PREDEFINED.getValue());
-        this.communicationChannel.establishConnectionWithServer(clientIdentification);
+      ClientIdentification clientIdentification = new ClientIdentification(Endpoints.CONTROL_PANEL,
+          Endpoints.NOT_PREDEFINED.getValue());
+      this.communicationChannel.establishConnectionWithServer(clientIdentification);
     } else {
-        Logger.error("Unknown command: " + response);
+      Logger.error("Unknown command: " + response);
     }
   }
 
@@ -204,7 +208,8 @@ public class ControlPanelResponseHandler {
    * If the body does not contain a response, logs an error and returns null.
    * 
    * @param body the message body.
-   * @return the success response, or null if the body does not contain a response.
+   * @return the success response, or null if the body does not contain a
+   *         response.
    */
   private Response extractResponse(MessageBody body) {
 
@@ -222,7 +227,8 @@ public class ControlPanelResponseHandler {
    * If the command is not a greenhouse command, logs an error and returns null.
    * 
    * @param response the response.
-   * @return the greenhouse command, or null if the command is not a greenhouse command.
+   * @return the greenhouse command, or null if the command is not a greenhouse
+   *         command.
    */
   private GreenhouseCommand extractCommand(Response response) {
     Transmission command = response.getTransmission();
