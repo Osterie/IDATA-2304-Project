@@ -74,8 +74,8 @@ The greenhouse cannot push information.
 
 ## Connection and state
 
-TODO - is your communication protocol connection-oriented or connection-less? Is it stateful or 
-stateless? 
+The protocol used is connection-oriented, as it uses TCP, which establishes a connection between the client and the server before sending data.
+The protocol is stateful, as the server maintains the stata of the nodes connected to it.
 
 ## Types, constants
 
