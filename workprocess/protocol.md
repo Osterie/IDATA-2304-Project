@@ -16,6 +16,7 @@ distributed application.
 * **RSA encryption (asymmetric)** - An encryption method where a public key is used for encryption and a private key for decryption.
 * **TCP** - Transmission Control Protocol, a communication standard enabling reliable data transfer over a network.
 
+---
 
 ## The underlying transport protocol
 
@@ -41,6 +42,7 @@ Clients are the nodes that initiate communication with the server to send reques
 **Server**
 The central entity managing client connections and routing messages. It is responsible for receiving sensor data from greenhouse nodes, sending commands to greenhouse nodes, and relaying sensor data to control panels (When it recieves messages it sends the message where the message want to be sent ish.). It is represented by the `IntermediaryServer` class, which uses `ClientHandler` to manage individual client connections.
 
+---
 
 ## The flow of information and events
 
@@ -66,6 +68,8 @@ Greenhouse nodes connect to the intermediary server, which routes messages betwe
 
 The greenhouse cannot push information.
 
+---
+
 ## Connection and state
 
 The protocol used is connection-oriented, as it uses TCP, which establishes a connection between the client and the server before sending data.
@@ -90,6 +94,8 @@ Delimiters;
 - BODY_FIELD_PARAMETERS : Delimiter between a fields parameters in the body of a message, established 
 with the value `,`.
 - BODY_SENSOR_SEPARATOR : Delimiter between sensor data in the body of a message, established with the value `¤`.
+
+---
 
 ## Message Format
 All messages consist of the following parts:
@@ -221,6 +227,8 @@ Where:
 #### **Greenhouse Node**
 - Receives commands, processes them, and optionally sends back responses (e.g., node ID or execution status).
 
+---
+
 ### Marshalling in Message Formatting
 
 In this Java application, **marshalling** refers to the process of converting data into a specific format for communication between components (such as the `Control Panel` and `Greenhouse`). This process ensures that data can be serialized into messages with proper delimiters, allowing the message to be easily parsed, transmitted, and interpreted on the receiving end.
@@ -253,6 +261,8 @@ The following delimiters are defined:
     - Used to separate **sensor data** in the body of a message.
     - Example: `Temperature¤Humidity¤Soil Moisture`
 
+---
+
 ## Errors and Handling
 ### **Examples of Errors**
 1. **Invalid Message Format**:
@@ -261,6 +271,8 @@ The following delimiters are defined:
     - Ignore the message or log an error.
 3. **Client Not Found**:
     - Notify the sender or log the issue.
+
+---
 
 ### Error messages
 
@@ -293,6 +305,8 @@ example scenario could be as follows:
 7. The user of the first-control panel presses on the button "ON" for the first fan of
    sensor/actuator node with ID=2.
 8. The user of the second control-panel node presses on the button "turn off all actuators".
+
+---
 
 ## Reliability and security
 
