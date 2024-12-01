@@ -23,10 +23,20 @@ import javax.imageio.ImageIO;
  */
 public class Base64ImageEncoder {
 
-  public static String imageToString(BufferedImage bufferedImage, String fileExtension) throws IOException {
+  /**
+   * Converts image to string.
+   *
+   * @param bufferedImage image to be converted.
+   * @param fileExtension image type.
+   * @return stringed image
+   * @throws IOException exception
+   */
+  public static String imageToString(BufferedImage bufferedImage,
+                                     String fileExtension) throws IOException {
     
     if (bufferedImage.getType() != BufferedImage.TYPE_INT_RGB) {
-      BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+      BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
+              bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
       newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, null);
       bufferedImage = newBufferedImage;
     }

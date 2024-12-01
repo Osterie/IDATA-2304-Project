@@ -20,46 +20,46 @@ package no.ntnu.tools;
  */
 public enum AnsiColors {
 
-    /** ANSI code for green text. */
-    GREEN("\u001B[32m"),
+  /** ANSI code for green text. */
+  GREEN("\u001B[32m"),
 
-    /** ANSI code for yellow text. */
-    YELLOW("\u001B[33m"),
+  /** ANSI code for yellow text. */
+  YELLOW("\u001B[33m"),
 
-    /** ANSI code for red text. */
-    RED("\u001B[31m"),
+  /** ANSI code for red text. */
+  RED("\u001B[31m"),
 
-    /** ANSI code to reset text color to the default. */
-    RESET("\u001B[0m");
+  /** ANSI code to reset text color to the default. */
+  RESET("\u001B[0m");
 
-    /** The ANSI escape code associated with the color. */
-    private final String color;
+  /** The ANSI escape code associated with the color. */
+  private final String color;
 
-    /**
-     * Constructs an {@code AnsiColors} enum with the specified ANSI escape code.
-     *
-     * @param color The ANSI escape code for the color.
-     */
-    AnsiColors(String color) {
-        this.color = color;
-    }
+  /**
+   * Constructs an {@code AnsiColors} enum with the specified ANSI escape code.
+   *
+   * @param color The ANSI escape code for the color.
+   */
+  AnsiColors(String color) {
+    this.color = color;
+  }
 
-    /**
-     * Returns the ANSI escape code for the color.
-     *
-     * @return The ANSI escape code as a {@code String}.
-     */
-    public String getColor() {
-        return color;
-    }
+  /**
+   * Returns the ANSI escape code for the color.
+   *
+   * @return The ANSI escape code as a {@code String}.
+   */
+  public String getColor() {
+    return color;
+  }
 
-    /**
-     * Returns the ANSI escape code as a string representation of the enum.
-     *
-     * @return The ANSI escape code as a {@code String}.
-     */
-    @Override
-    public String toString() {
-        return color;
-    }
+  /**
+   * Returns the ANSI escape code as a string representation of the enum.
+   *
+   * @return The ANSI escape code as a {@code String}.
+   */
+  @Override
+  public String toString() {
+    return color;
+  }
 }

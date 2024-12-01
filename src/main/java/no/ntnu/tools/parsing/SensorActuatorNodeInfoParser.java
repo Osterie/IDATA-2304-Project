@@ -13,14 +13,14 @@ import no.ntnu.tools.Logger;
  * Utility class for parsing specifications to create SensorActuatorNodeInfo
  * objects.
  *
- * <p>
- * This class provides methods to parse specification strings and generate
+ *
+ * <p>This class provides methods to parse specification strings and generate
  * {@link SensorActuatorNodeInfo} objects that include associated actuators.
  * The specification string contains details about the sensor-actuator nodes and
  * their actuators.
  *
- * <p>
- * Key functionalities:
+ *
+ * <p>Key functionalities:
  * <ul>
  * <li>Parse node ID and actuator details from a structured string format.</li>
  * <li>Create and configure {@link Actuator} objects based on the
@@ -29,8 +29,8 @@ import no.ntnu.tools.Logger;
  * events.</li>
  * </ul>
  *
- * <p>
- * The specification string format is expected to adhere to the following
+ *
+ * <p>The specification string format is expected to adhere to the following
  * structure:
  * <ul>
  *
@@ -40,15 +40,15 @@ import no.ntnu.tools.Logger;
  * [type]_[id]_[on_text]_[off_text]_[state]</li>
  * </ul>
  *
- * <p>
- * Example specification:
+ *
+ * <p>Example specification:
  * 
  * <pre>
  * "1;temperature_101_ON_OFF_true;humidity_102_START_STOP_false"
  * </pre>
  *
- * <p>
- * This would create a {@link SensorActuatorNodeInfo} object with ID 1 and two
+ *
+ * <p>This would create a {@link SensorActuatorNodeInfo} object with ID 1 and two
  * actuators:
  * <ul>
  * <li>Actuator of type "temperature" with ID 101, turned on, with texts "ON"
@@ -63,8 +63,8 @@ import no.ntnu.tools.Logger;
  * specifications.</li>
  * </ul>
  *
- * <p>
- * <strong>Note:</strong> This class is not intended to be
+ *
+ * <p><strong>Note:</strong> This class is not intended to be
  * instantiated and only contains static methods.
  */
 public class SensorActuatorNodeInfoParser {

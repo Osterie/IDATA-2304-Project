@@ -6,8 +6,10 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 
 /**
- * A utility class that generates and holds a single static RSA key pair for shared use.
- * This class ensures that the keys are generated only once and remain accessible throughout the application.
+ * A utility class that generates and holds a single
+ * static RSA key pair for shared use.
+ * This class ensures that the keys are generated
+ * only once and remain accessible throughout the application.
  */
 public class PublicKeyHolder {
 
