@@ -14,7 +14,7 @@
 
 - [x] SEBASTIAN Refactor SensorReadingParser.java
 
-- [ ] KNUT pass på god kode for gui controlpanel (start metoden gjør meget mye.).
+- [x] KNUT pass på god kode for gui controlpanel (start metoden gjør meget mye.).
 - [x] ADRIAN Ensure high quality code for all classes under controlpanel folder (MISSING SOME JAVADOC STILL (tyty))
 - [x] ADRIAN Ensure high quality code for all classes under intermediary server folder
   - [x] ADRIAN clienthandler folder
@@ -144,7 +144,7 @@
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
 
 - [x] ADRIAN Skriv javadoc for greenhouse-klasser.
-- [ ] KNUT Skriv javadoc for GUI-klasser.
+- [x] KNUT Skriv javadoc for GUI-klasser.
 - [x] ADRIAN Skriv javadoc for control-panel-klasser.
 - [x] ADRIAN Skriv javadoc for run-klasser.
 - [x] TOBIAS Skriv javadoc for tools-klasser.
