@@ -168,6 +168,8 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
   @Override
   public void close() {
     super.close();
-    this.logic.onCommunicationChannelClosed();
+    if (this.logic != null){
+      this.logic.onCommunicationChannelClosed();
+    }
   }
 }

@@ -190,11 +190,13 @@ public abstract class TcpConnection {
       }
     }
 
+    this.setIsReconnecting(false);
+
     if (!isConnected()) {
       Logger.error("Failed to reconnect after " + attempts + " attempts.");
+      this.setIsReconnecting(false);
+      this.close();
     }
-
-    this.setIsReconnecting(false);
   }
 
   /**
