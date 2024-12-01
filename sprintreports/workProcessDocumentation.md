@@ -17,6 +17,9 @@ When programming we did not assign people areas to work on. TODOs were not distr
 
 For completing the work process documentation, everyone was assigned different tasks, which ensured that everyone contributed to all aspects of the project. For the final video everyone had some part to create for the video. 
 
+## Retrospective after each sprint
+
+Each sprint has a short retrospective at the end of the sprint.
 
 
 - [ ] KNUT 3. How was the work broken down into issues? Remember the principles you learned about issue
