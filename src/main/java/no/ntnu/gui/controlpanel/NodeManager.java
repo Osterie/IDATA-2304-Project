@@ -39,7 +39,7 @@ public class NodeManager {
    * @param channel           The communication channel for node updates.
    */
   public NodeManager(TabPane nodeTabPane, Runnable onAllNodesRemoved, Runnable onFirstNodeAdded,
-      ControlPanelCommunicationChannel channel) {
+                     ControlPanelCommunicationChannel channel) {
     this.nodeTabPane = nodeTabPane;
     this.onAllNodesRemoved = onAllNodesRemoved;
     this.onFirstNodeAdded = onFirstNodeAdded;

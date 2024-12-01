@@ -1,4 +1,4 @@
-package no.ntnu.gui.common.PopUpWindows;
+package no.ntnu.gui.common.popupwindows;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -16,7 +16,7 @@ import no.ntnu.tools.Logger;
  * This class contains the common logic for displaying
  * alert windows, and subclasses should define the alert type.
  */
-public abstract class AlertWindow  {
+public abstract class AlertWindow {
 
   // Static flag to track whether any popup is open
   private static boolean isPopupOpen = false;

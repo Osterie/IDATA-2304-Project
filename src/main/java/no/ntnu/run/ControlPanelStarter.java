@@ -1,8 +1,7 @@
 package no.ntnu.run;
 
-import no.ntnu.controlpanel.ControlPanelLogic;
-
 import no.ntnu.controlpanel.ControlPanelCommunicationChannel;
+import no.ntnu.controlpanel.ControlPanelLogic;
 import no.ntnu.gui.controlpanel.ControlPanelApplication;
 import no.ntnu.intermediaryserver.server.ServerConfig;
 import no.ntnu.tools.Logger;
@@ -14,6 +13,9 @@ public class ControlPanelStarter implements Runnable {
 
   private ControlPanelCommunicationChannel channel;
 
+  /**
+   * Create a new instance of the control panel starter.
+   */
   public ControlPanelStarter() {
     // Empty
   }
@@ -49,9 +51,10 @@ public class ControlPanelStarter implements Runnable {
     System.exit(0);
   }
 
+
   /**
    * Create the logic for the control panel.
-   * 
+   *
    * @return The logic for the control panel.
    */
   private ControlPanelLogic createLogic() {
@@ -65,7 +68,7 @@ public class ControlPanelStarter implements Runnable {
 
   /**
    * Start the GUI for the control panel.
-   * 
+   *
    * @param logic The logic for the control panel.
    */
   private void startGui(ControlPanelLogic logic) {
@@ -76,12 +79,13 @@ public class ControlPanelStarter implements Runnable {
 
   /**
    * Create the communication channel for the control panel.
-   * 
-   * @param logic The logic for the control panel.
+   *
+   * @param logic The logic for the control panel
    * @return The communication channel for the control panel.
    */
   private ControlPanelCommunicationChannel createCommunicationChannel(ControlPanelLogic logic) {
-    return new ControlPanelCommunicationChannel(logic, ServerConfig.getHost(), ServerConfig.getPortNumber());
+    return new ControlPanelCommunicationChannel(logic, ServerConfig.getHost(),
+            ServerConfig.getPortNumber());
   }
 
   /**

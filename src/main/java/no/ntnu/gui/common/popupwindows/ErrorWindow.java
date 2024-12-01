@@ -1,4 +1,4 @@
-package no.ntnu.gui.common.PopUpWindows;
+package no.ntnu.gui.common.popupwindows;
 
 import javafx.scene.control.Alert.AlertType;
 
