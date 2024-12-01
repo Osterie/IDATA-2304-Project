@@ -82,6 +82,7 @@ public class AudioSensorReading extends SensorReading {
    *
    * @return The sensor reading as a formatted string
    */
+  @Override
   public String getFormatted() {
     return this.getType().getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.getAudioFormatted()
         + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.fileExtension;

@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 
 /**
  * Factory class for creating the ribbon in the control panel.
+ * * The ribbon contains menu options for the control panel.
  */
 public class Ribbon {
 
@@ -20,19 +21,22 @@ public class Ribbon {
   public static VBox createRibbon(Runnable refreshAction) {
     MenuBar ribbonMenuBar = new MenuBar();
 
+    // Create the Options menu
     Menu fileMenu = new Menu("Options");
 
+    // Create the Refresh menu item
     MenuItem refreshItem = new MenuItem("Refresh");
-    MenuItem exitItem = new MenuItem("Exit");
-
     refreshItem.setOnAction(event -> {
       if (refreshAction != null) {
         refreshAction.run();
       }
     });
 
+    // Create the Exit menu item
+    MenuItem exitItem = new MenuItem("Exit");
     exitItem.setOnAction(event -> Platform.exit());
 
+    //Adds the items to the menu bar
     fileMenu.getItems().addAll(refreshItem, exitItem);
     ribbonMenuBar.getMenus().add(fileMenu);
 

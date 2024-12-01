@@ -68,6 +68,7 @@ public class NumericSensorReading extends SensorReading {
    *
    * @return The sensor reading and the unit
    */
+  @Override
   public String getFormatted() {
     return this.getType().getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.value
         + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.unit;

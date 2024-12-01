@@ -3,9 +3,7 @@
 - Clean code.
 - Good code.
 
-- [ ] TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
 - [ ] TODO create a starter for only IntermediaryServer.
-- [ ] TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
 
 # important
 
@@ -16,7 +14,7 @@
 
 - [x] SEBASTIAN Refactor SensorReadingParser.java
 
-- [ ] KNUT pass på god kode for gui controlpanel (start metoden gjør meget mye.).
+- [x] KNUT pass på god kode for gui controlpanel (start metoden gjør meget mye.).
 - [x] ADRIAN Ensure high quality code for all classes under controlpanel folder (MISSING SOME JAVADOC STILL (tyty))
 - [x] ADRIAN Ensure high quality code for all classes under intermediary server folder
   - [x] ADRIAN clienthandler folder
@@ -40,10 +38,11 @@
 
 - [ ] TODO dont print out audio in console...
 - [ ] TODO can add a location variable to the sensors to show where they are located? if user wants. Would be especially good for image sensor and motion sensor and whatver
+- [ ] TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
 
 # CURRENT
 
-- [ ] ADRIAN Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
+- [x] ADRIAN Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
 - [x] ADRIAN create a starter for only IntermediaryServer.
 
 
@@ -57,14 +56,14 @@
 - [x] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
 - [x] ADRIAN fix issue with images not being replaced, but instead being added when displaying images
 - [x] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
-- [ ] TOBIAS Judge if sensor pane should be scrollable. I tried it out, and it didn't look good, and it didn't feel good to use.
+- [x] TOBIAS Judge if sensor pane should be scrollable. I tried it out, and it didn't look good, and it didn't feel good to use.
 - [x] TOBIAS ScrollPane for controlPanel.
 - [x] SEBASTIAN Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
 - [ ] DANIEL Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
 - [x] SEBASTIAN Actuator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such. Each actuator should have "Turned on/off text" when they are made.
 
 - [x] ADRIAN Sensors for light, PH.
-- [ ] TOBIAS Implement encryption.
+- [ ] TOBIAS Implement encryption. PAIN
 - [x] ADRIAN Handling is the integrity of the data is altered.
 - [x] TOBIAS Hashing the data and storing it in header(?) for checking integrity. 
 - [x] TOBIAS add hash in header of Message.
@@ -98,7 +97,7 @@
 - [x] ADRIAN notifyChanges method of Actuator Class, refactor this method.
 - [x] ADRIAN image sensor should have image: [Actual image]
 
-- [ ] TOBIAS add a working refresh button to control panel
+- [x] ADRIAN add a working refresh button to control panel
 
 - [x] ADRIAN fix nodes sometimes not being created in gui.
 
@@ -145,7 +144,7 @@
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
 
 - [x] ADRIAN Skriv javadoc for greenhouse-klasser.
-- [ ] KNUT Skriv javadoc for GUI-klasser.
+- [x] KNUT Skriv javadoc for GUI-klasser.
 - [x] ADRIAN Skriv javadoc for control-panel-klasser.
 - [x] ADRIAN Skriv javadoc for run-klasser.
 - [x] TOBIAS Skriv javadoc for tools-klasser.
@@ -172,10 +171,10 @@ For each of the design choices provide a short justification: why did you choose
 - [ ] SEBASTIAN. • Who are the actors (nodes) in your solution?
 - [ ] SEBASTIAN. • Who are the clients, who is/are the server(s)?
 - [x] ADRIAN 6. The flow of information: when and how the messages are sent?
-- [ ] KNUT. 7.  The type of your protocol:
-- [ ] KNUT. • Is your protocol connection-oriented or connection-less?
-- [ ] KNUT. • Is the protocol state-full or state-less?
-- [x] DANIEL 8.  The different types and special values (constants) used
+- [?] KNUT. 7.  The type of your protocol:
+- [X] KNUT. • Is your protocol connection-oriented or connection-less?
+- [X] KNUT. • Is the protocol state-full or state-less?
+- [ ] DANIEL 8.  The different types and special values (constants) used
 - [x] TOBIAS 9.  The message format:
 - [x] TOBIAS ? • The allowed message types (sensor messages, command messages)
 - [x] TOBIAS • The type of marshalling used (fixed size, separators, TLV?)
@@ -327,39 +326,13 @@ either using public-key cryptography or other methods.
 
 - [x] 5. ADRIAN Support of more flexible actuator commands. By default, it is expected that a command is sent to a specific sensor node, specific actuator. If you manage to support also either broadcast commands (to all sensor nodes at a time), or multicast (to specific groups of sensor nodes), this is considered an extra.
 
-BROADCAST.
-
-# WORK PROCESS DOCUMENTATION REQUIREMENTS
-provide some form of documentation of the following:
-- [ ] KNUT 1. How the work was planned in terms of iterations (sprints)
-- [x] ADRIAN 2. How the tasks were distributed - who was responsible for what. Note - it is NOT OK to have someone in the group responsible only for creating videos. This course is primarily about network protocols and network programming. Every group member must demonstrate expertise within these fields. Perhaps one student works more on the protocol, another on the server programming, and the third on client programming, that is fine. But it is not fine if one student does all the programming, one just writes documentation (sprint reports) and the third creates a video. How are the second and third students showing their computer network expertise?
-
-## How the tasks were distributed
-Tasks were distributed in a TODO.md file under our version control. To create tasks we started by analyzing which tasks the project described, and then we wrote them down and tried to evenly distribute them. While working on the project more TODOs were thought about, written down, and distributed. After we had completed our TODOs we assigned ourselves to other undone TODOs.
-
-## who was responsible for what.
-When programming we did not assign people areas to work on. TODOs were not distributed necessarily based on what other TODOs a member worked on, which was to try to ensure that everyone leared about all parts of the project. Also for writing protocol, everyone were given the responsibility of writing some part of the protocol.
-For completing the work process documentation, everyone was assigned different tasks, which ensured that everyone contributed to all aspects of the project. For the final video everyone had some part to create for the video. 
-
-- [ ] KNUT 3. How was the work broken down into issues? Remember the principles you learned about issue
-definition in the System development course. Issues should be small, have descriptive names,
-clear "definition of done", etc. For example, an issue like "improve GUI" is a bad issue. What
-does it mean? When is it complete?
-- [x] DANIEL 4. How the work was progressing - what did you accomplish in each sprint? Which issues were
-planned, and which ones were completed?
-- [x] SEBASTIAN 5. A short retrospective after each sprint - what went well, and how can you improve?
-
-It is suggested that you keep the sprint documentation in Git as well, but you are allowed to use
-Wiki pages, Jira or other tools if you want.
-
-
 # VIDEO
 
 - [X] KNUT 1. Introduction of the application: what problem does your solution solve? (1min)
 - [ ] SEBASTIAN 2. The information, materials, approach you used, and the research you did. (1min)
-- [X] KNUT 3. The work process: how did you organize work throughout the semester? Role of each team
+- [X ] KNUT 3. The work process: how did you organize work throughout the semester? Role of each team
 member? How did you work with the sprints? Were there any general themes for the sprints, phases of the project? (1min)
-- [x] DANIEL 4. The architecture of your solution. What nodes are communicating? What is the responsibility
+- [ ] DANIEL 4. The architecture of your solution. What nodes are communicating? What is the responsibility
 of each? Preferably, include model’s diagrams here. (1-2min)
 - [x] TOBIAS OG DANIEL 5. Your communication protocol. Summarize it in a clear yet concise way. (3-4min)
 
