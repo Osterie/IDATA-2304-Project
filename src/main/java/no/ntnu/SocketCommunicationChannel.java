@@ -1,22 +1,26 @@
 package no.ntnu;
 
 import java.io.IOException;
-
 import no.ntnu.constants.Endpoints;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
-import no.ntnu.messages.Transmission;
-import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
 import no.ntnu.messages.Message;
 import no.ntnu.messages.MessageBody;
 import no.ntnu.messages.MessageHeader;
+import no.ntnu.messages.Transmission;
+import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
 import no.ntnu.tools.Logger;
 
+/**
+ * The SocketCommunicationChannel class provides a communication channel for sending and receiving
+ * messages over a socket connection. This class extends the TcpConnection class and adds the
+ * functionality to send and receive messages with the server.
+ */
 public abstract class SocketCommunicationChannel extends TcpConnection {
   protected ClientIdentification clientIdentification;
 
   /**
    * Creates a new socket communication channel.
-   * 
+   *
    * @param host The host to connect to.
    * @param port The port to connect to.
    */
@@ -32,7 +36,7 @@ public abstract class SocketCommunicationChannel extends TcpConnection {
 
   /**
    * Establishes a connection with the server by sending an identification message.
-   * 
+   *
    * @param clientIdentification The client identification to send.
    */
   public void establishConnectionWithServer(ClientIdentification clientIdentification) {
@@ -53,14 +57,14 @@ public abstract class SocketCommunicationChannel extends TcpConnection {
    * 
    */
   @Override
-  protected void doReconnectedActions(){
+  protected void doReconnectedActions() {
     this.establishConnectionWithServer(this.clientIdentification);
     super.doReconnectedActions();
   }
 
   /**
    * Creates a client identification message based on the provided client information.
-   * 
+   *
    * @param clientIdentification The client identification information.
    * @return The identification message.
    */

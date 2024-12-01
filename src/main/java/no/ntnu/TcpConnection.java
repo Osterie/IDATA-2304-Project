@@ -7,35 +7,44 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
-
-import no.ntnu.messages.*;
+import no.ntnu.messages.Message;
+import no.ntnu.messages.Transmission;
 import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
 import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.tools.Logger;
 
+
+/**
+ * The TcpConnection class provides a base class for establishing and managing
+ * TCP socket connections. This class provides methods for connecting to a
+ * socket, sending and receiving messages, and handling connection errors.
+ * Subclasses can extend this class to implement specific message handling
+ * logic.
+ */
 public abstract class TcpConnection {
 
+  private static final int MAX_RETRIES = 5;
+  private static final int RETRY_DELAY_MS = 1000; // Time between retries
   private Socket socket;
   private BufferedReader socketReader;
   private PrintWriter socketWriter;
   private boolean isConnected;
-  private Queue<Message> messageQueue;
-
+  private final Queue<Message> messageQueue;
   private String host;
   private int port;
-
   private boolean autoReconnect = true;
   private boolean isReconnecting = false;
-  private static final int MAX_RETRIES = 5;
-  private static final int RETRY_DELAY_MS = 1000; // Time between retries
 
+  /**
+   * Creates a new TCP connection.
+   */
   protected TcpConnection() {
     this.messageQueue = new LinkedList<>();
   }
 
   /**
    * Returns the socket.
-   * 
+   *
    * @return the socket.
    */
   protected Socket getSocket() {
@@ -44,7 +53,7 @@ public abstract class TcpConnection {
 
   /**
    * Sets whether the socket is reconnecting.
-   * 
+   *
    * @param isReconnecting true if the socket is reconnecting, false otherwise.
    */
   private void setIsReconnecting(boolean isReconnecting) {
@@ -53,7 +62,7 @@ public abstract class TcpConnection {
 
   /**
    * Returns true if the socket is reconnecting, false otherwise.
-   * 
+   *
    * @return true if the socket is reconnecting, false otherwise.
    */
   protected boolean isReconnecting() {
@@ -61,17 +70,8 @@ public abstract class TcpConnection {
   }
 
   /**
-   * Sets whether the socket is connected.
-   * 
-   * @param isConnected true if the socket is connected, false otherwise.
-   */
-  protected void setConnected(boolean isConnected) {
-    this.isConnected = isConnected;
-  }
-
-  /**
    * Returns true if the socket is connected, false otherwise.
-   * 
+   *
    * @return true if the socket is connected, false otherwise.
    */
   public boolean isConnected() {
@@ -79,8 +79,27 @@ public abstract class TcpConnection {
   }
 
   /**
+   * Sets whether the socket is connected.
+   *
+   * @param isConnected true if the socket is connected, false otherwise.
+   */
+  protected void setConnected(boolean isConnected) {
+    this.isConnected = isConnected;
+  }
+
+  /**
+   * Returns true if the connection should automatically reconnect if lost, false
+   * otherwise.
+   *
+   * @return true if the connection should automatically reconnect if lost, false otherwise.
+   */
+  private boolean isAutoReconnect() {
+    return this.autoReconnect;
+  }
+
+  /**
    * Sets whether the connection should automatically reconnect if lost.
-   * 
+   *
    * @param autoReconnect true to enable auto-reconnect, false to disable it.
    */
   public void setAutoReconnect(boolean autoReconnect) {
@@ -88,19 +107,8 @@ public abstract class TcpConnection {
   }
 
   /**
-   * Returns true if the connection should automatically reconnect if lost, false
-   * otherwise.
-   * 
-   * @return true if the connection should automatically reconnect if lost, false
-   *         otherwise.
-   */
-  private boolean isAutoReconnect() {
-    return this.autoReconnect;
-  }
-
-  /**
    * Connects to the given socket.
-   * 
+   *
    * @param socket the socket to connect to.
    */
   public void connect(Socket socket) {
@@ -113,7 +121,7 @@ public abstract class TcpConnection {
 
   /**
    * Connects to the given host and port.
-   * 
+   *
    * @param host the host to connect to.
    * @param port the port to connect to.
    */
@@ -128,7 +136,7 @@ public abstract class TcpConnection {
 
   /**
    * Initializes the socket and sets up the reader and writer streams.
-   * 
+   *
    * @param socket the socket to initialize.
    * @throws IOException if an I/O error occurs during initialization.
    */
@@ -145,7 +153,7 @@ public abstract class TcpConnection {
 
   /**
    * Handles connection errors by logging and attempting to reconnect.
-   * 
+   *
    * @param e    the exception encountered.
    * @param host the host to reconnect to.
    * @param port the port to reconnect to.
@@ -157,7 +165,7 @@ public abstract class TcpConnection {
 
   /**
    * Reconnects to the given host and port if connection lost.
-   * 
+   *
    * @param host the host to connect to.
    * @param port the port to connect to.
    */
@@ -193,7 +201,7 @@ public abstract class TcpConnection {
    * Returns true if the connection should attempt to reconnect, false otherwise.
    * If auto-reconnect is disabled or a reconnection is already in progress, it
    * should not attempt to reconnect.
-   * 
+   *
    * @return true if the connection should attempt to reconnect, false otherwise.
    */
   private boolean shouldReconnect() {
@@ -213,7 +221,7 @@ public abstract class TcpConnection {
 
   /**
    * Performs the actions needed to reconnet.
-   * 
+   *
    * @param host the host to reconnect to.
    * @param port the port to reconnect to.
    * @throws IOException if an I/O error occurs during reconnection.
@@ -232,7 +240,7 @@ public abstract class TcpConnection {
 
   /**
    * Sleeps for an increasing amount of time before attempting to reconnect.
-   * 
+   *
    * @param attempts the number of reconnection attempts made so far.
    */
   private void sleepForReconnection(int attempts) {
@@ -249,10 +257,10 @@ public abstract class TcpConnection {
   /**
    * Initializes the input and output streams for the socket connection.
    * And starts the listening thread
-   * 
-   * @param host
-   * @param port
-   * @throws IOException
+   *
+   * @param host the host to connect to.
+   * @param port the port to connect to.
+   * @throws IOException if an I/O error occurs during initialization.
    */
   public void initializeStreams(String host, int port) throws IOException {
     Logger.info("Trying to establish connection to " + host + ":" + port);
@@ -296,7 +304,7 @@ public abstract class TcpConnection {
 
   /**
    * Reads a line from the connected socket.
-   * 
+   *
    * @return the line read from the socket.
    */
   protected String readLine() {
@@ -315,7 +323,7 @@ public abstract class TcpConnection {
 
   /**
    * Reads and handles a message from the connected socket.
-   * 
+   *
    * @throws IOException if an I/O error occurs when reading the message.
    */
   protected void readMessage() throws IOException {
@@ -348,7 +356,7 @@ public abstract class TcpConnection {
 
   /**
    * Handles integrity error by resending the message.
-   * 
+   *
    * @param message the message to resend.
    */
   private void handleIntegrityError(Message message) {
@@ -360,7 +368,7 @@ public abstract class TcpConnection {
 
   /**
    * Parses the server message into a Message object.
-   * 
+   *
    * @param messageToParse the message to parse.
    * @return the parsed message as a Message object.
    */
@@ -371,7 +379,8 @@ public abstract class TcpConnection {
     try {
       message = Message.fromString(messageToParse);
     } catch (IllegalArgumentException | NullPointerException e) {
-      Logger.error("Invalid server message format: " + messageToParse + ". Error: " + e.getMessage());
+      Logger.error("Invalid server message format: " + messageToParse + ". Error: "
+              + e.getMessage());
     }
 
     // Check for null message, header, or body
@@ -384,7 +393,7 @@ public abstract class TcpConnection {
 
   /**
    * Sends a message to the connected socket.
-   * 
+   *
    * @param message the message to send.
    */
   public synchronized void sendMessage(Message message) {
@@ -430,12 +439,15 @@ public abstract class TcpConnection {
   public synchronized void close() {
 
     try {
-      if (socket != null)
+      if (socket != null) {
         socket.close();
-      if (socketReader != null)
+      }
+      if (socketReader != null) {
         socketReader.close();
-      if (socketWriter != null)
+      }
+      if (socketWriter != null) {
         socketWriter.close();
+      }
       isConnected = false;
       Logger.info("Socket connection closed.");
     } catch (IOException e) {
@@ -450,13 +462,12 @@ public abstract class TcpConnection {
    */
   protected final void handleMessage(Message message) {
     // Common handling logic
-    if (message.getBody().getTransmission() instanceof SuccessResponse) {
-      SuccessResponse response = (SuccessResponse) message.getBody().getTransmission();
+    if (message.getBody().getTransmission() instanceof SuccessResponse response) {
 
       Transmission transmission = response.getTransmission();
 
-      if (transmission instanceof ClientIdentificationTransmission) {
-        ClientIdentificationTransmission clientIdentificationTransmission = (ClientIdentificationTransmission) transmission;
+      if (transmission
+              instanceof ClientIdentificationTransmission clientIdentificationTransmission) {
 
         // Common logic for handling client identification
         handleClientIdentification(clientIdentificationTransmission);
