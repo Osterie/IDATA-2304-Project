@@ -5,13 +5,15 @@
 
 # important
 
+- [ ] SEBASTIAN GOOGLE CHECK ON MY RESPONSIBILITIES.
+
 - [ ] TODO change nodeId to only be int, or that it can be string. (go for can be string.)
 - [x] TOBIAS Refactor tools.
 
-- [ ] SEBASTIAN Refactor SensorReadingParser.java
+- [x] SEBASTIAN Refactor SensorReadingParser.java
 
 - [X] KNUT pass på god kode for gui controlpanel.
-- [x] ADRIAN Ensure high quality code for all classes under controlpanel folder
+- [ ] ADRIAN Ensure high quality code for all classes under controlpanel folder (MISSING SOME JAVADOC STILL)
 - [x] ADRIAN Ensure high quality code for all classes under intermediary server folder
   - [x] ADRIAN clienthandler folder
   - [x] ADRIAN server folder
