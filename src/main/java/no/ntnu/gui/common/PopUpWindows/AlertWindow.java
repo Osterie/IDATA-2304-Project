@@ -8,6 +8,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
+import no.ntnu.tools.Logger;
 
 /**
  * An abstract utility class for displaying alert
@@ -29,7 +30,7 @@ public abstract class AlertWindow  {
   public void showAlert(String title, String message) {
     if (isPopupOpen) {
       // If a popup is already open, do not show a new one
-      System.out.println("Popup is already open. New popup blocked.");
+      Logger.info("Popup is already open. New popup blocked.");
       return;
     }
 
