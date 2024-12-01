@@ -355,9 +355,9 @@ Wiki pages, Jira or other tools if you want.
 
 # VIDEO
 
-- [ ] KNUT 1. Introduction of the application: what problem does your solution solve? (1min)
+- [X] KNUT 1. Introduction of the application: what problem does your solution solve? (1min)
 - [ ] SEBASTIAN 2. The information, materials, approach you used, and the research you did. (1min)
-- [ ] KNUT 3. The work process: how did you organize work throughout the semester? Role of each team
+- [X] KNUT 3. The work process: how did you organize work throughout the semester? Role of each team
 member? How did you work with the sprints? Were there any general themes for the sprints, phases of the project? (1min)
 - [ ] DANIEL 4. The architecture of your solution. What nodes are communicating? What is the responsibility
 of each? Preferably, include model’s diagrams here. (1-2min)
