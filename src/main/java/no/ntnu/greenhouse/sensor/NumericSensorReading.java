@@ -1,7 +1,6 @@
 package no.ntnu.greenhouse.sensor;
 
 import java.util.Objects;
-
 import no.ntnu.messages.Delimiters;
 
 /**
@@ -76,7 +75,7 @@ public class NumericSensorReading extends SensorReading {
 
   /**
    * Indicates whether some other object is "equal to" this one.
-   * 
+   *
    * @param o the reference object with which to compare.
    * @return {@code true} if this object is the same as the obj argument;
    *         {@code false} otherwise.

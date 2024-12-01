@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import no.ntnu.greenhouse.actuator.Actuator;
 import no.ntnu.greenhouse.sensor.SensorReading;
 import no.ntnu.listeners.common.ActuatorListener;
@@ -16,13 +15,12 @@ import no.ntnu.tools.Logger;
  * The central logic of a control panel node. It uses a communication channel to send commands
  * and receive events. It supports listeners who will be notified on changes (for example, a new
  * node is added to the network, or a new sensor reading is received).
- *
  * Note: This class demonstrates proper separation of logic from the GUI. In larger projects,
  * this class may handle complex logic such as storing events in a database, performing checks,
  * or sending notifications, which should never be placed inside GUI classes.
  */
 public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListener,
-        CommunicationChannelListener  {
+    CommunicationChannelListener {
 
   private final List<GreenhouseEventListener> listeners = new LinkedList<>();
 
@@ -73,18 +71,12 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
   }
 
   /**
-   * Advertise new sensor readings.
-   * Notifies the control panel logic of new sensor readings after a specified delay.
-   * 
-   * @param specification Specification of the readings in the following format:
-   *                      [nodeID]
-   *                      semicolon
-   *                      [sensor_type_1] equals [sensor_value_1] space [unit_1]
-   *                      comma
-   *                      ...
-   *                      comma
-   *                      [sensor_type_N] equals [sensor_value_N] space [unit_N]
-   * @param delay         Delay in seconds
+   * Advertise that sensor data has been received.
+   * Notifies the control panel logic that sensor data has been received after a specified delay.
+   *
+   * @param sensors The list of sensor readings
+   * @param nodeId  The ID of the node that sent the data
+   * @param delay   The delay in seconds
    */
   public void advertiseSensorData(List<SensorReading> sensors, int nodeId, int delay) {
     ControlPanelLogic self = this;
@@ -118,7 +110,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
     }, delay * 1000L);
   }
 
-    /**
+  /**
    * Advertise that an actuator has changed its state.
    * Notifies the control panel logic of an actuator state change after a specified delay.
    *
@@ -141,10 +133,10 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
   }
 
   /**
-   * Add a node based on the response.
-   * Creates a new node and schedules its addition to the control panel logic.
+   * Advertise that a new node has been added.
+   * Notifies the control panel logic that a new node has been added after a specified delay.
    *
-   * @param response The response containing node information
+   * @param nodeInfo The information about the new node
    */
   public void addNode(SensorActuatorNodeInfo nodeInfo) {
 
@@ -161,7 +153,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
 
   /**
    * Notifies all listeners that a new node has been added.
-   * 
+   *
    * @param nodeInfo The information about the new node to advertise.
    */
   @Override
@@ -171,7 +163,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
 
   /**
    * Notifies all listeners that a node has been removed.
-   * 
+   *
    * @param nodeId The ID of the removed node.
    */
   @Override
@@ -181,7 +173,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
 
   /**
    * Notifies all listeners that sensor data has been received.
-   * 
+   *
    * @param nodeId  The ID of the node that sent the data.
    * @param sensors The list of sensor readings.
    */
@@ -192,10 +184,10 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
 
   /**
    * Notifies all listeners that an actuator state has changed.
-   * 
-   * @param nodeId    The ID of the node to which the actuator is attached.
+   *
+   * @param nodeId     The ID of the node to which the actuator is attached.
    * @param actuatorId The ID of the actuator.
-   * @param isOn      True if the actuator is on; false if it is off.
+   * @param isOn       True if the actuator is on; false if it is off.
    */
   @Override
   public void onActuatorStateChanged(int nodeId, int actuatorId, boolean isOn) {
@@ -204,9 +196,9 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
 
   /**
    * Notifies all listeners that an actuator has been updated.
-   * 
-   * @param nodeId    The ID of the node to which the actuator is attached.
-   * @param actuator  The updated actuator.
+   *
+   * @param nodeId   The ID of the node to which the actuator is attached.
+   * @param actuator The updated actuator.
    */
   @Override
   public void actuatorUpdated(int nodeId, Actuator actuator) {
@@ -214,7 +206,7 @@ public class ControlPanelLogic implements GreenhouseEventListener, ActuatorListe
       communicationChannel.sendActuatorChange(nodeId, actuator.getId(), actuator.isOn());
     }
     listeners.forEach(listener ->
-            listener.onActuatorStateChanged(nodeId, actuator.getId(), actuator.isOn())
+        listener.onActuatorStateChanged(nodeId, actuator.getId(), actuator.isOn())
     );
   }
 

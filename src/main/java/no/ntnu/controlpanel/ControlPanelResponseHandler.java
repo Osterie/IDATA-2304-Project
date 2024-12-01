@@ -4,7 +4,6 @@ import static no.ntnu.tools.parsing.Parser.parseBooleanOrError;
 import static no.ntnu.tools.parsing.Parser.parseIntegerOrError;
 
 import java.util.List;
-
 import no.ntnu.constants.Endpoints;
 import no.ntnu.greenhouse.sensor.SensorReading;
 import no.ntnu.intermediaryserver.clienthandler.ClientIdentification;
@@ -30,10 +29,11 @@ import no.ntnu.tools.parsing.SensorReadingsParser;
  */
 public class ControlPanelResponseHandler {
 
-  private ControlPanelCommunicationChannel communicationChannel;
-  private ControlPanelLogic logic;
+  private final ControlPanelCommunicationChannel communicationChannel;
+  private final ControlPanelLogic logic;
 
-  public ControlPanelResponseHandler(ControlPanelCommunicationChannel communicationChannel, ControlPanelLogic logic) {
+  public ControlPanelResponseHandler(ControlPanelCommunicationChannel communicationChannel,
+                                     ControlPanelLogic logic) {
     this.communicationChannel = communicationChannel;
     this.logic = logic;
   }
@@ -102,7 +102,7 @@ public class ControlPanelResponseHandler {
 
   /**
    * Handles the response to an actuator change command.
-   * 
+   *
    * @param responseData the response data.
    */
   private void handleActuatorChangeResponse(String responseData) {
@@ -122,7 +122,7 @@ public class ControlPanelResponseHandler {
 
   /**
    * Handles the response to a get sensor data command.
-   * 
+   *
    * @param responseData the response data.
    */
   private void handleGetSensorDataResponse(String responseData) {
@@ -140,18 +140,19 @@ public class ControlPanelResponseHandler {
 
   /**
    * Handles the response to a get node command.
-   * 
+   *
    * @param responseData the response data.
    */
   private void handleGetNodeCommand(String responseData) {
-    SensorActuatorNodeInfo nodeInfo = SensorActuatorNodeInfoParser.createSensorNodeInfoFrom(responseData, this.logic);
+    SensorActuatorNodeInfo nodeInfo =
+        SensorActuatorNodeInfoParser.createSensorNodeInfoFrom(responseData, this.logic);
     this.logic.addNode(nodeInfo);
   }
 
   /**
    * Handles the response to a get node ID command.
    * Spawns a new sensor/actuator node based on the response data.
-   * 
+   *
    * @param nodeId the node id response data.
    */
   private void handleGetNodeIdResponse(String nodeId) {
@@ -160,22 +161,20 @@ public class ControlPanelResponseHandler {
 
   /**
    * Handles a response from the server.
-   * 
+   *
    * @param response the message response.
    */
   private void handleServerResponse(Response response) {
-    if (response instanceof SuccessResponse) {
-      SuccessResponse successResponse = (SuccessResponse) response;
+    if (response instanceof SuccessResponse successResponse) {
       this.handleServerSuccessResponse(successResponse);
-    } else if (response instanceof FailureResponse) {
-      FailureResponse failureResponse = (FailureResponse) response;
+    } else if (response instanceof FailureResponse failureResponse) {
       this.handleServerFailureResponse(failureResponse);
     }
   }
 
   /**
    * Handles a success response from the server.
-   * 
+   *
    * @param response the success response.
    */
   private void handleServerSuccessResponse(SuccessResponse response) {
@@ -185,7 +184,7 @@ public class ControlPanelResponseHandler {
   /**
    * Handles a failure response from the server.
    * Different failure reasons may be hanlded differently.
-   * 
+   *
    * @param response the failure response.
    */
   private void handleServerFailureResponse(FailureResponse response) {
@@ -195,8 +194,8 @@ public class ControlPanelResponseHandler {
     FailureReason reason = response.getFailureReason();
 
     if (reason == FailureReason.FAILED_TO_IDENTIFY_CLIENT) {
-      ClientIdentification clientIdentification = new ClientIdentification(Endpoints.CONTROL_PANEL,
-          Endpoints.NOT_PREDEFINED.getValue());
+      ClientIdentification clientIdentification =
+          new ClientIdentification(Endpoints.CONTROL_PANEL, Endpoints.NOT_PREDEFINED.getValue());
       this.communicationChannel.establishConnectionWithServer(clientIdentification);
     } else {
       Logger.error("Unknown command: " + response);
@@ -206,10 +205,9 @@ public class ControlPanelResponseHandler {
   /**
    * Extracts the response from a message body.
    * If the body does not contain a response, logs an error and returns null.
-   * 
+   *
    * @param body the message body.
-   * @return the success response, or null if the body does not contain a
-   *         response.
+   * @return the success response, or null if the body does not contain a response.
    */
   private Response extractResponse(MessageBody body) {
 
@@ -225,10 +223,9 @@ public class ControlPanelResponseHandler {
   /**
    * Extracts the greenhouse command from a success response.
    * If the command is not a greenhouse command, logs an error and returns null.
-   * 
+   *
    * @param response the response.
-   * @return the greenhouse command, or null if the command is not a greenhouse
-   *         command.
+   * @return the greenhouse command, or null if the command is not a greenhouse command.
    */
   private GreenhouseCommand extractCommand(Response response) {
     Transmission command = response.getTransmission();
