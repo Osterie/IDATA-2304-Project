@@ -1,4 +1,5 @@
 package no.ntnu.tools.stringification;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -19,36 +20,20 @@ public class Base64ImageEncoderTest {
     private static BufferedImage bufferedImage;
 
     @BeforeAll
-    public static void setup() {
+    public static void setup() throws IOException {
         // Provide valid image paths for testing
-        inputImageFile = new File("resources\\images\\picsart_chuck.jpg");  // Replace with your image path
-        try {
-            bufferedImage = ImageIO.read(inputImageFile);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        inputImageFile = new File("resources\\images\\picsart_chuck.jpg"); // Replace with your image path
+
+        bufferedImage = ImageIO.read(inputImageFile);
+
     }
 
     @Test
     public void testImageToString() throws IOException {
         // Test converting image to Base64 string
-        String base64String = Base64ImageEncoder.imageToString(bufferedImage,"png");
+        String base64String = Base64ImageEncoder.imageToString(bufferedImage, "png");
         assertNotNull(base64String, "Base64 string should not be null.");
         assertFalse(base64String.isEmpty(), "Base64 string should not be empty.");
         Logger.info("Image successfully converted to Base64 string.");
     }
-
-    // @Test
-    // public void testStringToImage() throws IOException {
-    //     // Convert image to Base64 string first
-    //     String base64String = Base64ImageEncoder.imageToString(inputImageFile, "png");
-
-    //     // Test converting Base64 string back to BufferedImage
-    //     BufferedImage image = Base64ImageEncoder.stringToImage(base64String);
-    //     assertNotNull(image, "BufferedImage should not be null.");
-    //     assertEquals(image.getWidth(), 1024);
-    //     assertEquals(image.getHeight(), 1024);
-    //     Logger.info("Base64 string successfully converted back to image.");
-    // }
 }

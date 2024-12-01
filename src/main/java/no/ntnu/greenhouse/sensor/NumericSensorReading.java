@@ -63,7 +63,6 @@ public class NumericSensorReading extends SensorReading {
     return this.getType().getType() + " = " + this.value + " " + this.unit;
   }
 
-  // TODO use to string instead
   /**
    * Get a human-readable (formatted) version of the current reading, including
    * the unit.
