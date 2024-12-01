@@ -192,7 +192,8 @@ public class ControlPanelApplication extends Application
    */
   private void setupMainScene(Stage stage, VBox rootLayout) {
     mainScene = new Scene(rootLayout, WINDOW_WIDTH, WINDOW_HEIGHT);
-    mainScene.getStylesheets().add(getClass().getResource("/css/controlpanel.css").toExternalForm());
+    mainScene.getStylesheets().add(getClass().getResource
+            ("/css/controlpanel.css").toExternalForm());
     stage.setScene(mainScene);
     stage.show();
   }
@@ -291,7 +292,7 @@ public class ControlPanelApplication extends Application
   @Override
   public void onCommunicationChannelClosed() {
     InformationWindow infoWindow = new InformationWindow();
-    infoWindow.showAlert("Communication",
-        "The communication to the server has been lost, if you just refreshed, the connection will re-establish.");
+    infoWindow.showAlert("Communication", "The communication to the server has been lost, "
+            + "if you just refreshed, the connection will re-establish.");
   }
 }
