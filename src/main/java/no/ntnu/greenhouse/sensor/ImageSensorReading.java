@@ -70,7 +70,7 @@ public class ImageSensorReading extends SensorReading{
             }
         } catch (IOException e) {
             System.err.println("An error occurred while loading the image.");
-            e.printStackTrace();
+            // e.printStackTrace();
         }
 
         // Update current image if an image was successfully loaded
