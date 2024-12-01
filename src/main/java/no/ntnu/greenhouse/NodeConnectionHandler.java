@@ -110,7 +110,7 @@ public class NodeConnectionHandler extends SocketCommunicationChannel implements
      */
     private void handleGreenhouseCommand(GreenhouseCommand command, MessageHeader header) {
         Message response = command.execute(this.nodeLogic, header);
-        Logger.info("Received command for node, sending response: " + response);
+        // Logger.info("Received command for node, sending response: " + response);
         this.sendMessage(response);
     }
 

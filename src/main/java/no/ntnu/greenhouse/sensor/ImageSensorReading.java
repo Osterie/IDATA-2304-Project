@@ -69,7 +69,7 @@ public class ImageSensorReading extends SensorReading {
                 Logger.info("No image files found in the specified directory.");
             }
         } catch (IOException e) {
-            System.err.println("An error occurred while loading the image.");
+            Logger.error("An error occurred while loading the image.");
             // e.printStackTrace();
         }
 

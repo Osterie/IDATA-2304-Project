@@ -52,7 +52,7 @@ public class ControlPanelCommunicationChannel extends SocketCommunicationChannel
    */
   @Override
   protected void handleSpecificMessage(Message message) {
-    Logger.info("Received message from server: " + message);
+    // Logger.info("Received message from server: " + message);
     
     MessageHeader header = message.getHeader();
     MessageBody body = message.getBody();

@@ -61,7 +61,7 @@ public class TransmissionTranslator {
      * @return the corresponding Transmission object, or null if not found
      */
     public Transmission toTransmission(String string) {
-        Logger.info("Converting string to transmission: " + string);
+        // Logger.info("Converting string to transmission: " + string);
         String transmissionType = identifyTransmissionType(string);
 
         Transmission transmission = getTransmission(transmissionType);
