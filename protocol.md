@@ -39,9 +39,8 @@ Clients are the nodes that initiate communication with the server to send reques
 
 1. **Greenhouse nodes:** These are sensor and actuator nodes that send sensor data to the server and receive commands from the server to control the actuators.
 
-2. **Control panels:** These are GUIs that visualize the sensor data and send commands to the server to control the actuators.
+2. **Control panels:** These are clients that ask for/recieve sensor data form the server and send commands to the server to control the actuators.
 
-TODO: Contorlpanel is 
 
 **Server**
 The central entity managing client connections and routing messages. It is responsible for receiving sensor data from greenhouse nodes, sending commands to greenhouse nodes, and relaying sensor data to control panels (When it recieves messages it sends the message where the message want to be sent ish.). It is represented by the `IntermediaryServer` class, which uses `ClientHandler` to manage individual client connections.
