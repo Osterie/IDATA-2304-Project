@@ -362,9 +362,19 @@ member? How did you work with the sprints? Were there any general themes for the
 - [ ] DANIEL 4. The architecture of your solution. What nodes are communicating? What is the responsibility
 of each? Preferably, include model’s diagrams here. (1-2min)
 - [ ] TOBIAS OG DANIEL 5. Your communication protocol. Summarize it in a clear yet concise way. (3-4min)
+
 - [ ] ALLE TODO 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
 
+
+1. run intermidiary server
+2. run greenhouse
+2. run control panel
+
 - Show that if greenhouse and/or control panel is started before the intermediary server, that they try to reconnect to the server, and then run the server to show they are able to connect whilst trying to reconnect.
+- Run multiple control panels. (SHow that if yoy do something in one control panel, it is reflected in the other control panel and geenhosue)
+- Press buttons in greenhouse and show that it is reflected in control panel.
+- show turn on and turn off all actuators for a node.
+- when you close a contorl panel and open it again, it works.
 
 - [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project. (1-3min)
 
