@@ -115,12 +115,6 @@ All messages consist of the following parts:
       - `SUCCESS`: The command was executed successfully.
       - `FAILURE`: The command failed to execute.
 
-### **Example Message**
-
-Result:
-- DST;DST_ID;DATA_TYPE COMMAND
-- GREENHOUSE;AllId;STRING GET_NODE_ID
-
 ---
 
 ### Message Types
@@ -144,9 +138,18 @@ Result:
 TODO - describe the general format of all messages. Then describe specific format for each
 message type in your protocol.
 
----
-
 #### Commands
+
+After a command is executed, the method which does this will return a message, and instead of the body of the message containing a command, it will contain a response which will be handled when the message is sent back to whoever sent it firsst. The response will be either a SuccessResponse or a FailureResponse.
+
+All success responses look like this:
+- SUCCESS,COMMAND_TYPE,RESPONSE_DATA
+
+All failure responses look like this:
+- FAILURE,COMMAND_TYPE,FAILURE_REASON
+
+For the commands below we will also mention the potential success responses and failure responses, but will only write what the response data might be or the failure reasaon, since the general format of the responses are already mentioned above.
+
 
 Where:
 - **DST**: Destination (`CONTROL_PANEL` or `GREENHOUSE`).
@@ -158,33 +161,57 @@ Where:
 ##### **1. ActuatorChangeCommand**
 **Purpose**: Change the state of a specific actuator.
 
-**Format**:
-DST;DST_ID;COMMAND;ACTUATOR_CHANGE;ACTUATOR_ID,STATE
+**Format**: DST;DST_ID;HASH-ACTUATOR_CHANGE,ACTUATOR_ID,STATE
+
+**Success Response**: SUCCESS,ACTUATOR_CHANGE,NODE_ID;ACTUATOR_ID;STATE
+
+NODE_ID = id of node
+ACTUATOR_ID = actual id of actuator
+STATE = 1 or 0
 
 ##### **2. GetNodeCommand**
 **Purpose**: Retrieve information about a specific node
 
-**Format**: DST;DST_ID;COMMAND;GET_NODE
+**Format**: DST;DST_ID;HASH-GET_NODE
+
+**Success Response**: SUCCESS,GET_NODE,NODE_ID;ACTUATOR_TYPE1¤ACTUATOR_ID1¤ACTUATOR_TURN_ON_TEXT1¤ACTUATOR_TURN_OFF_TEXT1¤ACTUATOR_STATE1,Actuator2,3,4 and so on.
+
+ACTUATOR_TYPE1 = type of actuator
+ACTUATOR_ID1 = id of actuator
+ACTUATOR_TURN_ON_TEXT1 = text to display when actuator is turned on
+ACTUATOR_TURN_OFF_TEXT1 = text to display when actuator is turned off
+
 
 ##### **3. GetNodeIdCommand**
 **Purpose**: Retrieve the ID of a specific node.
 
-**Format**: DST;DST_ID;COMMAND;GET_NODE_ID
+**Format**: DST;DST_ID;HASH-GET_NODE_ID
+
+**Success Response**: SUCCESS,GET_NODE_ID,NODE_ID;ACTUATOR_ID;NODE_ID
+
+NODE_ID = id of node
 
 ##### **4. GetSensorDataCommand**
 **Purpose**: Retrieve data from a specific sensor.
 
-**Format**: DST;DST_ID;COMMAND;GET_SENSOR_DATA;SENSOR_ID
+**Format**: DST;DST_ID;HASH-GET_SENSOR_DATA
+
+**Success Response**: SUCCESS,GET_SENSOR_DATA,ACTUATOR_ID;(sensor data, a bit differently formatted based on sensor data type and such)
+
 
 ##### **5. TurnOffAllActuatorInNodeCommand**
 **Purpose**: Turn off all actuators in a specific node.
 
-**Format**: DST;DST_ID;COMMAND;TURN_OFF_ALL_ACTUATORS
+**Format**: DST;DST_ID;HASH-TURN_OFF_ALL_ACTUATORS
+
+**Success Response**: SUCCESS,TURN_OFF_ALL_ACTUATORS,TURN_OFF_ALL_ACTUATORS_SUCCESS
 
 ##### **6. TurnOnAllActuatorInNodeCommand**
 **Purpose**: Turn on all actuators in a specific node.
 
-**Format**: DST;DST_ID;COMMAND;TURN_ON_ALL_ACTUATORS
+**Format**: DST;DST_ID;HASH-TURN_ON_ALL_ACTUATORS
+
+**Success Response**: SUCCESS,TURN_ON_ALL_ACTUATORS,TURN_ON_ALL_ACTUATORS_SUCCESS
 
 ---
 
