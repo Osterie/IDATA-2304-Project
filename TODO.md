@@ -171,7 +171,7 @@ For each of the design choices provide a short justification: why did you choose
 - [ ] SEBASTIAN. • Who are the actors (nodes) in your solution?
 - [ ] SEBASTIAN. • Who are the clients, who is/are the server(s)?
 - [x] ADRIAN 6. The flow of information: when and how the messages are sent?
-- [?] KNUT. 7.  The type of your protocol:
+- [x] KNUT. 7.  The type of your protocol:
 - [X] KNUT. • Is your protocol connection-oriented or connection-less?
 - [X] KNUT. • Is the protocol state-full or state-less?
 - [ ] DANIEL 8.  The different types and special values (constants) used
@@ -330,7 +330,7 @@ either using public-key cryptography or other methods.
 
 - [X] KNUT 1. Introduction of the application: what problem does your solution solve? (1min)
 - [ ] SEBASTIAN 2. The information, materials, approach you used, and the research you did. (1min)
-- [X ] KNUT 3. The work process: how did you organize work throughout the semester? Role of each team
+- [X] KNUT 3. The work process: how did you organize work throughout the semester? Role of each team
 member? How did you work with the sprints? Were there any general themes for the sprints, phases of the project? (1min)
 - [ ] DANIEL 4. The architecture of your solution. What nodes are communicating? What is the responsibility
 of each? Preferably, include model’s diagrams here. (1-2min)
