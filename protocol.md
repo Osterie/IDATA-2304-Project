@@ -116,6 +116,9 @@ Result:
     - Status updates for sensors.
     - Actuator state confirmations.
 
+#### **3. Indetification request**
+- Sent from `GREENHOUSE` and `GREENHOUSE` to `SERVER`
+
 ### Message Flow
 
 #### **Control Panel**
