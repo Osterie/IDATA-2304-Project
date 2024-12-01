@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
 import no.ntnu.greenhouse.sensor.AudioSensorReading;
 import no.ntnu.greenhouse.sensor.ImageSensorReading;
 import no.ntnu.greenhouse.sensor.NoSensorReading;
@@ -26,8 +25,8 @@ import no.ntnu.tools.stringification.Base64ImageEncoder;
  * of sensor
  * readings including image, numeric, and audio readings.
  *
- * <p>
- * Supported formats for sensor readings:
+ *
+ * <p>Supported formats for sensor readings:
  * <ul>
  * <li>IMG: "type,base64String,fileExtension"</li>
  * <li>NUM: "type,value,unit"</li>
@@ -35,8 +34,8 @@ import no.ntnu.tools.stringification.Base64ImageEncoder;
  * </ul>
  *
  *
- * <p>
- * Methods:
+ *
+ * <p>Methods:
  * <ul>
  * <li>{@link #parseSensors(String)}: Parses a string containing sensor
  * information and returns a list of SensorReading objects.</li>
@@ -48,8 +47,8 @@ import no.ntnu.tools.stringification.Base64ImageEncoder;
  * a base64 encoded string.</li>
  * </ul>
  *
- * <p>
- * Exceptions:
+ *
+ * <p>Exceptions:
  * <ul>
  * <li>{@link IllegalArgumentException}: Thrown if the input string is null,
  * empty, or has an invalid format.</li>
@@ -86,7 +85,6 @@ public class SensorReadingsParser {
   /**
    * Parses a sensor reading from a string and returns the corresponding
    * SensorReading object.
-   *
    * The input string should be in the format "TYPE:DATA", where TYPE can be
    * "IMG", "NUM", or "AUD".
    * - For "IMG" (image) readings, DATA should be in the format
@@ -130,7 +128,8 @@ public class SensorReadingsParser {
 
     } else if (formatParts[0].equals("NUM")) {
       String type = assignmentParts[0];
-      double value = parseDoubleOrError(assignmentParts[1], "Invalid sensor value: " + assignmentParts[1]);
+      double value = parseDoubleOrError(assignmentParts[1],
+              "Invalid sensor value: " + assignmentParts[1]);
       String unit = "";
       if (assignmentParts.length == 3) {
         unit = assignmentParts[2];
@@ -160,7 +159,8 @@ public class SensorReadingsParser {
    * @throws IllegalArgumentException if the base64 string cannot be decoded into
    *                                  an image
    */
-  private static ImageSensorReading parseImageReading(String type, String base64String, String fileExtension) {
+  private static ImageSensorReading parseImageReading(String type,
+                                                      String base64String, String fileExtension) {
     BufferedImage image;
     try {
       image = Base64ImageEncoder.stringToImage(base64String);

@@ -1,10 +1,10 @@
 package no.ntnu.tools.encryption.symmetric;
 
+import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
 
 /**
  * Utility class for encrypting and decrypting string messages using the AES encryption algorithm.
