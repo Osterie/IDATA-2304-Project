@@ -327,6 +327,7 @@ either using public-key cryptography or other methods.
 
 - [x] 5. ADRIAN Support of more flexible actuator commands. By default, it is expected that a command is sent to a specific sensor node, specific actuator. If you manage to support also either broadcast commands (to all sensor nodes at a time), or multicast (to specific groups of sensor nodes), this is considered an extra.
 
+BROADCAST.
 
 # WORK PROCESS DOCUMENTATION REQUIREMENTS
 provide some form of documentation of the following:
@@ -365,8 +366,20 @@ of each? Preferably, include model’s diagrams here. (1-2min)
 
 - Show that if greenhouse and/or control panel is started before the intermediary server, that they try to reconnect to the server, and then run the server to show they are able to connect whilst trying to reconnect.
 
-- [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project.
-(1-3min)
+- [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project. (1-3min)
+
+
+## Resilience in case of network outages.
+
+If the client fails to connect to the server, or loses connection to the server, the client will try to re-establish the connection multiple times, each time waiting longer and logner to try and reconnect. If this fails too many times, the client will stop trying to connect and stop. If the client loses connection to the server and then tries to send messages, it will buffer the messages until the connection is re-established and will then send all the buffered messages when reconnected.
+
+
+## Support of more flexible actuator commands.
+
+In addition to being able to send an actuator state change command to a specific actuator on a specific node, We are able to send a command to turn on all or turn off all actuators for a specific node.
+
+Also, we have a protocol for sending a message to all connected nodes, by specifying a broadcast parameaer in our message. Which means when a broadcast message is sent from a client, to the server, the server will then broadcast the received message to all target clients.
+
 - [x] ADRIAN 8. Reflect on potential improvements and future work. (1 min)
 - Currently the messages we send are separated into different parts, like header and body, and each of these parts are further subdivided, we do this by using different delimiters like "-" ";" and such. A better solution which we could call future work is to instead use a well established protocol like JSON or XML. This would make it easier to read the messages, and also easier to parse them. We already have experience with both JSON and XML which means it would not have been a big problem to hypthetically implement one of these protocols in the future.
 
