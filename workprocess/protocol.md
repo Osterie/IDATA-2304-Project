@@ -312,27 +312,29 @@ example scenario could be as follows:
 
 ### Security:
 
-**Justification for RSA**: RSA is a well-established cryptographic algorithm offering strong security
+- For our application we wanted to implement RSA encryption, but ended up not using it because of bugs and tight schedule. But the tools for encryption is made.
+
+- Justification for RSA: RSA is a well-established cryptographic algorithm offering strong security
 for encrypting sensitive data or securely exchanging keys. Its public/private key mechanism
 ensures that only authorized users with the private key can decrypt the data.
 
-**Justification for asymmetric encryption**: Unlike symmetric encryption, RSA does not require both
+- Justification for asymmetric encryption: Unlike symmetric encryption, RSA does not require both
 parties to share a secret key beforehand, which simplifies key distribution and enhances
 security for scenarios where secure communication is required over untrusted networks.
 
-<p>Note: This class uses 2048-bit RSA keys, providing robust security. For even greater protection,
+Note: This class uses 2048-bit RSA keys, providing robust security. For even greater protection,
 consider using 3072 or 4096-bit keys, depending on performance and security requirements.
 
 ### Reliability:
-  - For reliability a hashing algorithm is being used.
+- For reliability a hashing algorithm is being used.
 
-  - Justification for hashing algorithm: Hashing algorithms like SHA-256 are used to ensure data integrity. The hash
-  function generates a fixed-size output (hash) that uniquely represents the message. When
-  transmitting messages over unreliable networks, hashes can verify the integrity of the
-  message and ensure it has not been tampered with or altered. This also provides
-  lightweight verification without adding computational overhead.
+- Justification for hashing algorithm: Hashing algorithms like SHA-256 are used to ensure data integrity. The hash
+function generates a fixed-size output (hash) that uniquely represents the message. When
+transmitting messages over unreliable networks, hashes can verify the integrity of the
+message and ensure it has not been tampered with or altered. This also provides
+lightweight verification without adding computational overhead.
 
-    - Message Integrity Check: By hashing the message on both the sender and receiver
-  sides, we ensure that any corruption during transmission can be detected. If the
-  received hash doesn't match the hash computed on the receiver's side, the message is
-  considered tampered or corrupted, and the sender is notified to resend.
+  - Message Integrity Check: By hashing the message on both the sender and receiver
+sides, we ensure that any corruption during transmission can be detected. If the
+received hash doesn't match the hash computed on the receiver's side, the message is
+considered tampered or corrupted, and the sender is notified to resend.
