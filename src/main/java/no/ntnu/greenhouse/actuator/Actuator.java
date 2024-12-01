@@ -9,6 +9,7 @@ import static no.ntnu.tools.parsing.Parser.parseIntegerOrError;
 import no.ntnu.greenhouse.SensorActuatorNode;
 import no.ntnu.greenhouse.sensor.SensorType;
 import no.ntnu.listeners.common.ActuatorListener;
+import no.ntnu.messages.Delimiters;
 import no.ntnu.tools.Logger;
 
 /**
@@ -199,7 +200,7 @@ public class Actuator {
    * @return The created actuator
    */
   public static Actuator fromString(String s, int nodeId) {
-    String[] actuatorInfo = s.split("_");
+    String[] actuatorInfo = s.split(Delimiters.BODY_SENSOR_SEPARATOR.getValue());
     if (actuatorInfo.length != 5) {
       throw new IllegalArgumentException("Invalid actuator info format: " + s);
     }
@@ -228,13 +229,13 @@ public class Actuator {
   @Override
   public String toString() {
     return this.getType()
-        + "_"
+        + Delimiters.BODY_SENSOR_SEPARATOR.getValue()
         + this.getId()
-        + "_"
+        + Delimiters.BODY_SENSOR_SEPARATOR.getValue()
         + this.getTurnOnText()
-        + "_"
+        + Delimiters.BODY_SENSOR_SEPARATOR.getValue()
         + this.getTurnOffText()
-        + "_"
+        + Delimiters.BODY_SENSOR_SEPARATOR.getValue()
         + (this.isOn() ? "1" : "0");
   }
 
