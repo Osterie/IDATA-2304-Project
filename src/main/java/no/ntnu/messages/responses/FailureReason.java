@@ -3,8 +3,6 @@ package no.ntnu.messages.responses;
 public enum FailureReason {
 
     SERVER_NOT_RUNNING("Server is not running"),
-    SERVER_ALREADY_RUNNING("Server is already running"),
-    SERVER_NOT_STOPPED("Server is not stopped"),
     FAILED_TO_IDENTIFY_CLIENT("Failed to identify client"),
     INTEGRITY_ERROR("Integrity error");
 
