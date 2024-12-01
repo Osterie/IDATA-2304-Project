@@ -264,7 +264,7 @@ public abstract class TcpConnection {
    * @param port
    * @throws IOException
    */
-  protected void initializeStreams(String host, int port) throws IOException {
+  public void initializeStreams(String host, int port) throws IOException {
     Logger.info("Trying to establish connection to " + host + ":" + port);
     this.socket = new Socket(host, port);
     this.socket.setKeepAlive(true);

@@ -42,7 +42,7 @@
 
 # CURRENT
 
-- [ ] ADRIAN Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
+- [x] ADRIAN Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
 - [x] ADRIAN create a starter for only IntermediaryServer.
 
 
@@ -97,7 +97,7 @@
 - [x] ADRIAN notifyChanges method of Actuator Class, refactor this method.
 - [x] ADRIAN image sensor should have image: [Actual image]
 
-- [ ] KNUT add a working refresh button to control panel
+- [x] ADRIAN add a working refresh button to control panel
 
 - [x] ADRIAN fix nodes sometimes not being created in gui.
 
