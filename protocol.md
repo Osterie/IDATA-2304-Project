@@ -27,10 +27,6 @@ TODO - what transport-layer protocol do you use? TCP? UDP? What port number(s)? 
 
 
 ## The architecture
-TODO - READ THROUGH THIS (MABYE I SHOULD BE MORE SPECIFIC?, ADD PICTURES OF THE ARCHITECTURE? UML DIAGRAMS?)
-
-Note: show the general architecture of your network. Which part is a server? Who are clients? 
-Do you have one or several servers? Perhaps include a picture here. 
 
 **Clients**
 Clients are the nodes that initiate communication with the server to send requests and receive responses.
@@ -39,9 +35,8 @@ Clients are the nodes that initiate communication with the server to send reques
 
 1. **Greenhouse nodes:** These are sensor and actuator nodes that send sensor data to the server and receive commands from the server to control the actuators.
 
-2. **Control panels:** These are GUIs that visualize the sensor data and send commands to the server to control the actuators.
+2. **Control panels:** These are clients that ask for/recieve sensor data form the server and send commands to the server to control the actuators.
 
-TODO: Contorlpanel is 
 
 **Server**
 The central entity managing client connections and routing messages. It is responsible for receiving sensor data from greenhouse nodes, sending commands to greenhouse nodes, and relaying sensor data to control panels (When it recieves messages it sends the message where the message want to be sent ish.). It is represented by the `IntermediaryServer` class, which uses `ClientHandler` to manage individual client connections.
@@ -75,8 +70,8 @@ The greenhouse cannot push information.
 
 ## Connection and state
 
-TODO - is your communication protocol connection-oriented or connection-less? Is it stateful or 
-stateless? 
+The protocol used is connection-oriented, as it uses TCP, which establishes a connection between the client and the server before sending data.
+The protocol is stateful, as the server maintains the stata of the nodes connected to it.
 
 ## Types, constants
 
@@ -93,6 +88,9 @@ All messages consist of the following parts:
 
 ### **Body**
 - Contains the command or message payload.
+- TODO: Transmission
+- Greenhouse and general command
+- Response and error response
 
 ### **Example Message**
 
@@ -114,6 +112,9 @@ Result:
     - Status updates for sensors.
     - Actuator state confirmations.
 
+#### **3. Indetification request**
+- Sent from `GREENHOUSE` and `GREENHOUSE` to `SERVER`
+
 ### Message Flow
 
 #### **Control Panel**
@@ -121,6 +122,38 @@ Result:
 
 #### **Greenhouse Node**
 - Receives commands, processes them, and optionally sends back responses (e.g., node ID or execution status).
+
+### Marshalling in Message Formatting
+
+In this Java application, **marshalling** refers to the process of converting data into a specific format for communication between components (such as the `Control Panel` and `Greenhouse`). This process ensures that data can be serialized into messages with proper delimiters, allowing the message to be easily parsed, transmitted, and interpreted on the receiving end.
+
+#### Delimiters in Marshalling
+
+The `Delimiters` enum in the `no.ntnu.messages` package defines various separators that are crucial for the formatting and parsing of messages. These delimiters ensure that different parts of a message (e.g., header, body, and parameters) are properly separated.
+
+##### **Delimiters for Marshalling**
+
+The following delimiters are defined:
+
+1. **`HEADER_BODY`** (`"-"`)
+    - Used to separate the **header** from the **body** of a message.
+    - Example: `HEADER-BODY`
+
+2. **`HEADER_FIELD`** (`";"`)
+    - Used to separate fields in the **header** of the message.
+    - Example: `DST;DST_ID;DATA_TYPE`
+
+3. **`BODY_FIELD`** (`HEADER_FIELD.getValue()`)
+    - Default delimiter between fields in the **body** of a message, which is the same as the `HEADER_FIELD` delimiter.
+    - Example: `ACTUATOR_CHANGE;ON`
+
+4. **`BODY_FIELD_PARAMETERS`** (`","`)
+    - Used to separate **parameters** in the **body** of a message. This delimiter is used specifically when a command or sensor message requires multiple parameters.
+    - Example: `1,ON`
+
+5. **`BODY_SENSOR_SEPARATOR`** (`"¤"`)
+    - Used to separate **sensor data** in the body of a message.
+    - Example: `Temperature¤Humidity¤Soil Moisture`
 
 ### Command types
 

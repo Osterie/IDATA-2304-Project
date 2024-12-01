@@ -134,7 +134,7 @@ public class SensorActuatorNodeInfoParser {
     if (s == null || s.isEmpty()) {
       throw new IllegalArgumentException("Actuator info can't be empty");
     }
-    String[] actuatorInfo = s.split("_"); // TODO enum for delimiter or what?
+    String[] actuatorInfo = s.split(Delimiters.BODY_SENSOR_SEPARATOR.getValue());
     if (actuatorInfo.length != 5) {
       throw new IllegalArgumentException("Invalid actuator info format: " + s);
     }

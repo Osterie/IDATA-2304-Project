@@ -52,7 +52,6 @@ public class NumericSensorReading extends SensorReading {
     this.value = newValue;
   }
 
-  
   /**
    * Returns a human-readable string representation of the sensor reading.
    * The format of the returned string is: "type = value unit".
@@ -63,15 +62,16 @@ public class NumericSensorReading extends SensorReading {
     return this.getType().getType() + " = " + this.value + " " + this.unit;
   }
 
-  // TODO use to string instead
   /**
    * Get a human-readable (formatted) version of the current reading, including
    * the unit.
    *
    * @return The sensor reading and the unit
    */
+  @Override
   public String getFormatted() {
-    return this.getType().getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.value + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.unit;
+    return this.getType().getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.value
+        + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.unit;
   }
 
   /**

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.security.*;
+import java.util.Base64;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -16,10 +17,7 @@ import no.ntnu.messages.commands.common.ClientIdentificationTransmission;
 import no.ntnu.messages.commands.greenhouse.GetNodeCommand;
 import no.ntnu.messages.responses.SuccessResponse;
 import no.ntnu.tools.Logger;
-import no.ntnu.tools.encryption.KeyGenerator;
-import no.ntnu.tools.encryption.MessageEncryptor;
-import no.ntnu.tools.encryption.MessageHasher;
-import no.ntnu.tools.encryption.PublicKeyHolder;
+import no.ntnu.tools.encryption.*;
 
 public abstract class TcpConnection {
 
@@ -266,7 +264,7 @@ public abstract class TcpConnection {
    * @param port
    * @throws IOException
    */
-  protected void initializeStreams(String host, int port) throws IOException {
+  public void initializeStreams(String host, int port) throws IOException {
     Logger.info("Trying to establish connection to " + host + ":" + port);
     this.socket = new Socket(host, port);
     this.socket.setKeepAlive(true);
@@ -316,24 +314,60 @@ public abstract class TcpConnection {
     try {
       if (this.socketReader != null) {
         clientRequest = this.socketReader.readLine();
-
-        // TODO: Uncomment when the encryption in sendMessage is done.
-        //try {
-        //  clientRequest = MessageEncryptor.decryptStringMessage(clientRequest, recipientPrivateKey);
-        //} catch (Exception e) {
-        //  throw new RuntimeException(e);
-        //}
-
+        Logger.info("MESSAGE IS: " + clientRequest);
+        // Decrypt message
+        clientRequest = this.decryptMessage(clientRequest);
       } else {
         Logger.error("Socket reader is null");
       }
     } catch (IOException e) {
       Logger.error("Could not receive client request: " + e.getMessage());
     }
+
+    Logger.info("MESSAGE IS: " + clientRequest);
     return clientRequest;
   }
 
-  // TODO @TobyJavascript when done, refactor
+  /**
+   * This method decrypts encryped message string.
+   *
+   * @param message message to be decrypted.
+   * @return the decrypted message.
+   */
+  protected String decryptMessage(String message) {
+    String encryptedMessage = message;
+
+    if (encryptedMessage != null) {
+      // Decrypts message
+      try {
+        //encryptedMessage = MessageEncryptor.decryptStringMessage(encryptedMessage, recipientPrivateKey);
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    return encryptedMessage;
+  }
+
+  /**
+   * This method returns the encrypted string of input message.
+   *
+   * @param message message to be encrypted.
+   * @return encrypted message.
+   */
+  protected String encryptMessage(Message message) {
+    // Encrypt original body content
+    String encryptedMessage = message.toString();
+
+    try {
+      //encryptedMessage = MessageEncryptor.encryptMessage(message, recipientPublicKey);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
+    return encryptedMessage;
+  }
+
   /**
    * Reads and handles a message from the connected socket.
    * 
@@ -342,22 +376,20 @@ public abstract class TcpConnection {
   protected void readMessage() throws IOException {
     String serverMessage = this.readLine();
     if (serverMessage != null) {
-      // Logger.info("Received from server: " + serverMessage);
-      // TODO: It needs decryption.
-      // TODO: HandleMessage should take Message not String.
       Message message = this.parseMessage(serverMessage);
 
+      // Creates hash from body content
       MessageHasher.addHashedContentToMessage(message);
-
-      // Extract hash from header
+      // Extract hash from created header
       String hashedContentFromHeader = message.getHeader().getHashedContent();
-      // Hash received message
-      MessageHasher.addHashedContentToMessage(message);
+
+      // Extract hash from received header
       String receivedMessageHash = message.getHeader().getHashedContent();
 
       // Match the two hashes
       if (hashedContentFromHeader.equals(receivedMessageHash)) {
-        // No integiry loss.
+        // No integrity loss.
+        Logger.info("No integrity loss.");
       }
       else{
         // Integrity loss
@@ -419,29 +451,15 @@ public abstract class TcpConnection {
     // Adds hashed version of body content to header,
     Message originalMessage = MessageHasher.addHashedContentToMessage(message);
 
-    // TODO: Not all takes string, therefore encryption not working.
-    // Encrypt original body content
-    String encryptedMessage2 = MessageEncryptor.encryptMessage(originalMessage,
-    recipientPublicKey);
-
-    // TODO: Delete sout after showing it works.
-    // System.out.println("AFTER ENCRYPTION: " + encryptedMessage2);
-    try {
-      encryptedMessage2 = MessageEncryptor.decryptStringMessage(encryptedMessage2, recipientPrivateKey);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-    // System.out.println("AFTER DECRYPTION: " + encryptedMessage2 + " " + message.toString());
-
-    // TODO: This one is replaced with the one over when encryption works.
-    Message encryptedMessage = message;
+    // Encrypts message
+    String encryptedMessage = this.encryptMessage(originalMessage);
 
     if (isConnected && socketWriter != null) {
       socketWriter.println(encryptedMessage);
-      // Logger.info("Sent message to server: " + encryptedMessage);
+
     } else {
       Logger.error("Unable to send message, socket is not connected.");
-      messageQueue.offer(encryptedMessage); // Buffer the message
+      messageQueue.offer(originalMessage); // Buffer the message
       reconnect(this.host, this.port);
     }
   }

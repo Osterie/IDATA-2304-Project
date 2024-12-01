@@ -2,9 +2,10 @@ package no.ntnu.tools.encryption;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Base64;
 import javax.crypto.SecretKey;
-
 import no.ntnu.messages.*;
+import no.ntnu.tools.Logger;
 import no.ntnu.tools.encryption.asymmetric.HybridRSAEncryptor;
 
 
@@ -21,39 +22,24 @@ public class MessageEncryptor {
    * @return the encrypted message
    */
   public static String encryptMessage(Message message, PublicKey recipientPublicKey) {
-    Message encryptedMessage = message;
+    String encryptedMessage = message.toString();
     String encryptedAeskey = null;
-    String encryptedBody = null;
-    String encryptedHeader = null;
-    String encryptedMessageTest = null;
 
     try {
       // Generate AES key
       SecretKey aesKey = HybridRSAEncryptor.generateAESKey();
 
-      // Original content
-      MessageHeader originalHeader = encryptedMessage.getHeader();
-      MessageBody originalBody = encryptedMessage.getBody();
-
       // Encrypt message
-      encryptedMessageTest = HybridRSAEncryptor.encryptWithAES(message.toString(), aesKey);
-
-      // Encrypted content
-      encryptedHeader = HybridRSAEncryptor.encryptWithAES(originalHeader.toString(), aesKey);
-      encryptedBody = HybridRSAEncryptor.encryptWithAES(originalBody.toString(), aesKey);
+      encryptedMessage = HybridRSAEncryptor.encryptWithAES(encryptedMessage, aesKey);
 
       // Encrypt the AES key with the recipient's public key
       encryptedAeskey = HybridRSAEncryptor.encryptAESKeyWithRSA(aesKey, recipientPublicKey);
-
-      // Add encrypted content to header
-      // encryptedMessage.getHeader().setId(encryptedId);
-
     } catch (Exception e) {
-      System.err.println("Error occurred during encryption: " + e.getMessage());
+      Logger.error("Error occurred during encryption: " + e.getMessage());
       e.printStackTrace();
     }
 
-    return encryptedMessageTest + Delimiters.HEADER_BODY.getValue() + encryptedAeskey;
+    return encryptedMessage + "-" + encryptedAeskey;
   }
 
   /**
@@ -67,8 +53,6 @@ public class MessageEncryptor {
   public static String decryptStringMessage(String encryptedMessageString, PrivateKey privateKey)
           throws Exception {
 
-    String decryptedHeaderString = null;
-    String decryptedBodyString = null;
     String decryptedMessage = null;
 
     // Split the string by "-"
@@ -80,15 +64,23 @@ public class MessageEncryptor {
       String element1 = elements[0];
       String element2 = elements[1];
 
-      // AES key
-      SecretKey aesKey = HybridRSAEncryptor.decryptAESKeyWithRSA(element2, privateKey);
+      try {
+        SecretKey aesKey = HybridRSAEncryptor.decryptAESKeyWithRSA(element2, privateKey);
+        decryptedMessage = HybridRSAEncryptor.decryptWithAES(element1, aesKey);
 
-      // Decrypt elements
-      decryptedMessage = HybridRSAEncryptor.decryptWithAES(element1, aesKey);
+        Base64.getDecoder().decode(element1); // Validate encrypted message
+        Base64.getDecoder().decode(element2); // Validate encrypted AES key
+      } catch (Exception e) {
+        Logger.error("Decryption failed: " + e.getMessage());
+        throw e;
+      }
 
     } else {
-      // System.out.println(encryptedMessageString);
-      System.out.println("The input does not have exactly 3 elements separated by '-'.");
+      Logger.info("The input does not have exactly 2 elements separated by '-'.");
+    }
+
+    if (decryptedMessage == null) {
+      Logger.error("Problem decrypting message, message ended up: null");
     }
 
     return decryptedMessage;

@@ -1,23 +1,18 @@
 package no.ntnu.greenhouse.sensor;
 
-
-import java.sql.SQLOutput;
-
 /**
  * An image sensor which can sense the environment in a specific way.
  */
 public class ImageSensor extends Sensor<ImageSensorReading> {
-  // private final ImageSensorReading reading;
+
   private final String imagesFilePath;
   private final String dataFormat = "IMG";
   private boolean isOn;
 
-  // TODO do not give image, just have a constant image
-
   /**
    * Create an image sensor.
    *
-   * @param type    The type of the sensor.
+   * @param type           The type of the sensor.
    * @param imagesFilePath The file path to the images
    */
   public ImageSensor(SensorType type, String imagesFilePath) {
@@ -30,9 +25,9 @@ public class ImageSensor extends Sensor<ImageSensorReading> {
   /**
    * Create an image sensor.
    *
-   * @param type    The type of the sensor.
+   * @param type           The type of the sensor.
    * @param imagesFilePath The file path to the images
-   * @param image The initial image
+   * @param image          The initial image
    */
   private ImageSensor(SensorType type, String imagesFilePath, ImageSensorReading image) {
     this.reading = image;
@@ -79,15 +74,15 @@ public class ImageSensor extends Sensor<ImageSensorReading> {
   }
 
   /**
-   * Apply an external impact (from an actuator) to the current value of the sensor.
+   * Apply an external impact (from an actuator) to the current value of the
+   * sensor.
    *
    * @param impact The impact to apply - the delta for the value
    */
 
-    public void applyImpact(double impact) {
-      toggle();
-    }
-
+  public void applyImpact(double impact) {
+    toggle();
+  }
 
   /**
    * Get a string representation of the sensor reading.
@@ -98,17 +93,10 @@ public class ImageSensor extends Sensor<ImageSensorReading> {
   public String toString() {
     return reading.toString();
   }
-/**
-  @Override
-  public void applyImpact(double impact) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'applyImpact'");
-  }
-  */
 
-    /**
-     * Turn on the sensor.
-     */
+  /**
+   * Turn on the sensor.
+   */
   private void turnOn() {
     isOn = true;
   }

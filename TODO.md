@@ -3,23 +3,25 @@
 - Clean code.
 - Good code.
 
+- [ ] TODO create a starter for only IntermediaryServer.
+
 # important
 
 - [ ] SEBASTIAN GOOGLE CHECK ON MY RESPONSIBILITIES.
-
 - [ ] TODO change nodeId to only be int, or that it can be string. (go for can be string.)
+
 - [x] TOBIAS Refactor tools.
 
 - [x] SEBASTIAN Refactor SensorReadingParser.java
 
-- [X] KNUT pass på god kode for gui controlpanel.
+- [x] KNUT pass på god kode for gui controlpanel (start metoden gjør meget mye.).
 - [x] ADRIAN Ensure high quality code for all classes under controlpanel folder (MISSING SOME JAVADOC STILL (tyty))
 - [x] ADRIAN Ensure high quality code for all classes under intermediary server folder
   - [x] ADRIAN clienthandler folder
   - [x] ADRIAN server folder
-- [ ] ADRIAN Ensure high quality code for all classes under greenhouse folder
+- [x] ADRIAN Ensure high quality code for all classes under greenhouse folder
   - [x] ADRIAN actuator folder
-  - [ ] ADRIAN sensor folder
+  - [x] ADRIAN sensor folder
   - [x] ADRIAN other
 - [x] ADRIAN Ensure high quality code for all classes under messages folder
   - [x] ADRIAN Commands
@@ -36,39 +38,32 @@
 
 - [ ] TODO dont print out audio in console...
 - [ ] TODO can add a location variable to the sensors to show where they are located? if user wants. Would be especially good for image sensor and motion sensor and whatver
+- [ ] TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
 
 # CURRENT
 
-- [x] UNASSIGNED The hash stored in the header seems to not arrive, it becomes 1 somewhere in the travel.
-- [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
-- [ ] UNASSIGNED TODO create a starter for only IntermediaryServer.
-- [ ] UNASSIGNED TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
-- [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
+- [x] ADRIAN Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
+- [x] ADRIAN create a starter for only IntermediaryServer.
 
-- [ ] TODO create a starter for only IntermediaryServer.
-- [ ] TODO make control panel and nodes not scrollable, only sensorpane and actuaotrPane.
 
 - [x] ADRIAN refactor commands.
 - [x] ADRIAN Use enums for SensorActuatorNodeInfoParser and GetNodeCommand.
 - [x] ADRIAN builder pattern for devices instead of DeviceFactory.
 - [x] ADRIAN ControlPanelCommunicationChannel, instead of checking if .equals("Get_node") should check if classes are equal or something, idk. some better solution!
 - [x] ADRIAN Separate factory for actuators.
-<!-- - [ ] TOBIAS for generateHeader method usage, what if header is null? handle this. -->
 - [x] TOBIAS FIX When displaying sensor reading in sensor pane, the sensors type is repeated, for example "temperature: temperature = 20deg"
 - [X] KNUT Refactor gui classes. For example ControlPanelApplication. Can create a class for node tab, instead of having the method do all it's shenanigans.
-<!-- - [ ] DO NOT ASSIGN YOURSELF UNASSIGNED If we send data types in GetSensorDataCommand, we should on the receiving end check what datatype and handle it accordingly, instead of current solution. -->
 - [x] TOBIAS When errors happen and are unable to be handled, an error message should be displayed in GUI. A tooltip, text on screen. Whatever is the best solution.
 - [x] ADRIAN fix issue with images not being replaced, but instead being added when displaying images
 - [x] TOBIAS sensor pane should be scrollable if the sensors use up more space than which is allocated to the sensor pane. The scrollable pane should NOT be too small. Same size as without it.
-- [ ] Judge if sensor pane should be scrollable. I tried it out, and it didn't look good, and it didn't feel good to use.
+- [x] TOBIAS Judge if sensor pane should be scrollable. I tried it out, and it didn't look good, and it didn't feel good to use.
 - [x] TOBIAS ScrollPane for controlPanel.
 - [x] SEBASTIAN Create classes for audio, video and motion sensor, like for image sensor. Send data from greenhouse to control panel. Read and display the data at receiving end (control panel).
 - [ ] DANIEL Actuator changes, for audio, video, motion sensor and image, the actuator should "Activate/Deactivate" or "Turn ON/ Turn OFF" the sensor, instead of sending an impact, this will just turn the sensors off, so that they cannot read anymore data.
 - [x] SEBASTIAN Actuator text should not be only ON or OFF, but should support for example CLOSED, OPEN, ACTIVE, UNACTIVE and such. Each actuator should have "Turned on/off text" when they are made.
 
-- [ ] DO NOT ASSIGN YOURSELF UNASSIGNED Add a readme file under resources, or explain in the classes that use the resources (ImageSensorReading, Audio, Video), that the files are read from file to simulate actual audio/video/image sensor data, but in reality the sensors would not read from this file system, but actually record audio, video and take images. (Which can be sent over the network)
 - [x] ADRIAN Sensors for light, PH.
-- [ ] TOBIAS Implement encryption.
+- [ ] TOBIAS Implement encryption. PAIN
 - [x] ADRIAN Handling is the integrity of the data is altered.
 - [x] TOBIAS Hashing the data and storing it in header(?) for checking integrity. 
 - [x] TOBIAS add hash in header of Message.
@@ -102,7 +97,7 @@
 - [x] ADRIAN notifyChanges method of Actuator Class, refactor this method.
 - [x] ADRIAN image sensor should have image: [Actual image]
 
-- [ ] TOBIAS add a working refresh button to control panel
+- [x] ADRIAN add a working refresh button to control panel
 
 - [x] ADRIAN fix nodes sometimes not being created in gui.
 
@@ -137,12 +132,11 @@
 - [ ] When using copilot to write javadoc, check that the javadoc is correct
 
 - [x] TOBIAS. Gjør om bilde til string, også den stringen til bilde. (for å sende over socket)
-- [ ] ?TOBIAS. Klasse for control panel som kan gjøre om den mottatte informasjonen til riktig format.
+- [ ] TOBIAS. ? Klasse for control panel som kan gjøre om den mottatte informasjonen til riktig format.
 - [x] ADRIAN. Følge protokoll, en header og en body. Header inneholer mottaker, mottakerID, datatype Body inneholder dataen.
 
 # JAVADOC
 
-- [ ] ADRIAN/DANIEL/KNUT/SEBASTIAN/TOBIAS. JAVADOC FOLKENS, JAVADOC.
 - [x] TOBIAS Skriv javadoc for messages-klasser.
 - [x] ADRIAN Skriv javadoc for command-klasser.
 - [x] TOBIAS Skriv javadoc for listeners-klasser.
@@ -150,12 +144,12 @@
 - [x] SEBASTIAN Skriv javadoc for sensor-klasser.
 
 - [x] ADRIAN Skriv javadoc for greenhouse-klasser.
-- [ ] UNASSIGNED Skriv javadoc for GUI-klasser.
+- [x] KNUT Skriv javadoc for GUI-klasser.
 - [x] ADRIAN Skriv javadoc for control-panel-klasser.
 - [x] ADRIAN Skriv javadoc for run-klasser.
 - [x] TOBIAS Skriv javadoc for tools-klasser.
 
-- [ ] UNASSIGNED Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
+- [ ] ALLE TODO Gå gjennom alle klasser når produktet er ferdig, for nye klasser har kanskje ikkje javadoc.
 
 # Fill in reports from meeting notes
 
@@ -177,9 +171,9 @@ For each of the design choices provide a short justification: why did you choose
 - [ ] SEBASTIAN. • Who are the actors (nodes) in your solution?
 - [ ] SEBASTIAN. • Who are the clients, who is/are the server(s)?
 - [x] ADRIAN 6. The flow of information: when and how the messages are sent?
-- [ ] KNUT. 7.  The type of your protocol:
-- [ ] KNUT. • Is your protocol connection-oriented or connection-less?
-- [ ] KNUT. • Is the protocol state-full or state-less?
+- [?] KNUT. 7.  The type of your protocol:
+- [X] KNUT. • Is your protocol connection-oriented or connection-less?
+- [X] KNUT. • Is the protocol state-full or state-less?
 - [ ] DANIEL 8.  The different types and special values (constants) used
 - [x] TOBIAS 9.  The message format:
 - [x] TOBIAS ? • The allowed message types (sensor messages, command messages)
@@ -210,7 +204,6 @@ a reply with an error code?
 - [x] ADRIAN. Implementere Message og Command interfacer/klasser
 - [x] ADRIAN. Command classes for client identification. 
 - [x] ADRIAN. Lage ulike Message/Command underklasser
-- [ ] SEBASTIAN Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser denne protokollen ut?
 - [x] SEBASTIAN Commands to turn on/off all actuators for a node. 
 - [x] ADRIAN. Lage klasse som applikasjonen kan kjøres fra.
 - [x] ADRIAN Refaktorer client handler felt, kanskje bruke egen klasse for å lagre klient type og klient id.
@@ -236,13 +229,13 @@ Need to introduse a new thread on client side, on thread for reading, on thread 
 - [X] DANIEL. Lag test klasser som tester kommunikasjon mellom intermediary server og klientene (greenhouse nodes og control panels).
 - [X] DANIEL. Test at de kobler seg til serveren riktig, at de blir identifisert av serveren på riktig måte. Test hva som skjer om protokoller ikke blir fulgt, for eksemepel om første melding til server ikke er en identifiserende melding. 
 - [X] KNUT: Test å sende kommandoer, sjekk respons.
-- [ ] SEBASTIAN Test med flere kontrollere koblet til server, også spør om informasjon fra noder samtidig, både fra ulike noder og fra samme node og slikt.
-- [ ] UNASSIGNED Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
+- [x] ADRIAN Test med flere kontrollere koblet til server, også spør om informasjon fra noder samtidig, både fra ulike noder og fra samme node og slikt.
+- [ ] TODO Teste å åpne et kontrol panel på localhost pcen, og en annen pc. Koble seg til samme IP... som er IP til PCen som kjører hoved programmet.
 
 ## OTHER
 
 - [ ] TOBIAS - Lag tester for alle klasser som kan testes.
-- [ ] UNASSIGNED Test protokoll
+- [ ] TODO Test protokoll
 - [ ] TOBIAS - Test Message og Command klasser
 _
 # GREENHOUSE
@@ -308,7 +301,6 @@ Hvordan kan vi håndtere ulike datatyper uten å hardkode? slik det er lett å u
 
 ## GUI
 
-- [ ] KNUT. Visualize charts.
 - [X] KNUT. GUI Hvordan gjøre: "turn off all actuators (heaters, fans, window openers) at sensor node 7; or turn on all fans at sensor nodes 7, 12, and 19." Mulig å skru av spesifikke actuators. Eller mulig å skru av alle actuators (av samme type). Hvordan ser dette ut i GUI?
 - [x] KNUT. Utbedre UI for ControlPanelApplication, Sett TurnOffAllActuators button til actuatorPane og fjern nodeSelect
 - [X] KNUT. Class to create javafx components containing text, or an image, or whatever, should be genereal. Based on data gotten from SensorReading class or whatever.
@@ -334,47 +326,47 @@ either using public-key cryptography or other methods.
 
 - [x] 5. ADRIAN Support of more flexible actuator commands. By default, it is expected that a command is sent to a specific sensor node, specific actuator. If you manage to support also either broadcast commands (to all sensor nodes at a time), or multicast (to specific groups of sensor nodes), this is considered an extra.
 
-
-# WORK PROCESS DOCUMENTATION REQUIREMENTS
-provide some form of documentation of the following:
-- [ ] KNUT 1. How the work was planned in terms of iterations (sprints)
-- [x] ADRIAN 2. How the tasks were distributed - who was responsible for what. Note - it is NOT OK to have someone in the group responsible only for creating videos. This course is primarily about network protocols and network programming. Every group member must demonstrate expertise within these fields. Perhaps one student works more on the protocol, another on the server programming, and the third on client programming, that is fine. But it is not fine if one student does all the programming, one just writes documentation (sprint reports) and the third creates a video. How are the second and third students showing their computer network expertise?
-
-## How the tasks were distributed
-Tasks were distributed in a TODO.md file under our version control. To create tasks we started by analyzing which tasks the project described, and then we wrote them down and tried to evenly distribute them. While working on the project more TODOs were thought about, written down, and distributed. After we had completed our TODOs we assigned ourselves to other undone TODOs.
-
-## who was responsible for what.
-When programming we did not assign people areas to work on. TODOs were not distributed necessarily based on what other TODOs a member worked on, which was to try to ensure that everyone leared about all parts of the project. Also for writing protocol, everyone were given the responsibility of writing some part of the protocol.
-For completing the work process documentation, everyone was assigned different tasks, which ensured that everyone contributed to all aspects of the project. For the final video everyone had some part to create for the video. 
-
-- [ ] KNUT 3. How was the work broken down into issues? Remember the principles you learned about issue
-definition in the System development course. Issues should be small, have descriptive names,
-clear "definition of done", etc. For example, an issue like "improve GUI" is a bad issue. What
-does it mean? When is it complete?
-- [ ] DANIEL 4. How the work was progressing - what did you accomplish in each sprint? Which issues were
-planned, and which ones were completed?
-- [x] SEBASTIAN 5. A short retrospective after each sprint - what went well, and how can you improve?
-
-It is suggested that you keep the sprint documentation in Git as well, but you are allowed to use
-Wiki pages, Jira or other tools if you want.
-
-
 # VIDEO
 
-- [ ] KNUT 1. Introduction of the application: what problem does your solution solve? (1min)
+- [X] KNUT 1. Introduction of the application: what problem does your solution solve? (1min)
 - [ ] SEBASTIAN 2. The information, materials, approach you used, and the research you did. (1min)
-- [ ] KNUT 3. The work process: how did you organize work throughout the semester? Role of each team
+- [X ] KNUT 3. The work process: how did you organize work throughout the semester? Role of each team
 member? How did you work with the sprints? Were there any general themes for the sprints, phases of the project? (1min)
 - [ ] DANIEL 4. The architecture of your solution. What nodes are communicating? What is the responsibility
 of each? Preferably, include model’s diagrams here. (1-2min)
-- [ ] TOBIAS OG DANIEL 5. Your communication protocol. Summarize it in a clear yet concise way. (3-4min)
-- [ ] ALLE 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
-- [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project.
-(1-3min)
+- [x] TOBIAS OG DANIEL 5. Your communication protocol. Summarize it in a clear yet concise way. (3-4min)
+
+- [ ] ALLE TODO 6. Your solution and result. Explain what is working. Show a demo of the system. (2-4min)
+
+
+1. run intermidiary server
+2. run greenhouse
+2. run control panel
+
+- Show that if greenhouse and/or control panel is started before the intermediary server, that they try to reconnect to the server, and then run the server to show they are able to connect whilst trying to reconnect.
+- Run multiple control panels. (SHow that if yoy do something in one control panel, it is reflected in the other control panel and geenhosue)
+- Press buttons in greenhouse and show that it is reflected in control panel.
+- show turn on and turn off all actuators for a node.
+- when you close a contorl panel and open it again, it works.
+
+- [ ] 7. SEBASTIAN / TOBIAS Explain what extra work you have done (if any) for this to be considered an excellent project. (1-3min)
+
+
+## Resilience in case of network outages.
+
+If the client fails to connect to the server, or loses connection to the server, the client will try to re-establish the connection multiple times, each time waiting longer and logner to try and reconnect. If this fails too many times, the client will stop trying to connect and stop. If the client loses connection to the server and then tries to send messages, it will buffer the messages until the connection is re-established and will then send all the buffered messages when reconnected.
+
+
+## Support of more flexible actuator commands.
+
+In addition to being able to send an actuator state change command to a specific actuator on a specific node, We are able to send a command to turn on all or turn off all actuators for a specific node.
+
+Also, we have a protocol for sending a message to all connected nodes, by specifying a broadcast parameaer in our message. Which means when a broadcast message is sent from a client, to the server, the server will then broadcast the received message to all target clients.
+
 - [x] ADRIAN 8. Reflect on potential improvements and future work. (1 min)
 - Currently the messages we send are separated into different parts, like header and body, and each of these parts are further subdivided, we do this by using different delimiters like "-" ";" and such. A better solution which we could call future work is to instead use a well established protocol like JSON or XML. This would make it easier to read the messages, and also easier to parse them. We already have experience with both JSON and XML which means it would not have been a big problem to hypthetically implement one of these protocols in the future.
 
-- Additionally, we are somewhat lacking with catching and managing errors. We have an enum for different Failure reasons, but we don't use many of them and don't have many of them either. To help with implement better error handling, we would need more and better tests and utilize them further than what we already have.
+- Additionally, we are somewhat lacking with catching and managing errors. We have an enum for different Failure reasons, but we don't use many of them and don't have many of them either. Currently we have an enum for if the server is not running, if the server failed to identify a client, and if we have integrity To help with implement better error handling, we would need more and better tests and utilize them further than what we already have.
 
 
 Note: it is not a big problem if your video is 17 or 18 minutes, but don’t make it to 35 minutes!

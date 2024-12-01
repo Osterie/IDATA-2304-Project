@@ -8,8 +8,6 @@ public abstract class Sensor<T extends SensorReading> {
 
     protected T reading;
 
-    // protected SensorReading reading;
-
     private final int id;
 
     // The next ID to be assigned to a sensor, every time a new sensor is created,

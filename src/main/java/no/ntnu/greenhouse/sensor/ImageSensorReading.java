@@ -3,7 +3,6 @@ package no.ntnu.greenhouse.sensor;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.util.Random;
 import no.ntnu.tools.stringification.Base64ImageEncoder;
 
@@ -15,7 +14,7 @@ import no.ntnu.tools.Logger;
 /**
  * Represents a sensor reading that contains an image.
  */
-public class ImageSensorReading extends SensorReading{
+public class ImageSensorReading extends SensorReading {
 
     private BufferedImage currentImage;
     private String fileExtension;
@@ -57,7 +56,8 @@ public class ImageSensorReading extends SensorReading{
             File dir = new File(imagesFilePath);
             // Logger.info("Looking for image files in: " + dir.getAbsolutePath());
             // Logger.info("Files in directory: " + dir.listFiles().length);
-            File[] files = dir.listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg"));
+            File[] files = dir
+                    .listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg"));
             if (files != null && files.length > 0) {
                 int randomIndex = new Random().nextInt(files.length);
                 File chosenFile = files[randomIndex];
@@ -95,7 +95,6 @@ public class ImageSensorReading extends SensorReading{
         return fileExtension;
     }
 
-    
     /**
      * Sets the file extension for the image sensor reading.
      *
@@ -109,7 +108,8 @@ public class ImageSensorReading extends SensorReading{
      * Indicates whether some other object is "equal to" this one.
      *
      * @param o the reference object with which to compare.
-     * @return {@code true} if this object is the same as the obj argument; {@code false} otherwise.
+     * @return {@code true} if this object is the same as the obj argument;
+     *         {@code false} otherwise.
      */
     @Override
     public boolean equals(Object o) {
@@ -124,26 +124,15 @@ public class ImageSensorReading extends SensorReading{
     }
 
     /**
-     * Get a string representation of the sensor reading.
-     *
-     * @return A string representation of the sensor reading
-     */
-    @Override
-    public String toString() {
-        return "{ type=" + this.type + ", image=" + this.currentImage.toString() + ", fileExtension=" + this.fileExtension + " }";
-    }
-
-    /**
      * Get a human-readable (formatted) version of the current reading.
      * 
      * @return The sensor reading and the unit
      */
     @Override
     public String getFormatted() {
-        // TODO we should have type here since that is done for numeric sensor reading, consistency.
-        // Does not make sense that there is a " = " randomly.
-        // CHANGE TO USE BODY FIELD DELIMITER:
-        return this.type.getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.getImageFormatted(this.currentImage) + Delimiters.BODY_FIELD_PARAMETERS.getValue() + this.fileExtension;
+        return this.type.getType() + Delimiters.BODY_FIELD_PARAMETERS.getValue()
+                + this.getImageFormatted(this.currentImage) + Delimiters.BODY_FIELD_PARAMETERS.getValue()
+                + this.fileExtension;
     }
 
     /**

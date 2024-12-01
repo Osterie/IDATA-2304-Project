@@ -37,6 +37,7 @@ public class NodeManager {
    * @param nodeTabPane       The TabPane to manage node-related tabs.
    * @param onAllNodesRemoved A callback to run when all nodes are removed.
    * @param onFirstNodeAdded  A callback to run when the first node is added.
+   * @param channel           The communication channel for node updates.
    */
   public NodeManager(TabPane nodeTabPane, Runnable onAllNodesRemoved, Runnable onFirstNodeAdded,
                      ControlPanelCommunicationChannel channel) {
